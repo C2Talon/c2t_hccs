@@ -1,0 +1,194 @@
+[ angry pi&ntilde;ata ]
+scrollwhendone
+try to steal an item
+consult c2t_hccs_combat.ash
+
+[ default ]
+abort
+
+[ eldritch tentacle ]
+scrollwhendone
+try to steal an item
+skill detect weakness
+skill micrometeorite
+skill feel nostalgic
+skill feel envy
+if sealclubber || turtletamer || discobandit || accordionthief
+    skill curse of weaksauce
+    skill sing along
+    while !pastround 20
+        attack with weapon
+    endwhile
+endif
+if pastamancer
+    skill sing along
+    skill saucestorm
+    skill saucestorm
+    skill saucestorm
+    skill saucestorm
+endif
+if sauceror
+    skill curse of weaksauce
+    skill sing along
+    skill saucestorm
+    skill saucestorm
+    skill saucestorm
+    skill saucestorm
+endif
+
+[ elf hobo ]
+scrollwhendone
+try to steal an item
+consult c2t_hccs_combat.ash
+
+[ evil olive ]
+scrollwhendone
+try to steal an item
+consult c2t_hccs_combat.ash
+
+[ factory worker ]
+scrollwhendone
+try to steal an item
+skill meteor shower
+consult c2t_hccs_combat.ash
+
+[ fluffy bunny ]
+scrollwhendone
+try to steal an item
+consult c2t_hccs_combat.ash
+skill throw latte on opponent
+skill reflex hammer
+skill snokebomb
+
+[ god lobster ]
+scrollwhendone
+skill detect weakness
+skill micrometeorite
+if sealclubber || turtletamer || discobandit || accordionthief
+    skill curse of weaksauce
+    skill sing along
+    while !pastround 20
+        attack with weapon
+    endwhile
+endif
+if pastamancer
+    skill stuffed mortar shell
+    skill sing along
+endif
+if sauceror
+    skill curse of weaksauce
+    skill saucegeyser
+    skill saucegeyser
+endif
+
+[ hobelf ]
+scrollwhendone
+try to steal an item
+consult c2t_use_the_force.ash
+
+[ neverending party ]
+scrollwhendone
+try to steal an item
+skill detect weakness
+skill micrometeorite
+consult c2t_hccs_combat.ash
+if sealclubber || turtletamer || discobandit || accordionthief
+    skill curse of weaksauce
+    skill sing along
+    while !pastround 20
+        attack with weapon
+    endwhile
+endif
+if pastamancer
+    skill stuffed mortar shell
+    skill sing along
+endif
+if sauceror
+    skill curse of weaksauce
+    skill stuffed mortar shell
+    skill sing along
+    skill saucegeyser
+endif
+
+[ novelty tropical skeleton ]
+try to steal an item
+skill become a wolf
+skill gulp latte
+consult c2t_hccs_combat.ash
+
+[ piranha plant ]
+scrollwhendone
+try to steal an item
+skill detect weakness
+skill micrometeorite
+if sealclubber || turtletamer || discobandit || accordionthief
+    skill curse of weaksauce
+    skill sing along
+    while !pastround 20
+        attack with weapon
+    endwhile
+endif
+if pastamancer
+    skill stuffed mortar shell
+    skill sing along
+endif
+if sauceror
+    skill curse of weaksauce
+    skill stuffed mortar shell
+    skill sing along
+    skill saucegeyser
+endif
+
+[ possessed can of tomatoes ]
+scrollwhendone
+try to steal an item
+skill become a wolf
+skill gulp latte
+skill feel hatred
+consult c2t_hccs_combat.ash
+
+[ sausage goblin ]
+scrollwhendone
+skill detect weakness
+skill micrometeorite
+if sealclubber || turtletamer || discobandit || accordionthief
+    skill curse of weaksauce
+    skill sing along
+    skill lecture on relativity
+    if discobandit || accordionthief
+        skill saucy salve
+    endif
+    while !pastround 20
+        attack with weapon
+    endwhile
+endif
+if pastamancer
+    skill lecture on relativity
+    skill stuffed mortar shell
+    skill sing along
+endif
+if sauceror
+    skill curse of weaksauce
+    skill sing along
+    skill lecture on relativity
+    skill saucegeyser
+    skill saucegeyser
+endif
+
+[ spawn of wally ]
+scrollwhendone
+skill sing along
+skill furious wallop
+attack with weapon
+
+[ thugnderdome ]
+scrollwhendone
+skill meteor shower
+consult c2t_use_the_force.ash
+
+[ ungulith ]
+scrollwhendone
+skill %fn, spit on me!
+skill meteor shower
+consult c2t_hccs_combat.ash
+
