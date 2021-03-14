@@ -11,7 +11,20 @@ import <c2t_hccs_aux.ash>
 boolean HALT_BEFORE_TEST = get_property("c2t_hccs_haltBeforeTest").to_boolean();
 //prints modtrace before non-stat tests
 boolean PRINT_MODTRACE = get_property("c2t_hccs_printModtrace").to_boolean();
+/*
+-- other properties that change options --
+-- can set via the CLI with "set c2t_hccs_name = value" --
 
+c2t_hccs_joinClan = 90485
+This is the clan that the script will join for the VIP lounge and fortune teller
+Takes an int or string, where int would be clanid (preferred), and string would be the clan name
+Will default to 90485 (Bonus Adventures From Hell)
+
+c2t_hccs_clanFortunes = CheeseFax
+This is the name of the person/bot that you want to do the fortune teller with
+Will default to CheeseFax
+
+*/
 
 //wtb enum
 int TEST_HP = 1;
@@ -400,11 +413,19 @@ boolean c2t_hccs_pre_coil() {
 			print("Warning: number of free-free combs exhausted with no grain of sand to show for it","blue");
 	}
 
-	// Clanmate fortunes (BAFH/CheeseFax)
+	//probably should make a property handler, because this looks like it may get unwieldly
 	if (get_property('_clanFortuneConsultUses').to_int() < 3) {
-		cli_execute('/whitelist bonus adventures from hell');
-		while (get_property('_clanFortuneConsultUses').to_int() < 3) {
-			cli_execute('fortune cheesefax');
+		if (get_property("c2t_hccs_joinClan").to_int() != 0)
+			c2t_assert(c2t_joinClan(get_property("c2t_hccs_joinClan").to_int()),"Could not join clan "+get_property("c2t_hccs_joinClan"));
+		else if (get_property("c2t_hccs_joinClan") != "")
+			c2t_assert(c2t_joinClan(get_property("c2t_hccs_joinClan")),"Could not join clan "+get_property("c2t_hccs_joinClan"));
+		else
+			c2t_assert(c2t_joinClan(90485),"Could not join Bonus Adventures From Hell");
+		while (get_property('_clanFortuneConsultUses').to_int() < 3) { //probably get stuck in infinite loop if person/bot not online?
+			if (get_property("c2t_hccs_clanFortunes") != "")
+				cli_execute('fortune '+get_property("c2t_hccs_clanFortunes"));
+			else
+				cli_execute('fortune cheesefax');
 			cli_execute('wait 5');
 		}
 	}
