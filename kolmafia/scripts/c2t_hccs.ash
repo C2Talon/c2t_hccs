@@ -1933,7 +1933,7 @@ void c2t_hccs_fights() {
 	}
 
 	// NEP 11 free sausage goblin fights
-	if (c2t_sausageGoblinOdds() >= 0.9999 && get_property('_pocketProfessorLectures').to_int() < 9) {
+	if (c2t_isSausageGoblinNow() && get_property('_pocketProfessorLectures').to_int() < 9) {
 		//kind of important to get meat here, so double checking
 		if (get_property('boomBoxSong') != "Total Eclipse of Your Meat")
 			cli_execute('boombox meat');
@@ -2109,7 +2109,7 @@ boolean c2t_hccs_wandererFight() {
 	//try to do professor copies before doing extra kramco
 	if (c2t_isVoterNow())
 		append = ",equip i voted";
-	else if (c2t_sausageGoblinOdds() > 0.9999 && (turns_played() == 0 || get_property('_pocketProfessorLectures').to_int() > 7))
+	else if (c2t_isSausageGoblinNow() && (turns_played() == 0 || get_property('_pocketProfessorLectures').to_int() > 7))
 		append = ",equip kramco";
 	else
 		return false;
@@ -2118,9 +2118,12 @@ boolean c2t_hccs_wandererFight() {
 		cli_execute('breakfast;rest free');
 	}
 	print("Running wanderer fight","blue");
-	cli_execute('outfit save backupcs');
+	//cli_execute('outfit save backupcs');
+	//not going to use unreliable backup outfits; instead, using last maximizer string
+	string[int] maxstr = split_string(get_property("maximizerMRUList"),";");
 	familiar nowFam = my_familiar();
 	item nowEquip = equipped_item($slot[familiar]);
+
 	if (/*my_primestat() != $stat[moxie]*/true) {
 		use_familiar($familiar[melodramedary]);
 		append += ",equip dromedary drinking helmet";
@@ -2134,11 +2137,16 @@ boolean c2t_hccs_wandererFight() {
 		append += ",-equip garbage shirt,exp";
 	else
 		append += ",equip garbage shirt";
+
 	maximize(my_primestat()+append,false);
 	adv1($location[The Neverending Party],-1,"");//this might break something if NEP quest not taken care of yet
-	cli_execute('outfit backupcs');//fails if foldable was changed, usually because of wad of used tape changing into garbage shirt; shouldn't matter though, as maximizer is run before most actions
+
+	//cli_execute('outfit backupcs');//fails if foldable was changed, usually because of wad of used tape changing into garbage shirt
 	use_familiar(nowFam);
+	//call previous maximizer string to hopefully return it to previous state
+	maximize(maxstr[0],false);
 	equip($slot[familiar],nowEquip);
+
 	return true;
 }
 

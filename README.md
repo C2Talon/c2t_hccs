@@ -2,7 +2,7 @@
 
 Kolmafia script to handle a hardcore community service run with my set of skills and IotMs and with any class.
 
-This is a continual work-in-progress. It is not likely to run out-of-the-box for most, but others may be able to glean things from it.
+This is a continual work-in-progress. It is not likely to run out-of-the-box for most, but others may be able to glean things from it. To see what is needed to run smoothly without changes, see: https://cheesellc.com/kol/profile.php?u=Zdrvst
 
 `svn checkout https://github.com/c2talon/c2t_hccs/branches/master/kolmafia/`
 
