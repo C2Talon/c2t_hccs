@@ -83,11 +83,9 @@ boolean c2t_hccs_pre_noncombat();
 boolean c2t_hccs_pre_weapon();
 boolean c2t_hccs_pre_spell();
 void c2t_hccs_test_handler(int test);
-//string c2t_hccs_test_name(int test);
 boolean c2t_hccs_test_done(int test);
-boolean c2t_hccs_do_test(int test);
+void c2t_hccs_do_test(int test);
 void c2t_hccs_fights();
-//boolean c2t_cartographyHunt(location loc,monster mon);
 boolean c2t_hccs_wishFight(monster mon);
 boolean c2t_hccs_wandererFight();
 int c2t_hccs_tripleSize(int num);
@@ -97,16 +95,11 @@ void c2t_hccs_pantagramming();
 
 void main() {
 	c2t_assert(my_path() == "Community Service","Not in Community Service. Aborting.");
-	//c2t_assert(my_primestat() != $stat[moxie],'This is not yet able to handle moxie classes. Aborting.');
 
 	try {
 		c2t_hccs_init();
 		
-		// Default equipment. // bad idea to reset equipment like this on every run of script
-		//maximize("mus,equip garbage shirt,-equip kramco",false);
-		
 		c2t_hccs_test_handler(TEST_COIL_WIRE);
-		
 		c2t_assert(my_turncount() >= 60,'Something went exceptionally wrong coiling wire.');
 
 		//TODO maybe reorder stat tests based on hardest to achieve for a given class or mainstat
@@ -115,7 +108,6 @@ void main() {
 			c2t_hccs_levelup();
 			c2t_hccs_love_potion(true);
 			c2t_hccs_fights();
-			//abort('End of the road for now');
 			c2t_hccs_test_handler(TEST_MOX);
 		}
 		
@@ -254,58 +246,6 @@ boolean c2t_hccs_wishFight(monster mon) {
 	return true;
 }
 
-/*
-boolean c2t_cartographyHunt(location loc,monster mon) {
-	if (have_skill($skill[Map the Monsters]) && get_property('mappingMonsters') == 'false' && get_property('_monstersMapped').to_int() < 3)
-		use_skill(1,$skill[Map the Monsters]);
-	//else
-	//	abort("Unable to cast Map the Monsters");
-	//buffer result;
-	//result = visit_url("runskillz.php?action=Skillz&whichskill=7344&targetplayer=3286685&quantity=1&pwd="+my_hash(),false,true);
-	//print("result of visit_url()","blue");
-	//print(result);
-	//print("THIS IS WHAT YOU'RE LOOKING FOR","blue");
-	//wait(15);
-	//abort("STOP");
-
-	if (get_property('_latteDrinkUsed') == 'true')
-		cli_execute('latte refill cinnamon pumpkin vanilla');
-
-	c2t_setChoice(1387,3);//saber yr
-
-	if (get_property('mappingMonsters') == 'true') {
-		buffer buf;
-		buf = visit_url(loc.to_url(),false,true);
-		if (!buf.contains_text("Leading Yourself Right to Them"))
-			abort("Wrong thing came up when using Map the Monsters at "+loc+" with "+mon);
-		buf = visit_url("choice.php?pwd&whichchoice=1435&option=1&heyscriptswhatsupwinkwink="+mon.to_int(),true,true);
-		if (!buf.contains_text("<b>Combat"))
-			abort("Didn't enter combat using Map the Monsters at "+loc+" with "+mon);
-		run_turn();
-		run_choice(-1);
-		c2t_setChoice(1387,0);
-		if (get_property('mappingMonsters') == 'false')
-			return true;
-	}
-	return false;
-	/*
-	adv1(loc,-1,"");
-	if (!handling_choice()) abort("No choice?");
-	if (last_choice() == 1435 && count(available_choice_options()) > 0) {
-		visit_url("choice.php?pwd&whichchoice=1435&option=1&heyscriptswhatsupwinkwink="+mon.to_int(),true,true);
-		if (get_property('_latteDrinkUsed') == 'false')
-			use_skill(1,$skill[gulp latte]);
-		use_skill(1,$skill[Use the Force]);
-		if (!handling_choice()) abort("No choice?");
-		if (last_choice() == 1410 && count(available_choice_options()) > 0)
-			run_choice(3);
-	}
-	else
-		abort("Failed to select the monster from choice");
-	//
-}*/
-
-
 void c2t_hccs_test_handler(int test) {
 	//wanderer fight(s) before prepping stuff
 	//magic number here assuming using a turn for limerick dungeon semi-rare
@@ -415,34 +355,33 @@ boolean c2t_hccs_pre_coil() {
 
 	//probably should make a property handler, because this looks like it may get unwieldly
 	if (get_property('_clanFortuneConsultUses').to_int() < 3) {
-		if (get_property("c2t_hccs_joinClan").to_int() != 0)
-			c2t_assert(c2t_joinClan(get_property("c2t_hccs_joinClan").to_int()),"Could not join clan "+get_property("c2t_hccs_joinClan"));
-		else if (get_property("c2t_hccs_joinClan") != "")
-			c2t_assert(c2t_joinClan(get_property("c2t_hccs_joinClan")),"Could not join clan "+get_property("c2t_hccs_joinClan"));
+		string clan = get_property("c2t_hccs_joinClan");
+		if (clan.to_int() != 0)
+			c2t_assert(c2t_joinClan(clan.to_int()),`Could not join clan {clan}`);
+		else if (clan != "")
+			c2t_assert(c2t_joinClan(clan),`Could not join clan {clan}`);
 		else
 			c2t_assert(c2t_joinClan(90485),"Could not join Bonus Adventures From Hell");
-		while (get_property('_clanFortuneConsultUses').to_int() < 3) { //probably get stuck in infinite loop if person/bot not online?
-			if (get_property("c2t_hccs_clanFortunes") != "")
-				cli_execute('fortune '+get_property("c2t_hccs_clanFortunes"));
-			else
-				cli_execute('fortune cheesefax');
-			cli_execute('wait 5');
-		}
-	}
-	if (get_property('_photocopyUsed') == 'false' && item_amount($item[photocopied monster]) == 0) {
-		//print("THIS IS WHAT YOU'RE LOOKING FOR","blue");
-		//set_property('faxbots','1');
-		//cli_execute('faxbot factory worker');
-		//faxbot($monster[1789], "CheeseFax");
 
-		//since the above does not work, and neither do chatbot scripts:
-		chat_private('cheesefax','fax factory worker');
-		wait(15);//10 has failed multiple times
-		cli_execute('fax get');
-		if (!get_property('photocopyMonster').contains_text("factory worker")) {
-			//cli_execute('fax send'); //probably don't do this, especially not with a loop as faxbot may be offline
-			abort("wrong fax monster");
+		string fortunes = get_property("c2t_hccs_clanFortunes");
+		fortunes = (fortunes == ""?"cheesefax":fortunes);
+		c2t_assert(is_online(fortunes),`{fortunes} is not online for fortunes`);
+
+		while (get_property('_clanFortuneConsultUses').to_int() < 3)
+			cli_execute(`fortune {fortunes};wait 5`);
+	}
+	if (!get_property('_photocopyUsed').to_boolean() && item_amount($item[photocopied monster]) == 0) {
+		//pretty much the only way to get a fax of a factory worker (female) reliably:
+		c2t_assert(is_online("cheesefax"),"cheesefax is not online to send faxes");
+		for i from 1 to 3 {
+			chat_private('cheesefax','fax factory worker');
+			wait(15);//10 has failed multiple times
+			cli_execute('fax get');
+			if (get_property('photocopyMonster').contains_text("factory worker"))
+				break;
+			cli_execute('fax send');
 		}
+		c2t_assert(get_property('photocopyMonster').contains_text("factory worker"),'wrong fax monster');
 	}
 		
 	use_skill(1,$skill[Spirit of Peppermint]);
@@ -524,9 +463,9 @@ boolean c2t_hccs_pre_coil() {
 	if (get_property('_candySummons').to_int() == 0)
 		if (!use_skill(1,$skill[Summon Crimbo Candy]))
 			abort('crimbo candy fail');
-	if (available_amount($item[perfect ice cube]) == 0)
+	/*if (available_amount($item[perfect ice cube]) == 0)
 		if (!use_skill(1,$skill[Perfect Freeze]))
-			abort('perfect freeze fail');
+			abort('perfect freeze fail');*/
 	
 	if (available_amount($item[lime]) == 0) {
 		if (my_mp() < 50) {
@@ -851,12 +790,8 @@ boolean c2t_hccs_levelup() {
 
 	// using MCD as a flag, what could possibly go wrong?
 	// figure out something less error-prone before ever making public
-	if (current_mcd() != 10) {
+	if (current_mcd() != 10)
 		c2t_hccs_all_the_buffs();
-
-		//feel excitement //putting it here because using a chat macro for it
-		//chat_macro('/cast feel excitement');
-	}
 	
 	return true;
 }
@@ -980,11 +915,23 @@ boolean c2t_hccs_all_the_buffs() {
 			(my_primestat() == $stat[mysticality] && 
 			(have_effect($effect[Synthesis: Smart]) == 0 || have_effect($effect[Synthesis: Learning]) == 0))
 			) {
-			//TODO handler to map/saber angry pinata if that would solve the issue (does for muscle + a certain crimbo candy)
-			//or wish/saber hobelf
+			//edge case recoveries:
+			//this one assumes hobelf wasn't fought earlier, since this shouldn't be needed if so. otherwise, too many saber yr allocations
+			if (my_primestat() == $stat[muscle] && have_effect($effect[Synthesis: Strong]) == 0 && item_amount($item[Crimbo fudge]) > 0) {
+				if (item_amount($item[pile of candy]) == 0) {
+					c2t_setChoice(1387,3);//saber yr
+					c2t_cartographyHunt($location[South of the Border],$monster[angry pi&ntilde;ata]);
+					run_turn();
+					run_choice(-1);
+					c2t_setChoice(1387,0);
+				}
+				sweet_synthesis($effect[Synthesis: Strong]);
+				c2t_assert(have_effect($effect[Synthesis: Strong]) > 0,"Synthesis failed even after fighting an angry pinata");
+			}
 
 			//not going to wish for g9 anymore
-			abort("Synthesize didn't work properly");
+			else
+				abort("Synthesize didn't work properly");
 
 			/*
 			print("Wishing for stat boost","blue");
@@ -1183,12 +1130,6 @@ boolean c2t_hccs_pre_item() {
 	ensure_effect($effect[Nearly All-Natural]);//bag of grain
 	ensure_effect($effect[Steely-Eyed Squint]);
 	
-	/* doesn't work
-	use_familiar($familiar[Leprechaun]);
-	if (!get_property('_mummeryUses').contains_text('4'))
-		cli_execute('mummery item');
-	*/
-	
 	maximize('item,2 booze drop,-equip broken champagne bottle,-equip surprisingly capacious handbag,-equip red-hot sausage fork', false);
 	
 	//TODO put formula here to turn this into turns instead of whatever this is
@@ -1328,11 +1269,7 @@ boolean c2t_hccs_pre_familiar() {
 	//make retro cape a stat cape again after hot test
 	cli_execute('c2t_capeme '+my_primestat());
 	
-	// These should have fallen through all the way from leveling.
-	//ensure_effect($effect[Fidoxene]);
-	//ensure_effect($effect[Do I Know You From Somewhere?]);
-
-	// Pool buff. // should be carried over from pre-hot res
+	// Pool buff
 	ensure_effect($effect[Billiards Belligerence]);
 
 	if (my_hp() < 30) use_skill(1, $skill[Cannelloni Cocoon]);
@@ -1574,9 +1511,6 @@ boolean c2t_hccs_pre_weapon() {
 	if (have_effect($effect[Outer Wolf&trade;]) == 0)
 		abort('OU pizza failed');
 
-	//wish_effect($effect[Pyramid Power]);
-	//wish_effect($effect[Wasabi With You]);
-
 	/* have meteor lore now
 	if (my_class() != $class[pastamancer] || my_class() != $class[turtle tamer]) {
 		if (have_effect($effect[Rictus of Yeg]) == 0) {
@@ -1604,10 +1538,6 @@ boolean c2t_hccs_pre_weapon() {
 	
 	maximize('weapon damage', false);
 
-
-	// this is here for pvp purposes // should last for next
-	//ensure_effect($effect[We're All Made of Starfish]);
-	
 	if (PRINT_MODTRACE)
 		cli_execute("modtrace weapon damage");
 	if ((60 - floor(numeric_modifier('weapon damage') / 25 + 0.001) - floor(numeric_modifier('weapon damage percent') / 25 + 0.001)) > 1) {//testlimit
@@ -1781,11 +1711,6 @@ void c2t_hccs_fights() {
 			//thanks to map the monsters, dump extra latte banish on bunny to fish for latte ingredient
 			if (!get_property('_latteBanishUsed').to_boolean())
 				adv1($location[The Dire Warren],-1,"");
-
-			//probably don't need the next 2 lines with the Map the Monsters skill
-			//ensure_effect($effect[Musk of the Moose]);
-			//ensure_effect($effect[Carlweather's Cantata of Confrontation]);
-			//ensure_mp_tonic(50); // For Snokebomb.
 
 			if (get_property('_latteDrinkUsed').to_boolean())
 				cli_execute('latte refill cinnamon pumpkin vanilla');
@@ -2118,8 +2043,7 @@ boolean c2t_hccs_wandererFight() {
 		cli_execute('breakfast;rest free');
 	}
 	print("Running wanderer fight","blue");
-	//cli_execute('outfit save backupcs');
-	//not going to use unreliable backup outfits; instead, using last maximizer string
+	//saving last maximizer string and familiar stuff; outfits generally break here
 	string[int] maxstr = split_string(get_property("maximizerMRUList"),";");
 	familiar nowFam = my_familiar();
 	item nowEquip = equipped_item($slot[familiar]);
@@ -2141,9 +2065,8 @@ boolean c2t_hccs_wandererFight() {
 	maximize(my_primestat()+append,false);
 	adv1($location[The Neverending Party],-1,"");//this might break something if NEP quest not taken care of yet
 
-	//cli_execute('outfit backupcs');//fails if foldable was changed, usually because of wad of used tape changing into garbage shirt
+	//hopefully restore to previous state without outfits
 	use_familiar(nowFam);
-	//call previous maximizer string to hopefully return it to previous state
 	maximize(maxstr[0],false);
 	equip($slot[familiar],nowEquip);
 
@@ -2153,7 +2076,7 @@ boolean c2t_hccs_wandererFight() {
 
 // will fail if haiku dungeon stuff spills outside of itself, so probably avoid that or make sure to do combats elsewhere just before a test
 boolean c2t_hccs_test_done(int test) {
-	print('Checking test '+test+'...');
+	print(`Checking test {test}...`);
 	if (test == 30 && !get_property('kingLiberated').to_boolean() && get_property("csServicesPerformed").split_string(",").count() == 11)
 		return false;//to do the 'test' and to set kingLiberated
 	else if (get_property('kingLiberated').to_boolean())
@@ -2163,16 +2086,12 @@ boolean c2t_hccs_test_done(int test) {
 
 void c2t_hccs_do_test(int test) {
 	if (!c2t_hccs_test_done(test)) {
-		//c2t_setChoice(1089,test);//doesn't seem to work
 		visit_url('council.php');
 		visit_url('choice.php?pwd&whichchoice=1089&option='+test,true,true);
-		//run_turn();
-		//run_choice(-1);
-		//c2t_setChoice(1089,0);
-		if (!c2t_hccs_test_done(test))
-			abort('Failed to do test '+test+'. Maybe out of turns?');
-	} else
-		print('Test '+test+' already completed.');
+		c2t_assert(c2t_hccs_test_done(test),`Failed to do test {test}. Out of turns?`);
+	}
+	else
+		print(`Test {test} already done.`);
 }
 
 
