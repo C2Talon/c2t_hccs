@@ -91,6 +91,7 @@ boolean c2t_hccs_wandererFight();
 int c2t_hccs_tripleSize(int num);
 int c2t_hccs_tripleSize() return c2t_hccs_tripleSize(1);
 void c2t_hccs_pantagramming();
+void c2t_hccs_vote();
 
 
 void main() {
@@ -167,6 +168,77 @@ void c2t_hccs_pantagramming() {
 		//so mafia knows and maximizer can use
 		cli_execute("refresh all");
 	}
+}
+
+void c2t_hccs_vote() {
+	if (available_amount($item[&quot;I Voted!&quot; sticker]) > 0)
+		return;
+	if (my_daycount() > 1)
+		abort("Need to manually vote. This is not set up to vote except for day 1.");
+
+	buffer buf = visit_url('place.php?whichplace=town_right&action=townright_vote');
+
+	//monster priority
+	boolean [monster] monp = $monsters[angry ghost,government bureaucrat,terrible mutant,slime blob,annoyed snake];
+	monster mon1 = get_property('_voteMonster1').to_monster();
+	monster mon2 = get_property('_voteMonster2').to_monster();
+
+	//for output
+	int radi,che1,che2;
+
+	//select monster
+	foreach mon in monp {
+		if (mon1 == mon) {
+			radi = 1;
+			break;
+		}
+		else if (mon2 == mon) {
+			radi = 2;
+			break;
+		}
+	}
+
+	//votes by class, from 0 to 3
+	switch (my_class()) {
+		default:
+			abort("Unrecognized class for voting?");
+		case $class[seal clubber]:
+			//3 spooky res,10 stench damage,2 fam exp,-2 adventures
+			che1 = 1;//10 stench damage
+			che2 = 2;//2 familiar exp
+			break;
+		case $class[turtle tamer]:
+			//100% weapon damage,10 ML,unrecorded unarmed damage,-20 moxie
+			che1 = 0;//100% weapon damage
+			che2 = 1;//10 ML
+			break;
+		case $class[pastamancer]:
+			//30% gear drop,-10% crit,100% weapon damage,2 fam exp
+			che1 = 2;//100% weapon damage
+			che2 = 3;//2 fam exp
+			break;
+		case $class[sauceror]:
+			//-10 ML,3 exp,-20 mys,3 spooky res
+			che1 = 1;//3 exp
+			che2 = 3;//3 spooky res
+			break;
+		case $class[disco bandit]:
+			//30% max mp,10 hot damage,30% food drop,-20 item drop
+			che1 = 0;//30% max mp
+			che2 = 1;//10 hot damage
+			break;
+		case $class[accordion thief]:
+			//3 stench res,-20 mysticality,30% booze drop,25% initiative
+			che1 = 2;//30% booze drop
+			che2 = 3;//25% initative
+			break;
+	}
+
+	print("Voting for "+(radi==1?mon1:mon2)+", "+get_property('_voteLocal'+(che1+1))+", "+get_property('_voteLocal'+(che2+1)),"blue");
+	buf = visit_url('choice.php?pwd&option=1&whichchoice=1331&g='+radi+'&local[]='+che1+'&local[]='+che2,true,false);
+
+	if (available_amount($item[&quot;I Voted!&quot; sticker]) == 0)
+		abort("Voting failed?");
 }
 
 //TODO genericise and move to lib
@@ -314,6 +386,9 @@ void c2t_hccs_test_handler(int test) {
 }
 
 
+
+
+
 // sets some settings on start
 void c2t_hccs_init() {
 	// allow buy from NPCs
@@ -344,8 +419,7 @@ void c2t_hccs_exit() {
 
 boolean c2t_hccs_pre_coil() {
 	//make sure to vote and comb for grain of sand first
-	if (item_amount($item[&quot;I Voted!&quot; sticker]) == 0)
-		abort("Need to vote!");
+	c2t_hccs_vote();
 	if (item_amount($item[grain of sand]) == 0) {
 		if (get_property('_freeBeachWalksUsed').to_int() < 5)
 			abort("Comb the beach up to "+(5-get_property('_freeBeachWalksUsed').to_int())+" more times");
@@ -1611,6 +1685,13 @@ boolean c2t_hccs_pre_spell() {
 			use_skill(1,$skill[Cannelloni Cocoon]);
 		ensure_effect($effect[Visions of the Deep Dark Deeps]);
 	}
+
+	/* not actually going to use this for now as it's not profitable; TODO might make it conditional on a user setting or mall price though
+	//batteries
+	c2t_getEffect($effect[D-Charged],$item[battery (D)]);
+	c2t_getEffect($effect[AA-Charged],$item[battery (AA)]);
+	c2t_getEffect($effect[AAA-Charged],$item[battery (AAA)]);
+	*/
 
 	maximize('spell damage', false);
 
