@@ -11,8 +11,6 @@ scrollwhendone
 try to steal an item
 skill detect weakness
 skill micrometeorite
-skill feel nostalgic
-skill feel envy
 if sealclubber || turtletamer || discobandit || accordionthief
     skill curse of weaksauce
     skill sing along
@@ -110,6 +108,12 @@ if sauceror
     skill saucegeyser
 endif
 
+[ noob cave ]
+try to steal an item
+skill back-up to your last enemy
+twiddle your thumbs
+abort
+
 [ novelty tropical skeleton ]
 try to steal an item
 skill become a wolf
@@ -121,6 +125,8 @@ scrollwhendone
 try to steal an item
 skill detect weakness
 skill micrometeorite
+skill feel nostalgic
+skill feel envy
 if sealclubber || turtletamer || discobandit || accordionthief
     skill curse of weaksauce
     skill sing along

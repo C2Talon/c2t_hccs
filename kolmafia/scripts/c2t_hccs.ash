@@ -92,6 +92,8 @@ int c2t_hccs_tripleSize(int num);
 int c2t_hccs_tripleSize() return c2t_hccs_tripleSize(1);
 void c2t_hccs_pantagramming();
 void c2t_hccs_vote();
+int c2t_hccs_testTurns(int test);
+void c2t_hccs_backupFights(monster mon);
 
 
 void main() {
@@ -188,7 +190,12 @@ void c2t_hccs_vote() {
 
 	//select monster
 	foreach mon in monp {
-		if (mon1 == mon) {
+		//randomise if it's a choice between the last 2
+		if (mon == $monster[slime blob]) {
+			radi = random(2)+1;
+			break;
+		}
+		else if (mon1 == mon) {
 			radi = 1;
 			break;
 		}
@@ -480,6 +487,9 @@ boolean c2t_hccs_pre_coil() {
 
 	//pantagramming
 	c2t_hccs_pantagramming();
+
+	//backup camera
+	cli_execute('backupcamera ml;backupcamera reverser on');
 
 	//knock-off hero cape thing
 	cli_execute('c2t_capeme '+my_primestat());
@@ -1751,11 +1761,11 @@ boolean c2t_hccs_pre_mox() {
 void c2t_hccs_fights() {
 	//TODO move familiar changes and maximizer calls inside of blocks
 	// saber yellow ray stuff
-	if (available_amount($item[tomato juice of powerful power]) == 0 && available_amount($item[tomato]) == 0 && have_effect($effect[Tomato Power]) == 0) {
+	if ((available_amount($item[tomato juice of powerful power]) == 0 && available_amount($item[tomato]) == 0 && have_effect($effect[Tomato Power]) == 0) || get_property('feelNostalgicMonster').to_monster() != $monster[possessed can of tomatoes]) {
 		//don't need hound dog with map the monsters. going to keep for now as to not accidentally have crab as familiar. familiar doesn't really matter here anyway
 		use_familiar($familiar[Jumpsuited Hound Dog]);
 		//probably don't need this array of banish power with map the monsters
-		maximize(my_primestat()+",equip garbage shirt,equip fourth may,equip latte,equip powerful glove,equip doc bag,equip vampyric cloake",false);
+		maximize(my_primestat()+",-equip garbage shirt,equip fourth may,equip latte,equip powerful glove,equip doc bag,equip vampyric cloake",false);
 		cli_execute('mood apathetic');
 
 		if (my_hp() < 0.5 * my_maxhp())
@@ -1862,18 +1872,18 @@ void c2t_hccs_fights() {
 
 	use_familiar(levelingFam);
 
-	//summon tentacle
-	if (have_skill($skill[Evoke Eldritch Horror]) && !get_property('_eldritchHorrorEvoked').to_boolean()) {
-		//getting a tomato from this
-		if (get_property('feelNostalgicMonster').contains_text($monster[possessed can of tomatoes].to_string())) {
-			maximize(my_primestat()+",100exp,-familiar,-equip garbage shirt",false);
-			if (my_mp() < 80)
-				cli_execute('rest free');
-			use_skill(1,$skill[Evoke Eldritch Horror]);
-			run_combat();
-		}
-		else
-			abort("Something broke with trying to feel nostalgic for tomatoes");
+	// Your Mushroom Garden
+	// should get tomato drops from this
+	if (get_property('_mushroomGardenFights').to_int() == 0) {
+		maximize(my_primestat()+",-familiar,-equip garbage shirt",false);
+		//cli_execute('mood execute');
+		adv1($location[Your Mushroom Garden],-1,"");
+	}
+	if (!get_property('_mushroomGardenVisited').to_boolean()) {
+		c2t_setChoice(1410,1);//fertilize
+		adv1($location[Your Mushroom Garden],-1,"");
+		run_turn();
+		c2t_setChoice(1410,0);//unset choice
 	}
 
 
@@ -1893,17 +1903,13 @@ void c2t_hccs_fights() {
 
 	use_familiar(levelingFam);
 
-	// Your Mushroom Garden
-	if (get_property('_mushroomGardenFights').to_int() == 0) {
-		maximize(my_primestat()+",-familiar,equip garbage shirt",false);
-		//cli_execute('mood execute');
-		adv1($location[Your Mushroom Garden],-1,"");
-	}
-	if (!get_property('_mushroomGardenVisited').to_boolean()) {
-		c2t_setChoice(1410,1);//fertilize
-		adv1($location[Your Mushroom Garden],-1,"");
-		run_turn();
-		c2t_setChoice(1410,0);//unset choice
+	//summon tentacle
+	if (have_skill($skill[Evoke Eldritch Horror]) && !get_property('_eldritchHorrorEvoked').to_boolean()) {
+		maximize(my_primestat()+",100exp,-familiar,-equip garbage shirt",false);
+		if (my_mp() < 80)
+			cli_execute('rest free');
+		use_skill(1,$skill[Evoke Eldritch Horror]);
+		run_combat();
 	}
 
 	c2t_hccs_wandererFight();//hopefully doesn't do kramco
@@ -1911,7 +1917,7 @@ void c2t_hccs_fights() {
 	// God Lobster
 	if (get_property('_godLobsterFights').to_int() < 2) {
 		use_familiar($familiar[god lobster]);
-		maximize(my_primestat()+",equip garbage shirt",false);
+		maximize(my_primestat()+",-equip garbage shirt",false);
 		
 		// fight and get equipment
 		while (get_property('_godLobsterFights').to_int() < 2) {
@@ -2086,6 +2092,12 @@ void c2t_hccs_fights() {
 		if (my_mp() < 50)
 			cli_execute('eat magical sausage');
 
+		//swerve
+		if ((have_effect($effect[Spiced Up]) > 0 || have_effect($effect[Tomes of Opportunity]) > 0 || have_effect($effect[The Best Hair You've Ever Had]) > 0) && get_property('_backUpUses').to_int() < 11) {
+			c2t_hccs_backupFights($monster[sausage goblin]);
+			continue;
+		}
+
 		adv1($location[The Neverending Party],-1,"");
 	}
 
@@ -2100,6 +2112,24 @@ void c2t_hccs_fights() {
 	c2t_setChoice(1328,0);
 
 	cli_execute('mood apathetic');
+}
+
+void c2t_hccs_backupFights(monster mon) {
+	c2t_assert(get_property('feelNostalgicMonster').to_monster() == mon,mon+" was not on the backup menu");
+
+	print("Running backup fights","blue");
+
+	cli_execute('backupcamera ml');//just to make sure
+	string append;
+	if (mon == $monster[sausage goblin])
+		append = ",equip kramco";
+
+	use_familiar($familiar[melodramedary]);
+	while (get_property('_backUpUses').to_int() < 11) {
+		//really need to make a generic maximizer constructor
+		maximize(my_primestat()+",equip dromedary drinking helmet,equip garbage shirt,equip backup camera"+append,false);
+		adv1($location[Noob Cave],-1,"");
+	}
 }
 
 
@@ -2119,6 +2149,9 @@ boolean c2t_hccs_wandererFight() {
 		append = ",equip kramco";
 	else
 		return false;
+
+	if (turns_played() == 0)
+		c2t_getEffect($effect[Feeling Excited],$skill[Feel Excitement]);
 
 	if (my_hp() < my_maxhp()/2 || my_mp() < 10) {
 		cli_execute('breakfast;rest free');
