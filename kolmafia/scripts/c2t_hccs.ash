@@ -1761,7 +1761,11 @@ boolean c2t_hccs_pre_mox() {
 void c2t_hccs_fights() {
 	//TODO move familiar changes and maximizer calls inside of blocks
 	// saber yellow ray stuff
-	if ((available_amount($item[tomato juice of powerful power]) == 0 && available_amount($item[tomato]) == 0 && have_effect($effect[Tomato Power]) == 0) || get_property('feelNostalgicMonster').to_monster() != $monster[possessed can of tomatoes]) {
+	if (available_amount($item[tomato juice of powerful power]) == 0
+		&& available_amount($item[tomato]) == 0
+		&& have_effect($effect[Tomato Power]) == 0
+		&& get_property('feelNostalgicMonster').to_monster() != $monster[possessed can of tomatoes]) {
+
 		//don't need hound dog with map the monsters. going to keep for now as to not accidentally have crab as familiar. familiar doesn't really matter here anyway
 		use_familiar($familiar[Jumpsuited Hound Dog]);
 		//probably don't need this array of banish power with map the monsters
@@ -1793,7 +1797,6 @@ void c2t_hccs_fights() {
 		}
 
 		// Tomato in pantry (NOT Saber YR) -- RUNNING AWAY to use nostalgia later
-		//TODO might be good to change subsequent fight to piranha plant or globster instead of tentacle, since tentacle boss is a thing
 		if (available_amount($item[tomato juice of powerful power]) == 0
 			&& available_amount($item[tomato]) == 0
 			&& have_effect($effect[Tomato Power]) == 0
@@ -2120,14 +2123,18 @@ void c2t_hccs_backupFights(monster mon) {
 	print("Running backup fights","blue");
 
 	cli_execute('backupcamera ml');//just to make sure
-	string append;
+	string kramco;
 	if (mon == $monster[sausage goblin])
-		append = ",equip kramco";
+		kramco = ",equip kramco";
+	string garbage = ",equip garbage shirt";
 
 	use_familiar($familiar[melodramedary]);
 	while (get_property('_backUpUses').to_int() < 11) {
+		//NEP fights give twice as much exp as sausage goblins, so keep at least as many shirt charges for it as fights remaining in NEP
+		if (get_property('garbageShirtCharge').to_int() < 17)
+			garbage = "";
 		//really need to make a generic maximizer constructor
-		maximize(my_primestat()+",equip dromedary drinking helmet,equip garbage shirt,equip backup camera"+append,false);
+		maximize(my_primestat()+",equip dromedary drinking helmet,equip backup camera"+kramco+garbage,false);
 		adv1($location[Noob Cave],-1,"");
 	}
 }
@@ -2171,13 +2178,15 @@ boolean c2t_hccs_wandererFight() {
 		if (available_amount($item[astral pet sweater]) > 0)
 			append += ",equip astral pet sweater";
 	}
-	if (turns_played() == 0)
+	//if (turns_played() == 0)
 		append += ",-equip garbage shirt,exp";
-	else
-		append += ",equip garbage shirt";
+	//else
+	//	append += ",equip garbage shirt";
 
 	maximize(my_primestat()+append,false);
-	adv1($location[The Neverending Party],-1,"");//this might break something if NEP quest not taken care of yet
+	c2t_setChoice(1322,2);//in case quest isn't handled yet, just reject it; TODO accept drink or food quest
+	adv1($location[The Neverending Party],-1,"");
+	c2t_setChoice(1322,0);
 
 	//hopefully restore to previous state without outfits
 	use_familiar(nowFam);
