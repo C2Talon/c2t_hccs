@@ -68,6 +68,19 @@ void main(int initround, monster foe, string page) {
 			case $monster[annoyed snake]:
 			case $monster[slime blob]:
 				return;
+			case $monster[God Lobster]:
+				//grabbing moxie buff item
+				if (my_primestat() == $stat[moxie]
+					&& have_effect($effect[Unrunnable Face]) == 0
+					&& item_amount($item[runproof mascara]) == 0
+					&& get_property('feelNostalgicMonster').to_monster() == $monster[party girl]) {
+
+					if (have_skill($skill[Feel Nostalgic]))
+						use_skill(1,$skill[Feel Nostalgic]);
+					if (have_skill($skill[Feel Envy]))
+						use_skill(1,$skill[Feel Envy]);
+				}
+				return;
 			default:
 				//this shouldn't happen //happens with voter fights as CCS doesn't handle each explicitly
 				abort("Something broke in the combat script. Might be fine?");

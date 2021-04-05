@@ -60,10 +60,11 @@ skill snokebomb
 
 [ god lobster ]
 scrollwhendone
+skill curse of weaksauce
 skill detect weakness
 skill micrometeorite
+consult c2t_hccs_combat.ash
 if sealclubber || turtletamer || discobandit || accordionthief
-    skill curse of weaksauce
     skill sing along
     while !pastround 20
         attack with weapon
@@ -74,7 +75,6 @@ if pastamancer
     skill sing along
 endif
 if sauceror
-    skill curse of weaksauce
     skill saucegeyser
     skill saucegeyser
 endif
