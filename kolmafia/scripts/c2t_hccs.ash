@@ -438,7 +438,7 @@ int c2t_hccs_testTurns(int test) {
 		case TEST_FAMILIAR:
 			return (60 - floor((numeric_modifier('familiar weight')+familiar_weight(my_familiar()))/5));
 		case TEST_WEAPON:
-			num = (have_effect('Bow-Legged Swagger') > 0?25:50);
+			num = (have_effect($effect[Bow-Legged Swagger]) > 0?25:50);
 			return (60 - floor(numeric_modifier('weapon damage') / num + 0.001) - floor(numeric_modifier('weapon damage percent') / num + 0.001));
 		case TEST_SPELL:
 			return (60 - floor(numeric_modifier('spell damage') / 50 + 0.001) - floor(numeric_modifier('spell damage percent') / 50 + 0.001));
