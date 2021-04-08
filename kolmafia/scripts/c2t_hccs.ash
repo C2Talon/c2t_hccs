@@ -1742,8 +1742,8 @@ void c2t_hccs_fights() {
 
 		//don't need hound dog with map the monsters. going to keep for now as to not accidentally have crab as familiar. familiar doesn't really matter here anyway
 		use_familiar($familiar[Jumpsuited Hound Dog]);
-		//probably don't need this array of banish power with map the monsters
-		maximize(my_primestat()+",-equip garbage shirt,equip fourth may,equip latte,equip powerful glove,equip doc bag,equip vampyric cloake",false);
+		//max mp to max latte gulp to fuel buffs
+		maximize("mp,-equip garbage shirt,equip fourth may,equip latte,equip vampyric cloake",false);
 		cli_execute('mood apathetic');
 
 		if (my_hp() < 0.5 * my_maxhp())
@@ -1966,17 +1966,6 @@ void c2t_hccs_fights() {
 
 	c2t_assert(have_effect($effect[Tomato Power]) > 0,'It somehow missed again.');
 
-	//drink astral pilsners; saving 1 for use in mime army shotglass post-run
-	if (my_level() >= 11 && item_amount($item[astral pilsner]) == 6) {
-		cli_execute('shrug Shanty of Superiority');
-		if (my_mp() < 100)
-			cli_execute('rest free');//probably bad
-		use_skill(1,$skill[The Ode to Booze]);
-		drink(5,$item[astral pilsner]);
-		cli_execute('shrug Ode to Booze');
-		use_skill(1,$skill[Stevedave's Shanty of Superiority]);
-	}
-
 	/* starting to have this bleed into the -combat test, so need to remove
 	// possibility: do pvp fights to remove instead of not use at all?
 	if (have_effect($effect[Mush-Maw]) == 0) {
@@ -1997,7 +1986,8 @@ void c2t_hccs_fights() {
 	if (get_property('backupCameraMode') != 'ml')
 		cli_execute('backupcamera ml');
 
-	print("Running backup camera and Neverending Party fights","blue");
+	if (!get_property('_gingerbreadMobHitUsed').to_boolean())
+		print("Running backup camera and Neverending Party fights","blue");
 
 	//neverending party and backup camera fights
 	//probably have to change this to only use free fights once can cap combat test without boombox potion
@@ -2075,6 +2065,17 @@ void c2t_hccs_fights() {
 			cli_execute('drink hot socks');
 			cli_execute('shrug ode to booze');
 			c2t_getEffect($effect[Stevedave's Shanty of Superiority],$skill[Stevedave's Shanty of Superiority]);
+		}
+
+		//drink astral pilsners once level 11; saving 1 for use in mime army shotglass post-run
+		if (my_level() >= 11 && item_amount($item[astral pilsner]) == 6) {
+			cli_execute('shrug Shanty of Superiority');
+			if (my_mp() < 100)
+				cli_execute('rest free');//probably bad
+			use_skill(1,$skill[The Ode to Booze]);
+			drink(5,$item[astral pilsner]);
+			cli_execute('shrug Ode to Booze');
+			use_skill(1,$skill[Stevedave's Shanty of Superiority]);
 		}
 
 		// -- setup and combat itself --
