@@ -925,16 +925,14 @@ boolean c2t_hccs_allTheBuffs() {
 	maximize("mp,-equip kramco",false);
 	
 	if (have_effect($effect[One Very Clear Eye]) == 0) {
-		//if (c2t_is_vote_fight_now())
+		while (c2t_hccs_wandererFight());//do vote monster if ready before spending turn
 		if (c2t_hccs_semirareItem())
 			c2t_getEffect($effect[One Very Clear Eye],$item[cyclops eyedrops]);
 	}
 
 	//emotion chip stat buff
 	c2t_getEffect($effect[Feeling Excited],$skill[Feel Excitement]);
-	//if (have_effect($effect[Feeling Excited]) == 0 && get_property('_feelExcitementUsed').to_int() < $skill[Feel Excitement].dailylimit)
-	//	use_skill(1,$skill[Feel Excitement]);
-	
+
 	c2t_getEffect($effect[The Magical Mojomuscular Melody],$skill[The Magical Mojomuscular Melody]);
 	
 	// daycare stat gain
