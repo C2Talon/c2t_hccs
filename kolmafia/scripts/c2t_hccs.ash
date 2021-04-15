@@ -105,9 +105,9 @@ int c2t_hccs_tripleSize(int num);
 int c2t_hccs_tripleSize() return c2t_hccs_tripleSize(1);
 void c2t_hccs_pantagramming();
 void c2t_hccs_vote();
-void c2t_hccs_backupFights(monster mon);
 int c2t_hccs_testTurns(int test);
 boolean c2t_hccs_thresholdMet(int test);
+boolean c2t_hccs_pull(item ite);
 
 
 void main() {
@@ -154,6 +154,13 @@ void main() {
 	}
 	finally
 		c2t_hccs_exit();
+}
+
+//pull item from storage
+boolean c2t_hccs_pull(item ite) {
+	if(!can_interact() && !in_hardcore() && item_amount(ite) == 0 && storage_amount(ite) > 0)//&& pulls_remaining() > 0)
+		return take_storage(1,ite);
+	return false;
 }
 
 //gave up trying to play nice, so brute forcing with visit_url()s
@@ -883,10 +890,8 @@ boolean c2t_hccs_buffExp() {
 			if (item_amount($item[Crimbo candied pecan]) == 0 || item_amount($item[Crimbo fudge]) == 0) {
 				print("Didn't get the right candies for buffs, so dropping hardcore.","blue");
 				c2t_dropHardcore();
-				if (item_amount($item[Crimbo candied pecan]) == 0)
-					cli_execute('pull crimbo candied pecan');
-				if (item_amount($item[Crimbo fudge]) == 0)
-					cli_execute('pull crimbo fudge');
+				c2t_hccs_pull($item[Crimbo candied pecan]);
+				c2t_hccs_pull($item[Crimbo fudge]);
 			}
 			if (!sweet_synthesis($effect[Synthesis: Style])) //works or no?
 				//probably automate drop to softcore at this point and just pull needed candy
@@ -909,6 +914,15 @@ boolean c2t_hccs_levelup() {
 			c2t_haveUse($item[a ten-percent bonus]);
 	if (my_level() < 7)
 		abort('initial leveling broke');
+
+	//some pulls if not in hard core; moxie would have already pulled up to 2 items so far
+	if (my_primestat() == $stat[moxie] && pulls_remaining() > 3)
+		c2t_hccs_pull($item[crumpled felt fedora]);//200 mox; saves 2 for fam test
+	c2t_hccs_pull($item[Great Wolf's beastly trousers]);//100 mus; saves 2 for fam test
+	c2t_hccs_pull($item[Staff of Simmering Hatred]);//125 mys; saves 4 for spell test
+	//rechecking this sometime after leveling for non-mys since 150 mys is possible
+	if (my_primestat() == $stat[mysticality])
+		c2t_hccs_pull($item[Stick-Knife of Loathing]);//150 mys; saves 4 for spell test
 
 	// using MCD as a flag, what could possibly go wrong?
 	// figure out something less error-prone before ever making public
@@ -1649,7 +1663,12 @@ boolean c2t_hccs_preSpell() {
 	if (available_amount($item[flask of baconstone juice]) > 0)
 		ensure_effect($effect[Baconstoned]);
 
-	retrieve_item(2, $item[obsidian nutcracker]);
+	//pull stick-knife if able to equip
+	if (my_basestat($stat[mysticality]) >= 150)
+		c2t_hccs_pull($item[Stick-Knife of Loathing]);
+
+	//get up to 2 obsidian nutcracker
+	retrieve_item(2 - item_amount($item[Stick-Knife of Loathing]) - item_amount($item[Staff of Simmering Hatred]),$item[obsidian nutcracker]);
 
 	//AT-only buff
 	if (my_class() == $class[accordion thief])
@@ -1679,12 +1698,17 @@ boolean c2t_hccs_preSpell() {
 		ensure_effect($effect[Visions of the Deep Dark Deeps]);
 	}
 
-	/* not actually going to use this for now as it's not profitable; TODO might make it conditional on a user setting or mall price though
-	//batteries
-	c2t_getEffect($effect[D-Charged],$item[battery (D)]);
-	c2t_getEffect($effect[AA-Charged],$item[battery (AA)]);
-	c2t_getEffect($effect[AAA-Charged],$item[battery (AAA)]);
-	*/
+	//if I ever feel like blowing the resources:
+	if (get_property('_c2t_hccs_dstab').to_boolean()) {
+		if (item_amount($item[pocket wish]) > 0 && have_effect($effect[Witch Breaded]) == 0)
+			cli_execute('genie effect witch breaded');
+
+		// not actually going to use this for now as it's not profitable; TODO might make it conditional on a user setting or mall price though
+		//batteries
+		c2t_getEffect($effect[D-Charged],$item[battery (D)]);
+		c2t_getEffect($effect[AA-Charged],$item[battery (AA)]);
+		c2t_getEffect($effect[AAA-Charged],$item[battery (AAA)]);
+	}
 
 	//for potential astral statuette on familiar
 	if (have_familiar($familiar[left-hand man]))
@@ -1694,6 +1718,14 @@ boolean c2t_hccs_preSpell() {
 
 	if (PRINT_MODTRACE)
 		cli_execute("modtrace spell damage");
+
+	//need to figure out pulls. just inform that there were pulls remaining if there are
+	if (!in_hardcore() && pulls_remaining() > 0) {
+		//if (get_property('_c2t_hccs_dstab').to_boolean())
+		//	abort(`Still have {pulls_remaining()} pulls remaining for the last test`);
+		//else
+			print(`Still had {pulls_remaining()} pulls remaining for the last test`,"red");
+	}
 
 	return c2t_hccs_thresholdMet(TEST_SPELL);
 }
@@ -1866,18 +1898,16 @@ void c2t_hccs_fights() {
 		// to add: accept if booze or food quest
 		//c2t_setChoice(1322,2);//this should be done turn 0 via wanderer
 		use_familiar($familiar[Ghost of Crimbo Carols]);
-		maximize(my_primestat()+",equip latte,-equip i voted",false);
+		maximize(my_primestat()+",equip latte,-equip i voted,-equip backup camera",false);
 
-		//first should have been the non-combat, so a second go:
-		if (have_effect($effect[Holiday Yoked]) == 0) {
-			//going to grab runproof mascara from globster if moxie instead of having to wait post-kramco
-			if (my_primestat() == $stat[moxie]) {
-				c2t_cartographyHunt($location[The Neverending Party],$monster[party girl]);
-				run_turn();
-			}
-			else
-				adv1($location[The Neverending Party],-1,"");
+		//going to grab runproof mascara from globster if moxie instead of having to wait post-kramco
+		if (my_primestat() == $stat[moxie]) {
+			c2t_cartographyHunt($location[The Neverending Party],$monster[party girl]);
+			run_turn();
 		}
+		else
+			adv1($location[The Neverending Party],-1,"");
+
 		c2t_assert(have_effect($effect[Holiday Yoked]) > 0,"Something broke trying to get Holiday Yoked");
 	}
 
@@ -1922,48 +1952,6 @@ void c2t_hccs_fights() {
 
 	c2t_hccs_wandererFight();//hopefully doesn't do kramco
 
-	// NEP 11 free sausage goblin fights
-	if (c2t_isSausageGoblinNow() && get_property('_pocketProfessorLectures').to_int() < 9) {
-		//kind of important to get meat here, so double checking
-		if (get_property('boomBoxSong') != "Total Eclipse of Your Meat")
-			cli_execute('boombox meat');
-
-		use_familiar($familiar[Pocket Professor]);
-		maximize(my_primestat()+",equip garbage shirt,equip kramco,100familiar weight",false);
-		if (!get_property('_mummeryUses').contains_text('1'))
-			cli_execute('mummery meat');
-
-		if (my_hp() < 0.8 * my_maxhp())
-			visit_url('clan_viplounge.php?where=hottub');
-		if (get_property('_sausageFights').to_int() < 9)
-			adv1($location[The Neverending Party],-1,"");
-	}
-
-	//potion buffs
-	if (my_primestat() == $stat[muscle] && have_effect($effect[Tomato Power]) == 0) {
-		c2t_getEffect($effect[Phorcefullness],$item[philter of phorce]);
-		c2t_getEffect($effect[Stabilizing Oiliness],$item[oil of stability]);
-		c2t_getEffect($effect[Tomato Power],$item[tomato juice of powerful power]);
-	}
-	else if (my_primestat() == $stat[mysticality] && have_effect($effect[Tomato Power]) == 0) {
-		c2t_getEffect($effect[Mystically Oiled],$item[ointment of the occult]);
-		c2t_getEffect($effect[Expert Oiliness],$item[oil of expertise]);
-		c2t_getEffect($effect[Tomato Power],$item[tomato juice of powerful power]);
-	}
-	else if (my_primestat() == $stat[moxie] && have_effect($effect[Tomato Power]) == 0) {
-		if (have_effect($effect[Slippery Oiliness]) == 0 && item_amount($item[jumbo olive]) == 0) {
-			//only thing that needs be equipped
-			equip($item[Fourth of May Cosplay saber]);
-			//TODO evil olive - change to run away from and feel nostagic+envy+free kill another thing to save a saber use for spell test
-			c2t_assert(c2t_hccs_wishFight($monster[Evil Olive]),"Failed to fight evil olive");
-		}
-		c2t_getEffect($effect[Superhuman Sarcasm],$item[serum of sarcasm]);
-		c2t_getEffect($effect[Slippery Oiliness],$item[oil of slipperiness]);
-		c2t_getEffect($effect[Tomato Power],$item[tomato juice of powerful power]);
-	}
-
-	c2t_assert(have_effect($effect[Tomato Power]) > 0,'It somehow missed again.');
-
 	/* starting to have this bleed into the -combat test, so need to remove
 	// possibility: do pvp fights to remove instead of not use at all?
 	if (have_effect($effect[Mush-Maw]) == 0) {
@@ -1971,6 +1959,13 @@ void c2t_hccs_fights() {
 		chew(1,$item[mushroom tea]);
 	}*/
 
+	//moxie needs olives
+	if (my_primestat() == $stat[moxie] && have_effect($effect[Slippery Oiliness]) == 0 && item_amount($item[jumbo olive]) == 0) {
+		//only thing that needs be equipped
+		equip($item[Fourth of May Cosplay saber]);
+		//TODO evil olive - change to run away from and feel nostagic+envy+free kill another thing to save a saber use for spell test
+		c2t_assert(c2t_hccs_wishFight($monster[Evil Olive]),"Failed to fight evil olive");
+	}
 
 	//setup for NEP and backup fights
 	string doc,garbage,kramco,fam;
@@ -2011,6 +2006,8 @@ void c2t_hccs_fights() {
 			use_familiar($familiar[hovering sombrero]);
 			fam = "";
 		}
+		else//swap off pocket professor after it happens
+			use_familiar($familiar[Melodramedary]);
 
 		//backup fights will turns this off after a point, so keep turning it on
 		if (get_property('garbageShirtCharge').to_int() > 0)
@@ -2035,7 +2032,7 @@ void c2t_hccs_fights() {
 		else if (get_property('choiceAdventure1324').to_int() != 5)
 			c2t_setChoice(1324,5);
 
-		// -- using things found in NEP --
+		// -- using things as they become available --
 		//use runproof mascara ASAP if moxie for more stats
 		if (my_primestat() == $stat[moxie] && have_effect($effect[Unrunnable Face]) == 0 && item_amount($item[runproof mascara]) > 0)
 			use(1,$item[runproof mascara]);
@@ -2076,17 +2073,51 @@ void c2t_hccs_fights() {
 			use_skill(1,$skill[Stevedave's Shanty of Superiority]);
 		}
 
+		//potion buffs when enough meat obtained
+		if (have_effect($effect[Tomato Power]) == 0
+			&& ((get_campground() contains $item[Dramatic&trade; range]) || my_meat() >= 950)//five-finger discount
+			) {
+
+			if (my_primestat() == $stat[muscle]) {
+				c2t_getEffect($effect[Phorcefullness],$item[philter of phorce]);
+				c2t_getEffect($effect[Stabilizing Oiliness],$item[oil of stability]);
+			}
+			else if (my_primestat() == $stat[mysticality]) {
+				c2t_getEffect($effect[Mystically Oiled],$item[ointment of the occult]);
+				c2t_getEffect($effect[Expert Oiliness],$item[oil of expertise]);
+			}
+			else if (my_primestat() == $stat[moxie]) {
+				c2t_getEffect($effect[Superhuman Sarcasm],$item[serum of sarcasm]);
+				c2t_getEffect($effect[Slippery Oiliness],$item[oil of slipperiness]);
+			}
+			c2t_getEffect($effect[Tomato Power],$item[tomato juice of powerful power]);
+			c2t_assert(have_effect($effect[Tomato Power]) > 0,'It somehow missed again.');
+		}
+
 		// -- setup and combat itself --
 		//make sure have some mp
 		if (my_mp() < 50)
 			cli_execute('eat magical sausage');
 
-		//backup fight or NEP fight
-		if ((have_effect($effect[Spiced Up]) > 0 || have_effect($effect[Tomes of Opportunity]) > 0 || have_effect($effect[The Best Hair You've Ever Had]) > 0)
-			&& get_property('_backUpUses').to_int() < 11
-			//this is target monster for backup fights
-			&& get_property('feelNostalgicMonster').to_monster() == $monster[sausage goblin]) {
+		//hopefully stop it before a possible break if my logic is off
+		if (get_property('_pocketProfessorLectures').to_int() == 0 && get_property('_backUpUses').to_int() >= 10)
+			abort('Pocket professor has not been used yet, while backup camera charges left is '+(11-get_property('_backUpUses').to_int()));
 
+		//9+ professor copies, after getting exp buff from NC and used sauceror potions
+		if (get_property('_pocketProfessorLectures').to_int() == 0
+			&& get_property('_backUpUses').to_int() < 11
+			&& (have_effect($effect[Spiced Up]) > 0 || have_effect($effect[Tomes of Opportunity]) > 0 || have_effect($effect[The Best Hair You've Ever Had]) > 0)
+			&& have_effect($effect[Tomato Power]) > 0
+			//target monster for professor copies. using back up camera to bootstrap
+			&& get_property('feelNostalgicMonster').to_monster() == $monster[sausage goblin]
+			) {
+
+			use_familiar($familiar[Pocket Professor]);
+			maximize(my_primestat()+",equip garbage shirt,equip kramco,100familiar weight,equip backup camera",false);
+
+		}
+		//backup fights; do a couple before getting exp buff, then continue after professor fights
+		else if (get_property('_backUpUses').to_int() < 11 && get_property('feelNostalgicMonster').to_monster() == $monster[sausage goblin]) {
 			//only use kramco offhand if target is sausage goblin to not mess things up
 			if (get_property('feelNostalgicMonster').to_monster() == $monster[sausage goblin])
 				kramco = ",equip kramco";
@@ -2098,13 +2129,12 @@ void c2t_hccs_fights() {
 				garbage = ",-equip garbage shirt";
 
 			maximize(my_primestat()+",exp,equip backup camera"+kramco+garbage+fam,false);
-			adv1($location[Noob Cave],-1,"");
 		}
-		else {
-			//equip better gear if found while fighting
+		//rest of the free NEP fights
+		else
 			maximize(my_primestat()+",exp,equip kramco"+garbage+fam+doc,false);
-			adv1($location[The Neverending Party],-1,"");
-		}
+
+		adv1($location[The Neverending Party],-1,"");
 	}
 
 	//back to singing about meat
@@ -2119,40 +2149,6 @@ void c2t_hccs_fights() {
 
 	cli_execute('mood apathetic');
 }
-
-void c2t_hccs_backupFights(monster mon) {
-	c2t_assert(get_property('feelNostalgicMonster').to_monster() == mon,mon+" was not on the backup menu");
-
-	print("Running backup fights","blue");
-
-	cli_execute('backupcamera ml');//just to make sure
-	string kramco;
-	if (mon == $monster[sausage goblin])
-		kramco = ",equip kramco";
-	string garbage = ",equip garbage shirt";
-	string fam = ",equip dromedary drinking helmet";
-
-	use_familiar($familiar[melodramedary]);
-	while (get_property('_backUpUses').to_int() < 11 && get_property('feelNostalgicMonster').to_monster() == mon) {
-		//NEP fights give twice as much exp as sausage goblins, so keep at least as many shirt charges for it as fights remaining in NEP
-		if (get_property('garbageShirtCharge').to_int() < 17)
-			garbage = ",-equip garbage shirt";
-		if (get_property('camelSpit').to_int() == 100) {
-			//don't really have another familiar that needs turns thrown at it
-			use_familiar($familiar[hovering sombrero]);
-			fam = "";
-		}
-		//really need to make a generic maximizer constructor
-		maximize(my_primestat()+",exp,equip backup camera"+kramco+garbage+fam,false);
-		adv1($location[Noob Cave],-1,"");
-	}
-
-	if (get_property('_backUpUses').to_int() != 11)
-		print("Somehow didn't complete all the backup fights","red");
-	if (get_property('feelNostalgicMonster').to_monster() != mon)
-		print("Nostalgic monster changed","red");
-}
-
 
 boolean c2t_hccs_wandererFight() {
 	/* probably doesn't matter to do wanderer while feeling lost, unless an unlucky superlikely takes a turn
@@ -2190,7 +2186,8 @@ boolean c2t_hccs_wandererFight() {
 	else
 		use_familiar($familiar[hovering sombrero]);
 
-	maximize(my_primestat()+append,false);
+	//backup camera may swap off voter monster, so don't equip it
+	maximize(my_primestat()+",-equip backup camera"+append,false);
 	c2t_setChoice(1322,2);//in case quest isn't handled yet, just reject it; TODO accept drink or food quest
 	adv1($location[The Neverending Party],-1,"");
 	c2t_setChoice(1322,0);

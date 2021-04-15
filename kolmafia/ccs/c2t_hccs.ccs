@@ -87,6 +87,8 @@ consult c2t_use_the_force.ash
 [ neverending party ]
 scrollwhendone
 try to steal an item
+skill back-up to your last enemy
+twiddle your thumbs
 skill detect weakness
 skill micrometeorite
 consult c2t_hccs_combat.ash
@@ -107,12 +109,6 @@ if sauceror
     skill sing along
     skill saucegeyser
 endif
-
-[ noob cave ]
-try to steal an item
-skill back-up to your last enemy
-twiddle your thumbs
-abort
 
 [ novelty tropical skeleton ]
 try to steal an item
