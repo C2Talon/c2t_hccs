@@ -158,7 +158,7 @@ void main() {
 
 //pull item from storage
 boolean c2t_hccs_pull(item ite) {
-	if(!can_interact() && !in_hardcore() && item_amount(ite) == 0 && storage_amount(ite) > 0)//&& pulls_remaining() > 0)
+	if(!can_interact() && !in_hardcore() && item_amount(ite) == 0 && storage_amount(ite) > 0 && pulls_remaining() > 0)
 		return take_storage(1,ite);
 	return false;
 }
@@ -1700,32 +1700,44 @@ boolean c2t_hccs_preSpell() {
 
 	//if I ever feel like blowing the resources:
 	if (get_property('_c2t_hccs_dstab').to_boolean()) {
-		if (item_amount($item[pocket wish]) > 0 && have_effect($effect[Witch Breaded]) == 0)
+		//the only way is all the way
+		if (item_amount($item[pocket wish]) > 0 && have_effect($effect[Witch Breaded]) == 0) {
 			cli_execute('genie effect witch breaded');
 
-		// not actually going to use this for now as it's not profitable; TODO might make it conditional on a user setting or mall price though
-		//batteries
-		c2t_getEffect($effect[D-Charged],$item[battery (D)]);
-		c2t_getEffect($effect[AA-Charged],$item[battery (AA)]);
-		c2t_getEffect($effect[AAA-Charged],$item[battery (AAA)]);
+			// not actually going to use this for now as it's not profitable; TODO might make it conditional on a user setting or mall price though
+			//batteries
+			c2t_getEffect($effect[D-Charged],$item[battery (D)]);
+			c2t_getEffect($effect[AA-Charged],$item[battery (AA)]);
+			c2t_getEffect($effect[AAA-Charged],$item[battery (AAA)]);
+		}
 	}
 
 	//for potential astral statuette on familiar
 	if (have_familiar($familiar[left-hand man]))
 		use_familiar($familiar[left-hand man]);
 
+	//need to figure out pulls
+	if (!in_hardcore() && pulls_remaining() > 0) {
+		//lazy way for now
+		boolean [item] derp;
+		if (item_amount($item[astral statuette]) == 0)
+			derp = $items[Cold Stone of Hatred,Fuzzy Slippers of Hatred,Lens of Hatred,witch's bra];
+		else
+			derp = $items[Fuzzy Slippers of Hatred,Lens of Hatred,witch's bra];
+
+		foreach x in derp {
+			if (pulls_remaining() == 0)
+				break;
+			c2t_hccs_pull(x);
+		}
+		if (pulls_remaining() > 0)
+			print(`Still had {pulls_remaining()} pulls remaining for the last test`,"red");
+	}
+
 	maximize('spell damage', false);
 
 	if (PRINT_MODTRACE)
 		cli_execute("modtrace spell damage");
-
-	//need to figure out pulls. just inform that there were pulls remaining if there are
-	if (!in_hardcore() && pulls_remaining() > 0) {
-		//if (get_property('_c2t_hccs_dstab').to_boolean())
-		//	abort(`Still have {pulls_remaining()} pulls remaining for the last test`);
-		//else
-			print(`Still had {pulls_remaining()} pulls remaining for the last test`,"red");
-	}
 
 	return c2t_hccs_thresholdMet(TEST_SPELL);
 }
@@ -1773,7 +1785,7 @@ void c2t_hccs_fights() {
 		//don't need hound dog with map the monsters. going to keep for now as to not accidentally have crab as familiar. familiar doesn't really matter here anyway
 		use_familiar($familiar[Jumpsuited Hound Dog]);
 		//max mp to max latte gulp to fuel buffs
-		maximize("mp,-equip garbage shirt,equip fourth may,equip latte,equip vampyric cloake",false);
+		maximize("mp,-equip garbage shirt,equip fourth may,equip latte,equip vampyric cloake,-equip backup camera",false);
 		cli_execute('mood apathetic');
 
 		if (my_hp() < 0.5 * my_maxhp())
@@ -2116,7 +2128,23 @@ void c2t_hccs_fights() {
 			maximize(my_primestat()+",equip garbage shirt,equip kramco,100familiar weight,equip backup camera",false);
 
 		}
-		//backup fights; do a couple before getting exp buff, then continue after professor fights
+		//fish for latte carrot ingredient with backup fights
+		else if (get_property('_pocketProfessorLectures').to_int() > 0
+			&& !get_property('latteUnlocks').contains_text('carrot')
+			&& get_property('_backUpUses').to_int() < 11
+			//target monster
+			&& get_property('feelNostalgicMonster').to_monster() == $monster[sausage goblin]
+			) {
+
+			//NEP monsters give twice as much base exp as sausage goblins, so keep at least as many shirt charges as fights remaining in NEP
+			if (get_property('garbageShirtCharge').to_int() < 17)
+				garbage = ",-equip garbage shirt";
+
+			maximize(my_primestat()+",exp,equip latte,equip backup camera"+garbage+fam,false);
+			adv1($location[The Dire Warren],-1,"");
+			continue;//don't want to fall into NEP in this state
+		}
+		//inital and post-latte backup fights
 		else if (get_property('_backUpUses').to_int() < 11 && get_property('feelNostalgicMonster').to_monster() == $monster[sausage goblin]) {
 			//only use kramco offhand if target is sausage goblin to not mess things up
 			if (get_property('feelNostalgicMonster').to_monster() == $monster[sausage goblin])
