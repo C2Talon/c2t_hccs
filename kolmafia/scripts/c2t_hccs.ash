@@ -108,6 +108,7 @@ void c2t_hccs_vote();
 int c2t_hccs_testTurns(int test);
 boolean c2t_hccs_thresholdMet(int test);
 boolean c2t_hccs_pull(item ite);
+void c2t_hccs_mod2log(string str);
 
 
 void main() {
@@ -154,6 +155,11 @@ void main() {
 	}
 	finally
 		c2t_hccs_exit();
+}
+
+void c2t_hccs_mod2log(string str) {
+	if (PRINT_MODTRACE)
+		logprint(cli_execute_output(str));
 }
 
 //pull item from storage
@@ -710,18 +716,15 @@ boolean c2t_hccs_preCoil() {
 		cli_execute('rest free');
 
 	// borrowed time
-	if (get_property('tomeSummons').to_int() == 0 && available_amount($item[borrowed time]) == 0)
-		cli_execute('acquire borrowed time');
-		//retrieve_item(1,$item['borrowed time']);
-	if (!get_property('_borrowedTimeUsed').to_boolean())
+	if (!get_property('_borrowedTimeUsed').to_boolean()) {//&& get_property('tomeSummons').to_int() == 0) {
+		c2t_assert(retrieve_item(1,$item[borrowed time]),"borrowed time fail");
 		use(1,$item[borrowed time]);
+	}
 
 	// box of familiar jacks
 	// going to get camel equipment straight away
-	if (available_amount($item[dromedary drinking helmet]) == 0 && get_property('tomeSummons').to_int() == 1 && available_amount($item[box of familiar jacks]) == 0)
-		cli_execute('acquire box of familiar jacks');
-		//retrieve_item(1,$item['box of familiar jacks']);
-	if (available_amount($item[dromedary drinking helmet]) == 0 && available_amount($item[box of familiar jacks]) == 1) {
+	if (available_amount($item[dromedary drinking helmet]) == 0) {//&& get_property('tomeSummons').to_int() == 1) {
+		c2t_assert(retrieve_item(1,$item[box of familiar jacks]),"box of familiar jacks fail");
 		use_familiar($familiar[Melodramedary]);
 		use(1,$item[box of familiar jacks]);
 	}
@@ -869,8 +872,7 @@ boolean c2t_hccs_buffExp() {
 
 		// 7 adventures, 12 turns of effect
 		if (my_fullness() == 3 && have_effect($effect[Knightlife]) == 0) {
-			if (item_amount($item[ketchup]) == 0)
-				cli_execute('acquire ketchup');
+			retrieve_item(1,$item[ketchup]);
 			if (available_amount($item[diabolic pizza]) == 0) {
 				pizza_effect(
 					$effect[Knightlife],
@@ -1265,8 +1267,7 @@ boolean c2t_hccs_preItem() {
 	if (!c2t_hccs_thresholdMet(TEST_ITEM))
 		c2t_getEffect($effect[Feeling Lost],$skill[Feel Lost]);
 
-	if (PRINT_MODTRACE)
-		cli_execute("modtrace item drop;modtrace booze drop");
+	c2t_hccs_mod2log("modtrace item drop;modtrace booze drop");
 
 	return c2t_hccs_thresholdMet(TEST_ITEM);
 }
@@ -1366,8 +1367,7 @@ boolean c2t_hccs_preHotRes() {
 			c2t_getEffect($effect[Sleazy Hands],$item[lotion of sleaziness]);
 	}
 
-	if (PRINT_MODTRACE)
-		cli_execute("modtrace hot resistance");
+	c2t_hccs_mod2log("modtrace hot resistance");
 
 	return c2t_hccs_thresholdMet(TEST_HOT_RES);
 }
@@ -1397,8 +1397,7 @@ boolean c2t_hccs_preFamiliar() {
 	use_familiar($familiar[Exotic Parrot]);
 	maximize('familiar weight', false);
 
-	if (PRINT_MODTRACE)
-		cli_execute("modtrace familiar weight");
+	c2t_hccs_mod2log("modtrace familiar weight");
 
 	return c2t_hccs_thresholdMet(TEST_FAMILIAR);
 }
@@ -1461,8 +1460,7 @@ boolean c2t_hccs_preNoncombat() {
 		if (have_effect($effect[Disquiet Riot]) == 0 && item_amount($item[pocket wish]) > 1)
 			cli_execute('genie effect disquiet riot');
 
-	if (PRINT_MODTRACE)
-		cli_execute("modtrace combat rate");
+	c2t_hccs_mod2log("modtrace combat rate");
 
 	return c2t_hccs_thresholdMet(TEST_NONCOMBAT);
 }
@@ -1623,8 +1621,7 @@ boolean c2t_hccs_preWeapon() {
 	
 	maximize('weapon damage', false);
 
-	if (PRINT_MODTRACE)
-		cli_execute("modtrace weapon damage");
+	c2t_hccs_mod2log("modtrace weapon damage");
 
 	return c2t_hccs_thresholdMet(TEST_WEAPON);
 }
@@ -1736,8 +1733,7 @@ boolean c2t_hccs_preSpell() {
 
 	maximize('spell damage', false);
 
-	if (PRINT_MODTRACE)
-		cli_execute("modtrace spell damage");
+	c2t_hccs_mod2log("modtrace spell damage");
 
 	return c2t_hccs_thresholdMet(TEST_SPELL);
 }
