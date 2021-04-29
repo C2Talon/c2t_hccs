@@ -7,6 +7,7 @@ import <canadv.ash>
 import <c2t_hccs_aux.ash>
 
 int START_TIME = now_to_int();
+boolean skippedFortunes = false;
 
 //aborts before doing test
 boolean HALT_BEFORE_TEST = get_property("c2t_hccs_haltBeforeTest").to_boolean();
@@ -514,6 +515,9 @@ void c2t_hccs_exit() {
 	//don't want CS moods running during manual intervention or when fully finished
 	cli_execute('mood apathetic');
 
+	if (skippedFortunes)
+		print(`Info: clan fortunes were skipped`,"red");
+
 	int t = now_to_int() - START_TIME;
 	print(`c2t_hccs took {floor(t/60000)} minute(s) {(t%60000)/1000.0} second(s) to execute.`,"blue");
 }
@@ -544,23 +548,24 @@ boolean c2t_hccs_preCoil() {
 
 		string fortunes = get_property("c2t_hccs_clanFortunes");
 		fortunes = (fortunes == ""?"cheesefax":fortunes);
-		c2t_assert(is_online(fortunes),`{fortunes} is not online for fortunes`);
 
-		while (get_property('_clanFortuneConsultUses').to_int() < 3)
-			cli_execute(`fortune {fortunes};wait 5`);
+		if (is_online(fortunes))
+			while (get_property('_clanFortuneConsultUses').to_int() < 3)
+				cli_execute(`fortune {fortunes};wait 5`);
+		else {
+			print(`{fortunes} is not online; skipping fortunes`,"red");
+			skippedFortunes = true;
+		}
 	}
+	//ungulith fax
 	if (!get_property('_photocopyUsed').to_boolean() && item_amount($item[photocopied monster]) == 0) {
-		//pretty much the only way to get a fax of a factory worker (female) reliably:
-		c2t_assert(is_online("cheesefax"),"cheesefax is not online to send faxes");
 		for i from 1 to 3 {
-			chat_private('cheesefax','fax factory worker');
-			wait(15);//10 has failed multiple times
-			cli_execute('fax get');
-			if (get_property('photocopyMonster').contains_text("factory worker"))
+			faxbot($monster[ungulith]);
+			if (get_property('photocopyMonster').contains_text("ungulith"))
 				break;
 			cli_execute('fax send');
 		}
-		c2t_assert(get_property('photocopyMonster').contains_text("factory worker"),'wrong fax monster');
+		c2t_assert(get_property('photocopyMonster').contains_text("ungulith"),'wrong fax monster');
 	}
 		
 	use_skill(1,$skill[Spirit of Peppermint]);
@@ -1374,11 +1379,10 @@ boolean c2t_hccs_preHotRes() {
 
 boolean c2t_hccs_preFamiliar() {
 	//sabering factory worker for meteor shower
-	if (item_amount($item[lava-proof pants]) == 0 && item_amount($item[photocopied monster]) > 0 && get_property('photocopyMonster').contains_text('factory worker')) {
+	if (item_amount($item[lava-proof pants]) == 0) {
 		equip($item[Fourth of May Cosplay Saber]);
 		c2t_setChoice(1387,3);//saber yr
-		use(1,$item[photocopied monster]);
-		run_turn();
+		c2t_assert(c2t_hccs_wishFight($monster[factory worker (female)]),"factory worker wish fail");
 		c2t_setChoice(1387,0);
 	}
 
@@ -1529,25 +1533,24 @@ boolean c2t_hccs_preWeapon() {
 	// Corrupted marrow 
 	// meteor shower gets used here, though probably not needed if TT or PM
 	if (have_effect($effect[cowrruption]) == 0 && item_amount($item[corrupted marrow]) == 0) {
-		if (get_property('camelSpit').to_int() == 100) {
-			cli_execute('mood apathetic');
-
-			//only 2 things needed for combat:
-			equip($item[Fourth of May Cosplay Saber]);
-			use_familiar($familiar[Melodramedary]);
-
-			if (!c2t_hccs_wishFight($monster[ungulith]))
-				abort('failed to fight ungulith');
-		}
-		else
+		if (get_property('camelSpit').to_int() < 100)
 			abort("Camel spit is only at "+get_property('camelSpit'));
-	}
-	c2t_setChoice(1387,0);
+		if (!get_property('photocopyMonster').contains_text("ungulith"))
+			abort("Ungulith is not the photocopied monster?");
 
-	//if (my_primestat() == $stat[muscle])
-		ensure_effect($effect[Cowrruption]);
-	//else
-	//	print('Cowrruption skipped','orange');
+		cli_execute('mood apathetic');
+
+		//only 2 things needed for combat:
+		equip($item[Fourth of May Cosplay Saber]);
+		use_familiar($familiar[Melodramedary]);
+
+		c2t_setChoice(1387,3);//saber yr
+		use(1,$item[photocopied monster]);
+		run_turn();
+		c2t_setChoice(1387,0);
+	}
+
+	c2t_getEffect($effect[Cowrruption],$item[corrupted marrow]);
 
 	if (have_effect($effect[Engorged Weapon]) == 0) {
 		retrieve_item(1,$item[Meleegra&trade; pills]);
