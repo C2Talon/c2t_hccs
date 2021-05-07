@@ -358,6 +358,10 @@ void c2t_hccs_testHandler(int test) {
 	string type;
 	int turns,before;
 
+	//combat familiars will slaughter everything; so make sure they're inactive at the start of test sections, since not every combat bothers with familiar checks
+	if ($familiars[shorter-order cook,left-hand man,imitation crab] contains my_familiar())
+		use_familiar($familiar[melodramedary]);
+
 	//wanderer fight(s) before prepping stuff
 	while (my_turncount() >= 60 && c2t_hccs_wandererFight());
 
@@ -431,7 +435,7 @@ void c2t_hccs_testHandler(int test) {
 	before = my_turncount();
 	c2t_hccs_doTest(test);
 	if (my_turncount() - before > turns)
-		abort("The task took more turns than expected. Aborting for manual intervention to make sure something didn't break.");
+		print("Notice: the task took more turns than expected, but still below the threshold, so continuing.");
 }
 
 
@@ -557,15 +561,31 @@ boolean c2t_hccs_preCoil() {
 			skippedFortunes = true;
 		}
 	}
-	//ungulith fax
+	//fax
 	if (!get_property('_photocopyUsed').to_boolean() && item_amount($item[photocopied monster]) == 0) {
-		for i from 1 to 3 {
-			faxbot($monster[ungulith]);
-			if (get_property('photocopyMonster').contains_text("ungulith"))
-				break;
-			cli_execute('fax send');
+		if (is_online("cheesefax")) {
+			print("getting fax of factory worker (female)","blue");
+			//pretty much the only way to get a fax of a factory worker (female) reliably:
+			for i from 1 to 3 {
+				chat_private('cheesefax','fax factory worker');
+				wait(15);//10 has failed multiple times
+				cli_execute('fax get');
+				if (get_property('photocopyMonster').contains_text("factory worker"))
+					break;
+				cli_execute('fax send');
+			}
+			c2t_assert(get_property('photocopyMonster').contains_text("factory worker"),'wrong fax monster');
 		}
-		c2t_assert(get_property('photocopyMonster').contains_text("ungulith"),'wrong fax monster');
+		else {
+			print("getting fax of ungulith","blue");
+			for i from 1 to 3 {
+				faxbot($monster[ungulith]);
+				if (get_property('photocopyMonster').contains_text("ungulith"))
+					break;
+				cli_execute('fax send');
+			}
+			c2t_assert(get_property('photocopyMonster').contains_text("ungulith"),'wrong fax monster');
+		}
 	}
 		
 	use_skill(1,$skill[Spirit of Peppermint]);
@@ -1198,6 +1218,7 @@ boolean c2t_hccs_preItem() {
 		while (have_effect($effect[Bat-Adjacent Form]) == 0 || !get_property('latteUnlocks').contains_text('carrot'))
 			adv1($location[The Dire Warren],-1,"");
 	}
+
 	if (!get_property('latteModifier').contains_text('Item Drop') && get_property('_latteBanishUsed') == 'true')
 		cli_execute('latte refill cinnamon carrot vanilla');
 
@@ -1379,12 +1400,22 @@ boolean c2t_hccs_preHotRes() {
 
 boolean c2t_hccs_preFamiliar() {
 	//sabering factory worker for meteor shower
-	if (item_amount($item[lava-proof pants]) == 0) {
+	if (item_amount($item[lava-proof pants]) == 0 && item_amount($item[heat-resistant necktie]) == 0) {//check necktie just in case wish gets the male version
 		equip($item[Fourth of May Cosplay Saber]);
-		c2t_setChoice(1387,3);//saber yr
-		c2t_assert(c2t_hccs_wishFight($monster[factory worker (female)]),"factory worker wish fail");
-		c2t_setChoice(1387,0);
+
+		if (item_amount($item[photocopied monster]) > 0 && get_property('photocopyMonster').contains_text("factory worker")) {
+			c2t_setChoice(1387,3);//saber yr
+			use(1,$item[photocopied monster]);
+			run_turn();
+			c2t_setChoice(1387,0);
+		}
+		else
+			c2t_assert(c2t_hccs_wishFight($monster[factory worker (female)]),"factory worker wish fail");
 	}
+
+	//should only get 1 per run, if any; would use in NEP combat loop, but no point as sombrero would already be already giving max stats
+	if (get_property('_c2t_hccs_dstab').to_boolean())
+		c2t_haveUse($item[short stack of pancakes]);
 
 	// Pool buff
 	ensure_effect($effect[Billiards Belligerence]);
@@ -1535,8 +1566,6 @@ boolean c2t_hccs_preWeapon() {
 	if (have_effect($effect[cowrruption]) == 0 && item_amount($item[corrupted marrow]) == 0) {
 		if (get_property('camelSpit').to_int() < 100)
 			abort("Camel spit is only at "+get_property('camelSpit'));
-		if (!get_property('photocopyMonster').contains_text("ungulith"))
-			abort("Ungulith is not the photocopied monster?");
 
 		cli_execute('mood apathetic');
 
@@ -1544,10 +1573,14 @@ boolean c2t_hccs_preWeapon() {
 		equip($item[Fourth of May Cosplay Saber]);
 		use_familiar($familiar[Melodramedary]);
 
-		c2t_setChoice(1387,3);//saber yr
-		use(1,$item[photocopied monster]);
-		run_turn();
-		c2t_setChoice(1387,0);
+		if (item_amount($item[photocopied monster]) > 0 && get_property('photocopyMonster').contains_text("ungulith")) {
+			c2t_setChoice(1387,3);//saber yr
+			use(1,$item[photocopied monster]);
+			run_turn();
+			c2t_setChoice(1387,0);
+		}
+		else
+			c2t_assert(c2t_hccs_wishFight($monster[ungulith]),"ungulith wish fail");
 	}
 
 	c2t_getEffect($effect[Cowrruption],$item[corrupted marrow]);
@@ -1561,44 +1594,6 @@ boolean c2t_hccs_preWeapon() {
 	if (available_amount($item[tainted seal's blood]) > 0)
 		ensure_effect($effect[Corruption of Wretched Wally]);
 
-	if (have_effect($effect[Outer Wolf&trade;]) == 0 && my_fullness() == 12) {
-		//use(available_amount($item[van key]), $item[van key]);
-		if (available_amount($item[ointment of the occult]) == 0) {
-			// Should have a second grapefruit from Scurvy.
-			// but maybe not enough reagents
-			retrieve_item(1,$item[ointment of the occult]);
-		}
-		if (available_amount($item[unremarkable duffel bag]) == 0) {
-			// get useless powder.
-			retrieve_item(1,$item[cool whip]);
-			cli_execute('smash 1 cool whip');
-		}
-		
-		// OU pizza requires funky logic, as it's not so simple as to make a priority list for last 2
-		// TODO maybe make something to figure out last 2 ingredients so not having to copy/paste so much
-		// this is currently an incomplete, lazy implementation; and will fail rarely
-		if (available_amount($item[Middle of the Road&trade; brand whiskey]) > 1) {
-			pizza_effect(
-				$effect[Outer Wolf&trade;],
-				c2t_priority($item[ointment of the occult],$item[out-of-tune biwa]),
-				c2t_priority($item[unremarkable duffel bag],$item[useless powder]),
-				$item[Middle of the Road&trade; brand whiskey],
-				$item[Middle of the Road&trade; brand whiskey]
-				//c2t_priority($item[Middle of the Road&trade; brand whiskey],$item[surprisingly capacious handbag],$item[PB&J with the crusts cut off])
-			);
-		}
-		else if (available_amount($item[Middle of the Road&trade; brand whiskey]) > 0) {
-			pizza_effect(
-				$effect[Outer Wolf&trade;],
-				c2t_priority($item[ointment of the occult],$item[out-of-tune biwa]),
-				c2t_priority($item[unremarkable duffel bag],$item[useless powder]),
-				$item[Middle of the Road&trade; brand whiskey],
-				c2t_priority($item[surprisingly capacious handbag],$item[PB&J with the crusts cut off])
-			);
-		}
-	}
-	if (have_effect($effect[Outer Wolf&trade;]) == 0)
-		abort('OU pizza failed');
 
 	/* have meteor lore now
 	if (my_class() != $class[pastamancer] || my_class() != $class[turtle tamer]) {
@@ -1623,6 +1618,49 @@ boolean c2t_hccs_preWeapon() {
 	ensure_effect($effect[Bow-Legged Swagger]);
 	
 	maximize('weapon damage', false);
+
+	//OU pizza if needed
+	if (!c2t_hccs_thresholdMet(TEST_WEAPON) && c2t_hccs_testTurns(TEST_WEAPON) > 3) {//TODO
+		if (have_effect($effect[Outer Wolf&trade;]) == 0 && my_fullness() == 12) {
+			// Should have a second grapefruit from Scurvy.
+			// but maybe not enough reagents
+			retrieve_item(1,$item[ointment of the occult]);
+
+			//preferring useless powder over duffel bag
+			if (available_amount($item[useless powder]) == 0) {
+				// get useless powder.
+				retrieve_item(1,$item[cool whip]);
+				cli_execute('smash 1 cool whip');
+			}
+
+			// OU pizza requires funky logic, as it's not so simple as to make a priority list for last 2 items
+			// TODO maybe make something to figure out last 2 ingredients so not having to copy/paste so much
+			// this is currently an incomplete, lazy implementation; and will fail rarely
+			if (available_amount($item[Middle of the Road&trade; brand whiskey]) > 1) {
+				pizza_effect(
+					$effect[Outer Wolf&trade;],
+					c2t_priority($item[ointment of the occult],$item[out-of-tune biwa]),
+					c2t_priority($item[useless powder],$item[unremarkable duffel bag]),
+					$item[Middle of the Road&trade; brand whiskey],
+					$item[Middle of the Road&trade; brand whiskey]
+					//c2t_priority($item[Middle of the Road&trade; brand whiskey],$item[surprisingly capacious handbag],$item[PB&J with the crusts cut off])
+				);
+			}
+			else if (available_amount($item[Middle of the Road&trade; brand whiskey]) > 0) {
+				pizza_effect(
+					$effect[Outer Wolf&trade;],
+					c2t_priority($item[ointment of the occult],$item[out-of-tune biwa]),
+					c2t_priority($item[useless powder],$item[unremarkable duffel bag]),
+					$item[Middle of the Road&trade; brand whiskey],
+					c2t_priority($item[surprisingly capacious handbag],$item[PB&J with the crusts cut off])
+				);
+			}
+			if (have_effect($effect[Outer Wolf&trade;]) == 0)
+				abort('OU pizza failed');
+		}
+	}
+	if (have_effect($effect[Outer Wolf&trade;]) == 0)
+		print("OU pizza skipped","blue");
 
 	c2t_hccs_mod2log("modtrace weapon damage");
 
@@ -2014,7 +2052,15 @@ void c2t_hccs_fights() {
 
 		//change to other familiar when spit maxed
 		if (get_property('camelSpit').to_int() == 100) {
-			use_familiar($familiar[hovering sombrero]);
+			if (item_amount($item[short stack of pancakes]) == 0 && have_effect($effect[Shortly Stacked]) == 0) {
+				if (my_familiar() != $familiar[shorter-order cook]) {
+					//give cook's combat bonus familiar exp to professor
+					use_familiar($familiar[pocket professor]);
+					use_familiar($familiar[shorter-order cook]);
+				}
+			}
+			else
+				use_familiar($familiar[hovering sombrero]);
 			fam = "";
 		}
 		else//swap off pocket professor after it happens
