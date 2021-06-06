@@ -1416,7 +1416,7 @@ boolean c2t_hccs_preFamiliar() {
 	}
 
 	//should only get 1 per run, if any; would use in NEP combat loop, but no point as sombrero would already be already giving max stats
-	if (get_property('_c2t_hccs_dstab').to_boolean())
+	//if (get_property('_c2t_hccs_dstab').to_boolean())
 		c2t_haveUse($item[short stack of pancakes]);
 
 	// Pool buff
@@ -2257,6 +2257,13 @@ boolean c2t_hccs_wandererFight() {
 	if (get_property('camelSpit').to_int() < 100 && !get_property("csServicesPerformed").contains_text(TEST_NAME[TEST_WEAPON])) {
 		use_familiar($familiar[melodramedary]);
 		append += ",equip dromedary drinking helmet";
+	}
+	else if (get_property('camelSpit').to_int() == 100 && !get_property("csServicesPerformed").contains_text(TEST_NAME[TEST_FAMILIAR]) && item_amount($item[short stack of pancakes]) == 0) {
+		if (my_familiar() != $familiar[shorter-order cook]) {
+			//give cook's combat bonus familiar exp to professor
+			use_familiar($familiar[pocket professor]);
+			use_familiar($familiar[shorter-order cook]);
+		}
 	}
 	else
 		use_familiar($familiar[hovering sombrero]);
