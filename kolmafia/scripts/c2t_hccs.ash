@@ -1,6 +1,8 @@
 //c2t hccs
 //c2t
 
+since r20752;//feelNostaligicMonster -> lastCopyableMonster
+
 import <c2t_cartographyHunt.ash>
 import <c2t_lib.ash>
 import <canadv.ash>
@@ -1819,7 +1821,7 @@ void c2t_hccs_fights() {
 	if (available_amount($item[tomato juice of powerful power]) == 0
 		&& available_amount($item[tomato]) == 0
 		&& have_effect($effect[Tomato Power]) == 0
-		&& get_property('feelNostalgicMonster').to_monster() != $monster[possessed can of tomatoes]) {
+		&& get_property('lastCopyableMonster').to_monster() != $monster[possessed can of tomatoes]) {
 
 		//don't need hound dog with map the monsters. going to keep for now as to not accidentally have crab as familiar. familiar doesn't really matter here anyway
 		use_familiar($familiar[Jumpsuited Hound Dog]);
@@ -1855,7 +1857,7 @@ void c2t_hccs_fights() {
 		if (available_amount($item[tomato juice of powerful power]) == 0
 			&& available_amount($item[tomato]) == 0
 			&& have_effect($effect[Tomato Power]) == 0
-			&& !get_property('feelNostalgicMonster').contains_text($monster[possessed can of tomatoes].to_string())
+			&& !get_property('lastCopyableMonster').contains_text($monster[possessed can of tomatoes].to_string())
 			) {
 			//thanks to map the monsters, dump extra latte banish on bunny to fish for latte ingredient
 			if (!get_property('_latteBanishUsed').to_boolean())
@@ -2168,7 +2170,7 @@ void c2t_hccs_fights() {
 			&& (have_effect($effect[Spiced Up]) > 0 || have_effect($effect[Tomes of Opportunity]) > 0 || have_effect($effect[The Best Hair You've Ever Had]) > 0)
 			&& have_effect($effect[Tomato Power]) > 0
 			//target monster for professor copies. using back up camera to bootstrap
-			&& get_property('feelNostalgicMonster').to_monster() == $monster[sausage goblin]
+			&& get_property('lastCopyableMonster').to_monster() == $monster[sausage goblin]
 			) {
 
 			use_familiar($familiar[Pocket Professor]);
@@ -2180,7 +2182,7 @@ void c2t_hccs_fights() {
 			&& !get_property('latteUnlocks').contains_text('carrot')
 			&& get_property('_backUpUses').to_int() < 11
 			//target monster
-			&& get_property('feelNostalgicMonster').to_monster() == $monster[sausage goblin]
+			&& get_property('lastCopyableMonster').to_monster() == $monster[sausage goblin]
 			) {
 
 			//NEP monsters give twice as much base exp as sausage goblins, so keep at least as many shirt charges as fights remaining in NEP
@@ -2192,9 +2194,9 @@ void c2t_hccs_fights() {
 			continue;//don't want to fall into NEP in this state
 		}
 		//inital and post-latte backup fights
-		else if (get_property('_backUpUses').to_int() < 11 && get_property('feelNostalgicMonster').to_monster() == $monster[sausage goblin]) {
+		else if (get_property('_backUpUses').to_int() < 11 && get_property('lastCopyableMonster').to_monster() == $monster[sausage goblin]) {
 			//only use kramco offhand if target is sausage goblin to not mess things up
-			if (get_property('feelNostalgicMonster').to_monster() == $monster[sausage goblin])
+			if (get_property('lastCopyableMonster').to_monster() == $monster[sausage goblin])
 				kramco = ",equip kramco";
 			else
 				kramco = "";
