@@ -1079,7 +1079,17 @@ boolean c2t_hccs_allTheBuffs() {
 			) {
 			//edge case recoveries:
 			//this one assumes hobelf wasn't fought earlier, since this shouldn't be needed if so. otherwise, too many saber yr allocations
-			if (my_primestat() == $stat[muscle] && have_effect($effect[Synthesis: Strong]) == 0 && item_amount($item[Crimbo fudge]) > 0) {
+			effect synth;
+			item candy1;
+			if (my_primestat() == $stat[muscle]) {
+				synth = $effect[Synthesis: Strong];
+				candy1 = $item[Crimbo fudge];
+			}
+			else if (my_primestat() == $stat[mysticality]) {
+				synth = $effect[Synthesis: Smart];
+				candy1 = $item[Crimbo candied pecan];
+			}
+			if (have_effect(synth) == 0 && item_amount(candy1) > 0) {
 				if (item_amount($item[pile of candy]) == 0) {
 					c2t_setChoice(1387,3);//saber yr
 					c2t_cartographyHunt($location[South of the Border],$monster[angry pi&ntilde;ata]);
@@ -1087,8 +1097,8 @@ boolean c2t_hccs_allTheBuffs() {
 					run_choice(-1);
 					c2t_setChoice(1387,0);
 				}
-				sweet_synthesis($effect[Synthesis: Strong]);
-				c2t_assert(have_effect($effect[Synthesis: Strong]) > 0,"Synthesis failed even after fighting an angry pinata");
+				sweet_synthesis(synth);
+				c2t_assert(have_effect(synth) > 0,"Synthesis failed even after fighting an angry pinata");
 			}
 
 			//not going to wish for g9 anymore
