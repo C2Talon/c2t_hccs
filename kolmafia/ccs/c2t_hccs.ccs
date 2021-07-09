@@ -52,9 +52,9 @@ consult c2t_hccs_combat.ash
 
 [ fluffy bunny ]
 scrollwhendone
-try to steal an item
 skill back-up to your last enemy
 twiddle your thumbs
+try to steal an item
 consult c2t_hccs_combat.ash
 skill throw latte on opponent
 skill reflex hammer
@@ -183,6 +183,9 @@ endif
 scrollwhendone
 skill sing along
 skill furious wallop
+attack with weapon
+
+[ sssshhsssblllrrggghsssssggggrrgglsssshhssslblgl ]
 attack with weapon
 
 [ thugnderdome ]

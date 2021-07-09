@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r20752;//feelNostaligicMonster -> lastCopyableMonster
+since r20793;//fireworks shop items
 
 import <c2t_cartographyHunt.ash>
 import <c2t_lib.ash>
@@ -1302,10 +1302,17 @@ boolean c2t_hccs_preItem() {
 
 
 	//THINGS I DON'T ALWAYS WANT TO USE FOR ITEM TEST
-	
+
 	//if familiar test is ever less than 19 turns, feel lost will need to be completely removed or the test order changed
 	if (!c2t_hccs_thresholdMet(TEST_ITEM))
 		c2t_getEffect($effect[Feeling Lost],$skill[Feel Lost]);
+
+	if (!c2t_hccs_thresholdMet(TEST_ITEM)) {
+		retrieve_item(1,$item[oversized sparkler]);
+		//repeat of previous maximize call
+		maximize('item,2 booze drop,-equip broken champagne bottle,-equip surprisingly capacious handbag,-equip red-hot sausage fork', false);
+	}
+
 
 	c2t_hccs_mod2log("modtrace item drop;modtrace booze drop");
 
@@ -1428,7 +1435,7 @@ boolean c2t_hccs_preFamiliar() {
 	}
 
 	//should only get 1 per run, if any; would use in NEP combat loop, but no point as sombrero would already be already giving max stats
-	//if (get_property('_c2t_hccs_dstab').to_boolean())
+	if (get_property('_c2t_hccs_dstab').to_boolean())
 		c2t_haveUse($item[short stack of pancakes]);
 
 	// Pool buff
@@ -1470,7 +1477,7 @@ boolean c2t_hccs_preNoncombat() {
 
 	ensure_effect($effect[Silent Running]);
 
-	if (have_effect($effect[Silence of the God Lobster]) == 0) {
+	if (have_effect($effect[Silence of the God Lobster]) == 0 && get_property('_godLobsterFights').to_int() < 3) {
 		cli_execute('mood apathetic');
 		use_familiar($familiar[god lobster]);
 		equip($item[God Lobster's Ring]);
@@ -1501,6 +1508,18 @@ boolean c2t_hccs_preNoncombat() {
 
 	use_familiar($familiar[Disgeist]);
 
+	//replacing glob buff with this
+	//mafia doesn't seem to support retrieve_item() by itself for this yet, so visit_url() to the rescue:
+	if (item_amount($item[porkpie-mounted popper]) == 0) {
+		visit_url("clan_viplounge.php?action=fwshop&whichfloor=2",false,true);
+		visit_url("shop.php?whichshop=fwshop",false,true);
+		visit_url("shop.php?whichshop=fwshop&action=buyitem&quantity=1&whichrow=1249&pwd",true,true);
+	}
+	//double-checking, and what will be used when mafia finally supports it:
+	retrieve_item(1,$item[porkpie-mounted popper]);
+
+	maximize('-100combat, familiar weight', false);
+	//doubling up to make sure, as it's been finicky:
 	maximize('-100combat, familiar weight', false);
 
 
@@ -1975,12 +1994,12 @@ void c2t_hccs_fights() {
 	}
 
 	// God Lobster
-	if (get_property('_godLobsterFights').to_int() < 2) {
+	if (get_property('_godLobsterFights').to_int() < 3) {//fireworks shop makes saving this not needed for me
 		use_familiar($familiar[god lobster]);
 		maximize(my_primestat()+",-equip garbage shirt",false);
 		
 		// fight and get equipment
-		while (get_property('_godLobsterFights').to_int() < 2) {
+		while (get_property('_godLobsterFights').to_int() < 3) {
 			c2t_setChoice(1310,1);//get equipment
 			if (my_hp() < 0.5 * my_maxhp())
 				visit_url('clan_viplounge.php?where=hottub');
