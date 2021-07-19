@@ -1512,7 +1512,7 @@ boolean c2t_hccs_preNoncombat() {
 	//mafia doesn't seem to support retrieve_item() by itself for this yet, so visit_url() to the rescue:
 	if (item_amount($item[porkpie-mounted popper]) == 0) {
 		visit_url("clan_viplounge.php?action=fwshop&whichfloor=2",false,true);
-		visit_url("shop.php?whichshop=fwshop",false,true);
+		//visit_url("shop.php?whichshop=fwshop",false,true);
 		visit_url("shop.php?whichshop=fwshop&action=buyitem&quantity=1&whichrow=1249&pwd",true,true);
 	}
 	//double-checking, and what will be used when mafia finally supports it:
@@ -2030,6 +2030,10 @@ void c2t_hccs_fights() {
 			cli_execute('rest free');
 		use_skill(1,$skill[Evoke Eldritch Horror]);
 		run_combat();
+
+		//in case the tentacle boss shows up; will cause an instant loss in a wish fight if health left at 0
+		if (have_effect($effect[beaten up]) > 0 || my_hp() < 50)
+			cli_execute('rest free');
 	}
 
 	c2t_hccs_wandererFight();//hopefully doesn't do kramco
