@@ -3,3 +3,4 @@ https://github.com/c2talon/c2t_cartographyHunt/branches/master/kolmafia/
 https://github.com/c2talon/c2t_capeMe/branches/master/kolmafia/
 https://svn.code.sf.net/p/therazekolmafia/canadv/code/
 https://github.com/Ezandora/Bastille/branches/Release/
+https://github.com/c2talon/c2t_cast/branches/master/kolmafia/

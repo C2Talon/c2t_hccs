@@ -5,6 +5,7 @@ since r20793;//fireworks shop items
 
 import <c2t_cartographyHunt.ash>
 import <c2t_lib.ash>
+import <c2t_cast.ash>
 import <canadv.ash>
 import <c2t_hccs_aux.ash>
 
@@ -104,8 +105,6 @@ void c2t_hccs_doTest(int test);
 void c2t_hccs_fights();
 boolean c2t_hccs_wishFight(monster mon);
 boolean c2t_hccs_wandererFight();
-int c2t_hccs_tripleSize(int num);
-int c2t_hccs_tripleSize() return c2t_hccs_tripleSize(1);
 void c2t_hccs_pantagramming();
 void c2t_hccs_vote();
 int c2t_hccs_testTurns(int test);
@@ -273,31 +272,6 @@ void c2t_hccs_vote() {
 
 	if (available_amount($item[&quot;I Voted!&quot; sticker]) == 0)
 		abort("Voting failed?");
-}
-
-//TODO genericise and move to lib
-int c2t_hccs_tripleSize(int num) {
-	if (have_effect($effect[Triple-Sized]) == 0 && num > 0) {
-		if (get_property('_powerfulGloveBatteryPowerUsed').to_int() >= 100) {
-			print("Powerful Glove depleted. Cannot triple size.","blue");
-			return 0;
-		}
-
-		item temp = $item[none];
-		if (!have_equipped($item[Powerful Glove])) {
-			temp = equipped_item($slot[acc3]);
-			equip($slot[acc3],$item[Powerful Glove]);
-		}
-
-		int i = 0;
-		repeat
-			use_skill(1,$skill[CHEAT CODE: Triple Size]);
-		until (++i >= num || get_property('_powerfulGloveBatteryPowerUsed').to_int() >= 100);
-
-		if (temp != $item[none])
-			equip($slot[acc3],temp);
-	}
-	return have_effect($effect[Triple-Sized]);
 }
 
 boolean c2t_haveUse(item ite) {
@@ -1025,7 +999,8 @@ boolean c2t_hccs_allTheBuffs() {
 		ensure_effect($effect[There's No N In Love]);
 
 	//cast triple size
-	c2t_hccs_tripleSize();
+	if (have_effect($effect[Triple-Sized]) == 0 && !c2t_cast($skill[CHEAT CODE: Triple Size]))
+		abort("Triple size failure");
 	
 	//boxing daycare, synthesis, and bastille
 	if (my_primestat() == $stat[muscle]) {
@@ -1538,7 +1513,8 @@ boolean c2t_hccs_preWeapon() {
 		abort('Camel spit only at '+get_property('camelSpit')+'%.');
 
 	//cast triple size
-	c2t_hccs_tripleSize();
+	if (have_effect($effect[Triple-Sized]) == 0 && !c2t_cast($skill[CHEAT CODE: Triple Size]))
+		abort("Triple size failure");
 
 	if (my_mp() < 500 && my_mp() != my_maxmp())
 		cli_execute('eat mag saus');
