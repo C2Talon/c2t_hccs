@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r20793;//fireworks shop items
+since r20810;//candle IotM
 
 import <c2t_cartographyHunt.ash>
 import <c2t_lib.ash>
@@ -929,16 +929,17 @@ boolean c2t_hccs_levelup() {
 	if (my_primestat() == $stat[mysticality])
 		c2t_hccs_pull($item[Stick-Knife of Loathing]);//150 mys; saves 4 for spell test
 
-	// using MCD as a flag, what could possibly go wrong?
-	// figure out something less error-prone before ever making public
-	if (current_mcd() != 10)
-		c2t_hccs_allTheBuffs();
+	c2t_hccs_allTheBuffs();
 	
 	return true;
 }
 
 // initialise limited-use, non-mood buffs for leveling
 boolean c2t_hccs_allTheBuffs() {
+	// using MCD as a flag, what could possibly go wrong?
+	if (current_mcd() >= 10)
+		return true;
+
 	print('Getting pre-fight buffs','blue');
 	// equip mp stuff
 	maximize("mp,-equip kramco",false);
@@ -1001,6 +1002,10 @@ boolean c2t_hccs_allTheBuffs() {
 	//cast triple size
 	if (have_effect($effect[Triple-Sized]) == 0 && !c2t_cast($skill[CHEAT CODE: Triple Size]))
 		abort("Triple size failure");
+
+	//candles
+	c2t_haveUse($item[Napalm In The Morning&trade; candle]);
+	c2t_haveUse($item[votive of confidence]);
 	
 	//boxing daycare, synthesis, and bastille
 	if (my_primestat() == $stat[muscle]) {
@@ -1361,6 +1366,10 @@ boolean c2t_hccs_preHotRes() {
 
 	//THINGS I DON'T USE FOR HOT TEST ANYMORE, but will fall back on if other things break
 
+	//candle
+	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
+		c2t_haveUse($item[rainbow glitter candle]);
+
 	//magenta seashell
 	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
 		if (available_amount($item[magenta seashell]) > 0)
@@ -1715,7 +1724,11 @@ boolean c2t_hccs_preSpell() {
 		c2t_hccs_pull($item[Stick-Knife of Loathing]);
 
 	//get up to 2 obsidian nutcracker
-	retrieve_item(2 - item_amount($item[Stick-Knife of Loathing]) - item_amount($item[Staff of Simmering Hatred]),$item[obsidian nutcracker]);
+	int nuts = 2;
+	foreach x in $items[Stick-Knife of Loathing,Staff of Simmering Hatred,Abracandalabra]
+		if (item_amount(x) > 0)
+			nuts--;
+	retrieve_item(nuts<0?0:nuts,$item[obsidian nutcracker]);
 
 	//AT-only buff
 	if (my_class() == $class[accordion thief])
