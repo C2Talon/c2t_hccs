@@ -1,6 +1,8 @@
 //c2t
 //c2t hccs combat
 //consult script to do one-offs in combat
+
+
 void main(int initround, monster foe, string page) {
 	if (my_familiar() == $familiar[Ghost of Crimbo Carols]) {
 		if (have_skill($skill[Become a Cloud of Mist]) && have_effect($effect[Misty Form]) == 0 && get_property('csServicesPerformed').contains_text('Breed More Collies'))
@@ -73,7 +75,7 @@ void main(int initround, monster foe, string page) {
 				if (my_primestat() == $stat[moxie]
 					&& have_effect($effect[Unrunnable Face]) == 0
 					&& item_amount($item[runproof mascara]) == 0
-					&& get_property('feelNostalgicMonster').to_monster() == $monster[party girl]) {
+					&& get_property('lastCopyableMonster').to_monster() == $monster[party girl]) {
 
 					if (have_skill($skill[Feel Nostalgic]))
 						use_skill(1,$skill[Feel Nostalgic]);
