@@ -1,92 +1,360 @@
 //c2t
-//c2t hccs combat
-//consult script to do one-offs in combat
+//c2t community service combat
 
+//most of this is subject to drastic change; the macro builder stuff probably going to be pulled out and made standalone at some point
+
+//print macros to the CLI that are being submitted
+boolean PRINT_MACRO = get_property("c2t_bb_printMacro").to_boolean();
+
+//---
+// BALLS builder
+// functions here are used to translate things like skill use into BALLS macro form
+// all functions with "macro" argument return the same as the non-"macro" one, but with "macro" prepended to it
+
+//combine/append
+string bb(string macro,string str);
+//just in case
+string bb(string macro);
+//finite repetition of a skill
+string bb(int num,skill ski);
+string bb(string macro,int num,skill ski);
+//single skill
+string bb(skill ski);
+string bb(string macro,skill ski);
+//combat item(s)
+string bb(item it1);
+string bb(string macro,item it1);
+//funkslinging
+string bb(item it1,item it2);
+string bb(string macro,item it1,item it2);
+//if
+string bbIf(string condition,string str);
+string bbIf(string macro,string condition,string str);
+//while
+string bbWhile(string condition,string str);
+string bbWhile(string macro,string condition,string str);
+//submit the macro in combat
+string bbSubmit(string macro);
+
+//---
+// consult script for CS
 
 void main(int initround, monster foe, string page) {
+	string mHead = "scrollwhendone;";
+	string mSteal = "pickpocket;";
+
+	//basic macro/what to run when nothing special needs be done or after the special thing is done
+	string mBasic =	bb($skill[disarming thrust])
+		.bb($skill[detect weakness])
+		.bb($skill[micrometeorite])
+		.bbIf("sealclubber || turtletamer || discobandit || accordionthief",
+			bb($skill[curse of weaksauce])
+			.bb($skill[sing along])
+			.bbWhile("!pastround 20",bb("attack;"))
+		)
+		.bbIf("pastamancer",
+			bb($skill[stuffed mortar shell])
+			.bb($skill[sing along])
+		)
+		.bbIf("sauceror",
+			bb($skill[curse of weaksauce])
+			.bb($skill[stuffed mortar shell])
+			.bb($skill[sing along])
+			.bb($skill[saucegeyser])
+		);
+
+	//mostly mBasic with relativity sprinkled in and small heal to help moxie survive chaining
+	string mChain =	bb($skill[disarming thrust])
+		.bb($skill[detect weakness])
+		.bb($skill[micrometeorite])
+		.bbIf("sealclubber || turtletamer || discobandit || accordionthief",
+			bb($skill[curse of weaksauce])
+			.bbIf("discobandit || accordionthief",bb($skill[saucy salve]))
+			.bb($skill[sing along])
+			.bb($skill[lecture on relativity])
+			.bbWhile("!pastround 20",bb("attack;"))
+		)
+		.bbIf("pastamancer",
+			bb($skill[lecture on relativity])
+			.bb($skill[stuffed mortar shell])
+			.bb($skill[sing along])
+		)
+		.bbIf("sauceror",
+			bb($skill[curse of weaksauce])
+			.bb($skill[sing along])
+			.bb($skill[lecture on relativity])
+			.bb($skill[saucegeyser])
+			.bb($skill[saucegeyser])
+		);
+
+	//macro to build
+	string m;
+
+	//run with ghost caroler for buffs at NEP and dire warren at different times
 	if (my_familiar() == $familiar[Ghost of Crimbo Carols]) {
+		m = mHead + mSteal;
 		if (have_skill($skill[Become a Cloud of Mist]) && have_effect($effect[Misty Form]) == 0 && get_property('csServicesPerformed').contains_text('Breed More Collies'))
-			use_skill(1,$skill[Become a Cloud of Mist]);
+			m += bb($skill[Become a Cloud of Mist]);
 		if (have_skill($skill[Offer Latte to Opponent]))
-			use_skill(1,$skill[Offer Latte to Opponent]);
+			m += bb($skill[Offer Latte to Opponent]);
 		if (have_skill($skill[Snokebomb]) && get_property('_snokebombUsed').to_int() < 3)
-			use_skill(1,$skill[Snokebomb]); 
+			m += bb($skill[Snokebomb]);
 		if (have_skill($skill[Throw Latte on Opponent]) && !get_property('_latteBanishUsed').to_boolean())
-			use_skill(1,$skill[Throw Latte on Opponent]);
+			m += bb($skill[Throw Latte on Opponent]);
+		m.bbSubmit();
+		return;
+	}
+	//saber random thing at this location for meteor shower buff
+	else if (get_property("lastAdventure").to_location() == $location[Thugnderdome]) {
+		bbSubmit(
+			mSteal
+			.bb($skill[meteor shower])
+		);
+		waitq(1);
+		bb($skill[Use the Force]).bbSubmit();
+		return;
 	}
 	else {
+		//basically mimicking CCS
 		switch (foe) {
 			//only use 1 become the bat for item test and initial latte throw
 			case $monster[fluffy bunny]:
-				if (have_skill($skill[Become a Bat]) && have_effect($effect[Bat-Adjacent Form]) == 0)
-					use_skill(1,$skill[Become a Bat]);
+				if (have_equipped($item[backup camera]) && get_property("_backUpUses").to_int() < 11) {
+					bbSubmit(
+						bb($skill[back-up to your last enemy])
+						.bb("twiddle;")
+					);
+					return;
+				}
+				bbSubmit(
+					mHead + mSteal
+					.bb(have_effect($effect[Bat-Adjacent Form]) == 0?bb($skill[Become a Bat]):"")
+					.bb($skill[throw latte on opponent])
+					.bb($skill[reflex hammer])
+					.bb($skill[snokebomb])
+				);
 				return;
+
 			//saber yr to not break mafia tracking
-			case $monster[factory worker (female)]:
-			case $monster[novelty tropical skeleton]:
-			case $monster[possessed can of tomatoes]:
 			case $monster[ungulith]:
+				bbSubmit(
+					mSteal
+					.bb($skill[%fn, spit on me!])
+					.bb($skill[meteor shower])
+				);
+				waitq(1);
+				bb($skill[Use the Force]).bbSubmit();
+				return;
+			case $monster[novelty tropical skeleton]:
+				bbSubmit(
+					mSteal
+					.bb($skill[become a wolf])
+					.bb($skill[gulp latte])
+				);
+				waitq(1);
+				bb($skill[Use the Force]).bbSubmit();
+				return;
+			case $monster[possessed can of tomatoes]:
+				bbSubmit(
+					mSteal
+					.bb($skill[become a wolf])
+					.bb($skill[gulp latte])
+					.bb($skill[feel hatred])
+				);
+				//no longer sabering tomato //nostalgia/envy on piranha plant for its drops
+				return;
+			case $monster[factory worker (female)]:
+			case $monster[factory worker (male)]://just in case this shows up
+				bbSubmit(
+					mSteal
+					.bb($skill[meteor shower])
+				);
+				waitq(1);
+				bb($skill[Use the Force]).bbSubmit();
+				return;
 			case $monster[Evil Olive]:
 			case $monster[hobelf]://apparently this doesn't work?
 			case $monster[elf hobo]://this might though?
 			case $monster[angry pi&ntilde;ata]:
-				if (have_skill($skill[Use the Force]))
-					use_skill(1,$skill[Use the Force]);
+				mSteal.bbSubmit();
+				waitq(1);
+				bb($skill[Use the Force]).bbSubmit();
 				return;
+
 			//using all free kills on neverending party monsters
 			case $monster[biker]:
 			case $monster[burnout]:
 			case $monster[jock]:
 			case $monster[party girl]:
 			case $monster["plain" girl]:
-				//feel pride //can't just have this in CSS since voters get thrown in NEP and aren't handled properly
-				if (have_skill($skill[Feel Pride]) && get_property('_feelPrideUsed').to_int() < 3)
-					use_skill(1,$skill[Feel Pride]);
-				if (have_skill($skill[Army of Toddlers]) && !get_property('_armyToddlerCast').to_boolean())
-					use_skill(1,$skill[Army of Toddlers]);
-				//things to do after NEP free fights
-				if (get_property('_neverendingPartyFreeTurns').to_int() == 10 && !get_property('_gingerbreadMobHitUsed').to_boolean()) {
-					//make sure to sing
-					if (have_skill($skill[Sing Along]))
-						use_skill(1,$skill[Sing Along]);
-					//free kill skills
-					if (have_skill($skill[Chest X-Ray]) && get_property('_chestXRayUsed').to_int() < 3) {
-						//won't use otoscope anywhere else, so might as well use it while doc bag equipped
-						if (have_skill($skill[Otoscope]) && get_property('_otoscopeUsed').to_int() < 3)
-							use_skill(1,$skill[Otoscope]);
-						use_skill(1,$skill[Chest X-Ray]);
-					}
-					else if (have_skill($skill[Shattering Punch]) && get_property('_shatteringPunchUsed').to_int() < 3) {
-						use_skill(1,$skill[Shattering Punch]);
-					}
-					else if (have_skill($skill[Gingerbread Mob Hit]) && !get_property('_gingerbreadMobHitUsed').to_boolean())
-						use_skill(1,$skill[Gingerbread Mob Hit]);
+				m = mHead + mSteal;
+				if (have_equipped($item[backup camera]) && get_property("_backUpUses").to_int() < 11) {
+					m += bb($skill[back-up to your last enemy]).bb("twiddle;");
+					m.bbSubmit();
+					return;
 				}
+				//feel pride still thinks it can be used after max uses for some reason
+				m += get_property("_feelPrideUsed").to_int() < 3 ? bb($skill[Feel Pride]) : "";
+				/*if (have_skill($skill[Army of Toddlers]) && !get_property('_armyToddlerCast').to_boolean()) {
+					m += bb($skill[Army of Toddlers]);
+					//toddlers mess with combat text, so submit it now
+					m.bbSubmit();
+					waitq(1);
+					m = mHead;
+				}*/
+
+				//free kills after NEP free fights
+				if (get_property('_neverendingPartyFreeTurns').to_int() == 10 && !get_property('_gingerbreadMobHitUsed').to_boolean()) {
+					bbSubmit(
+						m
+						.bb($skill[Sing Along])
+						//free kill skills
+						.bb($skill[Otoscope])//won't use otoscope anywhere else, so might as well use it while doc bag equipped
+						.bb($skill[Chest X-Ray])//this is unequipped after all uses, so don't need to check for it for now
+						.bb(get_property("_shatteringPunchUsed").to_int() < 3 ? bb($skill[Shattering Punch]) : "")
+						.bb($skill[Gingerbread Mob Hit])
+					);
+				}
+				//free combats at NEP
+				else
+					bbSubmit(m + mBasic);
+
 				return;
-			//vote monsters
+
+			case $monster[piranha plant]://should be getting tomato from this
+				bbSubmit(
+					mHead + mSteal
+					.bb($skill[feel nostalgic])
+					.bb($skill[feel envy])
+					+ mBasic
+				);
+				return;
+
+			//most basic of combats
 			case $monster[government bureaucrat]:
 			case $monster[terrible mutant]:
 			case $monster[angry ghost]:
 			case $monster[annoyed snake]:
 			case $monster[slime blob]:
+				bbSubmit(mHead + mSteal + mBasic);
 				return;
+
+			//chain potential; basic otherwise
+			case $monster[sausage goblin]:
+				bbSubmit(mHead + mChain);
+				return;
+
 			case $monster[God Lobster]:
+				m = mHead;
 				//grabbing moxie buff item
 				if (my_primestat() == $stat[moxie]
 					&& have_effect($effect[Unrunnable Face]) == 0
 					&& item_amount($item[runproof mascara]) == 0
 					&& get_property('lastCopyableMonster').to_monster() == $monster[party girl]) {
 
-					if (have_skill($skill[Feel Nostalgic]))
-						use_skill(1,$skill[Feel Nostalgic]);
-					if (have_skill($skill[Feel Envy]))
-						use_skill(1,$skill[Feel Envy]);
+					m += bb($skill[Feel Nostalgic]);
+					m += bb($skill[Feel Envy]);
 				}
+				m += mBasic;
+				m.bbSubmit();
 				return;
+
+			case $monster[eldritch tentacle]:
+				bbSubmit(
+					mHead + mSteal
+					.bb($skill[micrometeorite])
+					.bb($skill[detect weakness])
+					.bb($skill[curse of weaksauce])
+					.bb($skill[sing along])
+					.bbIf("sealclubber || turtletamer || discobandit || accordionthief",
+						bbWhile("!pastround 20","attack;")
+					)
+					.bbIf("pastamancer || sauceror",
+						bb(4,$skill[saucestorm])
+					)
+				);
+				return;
+
+			case $monster[sssshhsssblllrrggghsssssggggrrgglsssshhssslblgl]:
+				bbSubmit("attack;repeat;");
+				return;
+
+			//TODO: free run from holiday monsters
+
 			default:
 				//this shouldn't happen //happens with voter fights as CCS doesn't handle each explicitly
-				abort("Something broke in the combat script. Might be fine?");
+				abort("Something broke in the combat script.");
 		}
 	}
 }	
+
+
+//---
+// build/use BALLS macros
+
+//combine/append
+string bb(string m,string s) {
+	return m + s;
+}
+//just in case
+string bb(string m) {
+	return m;
+}
+
+//finite repetition of a skill
+string bb(int num,skill ski) {
+	string out;
+	if (have_skill(ski))
+		for i from 1 to num
+			out += `skill {ski.to_int()};`;
+	return out;
+}
+string bb(string m,int num,skill ski) {
+	return m + bb(num,ski);
+}
+//single skill
+string bb(skill ski) {
+	return bb(1,ski);
+}
+string bb(string m,skill ski) {
+	return m + bb(1,ski);
+}
+
+//combat item(s)
+string bb(item it1) {
+	return `item {it1.to_int()};`;
+}
+string bb(string m,item it1) {
+	return m + bb(it1);
+}
+//funkslinging
+string bb(item it1,item it2) {
+	return `item {it1.to_int()},{it2.to_int()};`;
+}
+string bb(string m,item it1,item it2) {
+	return m + bb(it1,it2);
+}
+
+//if
+string bbIf(string c,string s) {
+	return `if {c};{s}endif;`;
+}
+string bbIf(string m,string c,string s) {
+	return m + bbIf(c,s);
+}
+
+//while
+string bbWhile(string c,string s) {
+	return `while {c};{s}endwhile;`;
+}
+string bbWhile(string m,string c,string s) {
+	return m + bbWhile(c,s);
+}
+
+//submit
+string bbSubmit(string m) {
+	if (PRINT_MACRO)
+		print(`macro: {m}`,"blue");
+	return visit_url("fight.php?action=macro&macrotext="+m,true,false);
+}
 
