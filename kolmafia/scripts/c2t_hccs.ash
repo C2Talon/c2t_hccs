@@ -111,6 +111,8 @@ int c2t_hccs_testTurns(int test);
 boolean c2t_hccs_thresholdMet(int test);
 boolean c2t_hccs_pull(item ite);
 void c2t_hccs_mod2log(string str);
+void c2t_hccs_printRunTime(boolean final);
+void c2t_hccs_printRunTime() c2t_hccs_printRunTime(false);
 
 
 void main() {
@@ -157,6 +159,12 @@ void main() {
 	}
 	finally
 		c2t_hccs_exit();
+}
+
+
+void c2t_hccs_printRunTime(boolean f) {
+	int t = now_to_int() - START_TIME;
+	print(`c2t_hccs {f?"took":"has taken"} {floor(t/60000)} minute(s) {(t%60000)/1000.0} second(s) to execute{f?"":" so far"}.`,"blue");
 }
 
 void c2t_hccs_mod2log(string str) {
@@ -412,6 +420,8 @@ void c2t_hccs_testHandler(int test) {
 	c2t_hccs_doTest(test);
 	if (my_turncount() - before > turns)
 		print("Notice: the task took more turns than expected, but still below the threshold, so continuing.");
+
+	c2t_hccs_printRunTime();
 }
 
 
@@ -498,8 +508,7 @@ void c2t_hccs_exit() {
 	if (skippedFortunes)
 		print(`Info: clan fortunes were skipped`,"red");
 
-	int t = now_to_int() - START_TIME;
-	print(`c2t_hccs took {floor(t/60000)} minute(s) {(t%60000)/1000.0} second(s) to execute.`,"blue");
+	c2t_hccs_printRunTime(true);
 }
 
 boolean c2t_hccs_preCoil() {
@@ -1208,7 +1217,7 @@ boolean c2t_hccs_preItem() {
 
 	//get latte ingredient from fluffy bunny and cloake item buff
 	if (have_effect($effect[Bat-Adjacent Form]) == 0 || !get_property('latteUnlocks').contains_text('carrot')) {
-		maximize(my_primestat()+",equip latte,equip doc bag,equip vampyric cloake",false);
+		maximize("mainstat,equip latte,equip doc bag,equip vampyric cloake",false);
 		while (have_effect($effect[Bat-Adjacent Form]) == 0 || !get_property('latteUnlocks').contains_text('carrot'))
 			adv1($location[The Dire Warren],-1,"");
 	}
@@ -1725,9 +1734,11 @@ boolean c2t_hccs_preSpell() {
 
 	//get up to 2 obsidian nutcracker
 	int nuts = 2;
-	foreach x in $items[Stick-Knife of Loathing,Staff of Simmering Hatred,Abracandalabra]
+	foreach x in $items[Stick-Knife of Loathing,Staff of Simmering Hatred]//,Abracandalabra]
 		if (item_amount(x) > 0)
 			nuts--;
+	if (!have_familiar($familiar[left-hand man]) && item_amount($item[Abracandalabra]) > 0)
+		nuts--;
 	retrieve_item(nuts<0?0:nuts,$item[obsidian nutcracker]);
 
 	//AT-only buff
@@ -1743,7 +1754,7 @@ boolean c2t_hccs_preSpell() {
 
 	// meteor lore // moxie can't do this, as it wastes a saber on evil olive -- moxie should be able to do this now with nostalgia earlier?
 	if (have_effect($effect[Meteor Showered]) == 0 && get_property('_saberForceUses').to_int() < 5) {
-		maximize(my_primestat()+",equip fourth may",false);
+		maximize("mainstat,equip fourth may",false);
 		c2t_setChoice(1387,3);//saber yr
 		adv1($location[Thugnderdome],-1,"");//everything is saberable and no crazy NCs
 		c2t_setChoice(1387,0);
@@ -1951,7 +1962,7 @@ void c2t_hccs_fights() {
 	// Your Mushroom Garden
 	// should get tomato drops from this
 	if (get_property('_mushroomGardenFights').to_int() == 0) {
-		maximize(my_primestat()+",-equip garbage shirt"+famEq,false);
+		maximize("mainstat,-equip garbage shirt"+famEq,false);
 		//cli_execute('mood execute');
 		adv1($location[Your Mushroom Garden],-1,"");
 	}
@@ -1969,7 +1980,7 @@ void c2t_hccs_fights() {
 		// to add: accept if booze or food quest
 		//c2t_setChoice(1322,2);//this should be done turn 0 via wanderer
 		use_familiar($familiar[Ghost of Crimbo Carols]);
-		maximize(my_primestat()+",equip latte,-equip i voted,-equip backup camera",false);
+		maximize("mainstat,equip latte,-equip i voted,-equip backup camera",false);
 
 		//going to grab runproof mascara from globster if moxie instead of having to wait post-kramco
 		if (my_primestat() == $stat[moxie]) {
@@ -1985,7 +1996,7 @@ void c2t_hccs_fights() {
 	// God Lobster
 	if (get_property('_godLobsterFights').to_int() < 3) {//fireworks shop makes saving this not needed for me
 		use_familiar($familiar[god lobster]);
-		maximize(my_primestat()+",-equip garbage shirt",false);
+		maximize("mainstat,-equip garbage shirt",false);
 		
 		// fight and get equipment
 		while (get_property('_godLobsterFights').to_int() < 3) {
@@ -2014,7 +2025,7 @@ void c2t_hccs_fights() {
 
 	//summon tentacle
 	if (have_skill($skill[Evoke Eldritch Horror]) && !get_property('_eldritchHorrorEvoked').to_boolean()) {
-		maximize(my_primestat()+",100exp,-equip garbage shirt"+famEq,false);
+		maximize("mainstat,100exp,-equip garbage shirt"+famEq,false);
 		if (my_mp() < 80)
 			cli_execute('rest free');
 		use_skill(1,$skill[Evoke Eldritch Horror]);
@@ -2156,11 +2167,13 @@ void c2t_hccs_fights() {
 			use_skill(1,$skill[Stevedave's Shanty of Superiority]);
 		}
 
+		//explicitly buying and using range as it rarely bugs out
+		if (!(get_campground() contains $item[Dramatic&trade; range]) && my_meat() >= (have_skill($skill[five finger discount])?950:1000)) { //five-finger discount
+			retrieve_item($item[Dramatic&trade; range]);
+			use($item[Dramatic&trade; range]);
+		}
 		//potion buffs when enough meat obtained
-		if (have_effect($effect[Tomato Power]) == 0
-			&& ((get_campground() contains $item[Dramatic&trade; range]) || my_meat() >= 950)//five-finger discount
-			) {
-
+		if (have_effect($effect[Tomato Power]) == 0 && (get_campground() contains $item[Dramatic&trade; range])) {
 			if (my_primestat() == $stat[muscle]) {
 				c2t_getEffect($effect[Phorcefullness],$item[philter of phorce]);
 				c2t_getEffect($effect[Stabilizing Oiliness],$item[oil of stability]);
@@ -2196,7 +2209,7 @@ void c2t_hccs_fights() {
 			) {
 
 			use_familiar($familiar[Pocket Professor]);
-			maximize(my_primestat()+",equip garbage shirt,equip kramco,100familiar weight,equip backup camera",false);
+			maximize("mainstat,equip garbage shirt,equip kramco,100familiar weight,equip backup camera",false);
 
 		}
 		//fish for latte carrot ingredient with backup fights
@@ -2211,7 +2224,7 @@ void c2t_hccs_fights() {
 			if (get_property('garbageShirtCharge').to_int() < 17)
 				garbage = ",-equip garbage shirt";
 
-			maximize(my_primestat()+",exp,equip latte,equip backup camera"+garbage+fam,false);
+			maximize("mainstat,exp,equip latte,equip backup camera"+garbage+fam,false);
 			adv1($location[The Dire Warren],-1,"");
 			continue;//don't want to fall into NEP in this state
 		}
@@ -2227,11 +2240,11 @@ void c2t_hccs_fights() {
 			if (get_property('garbageShirtCharge').to_int() < 17)
 				garbage = ",-equip garbage shirt";
 
-			maximize(my_primestat()+",exp,equip backup camera"+kramco+garbage+fam,false);
+			maximize("mainstat,exp,equip backup camera"+kramco+garbage+fam,false);
 		}
 		//rest of the free NEP fights
 		else
-			maximize(my_primestat()+",exp,equip kramco"+garbage+fam+doc,false);
+			maximize("mainstat,exp,equip kramco"+garbage+fam+doc,false);
 
 		adv1($location[The Neverending Party],-1,"");
 	}
@@ -2293,7 +2306,7 @@ boolean c2t_hccs_wandererFight() {
 		use_familiar($familiar[hovering sombrero]);
 
 	//backup camera may swap off voter monster, so don't equip it
-	maximize(my_primestat()+",-equip backup camera"+append,false);
+	maximize("mainstat,-equip backup camera"+append,false);
 	c2t_setChoice(1322,2);//in case quest isn't handled yet, just reject it; TODO accept drink or food quest
 	adv1($location[The Neverending Party],-1,"");
 	c2t_setChoice(1322,0);

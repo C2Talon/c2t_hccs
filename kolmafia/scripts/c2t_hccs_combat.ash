@@ -291,6 +291,7 @@ void main(int initround, monster foe, string page) {
 			case $monster[Padre Cad&aacute;ver]:
 			case $monster[Persona Inocente Cad&aacute;ver]:
 				m = mHead + mSteal;
+				m += bb("abort after;");
 				m += bb($skill[reflex hammer]);
 				if (get_property("_snokebombUsed").to_int() < get_property("_feelHatredUsed").to_int())
 					m += bb($skill[snokebomb]);
