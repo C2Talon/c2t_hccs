@@ -192,12 +192,12 @@ void c2t_hccs_getFax(monster mon) {
 		else
 			faxbot(mon);
 
-		if (get_property('photocopyMonster') == mon.name)
+		if (get_property('photocopyMonster') == mon.manuel_name)
 			break;
 
 		cli_execute('fax send');
 	}
-	c2t_assert(get_property('photocopyMonster') == mon.name,'wrong fax monster');
+	c2t_assert(get_property('photocopyMonster') == mon.manuel_name,'wrong fax monster');
 }
 
 //gave up trying to play nice, so brute forcing with visit_url()s
