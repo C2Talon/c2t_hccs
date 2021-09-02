@@ -93,15 +93,19 @@ void main(int initround, monster foe, string page) {
 	//run with ghost caroler for buffs at NEP and dire warren at different times
 	if (my_familiar() == $familiar[Ghost of Crimbo Carols]) {
 		m = mHead + mSteal;
-		if (have_skill($skill[Become a Cloud of Mist]) && have_effect($effect[Misty Form]) == 0 && get_property('csServicesPerformed').contains_text('Breed More Collies'))
+		if (foe == $monster[fluffy bunny]) {
 			m += bb($skill[Become a Cloud of Mist]);
-		if (have_skill($skill[Offer Latte to Opponent]))
+			m += bb($skill[Fire Extinguisher: Foam Yourself]);
+			m.bbSubmit();
+			waitq(1);
+			bb($skill[Use the Force]).bbSubmit();
+		}
+		else {//NEP
+			m += bb($skill[Gulp Latte]);
 			m += bb($skill[Offer Latte to Opponent]);
-		if (have_skill($skill[Snokebomb]) && get_property('_snokebombUsed').to_int() < 3)
-			m += bb($skill[Snokebomb]);
-		if (have_skill($skill[Throw Latte on Opponent]) && !get_property('_latteBanishUsed').to_boolean())
 			m += bb($skill[Throw Latte on Opponent]);
-		m.bbSubmit();
+			m.bbSubmit();
+		}
 		return;
 	}
 	//saber random thing at this location for meteor shower buff
@@ -129,12 +133,21 @@ void main(int initround, monster foe, string page) {
 				bbSubmit(
 					mHead + mSteal
 					.bb(have_effect($effect[Bat-Adjacent Form]) == 0?bb($skill[Become a Bat]):"")
-					.bb($skill[throw latte on opponent])
 					.bb($skill[reflex hammer])
 					.bb($skill[snokebomb])
 				);
 				return;
 
+			//nostalgia other monster to get drops from these
+			case $monster[novelty tropical skeleton]:
+			case $monster[possessed can of tomatoes]:
+				bbSubmit(
+					mSteal
+					.bb($skill[become a wolf])
+					.bb($skill[gulp latte])
+					.bb($skill[throw latte on opponent])
+				);
+				return;
 			//saber yr to not break mafia tracking
 			case $monster[ungulith]:
 				bbSubmit(
@@ -144,24 +157,6 @@ void main(int initround, monster foe, string page) {
 				);
 				waitq(1);
 				bb($skill[Use the Force]).bbSubmit();
-				return;
-			case $monster[novelty tropical skeleton]:
-				bbSubmit(
-					mSteal
-					.bb($skill[become a wolf])
-					.bb($skill[gulp latte])
-				);
-				waitq(1);
-				bb($skill[Use the Force]).bbSubmit();
-				return;
-			case $monster[possessed can of tomatoes]:
-				bbSubmit(
-					mSteal
-					.bb($skill[become a wolf])
-					.bb($skill[gulp latte])
-					.bb($skill[feel hatred])
-				);
-				//no longer sabering tomato //nostalgia/envy on piranha plant for its drops
 				return;
 			case $monster[factory worker (female)]:
 			case $monster[factory worker (male)]://just in case this shows up
@@ -244,6 +239,7 @@ void main(int initround, monster foe, string page) {
 				bbSubmit(mHead + mChain);
 				return;
 
+			//nostalgia goes here
 			case $monster[God Lobster]:
 				m = mHead;
 				//grabbing moxie buff item
@@ -255,6 +251,13 @@ void main(int initround, monster foe, string page) {
 					m += bb($skill[Feel Nostalgic]);
 					m += bb($skill[Feel Envy]);
 				}
+				if (get_property('lastCopyableMonster').to_monster() == $monster[novelty tropical skeleton]
+					|| get_property('lastCopyableMonster').to_monster() == $monster[possessed can of tomatoes]) {
+
+					m += bb($skill[Feel Nostalgic]);
+					m += bb($skill[Feel Envy]);
+				}
+
 				m += mBasic;
 				m.bbSubmit();
 				return;

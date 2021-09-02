@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r20810;//candle IotM
+since r20876;//fire extinguisher IotM
 
 import <c2t_cartographyHunt.ash>
 import <c2t_lib.ash>
@@ -113,6 +113,8 @@ boolean c2t_hccs_pull(item ite);
 void c2t_hccs_mod2log(string str);
 void c2t_hccs_printRunTime(boolean final);
 void c2t_hccs_printRunTime() c2t_hccs_printRunTime(false);
+void c2t_hccs_getFax(monster mon);
+boolean c2t_hccs_fightGodLobster();
 
 
 void main() {
@@ -177,6 +179,25 @@ boolean c2t_hccs_pull(item ite) {
 	if(!can_interact() && !in_hardcore() && item_amount(ite) == 0 && storage_amount(ite) > 0 && pulls_remaining() > 0)
 		return take_storage(1,ite);
 	return false;
+}
+
+void c2t_hccs_getFax(monster mon) {
+	print(`getting fax of {mon}`,"blue");
+	for i from 1 to 3 {
+		if (mon == $monster[factory worker (female)]) {
+			chat_private('cheesefax','fax factory worker');
+			wait(15);//10 has failed multiple times
+			cli_execute('fax get');
+		}
+		else
+			faxbot(mon);
+
+		if (get_property('photocopyMonster') == mon.name)
+			break;
+
+		cli_execute('fax send');
+	}
+	c2t_assert(get_property('photocopyMonster') == mon.name,'wrong fax monster');
 }
 
 //gave up trying to play nice, so brute forcing with visit_url()s
@@ -332,6 +353,36 @@ boolean c2t_hccs_wishFight(monster mon) {
 	if (get_property("lastEncounter") != mon && get_property("lastEncounter") != "Using the Force")
 		return false;
 	return true;
+}
+
+boolean c2t_hccs_fightGodLobster() {
+	if (get_property('_godLobsterFights').to_int() < 3) {
+		use_familiar($familiar[god lobster]);
+		maximize("mainstat,-equip garbage shirt",false);
+
+		// fight and get equipment
+		c2t_setChoice(1310,1);//get equipment
+		if (my_hp() < 0.5 * my_maxhp())
+			visit_url('clan_viplounge.php?where=hottub');
+
+		item temp = c2t_priority($item[God Lobster's Ring],$item[God Lobster's Scepter],$item[astral pet sweater]);
+		if (temp != $item[none])
+			equip($slot[familiar],temp);
+
+		//combat & choice
+		visit_url('main.php?fightgodlobster=1');
+		run_turn();
+		if (choice_follows_fight())
+			run_choice(-1);
+		c2t_setChoice(1310,0);//unset
+
+		//should have gotten runproof mascara as moxie from globster
+		if (my_primestat() == $stat[moxie])
+			c2t_getEffect($effect[Unrunnable Face],$item[runproof mascara]);
+
+		return true;
+	}
+	return false;
 }
 
 void c2t_hccs_testHandler(int test) {
@@ -546,33 +597,17 @@ boolean c2t_hccs_preCoil() {
 			skippedFortunes = true;
 		}
 	}
+
 	//fax
 	if (!get_property('_photocopyUsed').to_boolean() && item_amount($item[photocopied monster]) == 0) {
-		if (is_online("cheesefax")) {
-			print("getting fax of factory worker (female)","blue");
-			//pretty much the only way to get a fax of a factory worker (female) reliably:
-			for i from 1 to 3 {
-				chat_private('cheesefax','fax factory worker');
-				wait(15);//10 has failed multiple times
-				cli_execute('fax get');
-				if (get_property('photocopyMonster').contains_text("factory worker"))
-					break;
-				cli_execute('fax send');
-			}
-			c2t_assert(get_property('photocopyMonster').contains_text("factory worker"),'wrong fax monster');
-		}
-		else {
-			print("getting fax of ungulith","blue");
-			for i from 1 to 3 {
-				faxbot($monster[ungulith]);
-				if (get_property('photocopyMonster').contains_text("ungulith"))
-					break;
-				cli_execute('fax send');
-			}
-			c2t_assert(get_property('photocopyMonster').contains_text("ungulith"),'wrong fax monster');
-		}
+		if (item_amount($item[Industrial Fire Extinguisher]) > 0 && item_amount($item[Fourth of May Cosplay Saber]) > 0)
+			c2t_hccs_getFax($monster[ungulith]);
+		else if (is_online("cheesefax"))
+			c2t_hccs_getFax($monster[factory worker (female)]);
+		else
+			c2t_hccs_getFax($monster[ungulith]);
 	}
-		
+
 	use_skill(1,$skill[Spirit of Peppermint]);
 	
 	//fish hatchet
@@ -1309,31 +1344,19 @@ boolean c2t_hccs_preItem() {
 }
 
 boolean c2t_hccs_preHotRes() {
-	//this has been moved to the familiar test to take advantage of meteor shower there
-	/*
-	if (item_amount($item[lava-proof pants]) == 0 && item_amount($item[photocopied monster]) > 0 && get_property('photocopyMonster').contains_text('factory worker')) {
-		equip($item[Fourth of May Cosplay Saber]);
-		c2t_setChoice(1387,3);//saber yr
-		use(1,$item[photocopied monster]);
-		run_turn();
-		c2t_setChoice(1387,0);
-	}
-	*/
-
-	//this is mostly for weapon and spell test, but also combos for cloake hot res
-	//should last 15 turns, which is enough to get through hot(1), NC(9), and weapon(1) tests to also affect the spell test
-	if (have_effect($effect[Do You Crush What I Crush?]) == 0 && have_familiar($familiar[Ghost of Crimbo Carols]) && (get_property('_snokebombUsed').to_int() < 3 || !get_property('_latteBanishUsed').to_boolean())) {
+	//cloake buff and fireproof foam suit for +32 hot res total, but also weapon and spell test buffs
+	//weapon/spell buff should last 15 turns, which is enough to get through hot(1), NC(9), and weapon(1) tests to also affect the spell test
+	if (have_effect($effect[Do You Crush What I Crush?]) == 0 && have_familiar($familiar[Ghost of Crimbo Carols])) {
 		equip($item[Vampyric Cloake]);
-		equip($item[Latte Lovers member's mug]);
+		equip($slot[weapon],$item[Fourth of May Cosplay Saber]);
+		equip($slot[off-hand],$item[Industrial Fire Extinguisher]);
 		if (my_mp() < 30)
 			cli_execute('rest free');
 		use_familiar($familiar[Ghost of Crimbo Carols]);
+		c2t_setChoice(1387,3);//saber yr
 		adv1($location[The Dire Warren],-1,"");
-	}
-
-	if (have_effect($effect[Synthesis: Hot]) == 0) {
-		retrieve_item(2, $item[jaba&ntilde;ero-flavored chewing gum]);
-		sweet_synthesis($item[jaba&ntilde;ero-flavored chewing gum], $item[jaba&ntilde;ero-flavored chewing gum]);
+		run_turn();
+		c2t_setChoice(1387,0);
 	}
 
 	use_familiar($familiar[Exotic Parrot]);
@@ -1342,14 +1365,8 @@ boolean c2t_hccs_preHotRes() {
 	ensure_effect($effect[Leash of Linguini]);
 	ensure_effect($effect[Empathy]);
 
-	if (have_effect($effect[Rainbowolin]) == 0)
-		cli_execute('pillkeeper elemental');
-
 	//retro cape
 	cli_execute('c2t_capeMe resistance');
-
-	if (get_property('_genieWishesUsed').to_int() < 3 || available_amount($item[pocket wish]) > 0)
-		cli_execute("genie effect "+$effect[Fireproof Lips]);
 
 	ensure_effect($effect[Elemental Saucesphere]);
 	ensure_effect($effect[Astral Shell]);
@@ -1359,10 +1376,7 @@ boolean c2t_hccs_preHotRes() {
 
 	//emotion chip
 	c2t_getEffect($effect[Feeling Peaceful],$skill[Feel Peaceful]);
-	
-	// Use pocket maze
-	ensure_effect($effect[Amazing]);
-	
+
 	//familiar weight
 	ensure_effect($effect[Blood Bond]);
 	ensure_effect($effect[Leash of Linguini]);
@@ -1375,7 +1389,7 @@ boolean c2t_hccs_preHotRes() {
 
 	//THINGS I DON'T USE FOR HOT TEST ANYMORE, but will fall back on if other things break
 
-	//candle
+	//daily candle
 	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
 		c2t_haveUse($item[rainbow glitter candle]);
 
@@ -1383,15 +1397,6 @@ boolean c2t_hccs_preHotRes() {
 	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
 		if (available_amount($item[magenta seashell]) > 0)
 			ensure_effect($effect[Too Cool for (Fish) School]);
-
-	//speakeasy drink
-	if (!c2t_hccs_thresholdMet(TEST_HOT_RES)) {
-		if (have_effect($effect[Feeling No Pain]) == 0) {
-			c2t_assert(my_meat() >= 500,'Not enough meat. Please autosell stuff.');
-			ensure_ode(2);
-			cli_execute('drink 1 Ish Kabibble');
-		}
-	}
 
 	//potion for sleazy hands & hot powder
 	if (!c2t_hccs_thresholdMet(TEST_HOT_RES)) {
@@ -1407,6 +1412,36 @@ boolean c2t_hccs_preHotRes() {
 			c2t_getEffect($effect[Sleazy Hands],$item[lotion of sleaziness]);
 	}
 
+	//pocket maze
+	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
+		ensure_effect($effect[Amazing]);
+
+	//synthesis: hot
+	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
+		if (have_effect($effect[Synthesis: Hot]) == 0) {
+			retrieve_item(2, $item[jaba&ntilde;ero-flavored chewing gum]);
+			sweet_synthesis($item[jaba&ntilde;ero-flavored chewing gum], $item[jaba&ntilde;ero-flavored chewing gum]);
+		}
+
+	//pillkeeper
+	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
+		if (have_effect($effect[Rainbowolin]) == 0)
+			cli_execute('pillkeeper elemental');
+
+	//pocket wish
+	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
+		if (get_property('_genieWishesUsed').to_int() < 3 || available_amount($item[pocket wish]) > 0)
+			cli_execute("genie effect "+$effect[Fireproof Lips]);
+
+	//speakeasy drink
+	if (!c2t_hccs_thresholdMet(TEST_HOT_RES)) {
+		if (have_effect($effect[Feeling No Pain]) == 0) {
+			c2t_assert(my_meat() >= 500,'Not enough meat. Please autosell stuff.');
+			ensure_ode(2);
+			cli_execute('drink 1 Ish Kabibble');
+		}
+	}
+
 	c2t_hccs_mod2log("modtrace hot resistance");
 
 	return c2t_hccs_thresholdMet(TEST_HOT_RES);
@@ -1417,14 +1452,21 @@ boolean c2t_hccs_preFamiliar() {
 	if (item_amount($item[lava-proof pants]) == 0 && item_amount($item[heat-resistant necktie]) == 0) {//check necktie just in case wish gets the male version
 		equip($item[Fourth of May Cosplay Saber]);
 
-		if (item_amount($item[photocopied monster]) > 0 && get_property('photocopyMonster').contains_text("factory worker")) {
+		if (item_amount($item[industrial fire extinguisher]) == 0) {
+			if (item_amount($item[photocopied monster]) > 0 && get_property('photocopyMonster').contains_text("factory worker")) {
+				c2t_setChoice(1387,3);//saber yr
+				use(1,$item[photocopied monster]);
+				run_turn();
+				c2t_setChoice(1387,0);
+			}
+			else
+				c2t_assert(c2t_hccs_wishFight($monster[factory worker (female)]),"factory worker wish fail");
+		}
+		else {
 			c2t_setChoice(1387,3);//saber yr
-			use(1,$item[photocopied monster]);
-			run_turn();
+			adv1($location[Thugnderdome],-1,"");//everything is saberable and no crazy NCs
 			c2t_setChoice(1387,0);
 		}
-		else
-			c2t_assert(c2t_hccs_wishFight($monster[factory worker (female)]),"factory worker wish fail");
 	}
 
 	//should only get 1 per run, if any; would use in NEP combat loop, but no point as sombrero would already be already giving max stats
@@ -1852,10 +1894,6 @@ void c2t_hccs_fights() {
 		&& have_effect($effect[Tomato Power]) == 0
 		&& get_property('lastCopyableMonster').to_monster() != $monster[possessed can of tomatoes]) {
 
-		//don't need hound dog with map the monsters. going to keep for now as to not accidentally have crab as familiar. familiar doesn't really matter here anyway
-		use_familiar($familiar[Jumpsuited Hound Dog]);
-		//max mp to max latte gulp to fuel buffs
-		maximize("mp,-equip garbage shirt,equip fourth may,equip latte,equip vampyric cloake,-equip backup camera",false);
 		cli_execute('mood apathetic');
 
 		if (my_hp() < 0.5 * my_maxhp())
@@ -1863,7 +1901,8 @@ void c2t_hccs_fights() {
 		
 		// Fruits in skeleton store (Saber YR)
 		if ((available_amount($item[ointment of the occult]) == 0 && available_amount($item[grapefruit]) == 0 && have_effect($effect[Mystically Oiled]) == 0)
-				|| (available_amount($item[oil of expertise]) == 0 && available_amount($item[cherry]) == 0 && have_effect($effect[Expert Oiliness]) == 0)) { //todo: add mus pot
+				|| (available_amount($item[oil of expertise]) == 0 && available_amount($item[cherry]) == 0 && have_effect($effect[Expert Oiliness]) == 0)
+				|| (available_amount($item[philter of phorce]) == 0 && available_amount($item[lemon]) == 0 && have_effect($effect[Phorcefullness]) == 0)) {
 			if (get_property('questM23Meatsmith') == 'unstarted') {
 				// Have to start meatsmith quest.
 				visit_url('shop.php?whichshop=meatsmith&action=talk');
@@ -1875,32 +1914,37 @@ void c2t_hccs_fights() {
 			if (!$location[The Skeleton Store].noncombat_queue.contains_text('Skeletons In Store'))
 				abort('Something went wrong at skeleton store.');
 
-			c2t_setChoice(1387,3);//saber yr
-			c2t_cartographyHunt($location[The Skeleton Store], $monster[novelty tropical skeleton]);
-			run_turn();
-			run_choice(-1);//just in case
-			c2t_setChoice(1387,0);
+			if (get_property('lastCopyableMonster').to_monster() != $monster[novelty tropical skeleton]) {
+				//max mp to max latte gulp to fuel buffs
+				use_familiar($familiar[Jumpsuited Hound Dog]);
+				maximize("mp,-equip garbage shirt,equip latte,equip vampyric cloake,-equip backup camera",false);
+
+				c2t_cartographyHunt($location[The Skeleton Store],$monster[novelty tropical skeleton]);
+				run_turn();
+			}
+			//get the fruits with nostalgia
+			c2t_hccs_fightGodLobster();
 		}
 
 		// Tomato in pantry (NOT Saber YR) -- RUNNING AWAY to use nostalgia later
 		if (available_amount($item[tomato juice of powerful power]) == 0
 			&& available_amount($item[tomato]) == 0
 			&& have_effect($effect[Tomato Power]) == 0
-			&& !get_property('lastCopyableMonster').contains_text($monster[possessed can of tomatoes].to_string())
 			) {
-			//thanks to map the monsters, dump extra latte banish on bunny to fish for latte ingredient
-			if (!get_property('_latteBanishUsed').to_boolean())
-				adv1($location[The Dire Warren],-1,"");
 
 			if (get_property('_latteDrinkUsed').to_boolean())
 				cli_execute('latte refill cinnamon pumpkin vanilla');
 
-			//c2t_setChoice(1387,3);//saber yr
-			//should run from this
-			c2t_cartographyHunt($location[The Haunted Pantry], $monster[possessed can of tomatoes]);
-			run_turn();
-			//run_choice(-1);//just in case
-			//c2t_setChoice(1387,0);
+			if (get_property('lastCopyableMonster').to_monster() != $monster[possessed can of tomatoes]) {
+				//max mp to max latte gulp to fuel buffs
+				use_familiar($familiar[Jumpsuited Hound Dog]);
+				maximize("mp,-equip garbage shirt,equip latte,equip vampyric cloake,-equip backup camera",false);
+
+				c2t_cartographyHunt($location[The Haunted Pantry],$monster[possessed can of tomatoes]);
+				run_turn();
+			}
+			//get the tomato with nostalgia
+			c2t_hccs_fightGodLobster();
 		}
 	}
 	
@@ -1959,26 +2003,14 @@ void c2t_hccs_fights() {
 
 	use_familiar(levelingFam);
 
-	// Your Mushroom Garden
-	// should get tomato drops from this
-	if (get_property('_mushroomGardenFights').to_int() == 0) {
-		maximize("mainstat,-equip garbage shirt"+famEq,false);
-		//cli_execute('mood execute');
-		adv1($location[Your Mushroom Garden],-1,"");
-	}
-	if (!get_property('_mushroomGardenVisited').to_boolean()) {
-		c2t_setChoice(1410,1);//fertilize
-		adv1($location[Your Mushroom Garden],-1,"");
-		run_turn();
-		c2t_setChoice(1410,0);//unset choice
-	}
-
 
 	//get crimbo ghost buff from dudes at NEP
 	if (have_effect($effect[Holiday Yoked]) == 0) {
 		// declining quest
 		// to add: accept if booze or food quest
 		//c2t_setChoice(1322,2);//this should be done turn 0 via wanderer
+		if (get_property('_latteDrinkUsed').to_boolean())
+			cli_execute('latte refill cinnamon pumpkin vanilla');
 		use_familiar($familiar[Ghost of Crimbo Carols]);
 		maximize("mainstat,equip latte,-equip i voted,-equip backup camera",false);
 
@@ -1993,33 +2025,8 @@ void c2t_hccs_fights() {
 		c2t_assert(have_effect($effect[Holiday Yoked]) > 0,"Something broke trying to get Holiday Yoked");
 	}
 
-	// God Lobster
-	if (get_property('_godLobsterFights').to_int() < 3) {//fireworks shop makes saving this not needed for me
-		use_familiar($familiar[god lobster]);
-		maximize("mainstat,-equip garbage shirt",false);
-		
-		// fight and get equipment
-		while (get_property('_godLobsterFights').to_int() < 3) {
-			c2t_setChoice(1310,1);//get equipment
-			if (my_hp() < 0.5 * my_maxhp())
-				visit_url('clan_viplounge.php?where=hottub');
-
-			item temp = c2t_priority($item[God Lobster's Ring],$item[God Lobster's Scepter],$item[astral pet sweater]);
-			if (temp != $item[none])
-				equip($slot[familiar],temp);
-
-			//combat & choice
-			visit_url('main.php?fightgodlobster=1');
-			run_turn();
-			if (choice_follows_fight())
-				run_choice(-1);
-			c2t_setChoice(1310,0);//unset
-
-			//should have gotten runproof mascara as moxie from globster
-			if (my_primestat() == $stat[moxie])
-				c2t_getEffect($effect[Unrunnable Face],$item[runproof mascara]);
-		}
-	}
+	//nostalgia for moxie stuff and run down remaining glob fights
+	while (c2t_hccs_fightGodLobster());
 
 	use_familiar(levelingFam);
 
@@ -2034,6 +2041,19 @@ void c2t_hccs_fights() {
 		//in case the tentacle boss shows up; will cause an instant loss in a wish fight if health left at 0
 		if (have_effect($effect[beaten up]) > 0 || my_hp() < 50)
 			cli_execute('rest free');
+	}
+
+	// Your Mushroom Garden
+	if (get_property('_mushroomGardenFights').to_int() == 0) {
+		maximize("mainstat,-equip garbage shirt"+famEq,false);
+		//cli_execute('mood execute');
+		adv1($location[Your Mushroom Garden],-1,"");
+	}
+	if (!get_property('_mushroomGardenVisited').to_boolean()) {
+		c2t_setChoice(1410,1);//fertilize
+		adv1($location[Your Mushroom Garden],-1,"");
+		run_turn();
+		c2t_setChoice(1410,0);//unset choice
 	}
 
 	c2t_hccs_wandererFight();//hopefully doesn't do kramco
