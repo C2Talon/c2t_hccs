@@ -1115,6 +1115,8 @@ boolean c2t_hccs_allTheBuffs() {
 			}
 			if (have_effect(synth) == 0 && item_amount(candy1) > 0) {
 				if (item_amount($item[pile of candy]) == 0) {
+					if (!have_equipped($item[fourth of may cosplay saber]))
+						equip($item[fourth of may cosplay saber]);
 					c2t_setChoice(1387,3);//saber yr
 					c2t_cartographyHunt($location[South of the Border],$monster[angry pi&ntilde;ata]);
 					run_turn();
@@ -1450,7 +1452,8 @@ boolean c2t_hccs_preHotRes() {
 boolean c2t_hccs_preFamiliar() {
 	//sabering factory worker for meteor shower
 	if (item_amount($item[lava-proof pants]) == 0 && item_amount($item[heat-resistant necktie]) == 0) {//check necktie just in case wish gets the male version
-		equip($item[Fourth of May Cosplay Saber]);
+		if (!have_equipped($item[fourth of may cosplay saber]))
+			equip($item[Fourth of May Cosplay Saber]);
 
 		if (item_amount($item[industrial fire extinguisher]) == 0) {
 			if (item_amount($item[photocopied monster]) > 0 && get_property('photocopyMonster').contains_text("factory worker")) {
@@ -1639,7 +1642,8 @@ boolean c2t_hccs_preWeapon() {
 		cli_execute('mood apathetic');
 
 		//only 2 things needed for combat:
-		equip($item[Fourth of May Cosplay Saber]);
+		if (!have_equipped($item[fourth of may cosplay saber]))
+			equip($item[Fourth of May Cosplay Saber]);
 		use_familiar($familiar[Melodramedary]);
 
 		if (item_amount($item[photocopied monster]) > 0 && get_property('photocopyMonster').contains_text("ungulith")) {
@@ -2068,7 +2072,8 @@ void c2t_hccs_fights() {
 	//moxie needs olives
 	if (my_primestat() == $stat[moxie] && have_effect($effect[Slippery Oiliness]) == 0 && item_amount($item[jumbo olive]) == 0) {
 		//only thing that needs be equipped
-		equip($item[Fourth of May Cosplay saber]);
+		if (!have_equipped($item[fourth of may cosplay saber]))
+			equip($item[Fourth of May Cosplay saber]);
 		//TODO evil olive - change to run away from and feel nostagic+envy+free kill another thing to save a saber use for spell test
 		c2t_assert(c2t_hccs_wishFight($monster[Evil Olive]),"Failed to fight evil olive");
 	}
