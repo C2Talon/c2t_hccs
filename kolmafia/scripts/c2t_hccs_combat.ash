@@ -216,16 +216,8 @@ void main(int initround, monster foe, string page) {
 
 				return;
 
-			case $monster[piranha plant]://should be getting tomato from this
-				bbSubmit(
-					mHead + mSteal
-					.bb($skill[feel nostalgic])
-					.bb($skill[feel envy])
-					+ mBasic
-				);
-				return;
-
-			//vote monsters: most basic of combats
+			//most basic of combats
+			case $monster[piranha plant]:
 			case $monster[government bureaucrat]:
 			case $monster[terrible mutant]:
 			case $monster[angry ghost]:

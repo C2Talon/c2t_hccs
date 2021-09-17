@@ -1323,6 +1323,9 @@ boolean c2t_hccs_preItem() {
 
 	ensure_effect($effect[Nearly All-Natural]);//bag of grain
 	ensure_effect($effect[Steely-Eyed Squint]);
+
+	//extra hand for latte in cases of 2 item drop weapons
+	use_familiar($familiar[left-hand man]);
 	
 	maximize('item,2 booze drop,-equip broken champagne bottle,-equip surprisingly capacious handbag,-equip red-hot sausage fork', false);
 
@@ -1338,7 +1341,6 @@ boolean c2t_hccs_preItem() {
 		//repeat of previous maximize call
 		maximize('item,2 booze drop,-equip broken champagne bottle,-equip surprisingly capacious handbag,-equip red-hot sausage fork', false);
 	}
-
 
 	c2t_hccs_mod2log("modtrace item drop;modtrace booze drop");
 
