@@ -12,36 +12,49 @@ import <c2t_hccs_aux.ash>
 int START_TIME = now_to_int();
 boolean skippedFortunes = false;
 
-//aborts before doing test
-boolean HALT_BEFORE_TEST = get_property("c2t_hccs_haltBeforeTest").to_boolean();
-//prints modtrace before non-stat tests
-boolean PRINT_MODTRACE = get_property("c2t_hccs_printModtrace").to_boolean();
-
+//properties
+//can set the following properties via the CLI. This just sets some defaults in case they don't exist to make handling them simpler
 /*
--- other properties that change options --
--- can set via the CLI with "set c2t_hccs_name = value" --
-
+set c2t_hccs_haltBeforeTest = false
+aborts after prepping for each test but before actually doing it at the council
+*/
+if (!property_exists("c2t_hccs_haltBeforeTest",false))
+	set_property("c2t_hccs_haltBeforeTest","false");
+/*
+set c2t_hccs_printModtrace = false
+prints a modtrace to the CLI and log just before non-stat tests
+*/
+if (!property_exists("c2t_hccs_printModtrace",false))
+	set_property("c2t_hccs_printModtrace","false");
+/*
 set c2t_hccs_joinClan = 90485
 This is the clan that the script will join for the VIP lounge and fortune teller
 Takes an int or string, where int would be clanid (preferred), and string would be the clan name
-Will default to 90485 (Bonus Adventures From Hell)
-
+*/
+if (!property_exists("c2t_hccs_joinClan",false))
+	set_property("c2t_hccs_joinClan","90485");
+/*
 set c2t_hccs_clanFortunes = CheeseFax
 This is the name of the person/bot that you want to do the fortune teller with
-Will default to CheeseFax
-
+*/
+if (!property_exists("c2t_hccs_clanFortunes",false))
+	set_property("c2t_hccs_clanFortunes","CheeseFax");
+/*
 set c2t_hccs_skipFinalService = false
 If this is set to true, the final service will be skipped leaving you in-run once finished
-Will default to false
-
+*/
+if (!property_exists("c2t_hccs_skipFinalService",false))
+	set_property("c2t_hccs_skipFinalService","false");
+/*
 set c2t_hccs_thresholds = 1,1,1,1,1,1,1,1,1,1
 These are the 10 thresholds corresponding to the minimum turns to allow each test to take
 The order is hp,mus,mys,mox,fam,weapon,spell,nc,item,hot -- which is the same as the game
 The script will stop just before doing a test if a threshold is not met after doing all the pre-test stuff
 Example: 1,1,1,1,35,1,31,1,1,1 will allow the familiar test to take 35 turns, the spell test to take 31 turns, and all others must be 1 turn
-Will default to 1,1,1,1,1,1,1,1,1,1
-
 */
+if (!property_exists("c2t_hccs_thresholds",false))
+	set_property("c2t_hccs_thresholds","1,1,1,1,1,1,1,1,1,1");
+
 
 //wtb enum
 int TEST_HP = 1;
@@ -170,7 +183,7 @@ void c2t_hccs_printRunTime(boolean f) {
 }
 
 void c2t_hccs_mod2log(string str) {
-	if (PRINT_MODTRACE)
+	if (get_property("c2t_hccs_printModtrace").to_boolean())
 		logprint(cli_execute_output(str));
 }
 
@@ -342,13 +355,11 @@ int c2t_getEffect(effect eff,item ite,int min) {
 }
 
 boolean c2t_hccs_wishFight(monster mon) {
-	c2t_setChoice(1387,3);//saber yr
 	if (!c2t_wishFight(mon))
 		return false;
 	run_turn();
 	//if (choice_follows_fight()) //saber force breaks this I think?
 		run_choice(-1);//just in case
-	c2t_setChoice(1387,0);//unset
 
 	if (get_property("lastEncounter") != mon && get_property("lastEncounter") != "Using the Force")
 		return false;
@@ -448,7 +459,7 @@ void c2t_hccs_testHandler(int test) {
 		default:
 			abort('Something went horribly wrong with the test handler');
 	}
-	if (HALT_BEFORE_TEST)
+	if (get_property("c2t_hccs_haltBeforeTest").to_boolean())
 		abort(`Halting. Double-check test {test}: {TEST_NAME[test]} ({type})`);
 
 	turns = c2t_hccs_testTurns(test);
@@ -515,11 +526,8 @@ boolean c2t_hccs_thresholdMet(int test) {
 	if (test == TEST_COIL_WIRE || test == 30)
 		return true;
 
-	string thr = get_property('c2t_hccs_thresholds');
-	if (thr == "")
-		thr = "1,1,1,1,1,1,1,1,1,1";
+	string [int] arr = split_string(get_property('c2t_hccs_thresholds'),",");
 
-	string [int] arr = split_string(thr,",");
 	if (count(arr) == 10 && arr[test-1].to_int() > 0 && arr[test-1].to_int() <= 60)
 		return (c2t_hccs_testTurns(test) <= arr[test-1].to_int());
 	else {
@@ -529,30 +537,46 @@ boolean c2t_hccs_thresholdMet(int test) {
 }
 
 
-// sets some settings on start
+//sets and backup some settings on start
 void c2t_hccs_init() {
-	// allow buy from NPCs
-	set_property('_saved_autoSatisfyWithNPCs', get_property('autoSatisfyWithNPCs'));
-	set_property('autoSatisfyWithNPCs', 'true');
-	// allow buy from coinmasters (hermit)
-	set_property('_saved_autoSatisfyWithCoinmasters', get_property('autoSatisfyWithCoinmasters'));
-	set_property('autoSatisfyWithCoinmasters', 'true');
-	//just to cover my butt if/when I turn recovery off in a previous session
-	set_property('hpAutoRecovery', '0.6');
+	//buy from NPCs
+	set_property('_saved_autoSatisfyWithNPCs',get_property('autoSatisfyWithNPCs'));
+	set_property('autoSatisfyWithNPCs','true');
+	//buy from coinmasters/hermit
+	set_property('_saved_autoSatisfyWithCoinmasters',get_property('autoSatisfyWithCoinmasters'));
+	set_property('autoSatisfyWithCoinmasters','true');
+	//saber yr
+	set_property('_saved_choiceAdventure1387',get_property('choiceAdventure1387'));
+	set_property('choiceAdventure1387','3');
+	//make sure to have some user-defined hp recovery since I don't want to think about it
+	if (get_property("recoveryScript") == "" && get_property('hpAutoRecovery').to_float() <= 0.5) {
+		set_property('_saved_hpAutoRecovery',get_property('hpAutoRecovery'));
+		set_property('hpAutoRecovery','0.6');
+	}
+	//no mana burn/every mp is sacred
+	set_property('_saved_manaBurningThreshold',get_property('manaBurningThreshold'));
+	set_property('manaBurningThreshold','-0.05');
+	//custom combat script
+	if (get_property('customCombatScript') != "c2t_hccs")
+		set_property('_saved_customCombatScript',get_property('customCombatScript'));
+	set_property('customCombatScript',"c2t_hccs");
 	
 	visit_url('council.php');// Initialize council.
-	
-	//kinda need to use this script's ccs when doing manual interventions as well, which is why the original is not being saved and restored
-	//set_property('_saved_customCombatScript',get_property('customCombatScript'));
-	cli_execute('ccs c2t_hccs');
 }
 
-// resets some settings on exit
+//restore settings on exit
 void c2t_hccs_exit() {
-	set_property('autoSatisfyWithNPCs', get_property('_saved_autoSatisfyWithNPCs'));
-	set_property('autoSatisfyWithCoinmasters', get_property('_saved_autoSatisfyWithCoinmasters'));
-	//set_property('customCombatScript',get_property('_saved_customCombatScript'));
-	set_property('hpAutoRecovery', '0.6');
+	set_property('autoSatisfyWithNPCs',get_property('_saved_autoSatisfyWithNPCs'));
+	set_property('autoSatisfyWithCoinmasters',get_property('_saved_autoSatisfyWithCoinmasters'));
+	set_property('choiceAdventure1387',get_property('_saved_choiceAdventure1387'));
+
+	if (get_property('_saved_hpAutoRecovery') != "")
+		set_property('hpAutoRecovery',get_property('_saved_hpAutoRecovery'));
+	set_property('manaBurningThreshold',get_property('_saved_manaBurningThreshold'));
+
+	//only want to restore combat script if CS finished, as it's needed for manual interventions
+	if (get_property("csServicesPerformed").split_string(",").count() == 11 && get_property('_saved_customCombatScript') != "")
+		set_property('customCombatScript',get_property('_saved_customCombatScript'));
 	//don't want CS moods running during manual intervention or when fully finished
 	cli_execute('mood apathetic');
 
@@ -581,13 +605,10 @@ boolean c2t_hccs_preCoil() {
 		string clan = get_property("c2t_hccs_joinClan");
 		if (clan.to_int() != 0)
 			c2t_assert(c2t_joinClan(clan.to_int()),`Could not join clan {clan}`);
-		else if (clan != "")
-			c2t_assert(c2t_joinClan(clan),`Could not join clan {clan}`);
 		else
-			c2t_assert(c2t_joinClan(90485),"Could not join Bonus Adventures From Hell");
+			c2t_assert(c2t_joinClan(clan),`Could not join clan {clan}`);
 
 		string fortunes = get_property("c2t_hccs_clanFortunes");
-		fortunes = (fortunes == ""?"cheesefax":fortunes);
 
 		if (is_online(fortunes))
 			while (get_property('_clanFortuneConsultUses').to_int() < 3)
@@ -1117,11 +1138,9 @@ boolean c2t_hccs_allTheBuffs() {
 				if (item_amount($item[pile of candy]) == 0) {
 					if (!have_equipped($item[fourth of may cosplay saber]))
 						equip($item[fourth of may cosplay saber]);
-					c2t_setChoice(1387,3);//saber yr
 					c2t_cartographyHunt($location[South of the Border],$monster[angry pi&ntilde;ata]);
 					run_turn();
 					run_choice(-1);
-					c2t_setChoice(1387,0);
 				}
 				sweet_synthesis(synth);
 				c2t_assert(have_effect(synth) > 0,"Synthesis failed even after fighting an angry pinata");
@@ -1353,14 +1372,13 @@ boolean c2t_hccs_preHotRes() {
 	if (have_effect($effect[Do You Crush What I Crush?]) == 0 && have_familiar($familiar[Ghost of Crimbo Carols])) {
 		equip($item[Vampyric Cloake]);
 		equip($slot[weapon],$item[Fourth of May Cosplay Saber]);
-		equip($slot[off-hand],$item[Industrial Fire Extinguisher]);
+		if (item_amount($item[Industrial Fire Extinguisher]) > 0)
+			equip($slot[off-hand],$item[Industrial Fire Extinguisher]);
 		if (my_mp() < 30)
 			cli_execute('rest free');
 		use_familiar($familiar[Ghost of Crimbo Carols]);
-		c2t_setChoice(1387,3);//saber yr
 		adv1($location[The Dire Warren],-1,"");
 		run_turn();
-		c2t_setChoice(1387,0);
 	}
 
 	use_familiar($familiar[Exotic Parrot]);
@@ -1452,25 +1470,25 @@ boolean c2t_hccs_preHotRes() {
 }
 
 boolean c2t_hccs_preFamiliar() {
-	//sabering factory worker for meteor shower
-	if (item_amount($item[lava-proof pants]) == 0 && item_amount($item[heat-resistant necktie]) == 0) {//check necktie just in case wish gets the male version
-		if (!have_equipped($item[fourth of may cosplay saber]))
+	//sabering fax for meteor shower
+	//using fax/wish here as feeling lost here is very likely
+	if (have_effect($effect[meteor showered]) == 0
+		&& item_amount($item[lava-proof pants]) == 0
+		&& item_amount($item[heat-resistant necktie]) == 0
+		&& item_amount($item[corrupted marrow]) == 0) {
+
+		if (!have_equipped($item[Fourth of May Cosplay Saber]))
 			equip($item[Fourth of May Cosplay Saber]);
 
-		if (item_amount($item[industrial fire extinguisher]) == 0) {
-			if (item_amount($item[photocopied monster]) > 0 && get_property('photocopyMonster').contains_text("factory worker")) {
-				c2t_setChoice(1387,3);//saber yr
-				use(1,$item[photocopied monster]);
-				run_turn();
-				c2t_setChoice(1387,0);
-			}
-			else
-				c2t_assert(c2t_hccs_wishFight($monster[factory worker (female)]),"factory worker wish fail");
+		if (item_amount($item[photocopied monster]) > 0) {
+			use(1,$item[photocopied monster]);
+			run_turn();
 		}
 		else {
-			c2t_setChoice(1387,3);//saber yr
-			adv1($location[Thugnderdome],-1,"");//everything is saberable and no crazy NCs
-			c2t_setChoice(1387,0);
+			if (item_amount($item[industrial fire extinguisher]) > 0)
+				c2t_assert(c2t_hccs_wishFight($monster[ungulith]),"ungulith wish fail");
+			else
+				c2t_assert(c2t_hccs_wishFight($monster[factory worker (female)]),"factory worker wish fail");
 		}
 	}
 
@@ -1635,12 +1653,8 @@ boolean c2t_hccs_preWeapon() {
 	// Pool buff. Should have fallen through from noncom
 	ensure_effect($effect[Billiards Belligerence]);
 
-	// Corrupted marrow 
-	// meteor shower gets used here, though probably not needed if TT or PM
-	if (have_effect($effect[cowrruption]) == 0 && item_amount($item[corrupted marrow]) == 0) {
-		if (get_property('camelSpit').to_int() < 100)
-			abort("Camel spit is only at "+get_property('camelSpit'));
-
+	//meteor shower
+	if (have_effect($effect[meteor showered]) == 0) {
 		cli_execute('mood apathetic');
 
 		//only 2 things needed for combat:
@@ -1648,14 +1662,7 @@ boolean c2t_hccs_preWeapon() {
 			equip($item[Fourth of May Cosplay Saber]);
 		use_familiar($familiar[Melodramedary]);
 
-		if (item_amount($item[photocopied monster]) > 0 && get_property('photocopyMonster').contains_text("ungulith")) {
-			c2t_setChoice(1387,3);//saber yr
-			use(1,$item[photocopied monster]);
-			run_turn();
-			c2t_setChoice(1387,0);
-		}
-		else
-			c2t_assert(c2t_hccs_wishFight($monster[ungulith]),"ungulith wish fail");
+		adv1($location[Thugnderdome],-1,"");//everything is saberable and no crazy NCs
 	}
 
 	c2t_getEffect($effect[Cowrruption],$item[corrupted marrow]);
@@ -1803,9 +1810,7 @@ boolean c2t_hccs_preSpell() {
 	// meteor lore // moxie can't do this, as it wastes a saber on evil olive -- moxie should be able to do this now with nostalgia earlier?
 	if (have_effect($effect[Meteor Showered]) == 0 && get_property('_saberForceUses').to_int() < 5) {
 		maximize("mainstat,equip fourth may",false);
-		c2t_setChoice(1387,3);//saber yr
 		adv1($location[Thugnderdome],-1,"");//everything is saberable and no crazy NCs
-		c2t_setChoice(1387,0);
 	}
 
 	if (have_effect($effect[Visions of the Deep Dark Deeps]) == 0) {
@@ -1916,7 +1921,8 @@ void c2t_hccs_fights() {
 			}
 			if (!can_adv($location[The Skeleton Store], false))
 				abort('Cannot open skeleton store!');
-			adv1($location[The Skeleton Store], -1, '');
+			if ($location[The Skeleton Store].turns_spent == 0 && !$location[The Skeleton Store].noncombat_queue.contains_text('Skeletons In Store'))
+				adv1($location[The Skeleton Store], -1, '');
 			if (!$location[The Skeleton Store].noncombat_queue.contains_text('Skeletons In Store'))
 				abort('Something went wrong at skeleton store.');
 

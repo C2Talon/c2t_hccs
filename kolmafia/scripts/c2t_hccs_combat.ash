@@ -40,6 +40,12 @@ string bbSubmit(string macro);
 // consult script for CS
 
 void main(int initround, monster foe, string page) {
+	//saber force
+	if (have_effect($effect[meteor showered]) > 0 || have_effect($effect[Fireproof Foam Suit]) > 0) {
+		bb($skill[Use the Force]).bbSubmit();
+		return;
+	}
+
 	string mHead = "scrollwhendone;";
 	string mSteal = "pickpocket;";
 
@@ -97,8 +103,6 @@ void main(int initround, monster foe, string page) {
 			m += bb($skill[Become a Cloud of Mist]);
 			m += bb($skill[Fire Extinguisher: Foam Yourself]);
 			m.bbSubmit();
-			waitq(1);
-			bb($skill[Use the Force]).bbSubmit();
 		}
 		else {//NEP
 			m += bb($skill[Gulp Latte]);
@@ -108,14 +112,15 @@ void main(int initround, monster foe, string page) {
 		}
 		return;
 	}
-	//saber random thing at this location for meteor shower buff
+	//saber random thing at this location for meteor shower buff -- saber happens elsewhere
 	else if (get_property("lastAdventure").to_location() == $location[Thugnderdome]) {
-		bbSubmit(
-			mSteal
-			.bb($skill[meteor shower])
-		);
-		waitq(1);
-		bb($skill[Use the Force]).bbSubmit();
+		m = mHead + mSteal.bb($skill[meteor shower]);
+
+		//camel spit for weapon test, which is directly after combat test
+		if (get_property("csServicesPerformed").contains_text("Be a Living Statue") && !get_property("csServicesPerformed").contains_text("Reduce Gazelle Population"))
+			m += bb($skill[%fn, spit on me!]);
+
+		m.bbSubmit();
 		return;
 	}
 	else {
@@ -148,32 +153,22 @@ void main(int initround, monster foe, string page) {
 					.bb($skill[throw latte on opponent])
 				);
 				return;
-			//saber yr to not break mafia tracking
+			//faxes -- saber use is elsewhere
 			case $monster[ungulith]:
-				bbSubmit(
-					mSteal
-					.bb($skill[%fn, spit on me!])
-					.bb($skill[meteor shower])
-				);
-				waitq(1);
-				bb($skill[Use the Force]).bbSubmit();
-				return;
 			case $monster[factory worker (female)]:
 			case $monster[factory worker (male)]://just in case this shows up
 				bbSubmit(
 					mSteal
 					.bb($skill[meteor shower])
 				);
-				waitq(1);
-				bb($skill[Use the Force]).bbSubmit();
 				return;
 			case $monster[Evil Olive]:
 			case $monster[hobelf]://apparently this doesn't work?
 			case $monster[elf hobo]://this might though?
 			case $monster[angry pi&ntilde;ata]:
-				mSteal.bbSubmit();
-				waitq(1);
-				bb($skill[Use the Force]).bbSubmit();
+				mSteal
+					.bb($skill[Use the Force])//don't care about tracking a potential stolen item, so cut it straight away
+					.bbSubmit();
 				return;
 
 			//using all free kills on neverending party monsters
@@ -190,13 +185,6 @@ void main(int initround, monster foe, string page) {
 				}
 				//feel pride still thinks it can be used after max uses for some reason
 				m += get_property("_feelPrideUsed").to_int() < 3 ? bb($skill[Feel Pride]) : "";
-				/*if (have_skill($skill[Army of Toddlers]) && !get_property('_armyToddlerCast').to_boolean()) {
-					m += bb($skill[Army of Toddlers]);
-					//toddlers mess with combat text, so submit it now
-					m.bbSubmit();
-					waitq(1);
-					m = mHead;
-				}*/
 
 				//free kills after NEP free fights
 				if (get_property('_neverendingPartyFreeTurns').to_int() == 10 && !get_property('_gingerbreadMobHitUsed').to_boolean()) {
@@ -204,8 +192,9 @@ void main(int initround, monster foe, string page) {
 						m
 						.bb($skill[Sing Along])
 						//free kill skills
-						.bb($skill[Otoscope])//won't use otoscope anywhere else, so might as well use it while doc bag equipped
-						.bb($skill[Chest X-Ray])//this is unequipped after all uses, so don't need to check for it for now
+						//won't use otoscope anywhere else, so might as well use it while doc bag equipped
+						.bb(get_property("_otoscopeUsed").to_int() < 3 ? bb($skill[Otoscope]) : "")
+						.bb(get_property("_chestXRayUsed").to_int() < 3 ? bb($skill[Chest X-Ray]) : "")
 						.bb(get_property("_shatteringPunchUsed").to_int() < 3 ? bb($skill[Shattering Punch]) : "")
 						.bb($skill[Gingerbread Mob Hit])
 					);
