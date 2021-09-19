@@ -274,8 +274,11 @@ void main(int initround, monster foe, string page) {
 			case $monster[Novio Cad&aacute;ver]:
 			case $monster[Padre Cad&aacute;ver]:
 			case $monster[Persona Inocente Cad&aacute;ver]:
+			//talk like a pirate day
+			case $monster[ambulatory pirate]:
+			case $monster[migratory pirate]:
+			case $monster[peripatetic pirate]:
 				m = mHead + mSteal;
-				m += bb("abort after;");
 				m += bb($skill[reflex hammer]);
 				if (get_property("_snokebombUsed").to_int() < get_property("_feelHatredUsed").to_int())
 					m += bb($skill[snokebomb]);
@@ -283,7 +286,6 @@ void main(int initround, monster foe, string page) {
 					m += bb($skill[feel hatred]);
 				m.bbSubmit();
 				//pretty sure most adv1() in the script assume it succeeds in fighting what it's supposed to, which the holiday monster is very much not the right one, so abort to rerun
-				//I don't think the combat script will get far enough to abort though
 				abort("Aborting for safety after encountering a holiday monster. Should be able to simply rerun to resume.");
 				return;
 
