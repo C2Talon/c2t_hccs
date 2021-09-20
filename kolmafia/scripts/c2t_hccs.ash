@@ -1929,7 +1929,7 @@ void c2t_hccs_fights() {
 			if (get_property('lastCopyableMonster').to_monster() != $monster[novelty tropical skeleton]) {
 				//max mp to max latte gulp to fuel buffs
 				use_familiar($familiar[Jumpsuited Hound Dog]);
-				maximize("mp,-equip garbage shirt,equip latte,equip vampyric cloake,-equip backup camera",false);
+				maximize("mp,-equip garbage shirt,equip latte,equip vampyric cloake,-equip backup camera,equip doc bag",false);
 
 				c2t_cartographyHunt($location[The Skeleton Store],$monster[novelty tropical skeleton]);
 				run_turn();
@@ -1944,13 +1944,12 @@ void c2t_hccs_fights() {
 			&& have_effect($effect[Tomato Power]) == 0
 			) {
 
-			if (get_property('_latteDrinkUsed').to_boolean())
-				cli_execute('latte refill cinnamon pumpkin vanilla');
-
 			if (get_property('lastCopyableMonster').to_monster() != $monster[possessed can of tomatoes]) {
+				if (get_property('_latteDrinkUsed').to_boolean())
+					cli_execute('latte refill cinnamon pumpkin vanilla');
 				//max mp to max latte gulp to fuel buffs
 				use_familiar($familiar[Jumpsuited Hound Dog]);
-				maximize("mp,-equip garbage shirt,equip latte,equip vampyric cloake,-equip backup camera",false);
+				maximize("mp,-equip garbage shirt,equip latte,equip vampyric cloake,-equip backup camera,equip doc bag",false);
 
 				c2t_cartographyHunt($location[The Haunted Pantry],$monster[possessed can of tomatoes]);
 				run_turn();
@@ -2056,26 +2055,12 @@ void c2t_hccs_fights() {
 	}
 
 	// Your Mushroom Garden
-	if (get_property('_mushroomGardenFights').to_int() == 0) {
+	if ((get_campground() contains $item[packet of mushroom spores]) && get_property('_mushroomGardenFights').to_int() == 0) {
 		maximize("mainstat,-equip garbage shirt"+famEq,false);
-		//cli_execute('mood execute');
 		adv1($location[Your Mushroom Garden],-1,"");
 	}
-	if (!get_property('_mushroomGardenVisited').to_boolean()) {
-		c2t_setChoice(1410,1);//fertilize
-		adv1($location[Your Mushroom Garden],-1,"");
-		run_turn();
-		c2t_setChoice(1410,0);//unset choice
-	}
 
-	c2t_hccs_wandererFight();//hopefully doesn't do kramco
-
-	/* starting to have this bleed into the -combat test, so need to remove
-	// possibility: do pvp fights to remove instead of not use at all?
-	if (have_effect($effect[Mush-Maw]) == 0) {
-		cli_execute('make mushroom tea');
-		chew(1,$item[mushroom tea]);
-	}*/
+	c2t_hccs_wandererFight();//shouldn't do kramco
 
 	//moxie needs olives
 	if (my_primestat() == $stat[moxie] && have_effect($effect[Slippery Oiliness]) == 0 && item_amount($item[jumbo olive]) == 0) {

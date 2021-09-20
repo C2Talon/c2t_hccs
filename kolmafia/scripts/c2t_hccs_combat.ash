@@ -1,5 +1,5 @@
-//c2t
 //c2t community service combat
+//c2t
 
 //most of this is subject to drastic change; the macro builder stuff probably going to be pulled out and made standalone at some point
 
@@ -287,6 +287,8 @@ void main(int initround, monster foe, string page) {
 				m.bbSubmit();
 				//pretty sure most adv1() in the script assume it succeeds in fighting what it's supposed to, which the holiday monster is very much not the right one, so abort to rerun
 				abort("Aborting for safety after encountering a holiday monster. Should be able to simply rerun to resume.");
+				//going to test using adv1() instead of abort for next round of holiday wanderers
+				//adv1(get_property("lastAdventure").to_location());
 				return;
 
 			default:
@@ -362,7 +364,7 @@ string bbWhile(string m,string c,string s) {
 //submit
 string bbSubmit(string m) {
 	if (PRINT_MACRO)
-		print(`macro: {m}`,"blue");
+		print(`bb macro: {m}`);
 	return visit_url("fight.php?action=macro&macrotext="+m,true,false);
 }
 
