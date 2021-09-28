@@ -545,9 +545,9 @@ void c2t_hccs_init() {
 	//buy from coinmasters/hermit
 	set_property('_saved_autoSatisfyWithCoinmasters',get_property('autoSatisfyWithCoinmasters'));
 	set_property('autoSatisfyWithCoinmasters','true');
-	//saber yr
-	set_property('_saved_choiceAdventure1387',get_property('choiceAdventure1387'));
-	set_property('choiceAdventure1387','3');
+	//choice adventure script
+	set_property('_saved_choiceAdventureScript',get_property('choiceAdventureScript'));
+	set_property('choiceAdventureScript','c2t_hccs_choices.ash');
 	//make sure to have some user-defined hp recovery since I don't want to think about it
 	if (get_property("recoveryScript") == "" && get_property('hpAutoRecovery').to_float() <= 0.5) {
 		set_property('_saved_hpAutoRecovery',get_property('hpAutoRecovery'));
@@ -568,7 +568,7 @@ void c2t_hccs_init() {
 void c2t_hccs_exit() {
 	set_property('autoSatisfyWithNPCs',get_property('_saved_autoSatisfyWithNPCs'));
 	set_property('autoSatisfyWithCoinmasters',get_property('_saved_autoSatisfyWithCoinmasters'));
-	set_property('choiceAdventure1387',get_property('_saved_choiceAdventure1387'));
+	set_property('choiceAdventureScript',get_property('_saved_choiceAdventureScript'));
 
 	if (get_property('_saved_hpAutoRecovery') != "")
 		set_property('hpAutoRecovery',get_property('_saved_hpAutoRecovery'));
@@ -2017,9 +2017,6 @@ void c2t_hccs_fights() {
 
 	//get crimbo ghost buff from dudes at NEP
 	if (have_effect($effect[Holiday Yoked]) == 0) {
-		// declining quest
-		// to add: accept if booze or food quest
-		//c2t_setChoice(1322,2);//this should be done turn 0 via wanderer
 		if (get_property('_latteDrinkUsed').to_boolean())
 			cli_execute('latte refill cinnamon pumpkin vanilla');
 		use_familiar($familiar[Ghost of Crimbo Carols]);
@@ -2126,23 +2123,6 @@ void c2t_hccs_fights() {
 			garbage = ",equip garbage shirt";
 		else
 			garbage = "";
-
-		// -- noncombat logic --
-		//going for stat exp buff initially, then combats afterward
-		if (my_primestat() == $stat[muscle] && have_effect($effect[Spiced Up]) == 0) {
-			c2t_setChoice(1324,2);
-			c2t_setChoice(1326,2);
-		}
-		else if (my_primestat() == $stat[mysticality] && have_effect($effect[Tomes of Opportunity]) == 0) {
-			c2t_setChoice(1324,1);
-			c2t_setChoice(1325,2);
-		}
-		else if (my_primestat() == $stat[moxie] && have_effect($effect[The Best Hair You've Ever Had]) == 0) {
-			c2t_setChoice(1324,4);
-			c2t_setChoice(1328,2);//need to verify
-		}
-		else if (get_property('choiceAdventure1324').to_int() != 5)
-			c2t_setChoice(1324,5);
 
 		// -- using things as they become available --
 		//use runproof mascara ASAP if moxie for more stats
@@ -2271,12 +2251,6 @@ void c2t_hccs_fights() {
 	if (get_property('boomBoxSong') != "Total Eclipse of Your Meat")
 		cli_execute('boombox meat');
 
-	//unset neverending party choices
-	c2t_setChoice(1324,0);
-	c2t_setChoice(1325,0);
-	c2t_setChoice(1326,0);
-	c2t_setChoice(1328,0);
-
 	cli_execute('mood apathetic');
 }
 
@@ -2325,9 +2299,7 @@ boolean c2t_hccs_wandererFight() {
 
 	//backup camera may swap off voter monster, so don't equip it
 	maximize("mainstat,-equip backup camera"+append,false);
-	c2t_setChoice(1322,2);//in case quest isn't handled yet, just reject it; TODO accept drink or food quest
 	adv1($location[The Neverending Party],-1,"");
-	c2t_setChoice(1322,0);
 
 	//hopefully restore to previous state without outfits
 	use_familiar(nowFam);
