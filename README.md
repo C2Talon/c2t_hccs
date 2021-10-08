@@ -16,16 +16,18 @@ To uninstall, run the following on the gCLI:
 
 ## Usage
 
-* The main script is `c2t_hccs`, and is the thing that should be run to do a HCCS run
+* The main script is `c2t_hccs.ash`, and is the thing that should be run to do a community service run
 * Not likely to run out-of-the-box for most. Hoping to change this eventually
-* Able to be re-run at any point in a run, hopefully after correcting whatever caused it to stop
+* Able to be re-run at any point in a run, hopefully after manually correcting whatever caused it to stop
 * Will abort when a non-coil test does not meet its turn threshold after preparations for it are done, which defaults to 1 turn
 * Pre-Valhalla: put diabolic pizza cube in the workshed
 * In Valhalla:
-* * Choose any class
-* * Choose the corresponding "knoll" moonsign
-* Uses moods "hccs-mus", "hccs-mys", and "hccs-mox" for leveling purposes on muscle, mysticality, and moxie classes, respectively. So set your own to what you want for what skills you have, otherwise you won't have much buffs while leveling
-* * Exception: the script will cast and handle stevedave's shanty of superiority and ur-kel's aria of annoyance, so either put them in the mood as well or leave 2 song slots open for them
+    - Choose any class
+    - Choose the corresponding "knoll" moonsign
+    - Optimal astral stuff is astral six-pack and astral pet sweater, though neither is strictly required
+* The script uses moods `hccs-mus`, `hccs-mys`, and `hccs-mox` for leveling purposes on muscle, mysticality, and moxie classes, respectively. So set your own to what you want for what skills you have, otherwise you won't have many buffs while levelling.
+    - Exception: the script will cast and handle stevedave's shanty of superiority and ur-kel's aria of annoyance, so either put them in the mood as well or leave 2 song slots open for them
+    - The moods I use can be seen in [mood examples.txt](https://github.com/c2talon/c2t_hccs/blob/master/mood%20examples.txt) to use as a starting point.
 
 ## User-defined properties the script uses
 
@@ -63,8 +65,6 @@ These are set via the gCLI. Basically so people don't have to edit the script it
 
 * Genericise things to not assume whoever runs this has everything I do
 * Better handling when overcapping a test, i.e. only use as much resources as needed and not more
-* Change the combat consult script to submit a single macro for the whole combat
-* Add user-defined thresholds for aborting on non-capped tests
 * Purge cruft from changes done over time
 * Add more IotMs and such as I get them
 
