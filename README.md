@@ -61,6 +61,56 @@ These are set via the gCLI. Basically so people don't have to edit the script it
 * Example: `1,1,1,1,35,1,31,1,1,1` will allow the familiar test to take 35 turns, the spell test to take 31 turns, and all others must be 1 turn
 * Defaults to `1,1,1,1,1,1,1,1,1,1`
 
+## IotM
+
+The script assumes several IotM are owned and will break without them. In addition, the [sweet synthesis](https://kol.coldfront.net/thekolwiki/index.php/Sweet_Synthesis) and [Summon Crimbo Candy](https://kol.coldfront.net/thekolwiki/index.php/Summon_Crimbo_Candy) skills, as well as the [Imitation Crab](https://kol.coldfront.net/thekolwiki/index.php/Imitation_Crab) familiar, are currently required. Some of the required IotM will eventually move to just supported instead, so this just reflects the current state of the script.
+
+The following are lists of required and supported IotM:
+
+### Required IotM (ordered by release date)
+* [Tome of Clip Art](https://kol.coldfront.net/thekolwiki/index.php/Tome_of_Clip_Art)
+* [Clan VIP Lounge invitation](https://kol.coldfront.net/thekolwiki/index.php/Clan_VIP_Lounge_invitation) -- assumes a fully-stocked VIP lounge
+* [Pocket Meteor Guide](https://kol.coldfront.net/thekolwiki/index.php/Pocket_Meteor_Guide)
+* [corked genie bottle](https://kol.coldfront.net/thekolwiki/index.php/Corked_genie_bottle)
+* [January's Garbge Tote (unopened)](https://kol.coldfront.net/thekolwiki/index.php/January%27s_Garbage_Tote_(unopened))
+* [God Lobster Egg](https://kol.coldfront.net/thekolwiki/index.php/God_Lobster_Egg)
+* [Songboom&trade; BoomBox Box](https://kol.coldfront.net/thekolwiki/index.php/SongBoom%E2%84%A2_BoomBox_Box)
+* [Bastille Battalion control rig crate](https://kol.coldfront.net/thekolwiki/index.php/Bastille_Battalion_control_rig_crate)
+* [Neverending Party invitation envelope](https://kol.coldfront.net/thekolwiki/index.php/Neverending_Party_invitation_envelope)
+* [Latte lovers club card](https://kol.coldfront.net/thekolwiki/index.php/Latte_lovers_club_card)
+* [Kramco Industries packing carton](https://kol.coldfront.net/thekolwiki/index.php/Kramco_Industries_packing_carton)
+* [Mint condition Lil' Doctor&trade; bag](https://kol.coldfront.net/thekolwiki/index.php/Mint_condition_Lil%27_Doctor%E2%84%A2_bag)
+* [vampyric cloake pattern](https://kol.coldfront.net/thekolwiki/index.php/Vampyric_cloake_pattern)
+* [Fourth of May Cosplay Saber kit](https://kol.coldfront.net/thekolwiki/index.php/Fourth_of_May_Cosplay_Saber_Kit)
+* [rune-strewn spoon cocoon](https://kol.coldfront.net/thekolwiki/index.php/Rune-strewn_spoon_cocoon)
+* [Beach Comb Box](https://kol.coldfront.net/thekolwiki/index.php/Beach_Comb_Box)
+* [Distant Woods Getaway Brochure](https://kol.coldfront.net/thekolwiki/index.php/Distant_Woods_Getaway_Brochure)
+* [packaged Pocket Professor](https://kol.coldfront.net/thekolwiki/index.php/Packaged_Pocket_Professor)
+* [Eight Days a Week Pill Keeper](https://kol.coldfront.net/thekolwiki/index.php/Unopened_Eight_Days_a_Week_Pill_Keeper)
+* [unopened diabolic pizza cube box](https://kol.coldfront.net/thekolwiki/index.php/Unopened_diabolic_pizza_cube_box)
+* [mint-in-box Powerful Glove](https://kol.coldfront.net/thekolwiki/index.php/Mint-in-box_Powerful_Glove)
+* [baby camelCalf](https://kol.coldfront.net/thekolwiki/index.php/Baby_camelCalf)
+* [Bagged Cargo Cultist Shorts](https://kol.coldfront.net/thekolwiki/index.php/Bagged_Cargo_Cultist_Shorts)
+* [Comprehensive Cartographic Compendium](https://kol.coldfront.net/thekolwiki/index.php/Comprehensive_Cartographic_Compendium)
+* [packaged knock-off retro superhero cape](https://kol.coldfront.net/thekolwiki/index.php/Packaged_knock-off_retro_superhero_cape)
+* [box o' ghosts](https://kol.coldfront.net/thekolwiki/index.php/Box_o%27_ghosts)
+* [emotion chip](https://kol.coldfront.net/thekolwiki/index.php/Emotion_chip)
+* [packaged backup camera](https://kol.coldfront.net/thekolwiki/index.php/Packaged_backup_camera)
+* [shortest-order cook](https://kol.coldfront.net/thekolwiki/index.php/Shortest-order_cook)
+
+### Supported IotM (not required) (ordered by release date)
+* [pantogram](https://kol.coldfront.net/thekolwiki/index.php/Pantogram)
+* [locked mumming trunk](https://kol.coldfront.net/thekolwiki/index.php/Locked_mumming_trunk) -- tiny stat gain from combat
+* [FantasyRealm membership packet](https://kol.coldfront.net/thekolwiki/index.php/FantasyRealm_membership_packet) -- get a hat with +15 mainstat
+* [Voter registration form](https://kol.coldfront.net/thekolwiki/index.php/Voter_registration_form) -- vote buffs and chance for mid-tier scaling wanderers
+* [Boxing Day care package](https://kol.coldfront.net/thekolwiki/index.php/Boxing_Day_care_package) -- 200% stat boost for leveling & item boost for mys classes
+* [Better Shrooms and Gardens catalog](https://kol.coldfront.net/thekolwiki/index.php/Better_Shrooms_and_Gardens_catalog) -- 1 mid-tier scaling fight
+* [sinistral homunculus](https://kol.coldfront.net/thekolwiki/index.php/Sinistral_homunculus) -- equip extra offhands for tests
+* [packaged SpinMaster&trade; lathe](https://kol.coldfront.net/thekolwiki/index.php/Packaged_SpinMaster%E2%84%A2_lathe) -- get an ebony epee
+* [packaged familiar scrapbook](https://kol.coldfront.net/thekolwiki/index.php/Packaged_familiar_scrapbook) -- equip before using ten-percent bonus
+* [Our Daily Candles&trade; order form](https://kol.coldfront.net/thekolwiki/index.php/Our_Daily_Candles%E2%84%A2_order_form)  -- uses its items
+* [packaged industrial fire extinguisher](https://kol.coldfront.net/thekolwiki/index.php/Packaged_industrial_fire_extinguisher) -- +33 total hot resist with saber
+
 ## TODO (eventually)
 
 * Genericise things to not assume whoever runs this has everything I do
