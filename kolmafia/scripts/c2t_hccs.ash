@@ -241,6 +241,8 @@ void c2t_hccs_pantagramming() {
 }
 
 void c2t_hccs_vote() {
+	if (!get_property("voteAlways").to_boolean() && !get_property("_voteToday").to_boolean())
+		return;
 	if (available_amount($item[&quot;I Voted!&quot; sticker]) > 0)
 		return;
 	if (my_daycount() > 1)
@@ -657,13 +659,14 @@ boolean c2t_hccs_preCoil() {
 
 	//ebony epee from lathe
 	if (item_amount($item[ebony epee]) == 0) {
-		if (item_amount($item[SpinMaster&trade; Lathe]) > 0)
+		if (item_amount($item[SpinMaster&trade; Lathe]) > 0) {
 			visit_url('shop.php?whichshop=lathe');
-		retrieve_item(1,$item[ebony epee]);
+			retrieve_item(1,$item[ebony epee]);
+		}
 	}
 	
-	//retreive_item(1, $item[FantasyRealm Warrior's Helm]);
-	if (item_amount($item[FantasyRealm G. E. M.]) == 0) {
+	//FantasyRealm hat
+	if (get_property("frAlways").to_boolean() && item_amount($item[FantasyRealm G. E. M.]) == 0) {
 		visit_url('place.php?whichplace=realm_fantasy&action=fr_initcenter');
 		if (my_primestat() == $stat[muscle])
 			run_choice(1);//1280,1 warrior; 1280,2 mage
@@ -1021,12 +1024,10 @@ boolean c2t_hccs_allTheBuffs() {
 	c2t_getEffect($effect[The Magical Mojomuscular Melody],$skill[The Magical Mojomuscular Melody]);
 	
 	// daycare stat gain
-	if (get_property('_daycareGymScavenges').to_int() == 0) {
+	if (get_property("daycareOpen").to_boolean() && get_property('_daycareGymScavenges').to_int() == 0) {
 		visit_url('place.php?whichplace=town_wrong&action=townwrong_boxingdaycare');
 		run_choice(3);//1334,3 boxing daycare lobby->boxing daycare
 		run_choice(2);//1336,2 scavenge
-		if (get_property('_daycareRecruits').to_int() == 0)
-			run_choice(1);//1336,1 recruit int _daycareRecruits
 	}
 	
 	
@@ -1074,7 +1075,7 @@ boolean c2t_hccs_allTheBuffs() {
 	
 	//boxing daycare, synthesis, and bastille
 	if (my_primestat() == $stat[muscle]) {
-		if (have_effect($effect[Muddled]) == 0)
+		if (get_property("daycareOpen").to_boolean() && have_effect($effect[Muddled]) == 0)
 			cli_execute('daycare mus');
 		if (have_effect($effect[Synthesis: Strong]) == 0) {
 			if (available_amount($item[Crimbo candied pecan]) > 0)
@@ -1087,7 +1088,7 @@ boolean c2t_hccs_allTheBuffs() {
 			cli_execute('bastille muscle');
 	}
 	else if (my_primestat() == $stat[mysticality]) {
-		if (have_effect($effect[Uncucumbered]) == 0)
+		if (get_property("daycareOpen").to_boolean() && have_effect($effect[Uncucumbered]) == 0)
 			cli_execute('daycare mys');
 		if (have_effect($effect[Synthesis: Smart]) == 0) {
 			if (available_amount($item[Crimbo peppermint bark]) > 0)
@@ -1100,7 +1101,7 @@ boolean c2t_hccs_allTheBuffs() {
 			cli_execute('bastille myst brutalist');
 	}
 	else if (my_primestat() == $stat[moxie]) {
-		if (have_effect($effect[Ten out of Ten]) == 0)
+		if (get_property("daycareOpen").to_boolean() && have_effect($effect[Ten out of Ten]) == 0)
 			cli_execute('daycare mox');
 		if (have_effect($effect[Synthesis: Cool]) == 0) {
 			if (available_amount($item[Crimbo peppermint bark]) > 0)
@@ -1344,7 +1345,8 @@ boolean c2t_hccs_preItem() {
 	ensure_effect($effect[Steely-Eyed Squint]);
 
 	//extra hand for latte in cases of 2 item drop weapons
-	use_familiar($familiar[left-hand man]);
+	if (have_familiar($familiar[left-hand man]))
+		use_familiar($familiar[left-hand man]);
 	
 	maximize('item,2 booze drop,-equip broken champagne bottle,-equip surprisingly capacious handbag,-equip red-hot sausage fork', false);
 
@@ -1980,12 +1982,15 @@ void c2t_hccs_fights() {
 
 	familiar levelingFam = my_familiar();
 	
-	if (my_primestat() == $stat[muscle] && !get_property('_mummeryUses').contains_text('3'))
-		cli_execute('mummery mus');
-	else if (my_primestat() == $stat[mysticality] && !get_property('_mummeryUses').contains_text('5'))
-		cli_execute('mummery mys');
-	else if (my_primestat() == $stat[moxie] && !get_property('_mummeryUses').contains_text('7'))
-		cli_execute('mummery mox');
+	//mumming trunk stats on leveling familiar
+	if (item_amount($item[mumming trunk]) > 0) {
+		if (my_primestat() == $stat[muscle] && !get_property('_mummeryUses').contains_text('3'))
+			cli_execute('mummery mus');
+		else if (my_primestat() == $stat[mysticality] && !get_property('_mummeryUses').contains_text('5'))
+			cli_execute('mummery mys');
+		else if (my_primestat() == $stat[moxie] && !get_property('_mummeryUses').contains_text('7'))
+			cli_execute('mummery mox');
+	}
 	
 	
 	if (my_primestat() == $stat[muscle])
