@@ -1959,13 +1959,15 @@ void c2t_hccs_fights() {
 	// saber yellow ray stuff
 	if (available_amount($item[tomato juice of powerful power]) == 0
 		&& available_amount($item[tomato]) == 0
-		&& have_effect($effect[Tomato Power]) == 0
-		&& get_property('lastCopyableMonster').to_monster() != $monster[possessed can of tomatoes]) {
+		&& have_effect($effect[Tomato Power]) == 0) {
 
 		cli_execute('mood apathetic');
 
 		if (my_hp() < 0.5 * my_maxhp())
 			cli_execute('rest free');
+
+		use_familiar($familiar[melodramedary]);
+		equip($item[dromedary drinking helmet]);
 		
 		// Fruits in skeleton store (Saber YR)
 		if ((available_amount($item[ointment of the occult]) == 0 && available_amount($item[grapefruit]) == 0 && have_effect($effect[Mystically Oiled]) == 0)
@@ -1985,8 +1987,7 @@ void c2t_hccs_fights() {
 
 			if (get_property('lastCopyableMonster').to_monster() != $monster[novelty tropical skeleton]) {
 				//max mp to max latte gulp to fuel buffs
-				use_familiar($familiar[Jumpsuited Hound Dog]);
-				maximize("mp,-equip garbage shirt,equip latte,equip vampyric cloake,-equip backup camera,equip doc bag",false);
+				maximize("mp,-equip garbage shirt,equip latte,equip vampyric cloake,-equip backup camera,equip doc bag,-familiar",false);
 
 				c2t_cartographyHunt($location[The Skeleton Store],$monster[novelty tropical skeleton]);
 				run_turn();
@@ -2005,8 +2006,8 @@ void c2t_hccs_fights() {
 				if (get_property('_latteDrinkUsed').to_boolean())
 					cli_execute('latte refill cinnamon pumpkin vanilla');
 				//max mp to max latte gulp to fuel buffs
-				use_familiar($familiar[Jumpsuited Hound Dog]);
-				maximize("mp,-equip garbage shirt,equip latte,equip vampyric cloake,-equip backup camera,equip doc bag",false);
+				use_familiar($familiar[melodramedary]);
+				maximize("mp,-equip garbage shirt,equip latte,equip vampyric cloake,-equip backup camera,equip doc bag,-familiar",false);
 
 				c2t_cartographyHunt($location[The Haunted Pantry],$monster[possessed can of tomatoes]);
 				run_turn();
