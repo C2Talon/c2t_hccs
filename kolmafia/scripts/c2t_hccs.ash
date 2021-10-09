@@ -54,6 +54,12 @@ Example: 1,1,1,1,35,1,31,1,1,1 will allow the familiar test to take 35 turns, th
 */
 if (!property_exists("c2t_hccs_thresholds",false))
 	set_property("c2t_hccs_thresholds","1,1,1,1,1,1,1,1,1,1");
+/*
+set c2t_bb_printMacro = true
+Prints the combat macro the script submits in combat
+*/
+if (!property_exists("c2t_bb_printMacro",false))
+	set_property("c2t_bb_printMacro","true");
 
 
 //wtb enum
