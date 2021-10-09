@@ -128,6 +128,7 @@ void c2t_hccs_printRunTime(boolean final);
 void c2t_hccs_printRunTime() c2t_hccs_printRunTime(false);
 void c2t_hccs_getFax(monster mon);
 boolean c2t_hccs_fightGodLobster();
+void c2t_hccs_breakfast();
 
 
 void main() {
@@ -192,6 +193,54 @@ boolean c2t_hccs_pull(item ite) {
 	if(!can_interact() && !in_hardcore() && item_amount(ite) == 0 && storage_amount(ite) > 0 && pulls_remaining() > 0)
 		return take_storage(1,ite);
 	return false;
+}
+
+//limited breakfast to only what might be used
+void c2t_hccs_breakfast() {
+	skill ski = $skill[advanced saucecrafting];
+	if (get_property("reagentSummons").to_int() == 0 && have_skill(ski) && my_mp() >= mp_cost(ski))
+		use_skill(1,ski);
+
+	ski = $skill[summon crimbo candy];
+	if (get_property("_candySummons").to_int() == 0 && have_skill(ski) && my_mp() >= mp_cost(ski))
+		use_skill(1,ski);
+
+	ski = $skill[prevent scurvy and sobriety];
+	if (!get_property("_preventScurvy").to_boolean() && have_skill(ski) && my_mp() >= mp_cost(ski))
+		use_skill(1,ski);
+
+	//mys classes want the D
+	if (my_primestat() == $stat[mysticality]) {
+		ski = $skill[pastamastery];
+		if (get_property("noodleSummons").to_int() == 0 && have_skill(ski) && my_mp() >= mp_cost(ski))
+			use_skill(1,ski);
+	}
+
+	//mox class stat boost for leveling
+	if (my_primestat() == $stat[moxie]) {
+		ski = $skill[acquire rhinestones];
+		if (!get_property("_rhinestonesAcquired").to_boolean() && have_skill(ski) && my_mp() >= mp_cost(ski))
+			use_skill(1,ski);
+	}
+
+	//genie bottle
+	while (get_property("_genieWishesUsed").to_int() < 3) {
+		visit_url(`inv_use.php?pwd={my_hash()}&which=3&whichitem=9529`);
+		visit_url("choice.php?whichchoice=1267&wish=for+more+wishes&option=1",true,true);
+	}
+
+	//power plant iff blowing load
+	if (get_property("_c2t_hccs_dstab").to_boolean()) {
+		if (get_property("daycareOpen").to_boolean() && !get_property("_daycareNap").to_boolean())
+			cli_execute("daycare item");
+
+		buffer buf = visit_url(`inv_use.php?pwd={my_hash()}&which=3&whichitem=10738`);
+		if (buf.contains_text('name="whichchoice" value="1448"')) {
+			matcher match = create_matcher('<button\\s+type="submit"\\s+name="pp"\\s+value="(\\d)"',buf);
+			while (match.find())
+				visit_url(`choice.php?pwd&whichchoice=1448&option=1&pp={match.group(1)}`,true,true);
+		}
+	}
 }
 
 void c2t_hccs_getFax(monster mon) {
@@ -717,7 +766,7 @@ boolean c2t_hccs_preCoil() {
 		}
 		if (!use_skill(1,$skill[Prevent Scurvy and Sobriety]))
 			abort('couldn\'t get rum and limes');
-		cli_execute('breakfast'); //bool breakfastCompleted
+		c2t_hccs_breakfast();
 	}
 		
 	// pre-coil pizza to get imitation whetstone for INFE pizza latter
@@ -1221,7 +1270,7 @@ boolean c2t_hccs_lovePotion(boolean useit,boolean dumpit) {
 	if (have_effect(love_effect) == 0) {
 		if (available_amount(love_potion) == 0) {
 			if (my_mp() < 50) { //this block is assuming my setup
-				cli_execute('breakfast');						
+				c2t_hccs_breakfast();
 				if (get_property('timesRested').to_int() < total_free_rests())
 					visit_url('place.php?whichplace=campaway&action=campaway_tentclick');
 				else
@@ -2280,7 +2329,8 @@ boolean c2t_hccs_wandererFight() {
 		c2t_getEffect($effect[Feeling Excited],$skill[Feel Excitement]);
 
 	if (my_hp() < my_maxhp()/2 || my_mp() < 10) {
-		cli_execute('breakfast;rest free');
+		c2t_hccs_breakfast();
+		cli_execute('rest free');
 	}
 	print("Running wanderer fight","blue");
 	//saving last maximizer string and familiar stuff; outfits generally break here
