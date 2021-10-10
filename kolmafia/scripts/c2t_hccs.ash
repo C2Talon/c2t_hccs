@@ -1747,15 +1747,6 @@ boolean c2t_hccs_preWeapon() {
 		ensure_effect($effect[Corruption of Wretched Wally]);
 
 
-	/* have meteor lore now
-	if (my_class() != $class[pastamancer] || my_class() != $class[turtle tamer]) {
-		if (have_effect($effect[Rictus of Yeg]) == 0) {
-			cli_execute("cargo item yeg's motel toothbrush");
-			use(1,$item[Yeg's Motel Toothbrush]);
-		}
-	}
-	*/
-
 	// turtle tamer saves ~1 turn with this part, and 4 from voting
 	if (my_class() == $class[turtle tamer]) {
 		if (have_effect($effect[Boon of She-Who-Was]) == 0) {
@@ -1814,6 +1805,15 @@ boolean c2t_hccs_preWeapon() {
 	if (have_effect($effect[Outer Wolf&trade;]) == 0)
 		print("OU pizza skipped","blue");
 
+	//cargo shorts as backup
+	if (item_amount($item[cargo cultist shorts]) > 0
+		&& !c2t_hccs_thresholdMet(TEST_WEAPON)
+		&& c2t_hccs_testTurns(TEST_WEAPON) > 4 //4 is how much cargo would save on spell test, so may as well use here if spell is not better
+		&& have_effect($effect[Rictus of Yeg]) == 0
+		&& !get_property('_cargoPocketEmptied').to_boolean())
+			cli_execute("cargo item yeg's motel toothbrush");
+	c2t_haveUse($item[Yeg's Motel Toothbrush]);
+
 	c2t_hccs_mod2log("modtrace weapon damage");
 
 	return c2t_hccs_thresholdMet(TEST_WEAPON);
@@ -1871,11 +1871,9 @@ boolean c2t_hccs_preSpell() {
 		ensure_song($effect[Elron's Explosive Etude]);
 
 	// cargo pocket
-	if (have_effect($effect[Sigils of Yeg]) == 0 && !get_property('_cargoPocketEmptied').to_boolean()) {
-		if (!get_property('_cargoPocketEmptied').to_boolean())
-			cli_execute("cargo item Yeg's Motel hand soap");
-		use(1,$item[Yeg's Motel hand soap]);
-	}
+	if (item_amount($item[cargo cultist shorts]) > 0 && have_effect($effect[Sigils of Yeg]) == 0 && !get_property('_cargoPocketEmptied').to_boolean())
+		cli_execute("cargo item Yeg's Motel hand soap");
+	c2t_haveUse($item[Yeg's Motel hand soap]);
 
 	// meteor lore // moxie can't do this, as it wastes a saber on evil olive -- moxie should be able to do this now with nostalgia earlier?
 	if (have_effect($effect[Meteor Showered]) == 0 && get_property('_saberForceUses').to_int() < 5) {
