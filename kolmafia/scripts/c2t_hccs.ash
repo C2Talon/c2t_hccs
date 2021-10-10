@@ -2088,7 +2088,7 @@ void c2t_hccs_fights() {
 
 
 	//get crimbo ghost buff from dudes at NEP
-	if (have_effect($effect[Holiday Yoked]) == 0) {
+	if (have_familiar($familiar[Ghost of Crimbo Carols]) && have_effect($effect[Holiday Yoked]) == 0) {
 		if (get_property('_latteDrinkUsed').to_boolean())
 			cli_execute('latte refill cinnamon pumpkin vanilla');
 		use_familiar($familiar[Ghost of Crimbo Carols]);
@@ -2166,7 +2166,7 @@ void c2t_hccs_fights() {
 
 		//change to other familiar when spit maxed
 		if (get_property('camelSpit').to_int() == 100) {
-			if (item_amount($item[short stack of pancakes]) == 0 && have_effect($effect[Shortly Stacked]) == 0) {
+			if (have_familiar($familiar[shorter-order cook]) && item_amount($item[short stack of pancakes]) == 0 && have_effect($effect[Shortly Stacked]) == 0) {
 				if (my_familiar() != $familiar[shorter-order cook]) {
 					//give cook's combat bonus familiar exp to professor
 					use_familiar($familiar[pocket professor]);
@@ -2174,7 +2174,7 @@ void c2t_hccs_fights() {
 				}
 			}
 			else
-				use_familiar($familiar[hovering sombrero]);
+				use_familiar(c2t_priority($familiars[baby sandworm,galloping grill,hovering sombrero]));
 			fam = "";
 		}
 		else//swap off pocket professor after it happens
@@ -2346,7 +2346,7 @@ boolean c2t_hccs_wandererFight() {
 		use_familiar($familiar[melodramedary]);
 		append += ",equip dromedary drinking helmet";
 	}
-	else if (get_property('camelSpit').to_int() == 100 && !get_property("csServicesPerformed").contains_text(TEST_NAME[TEST_FAMILIAR]) && item_amount($item[short stack of pancakes]) == 0) {
+	else if (have_familiar($familiar[shorter-order cook]) && get_property('camelSpit').to_int() == 100 && !get_property("csServicesPerformed").contains_text(TEST_NAME[TEST_FAMILIAR]) && item_amount($item[short stack of pancakes]) == 0) {
 		if (my_familiar() != $familiar[shorter-order cook]) {
 			//give cook's combat bonus familiar exp to professor
 			use_familiar($familiar[pocket professor]);
@@ -2354,7 +2354,7 @@ boolean c2t_hccs_wandererFight() {
 		}
 	}
 	else
-		use_familiar($familiar[hovering sombrero]);
+		use_familiar(c2t_priority($familiars[baby sandworm,galloping grill,hovering sombrero]));
 
 	//backup camera may swap off voter monster, so don't equip it
 	maximize("mainstat,-equip backup camera"+append,false);
