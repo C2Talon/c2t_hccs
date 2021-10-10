@@ -744,8 +744,8 @@ boolean c2t_hccs_preCoil() {
 			run_choice(3);//a guess
 	}
 
-	//boombox
-	if (get_property('boomBoxSong') != 'Total Eclipse of Your Meat')
+	//boombox meat
+	if (item_amount($item[songboom&trade; boombox]) > 0 && get_property('boomBoxSong') != 'Total Eclipse of Your Meat')
 		cli_execute('boombox meat');
 
 	// upgrade saber for familiar weight
@@ -2165,14 +2165,6 @@ void c2t_hccs_fights() {
 			doc = ",equip doc bag";
 		else
 			doc = "";
-		//swap song to fists when it's ready for next non-free fight
-		if (get_property('_boomBoxFights').to_int() == 10) {
-			if (get_property('boomBoxSong') != "These Fists Were Made for Punchin'")
-				cli_execute('boombox fists');
-		}
-		//in case something changed the song previously
-		else if (get_property('boomBoxSong') != "Total Eclipse of Your Meat")
-			cli_execute('boombox meat');
 
 		//change to other familiar when spit maxed
 		if (get_property('camelSpit').to_int() == 100) {
@@ -2318,10 +2310,6 @@ void c2t_hccs_fights() {
 
 		adv1($location[The Neverending Party],-1,"");
 	}
-
-	//back to singing about meat
-	if (get_property('boomBoxSong') != "Total Eclipse of Your Meat")
-		cli_execute('boombox meat');
 
 	cli_execute('mood apathetic');
 }
