@@ -135,6 +135,7 @@ void c2t_hccs_printRunTime() c2t_hccs_printRunTime(false);
 void c2t_hccs_getFax(monster mon);
 boolean c2t_hccs_fightGodLobster();
 void c2t_hccs_breakfast();
+int c2t_hccs_freeKillsLeft();
 
 
 void main() {
@@ -199,6 +200,18 @@ boolean c2t_hccs_pull(item ite) {
 	if(!can_interact() && !in_hardcore() && item_amount(ite) == 0 && storage_amount(ite) > 0 && pulls_remaining() > 0)
 		return take_storage(1,ite);
 	return false;
+}
+
+//free kills left
+int c2t_hccs_freeKillsLeft() {
+	int n = 0;
+	if (item_amount($item[lil' doctor&trade; bag]) > 0)
+		n += 3 - get_property("_chestXRayUsed").to_int();
+	if (have_skill($skill[shattering punch]))
+		n += 3 - get_property("_shatteringPunchUsed").to_int();
+	if (have_skill($skill[gingerbread mob hit]) && !get_property("_gingerbreadMobHitUsed").to_boolean())
+		n++;
+	return n;
 }
 
 //limited breakfast to only what might be used
@@ -2144,10 +2157,8 @@ void c2t_hccs_fights() {
 	if (!get_property('_gingerbreadMobHitUsed').to_boolean())
 		print("Running backup camera and Neverending Party fights","blue");
 
-	//neverending party and backup camera fights
-	//probably have to change this to only use free fights once can cap combat test without boombox potion
-	while (!get_property('_gingerbreadMobHitUsed').to_boolean()) { //no longer running non-free fights
-	//while (item_amount($item[Punching Potion]) == 0 && get_property('_boomBoxFights').to_int() > 8) {
+	//NEP loop //neverending party and backup camera fights
+	while (get_property("_neverendingPartyFreeTurns").to_int() < 10 || c2t_hccs_freeKillsLeft() > 0) {
 		// -- combat logic --
 		//use doc bag kills first after free fights
 		if (get_property('_neverendingPartyFreeTurns').to_int() == 10 && get_property('_chestXRayUsed').to_int() < 3)
