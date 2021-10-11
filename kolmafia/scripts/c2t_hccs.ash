@@ -248,11 +248,8 @@ void c2t_hccs_breakfast() {
 		visit_url("choice.php?whichchoice=1267&wish=for+more+wishes&option=1",true,true);
 	}
 
-	//power plant iff blowing load
-	if (get_property("_c2t_hccs_dstab").to_boolean()) {
-		if (get_property("daycareOpen").to_boolean() && !get_property("_daycareNap").to_boolean())
-			cli_execute("daycare item");
-
+	//power plant
+	if (item_amount($item[potted power plant]) > 0 && get_property("_pottedPowerPlant") != "0,0,0,0,0,0,0") {
 		buffer buf = visit_url(`inv_use.php?pwd={my_hash()}&which=3&whichitem=10738`);
 		if (buf.contains_text('name="whichchoice" value="1448"')) {
 			matcher match = create_matcher('<button\\s+type="submit"\\s+name="pp"\\s+value="(\\d)"',buf);
@@ -652,6 +649,9 @@ void c2t_hccs_exit() {
 
 	if (skippedFortunes)
 		print(`Info: clan fortunes were skipped`,"red");
+
+	if (get_property("shockingLickCharges").to_int() > 0)
+		print(`Info: shocking lick charge count from batteries is {get_property("shockingLickCharges")}`,"blue");
 
 	c2t_hccs_printRunTime(true);
 }
@@ -1431,6 +1431,11 @@ boolean c2t_hccs_preItem() {
 		//repeat of previous maximize call
 		maximize('item,2 booze drop,-equip broken champagne bottle,-equip surprisingly capacious handbag,-equip red-hot sausage fork', false);
 	}
+
+	//power plant; last to save batteries if not needed
+	if (!c2t_hccs_thresholdMet(TEST_ITEM))
+		if (item_amount($item[potted power plant]) > 0)
+			c2t_getEffect($effect[Lantern-Charged],$item[battery (lantern)]);
 
 	c2t_hccs_mod2log("modtrace item drop;modtrace booze drop");
 

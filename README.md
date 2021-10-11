@@ -95,10 +95,10 @@ The following are lists of required and supported IotM:
 
 ### Supported IotM (ordered by release date)
 
-While these are not strictly required, not having enough that either save turns or signicicantly help with leveling (big stat buffs, mostly) may cause problems.
+While these are not strictly required, not having enough that either save turns or signicicantly help with leveling may cause problems. The blurb after the em dash (&mdash;) is basically what the script uses the IotM for.
 
 * [pantogram](https://kol.coldfront.net/thekolwiki/index.php/Pantogram) &mdash; saves 2 turns on hot test, 3 on combat test, 0.4 on spell test
-* [locked mumming trunk](https://kol.coldfront.net/thekolwiki/index.php/Locked_mumming_trunk) &mdash; 2-4 stat from combat
+* [locked mumming trunk](https://kol.coldfront.net/thekolwiki/index.php/Locked_mumming_trunk) &mdash; 2-4 stats from combat
 * [Mint condition Lil' Doctor&trade; bag](https://kol.coldfront.net/thekolwiki/index.php/Mint_condition_Lil%27_Doctor%E2%84%A2_bag) &mdash; 3 free kills and 3 free banishes
 * [vampyric cloake pattern](https://kol.coldfront.net/thekolwiki/index.php/Vampyric_cloake_pattern) &mdash; saves 4.3 turns on item test, 2 on hot test; 50% mus buff
 * [FantasyRealm membership packet](https://kol.coldfront.net/thekolwiki/index.php/FantasyRealm_membership_packet) &mdash; get a hat with +15 mainstat
@@ -109,10 +109,11 @@ While these are not strictly required, not having enough that either save turns 
 * [sinistral homunculus](https://kol.coldfront.net/thekolwiki/index.php/Sinistral_homunculus) &mdash; equip extra offhands for tests
 * [packaged SpinMaster&trade; lathe](https://kol.coldfront.net/thekolwiki/index.php/Packaged_SpinMaster%E2%84%A2_lathe) &mdash; saves 4 turns on weapon with ebony epee
 * [Bagged Cargo Cultist Shorts](https://kol.coldfront.net/thekolwiki/index.php/Bagged_Cargo_Cultist_Shorts) &mdash; saves 8 turns on weapon test or 4 turns on spell test
+* [power seed](https://kol.coldfront.net/thekolwiki/index.php/Power_seed) &mdash; saves 6.7 turns on item test
 * [shortest-order cook](https://kol.coldfront.net/thekolwiki/index.php/Shortest-order_cook) &mdash; can save 2 turns on fam if lucky
 * [packaged familiar scrapbook](https://kol.coldfront.net/thekolwiki/index.php/Packaged_familiar_scrapbook) &mdash; equip before using ten-percent bonus
 * [Our Daily Candles&trade; order form](https://kol.coldfront.net/thekolwiki/index.php/Our_Daily_Candles%E2%84%A2_order_form) &mdash; class-dependent chance of 50% stat buff and/or 10 stats from combat
-* [packaged industrial fire extinguisher](https://kol.coldfront.net/thekolwiki/index.php/Packaged_industrial_fire_extinguisher) &mdash; 30 turns saved on hot test with saber
+* [packaged industrial fire extinguisher](https://kol.coldfront.net/thekolwiki/index.php/Packaged_industrial_fire_extinguisher) &mdash; 30 turns saved on hot test with saber and 3 more turns by itself
 
 ## TODO (eventually)
 
