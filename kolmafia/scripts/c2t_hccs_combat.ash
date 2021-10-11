@@ -107,6 +107,7 @@ void main(int initround, monster foe, string page) {
 					.c2t_bb(have_effect($effect[Bat-Adjacent Form]) == 0?c2t_bb($skill[Become a Bat]):"")
 					.c2t_bb($skill[reflex hammer])
 					.c2t_bb($skill[snokebomb])
+					.c2t_bb($skill[feel hatred])
 				);
 				return;
 
@@ -248,9 +249,9 @@ void main(int initround, monster foe, string page) {
 				m = mHead + mSteal;
 				m += c2t_bb($skill[reflex hammer]);
 				if (get_property("_snokebombUsed").to_int() < get_property("_feelHatredUsed").to_int())
-					m += c2t_bb($skill[snokebomb]);
+					m += c2t_bb($skill[snokebomb]).c2t_bb($skill[feel hatred]);
 				else
-					m += c2t_bb($skill[feel hatred]);
+					m += c2t_bb($skill[feel hatred]).c2t_bb($skill[snokebomb]);
 				m.c2t_bbSubmit();
 				//pretty sure most adv1() in the script assume it succeeds in fighting what it's supposed to, which the holiday monster is very much not the right one, so abort to rerun
 				abort("Aborting for safety after encountering a holiday monster. Should be able to simply rerun to resume.");

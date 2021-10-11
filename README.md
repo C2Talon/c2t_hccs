@@ -78,8 +78,6 @@ The following are lists of required and supported IotM:
 * [Neverending Party invitation envelope](https://kol.coldfront.net/thekolwiki/index.php/Neverending_Party_invitation_envelope)
 * [Latte lovers club card](https://kol.coldfront.net/thekolwiki/index.php/Latte_lovers_club_card)
 * [Kramco Industries packing carton](https://kol.coldfront.net/thekolwiki/index.php/Kramco_Industries_packing_carton)
-* [Mint condition Lil' Doctor&trade; bag](https://kol.coldfront.net/thekolwiki/index.php/Mint_condition_Lil%27_Doctor%E2%84%A2_bag)
-* [vampyric cloake pattern](https://kol.coldfront.net/thekolwiki/index.php/Vampyric_cloake_pattern)
 * [Fourth of May Cosplay Saber kit](https://kol.coldfront.net/thekolwiki/index.php/Fourth_of_May_Cosplay_Saber_Kit)
 * [rune-strewn spoon cocoon](https://kol.coldfront.net/thekolwiki/index.php/Rune-strewn_spoon_cocoon)
 * [Beach Comb Box](https://kol.coldfront.net/thekolwiki/index.php/Beach_Comb_Box)
@@ -96,20 +94,25 @@ The following are lists of required and supported IotM:
 * [packaged backup camera](https://kol.coldfront.net/thekolwiki/index.php/Packaged_backup_camera)
 
 ### Supported IotM (ordered by release date)
-* [pantogram](https://kol.coldfront.net/thekolwiki/index.php/Pantogram) &mdash; 2 hot res, spell damage, -combat
-* [locked mumming trunk](https://kol.coldfront.net/thekolwiki/index.php/Locked_mumming_trunk) &mdash; tiny stat gain from combat
+
+While these are not strictly required, not having enough that either save turns or signicicantly help with leveling (big stat buffs, mostly) may cause problems.
+
+* [pantogram](https://kol.coldfront.net/thekolwiki/index.php/Pantogram) &mdash; saves 2 turns on hot test, 3 on combat test, 0.4 on spell test
+* [locked mumming trunk](https://kol.coldfront.net/thekolwiki/index.php/Locked_mumming_trunk) &mdash; 2-4 stat from combat
+* [Mint condition Lil' Doctor&trade; bag](https://kol.coldfront.net/thekolwiki/index.php/Mint_condition_Lil%27_Doctor%E2%84%A2_bag) &mdash; 3 free kills and 3 free banishes
+* [vampyric cloake pattern](https://kol.coldfront.net/thekolwiki/index.php/Vampyric_cloake_pattern) &mdash; saves 4.3 turns on item test, 2 on hot test; 50% mus buff
 * [FantasyRealm membership packet](https://kol.coldfront.net/thekolwiki/index.php/FantasyRealm_membership_packet) &mdash; get a hat with +15 mainstat
 * [Songboom&trade; BoomBox Box](https://kol.coldfront.net/thekolwiki/index.php/SongBoom%E2%84%A2_BoomBox_Box) &mdash; extra meat from fights
 * [Voter registration form](https://kol.coldfront.net/thekolwiki/index.php/Voter_registration_form) &mdash; vote buffs and chance for mid-tier scaling wanderers
-* [Boxing Day care package](https://kol.coldfront.net/thekolwiki/index.php/Boxing_Day_care_package) &mdash; 200% stat boost for leveling & item boost for mys classes
+* [Boxing Day care package](https://kol.coldfront.net/thekolwiki/index.php/Boxing_Day_care_package) &mdash; 200% stat buff for leveling & saves 3.3 turns on item test for mys classes
 * [Better Shrooms and Gardens catalog](https://kol.coldfront.net/thekolwiki/index.php/Better_Shrooms_and_Gardens_catalog) &mdash; 1 mid-tier scaling fight
 * [sinistral homunculus](https://kol.coldfront.net/thekolwiki/index.php/Sinistral_homunculus) &mdash; equip extra offhands for tests
-* [packaged SpinMaster&trade; lathe](https://kol.coldfront.net/thekolwiki/index.php/Packaged_SpinMaster%E2%84%A2_lathe) &mdash; get an ebony epee (100% weapon damage)
-* [Bagged Cargo Cultist Shorts](https://kol.coldfront.net/thekolwiki/index.php/Bagged_Cargo_Cultist_Shorts) &mdash; uses pocket for weapon or spell test
-* [shortest-order cook](https://kol.coldfront.net/thekolwiki/index.php/Shortest-order_cook) &mdash; attempts to get short stack of pancakes once camel is charged
+* [packaged SpinMaster&trade; lathe](https://kol.coldfront.net/thekolwiki/index.php/Packaged_SpinMaster%E2%84%A2_lathe) &mdash; saves 4 turns on weapon with ebony epee
+* [Bagged Cargo Cultist Shorts](https://kol.coldfront.net/thekolwiki/index.php/Bagged_Cargo_Cultist_Shorts) &mdash; saves 8 turns on weapon test or 4 turns on spell test
+* [shortest-order cook](https://kol.coldfront.net/thekolwiki/index.php/Shortest-order_cook) &mdash; can save 2 turns on fam if lucky
 * [packaged familiar scrapbook](https://kol.coldfront.net/thekolwiki/index.php/Packaged_familiar_scrapbook) &mdash; equip before using ten-percent bonus
-* [Our Daily Candles&trade; order form](https://kol.coldfront.net/thekolwiki/index.php/Our_Daily_Candles%E2%84%A2_order_form) &mdash; uses its leveling items if obtained
-* [packaged industrial fire extinguisher](https://kol.coldfront.net/thekolwiki/index.php/Packaged_industrial_fire_extinguisher) &mdash; +33 total hot resist with saber
+* [Our Daily Candles&trade; order form](https://kol.coldfront.net/thekolwiki/index.php/Our_Daily_Candles%E2%84%A2_order_form) &mdash; class-dependent chance of 50% stat buff and/or 10 stats from combat
+* [packaged industrial fire extinguisher](https://kol.coldfront.net/thekolwiki/index.php/Packaged_industrial_fire_extinguisher) &mdash; 30 turns saved on hot test with saber
 
 ## TODO (eventually)
 

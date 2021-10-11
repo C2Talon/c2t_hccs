@@ -1342,8 +1342,9 @@ boolean c2t_hccs_preItem() {
 
 	//get latte ingredient from fluffy bunny and cloake item buff
 	if (have_effect($effect[Bat-Adjacent Form]) == 0 || !get_property('latteUnlocks').contains_text('carrot')) {
-		maximize("mainstat,equip latte,equip doc bag,equip vampyric cloake",false);
-		while (have_effect($effect[Bat-Adjacent Form]) == 0 || !get_property('latteUnlocks').contains_text('carrot'))
+		maximize("mainstat,equip latte,100 bonus lil doctor bag,100 bonus vampyric cloake",false);
+
+		while ((item_amount($item[lil' doctor&trade; bag]) > 0 && have_effect($effect[Bat-Adjacent Form]) == 0) || !get_property('latteUnlocks').contains_text('carrot'))
 			adv1($location[The Dire Warren],-1,"");
 	}
 
@@ -1998,7 +1999,7 @@ void c2t_hccs_fights() {
 
 			if (get_property('lastCopyableMonster').to_monster() != $monster[novelty tropical skeleton]) {
 				//max mp to max latte gulp to fuel buffs
-				maximize("mp,-equip garbage shirt,equip latte,equip vampyric cloake,-equip backup camera,equip doc bag,-familiar",false);
+				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,-equip backup camera,100 bonus lil doctor bag,-familiar",false);
 
 				c2t_cartographyHunt($location[The Skeleton Store],$monster[novelty tropical skeleton]);
 				run_turn();
@@ -2018,7 +2019,7 @@ void c2t_hccs_fights() {
 					cli_execute('latte refill cinnamon pumpkin vanilla');
 				//max mp to max latte gulp to fuel buffs
 				use_familiar($familiar[melodramedary]);
-				maximize("mp,-equip garbage shirt,equip latte,equip vampyric cloake,-equip backup camera,equip doc bag,-familiar",false);
+				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,-equip backup camera,100 bonus lil doctor bag,-familiar",false);
 
 				c2t_cartographyHunt($location[The Haunted Pantry],$monster[possessed can of tomatoes]);
 				run_turn();
@@ -2159,8 +2160,10 @@ void c2t_hccs_fights() {
 	while (get_property("_neverendingPartyFreeTurns").to_int() < 10 || c2t_hccs_freeKillsLeft() > 0) {
 		// -- combat logic --
 		//use doc bag kills first after free fights
-		if (get_property('_neverendingPartyFreeTurns').to_int() == 10 && get_property('_chestXRayUsed').to_int() < 3)
-			doc = ",equip doc bag";
+		if (item_amount($item[lil' doctor&trade; bag]) > 0
+			&& get_property('_neverendingPartyFreeTurns').to_int() == 10
+			&& get_property('_chestXRayUsed').to_int() < 3)
+				doc = ",equip lil doctor bag";
 		else
 			doc = "";
 
