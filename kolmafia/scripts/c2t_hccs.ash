@@ -25,7 +25,7 @@ set c2t_hccs_printModtrace = false
 prints a modtrace to the CLI and log just before non-stat tests
 */
 if (!property_exists("c2t_hccs_printModtrace",false))
-	set_property("c2t_hccs_printModtrace","false");
+	set_property("c2t_hccs_printModtrace","true");
 /*
 set c2t_hccs_joinClan = 90485
 This is the clan that the script will join for the VIP lounge and fortune teller
