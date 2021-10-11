@@ -723,7 +723,8 @@ boolean c2t_hccs_preCoil() {
 		cli_execute('backupcamera ml;backupcamera reverser on');
 
 	//knock-off hero cape thing
-	cli_execute('c2t_capeMe '+my_primestat());
+	if (item_amount($item[unwrapped knock-off retro superhero cape]) > 0)
+		cli_execute('retrocape '+my_primestat());
 
 	//ebony epee from lathe
 	if (item_amount($item[ebony epee]) == 0) {
@@ -1462,9 +1463,6 @@ boolean c2t_hccs_preHotRes() {
 	ensure_effect($effect[Blood Bond]);
 	ensure_effect($effect[Leash of Linguini]);
 	ensure_effect($effect[Empathy]);
-
-	//retro cape
-	cli_execute('c2t_capeMe resistance');
 
 	ensure_effect($effect[Elemental Saucesphere]);
 	ensure_effect($effect[Astral Shell]);
