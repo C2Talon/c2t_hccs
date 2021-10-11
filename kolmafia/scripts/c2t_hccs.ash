@@ -1568,10 +1568,6 @@ boolean c2t_hccs_preFamiliar() {
 		}
 	}
 
-	//should only get 1 per run, if any; would use in NEP combat loop, but no point as sombrero would already be already giving max stats
-	if (get_property('_c2t_hccs_dstab').to_boolean())
-		c2t_haveUse($item[short stack of pancakes]);
-
 	// Pool buff
 	ensure_effect($effect[Billiards Belligerence]);
 
@@ -1586,6 +1582,10 @@ boolean c2t_hccs_preFamiliar() {
 
 	use_familiar($familiar[Exotic Parrot]);
 	maximize('familiar weight', false);
+
+	//should only get 1 per run, if any; would use in NEP combat loop, but no point as sombrero would already be already giving max stats
+	if (!c2t_hccs_thresholdMet(TEST_FAMILIAR))
+		c2t_haveUse($item[short stack of pancakes]);
 
 	c2t_hccs_mod2log("modtrace familiar weight");
 
