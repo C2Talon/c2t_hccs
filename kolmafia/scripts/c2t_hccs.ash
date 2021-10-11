@@ -1134,8 +1134,8 @@ boolean c2t_hccs_allTheBuffs() {
 		ensure_effect($effect[There's No N In Love]);
 
 	//cast triple size
-	if (have_effect($effect[Triple-Sized]) == 0 && !c2t_cast($skill[CHEAT CODE: Triple Size]))
-		abort("Triple size failure");
+	if (item_amount($item[powerful glove]) > 0 && have_effect($effect[Triple-Sized]) == 0 && !c2t_cast($skill[CHEAT CODE: Triple Size]))
+		abort('Triple size failed');
 
 	//candles
 	c2t_haveUse($item[Napalm In The Morning&trade; candle]);
@@ -1603,11 +1603,10 @@ boolean c2t_hccs_preNoncombat() {
 	//not going to use this here, as it doesn't do to the noncombat rate in the moment anyway
 	//ensure_effect($effect[Billiards Belligerence]);
 
-	equip($slot[acc3], $item[Powerful Glove]);
-
 	ensure_effect($effect[The Sonata of Sneakiness]);
 	ensure_effect($effect[Smooth Movements]);
-	ensure_effect($effect[Invisible Avatar]);
+	if (item_amount($item[powerful glove]) > 0 && have_effect($effect[Invisible Avatar]) == 0 && !c2t_cast($skill[CHEAT CODE: Invisible Avatar]))
+		abort('Invisible avatar failed');
 
 	ensure_effect($effect[Silent Running]);
 
@@ -1672,8 +1671,8 @@ boolean c2t_hccs_preWeapon() {
 		abort('Camel spit only at '+get_property('camelSpit')+'%.');
 
 	//cast triple size
-	if (have_effect($effect[Triple-Sized]) == 0 && !c2t_cast($skill[CHEAT CODE: Triple Size]))
-		abort("Triple size failure");
+	if (item_amount($item[powerful glove]) > 0 && have_effect($effect[Triple-Sized]) == 0 && !c2t_cast($skill[CHEAT CODE: Triple Size]))
+		abort('Triple size failed');
 
 	if (my_mp() < 500 && my_mp() != my_maxmp())
 		cli_execute('eat mag saus');
