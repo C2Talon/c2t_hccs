@@ -1546,10 +1546,10 @@ boolean c2t_hccs_preHotRes() {
 boolean c2t_hccs_preFamiliar() {
 	//sabering fax for meteor shower
 	//using fax/wish here as feeling lost here is very likely
-	if (have_effect($effect[meteor showered]) == 0
-		&& item_amount($item[lava-proof pants]) == 0
+	if ((have_skill($skill[meteor lore]) && have_effect($effect[meteor showered]) == 0) ||
+		(item_amount($item[lava-proof pants]) == 0
 		&& item_amount($item[heat-resistant necktie]) == 0
-		&& item_amount($item[corrupted marrow]) == 0) {
+		&& item_amount($item[corrupted marrow]) == 0)) {
 
 		if (!have_equipped($item[Fourth of May Cosplay Saber]))
 			equip($item[Fourth of May Cosplay Saber]);
@@ -1727,13 +1727,15 @@ boolean c2t_hccs_preWeapon() {
 	ensure_effect($effect[Billiards Belligerence]);
 
 	//meteor shower
-	if (have_effect($effect[meteor showered]) == 0) {
+	if ((have_skill($skill[meteor lore]) && have_effect($effect[meteor showered]) == 0)
+		|| (have_familiar($familiar[melodramedary]) && have_effect($effect[spit upon]) == 0 && get_property('camelSpit').to_int() == 100)) {
+
 		cli_execute('mood apathetic');
 
 		//only 2 things needed for combat:
 		if (!have_equipped($item[fourth of may cosplay saber]))
-			equip($item[Fourth of May Cosplay Saber]);
-		use_familiar($familiar[Melodramedary]);
+			equip($item[fourth of may cosplay saber]);
+		use_familiar(c2t_priority($familiars[melodramedary]));
 
 		adv1($location[Thugnderdome],-1,"");//everything is saberable and no crazy NCs
 	}
@@ -1879,12 +1881,12 @@ boolean c2t_hccs_preSpell() {
 	c2t_haveUse($item[Yeg's Motel hand soap]);
 
 	// meteor lore // moxie can't do this, as it wastes a saber on evil olive -- moxie should be able to do this now with nostalgia earlier?
-	if (have_effect($effect[Meteor Showered]) == 0 && get_property('_saberForceUses').to_int() < 5) {
-		maximize("mainstat,equip fourth may",false);
+	if (have_skill($skill[meteor lore]) && have_effect($effect[meteor showered]) == 0 && get_property('_saberForceUses').to_int() < 5) {
+		maximize("mainstat,equip fourth of may cosplay saber",false);
 		adv1($location[Thugnderdome],-1,"");//everything is saberable and no crazy NCs
 	}
 
-	if (have_effect($effect[Visions of the Deep Dark Deeps]) == 0) {
+	if (have_skill($skill[Deep Dark Visions]) && have_effect($effect[Visions of the Deep Dark Deeps]) == 0) {
 		ensure_effect($effect[Elemental Saucesphere]);
 		ensure_effect($effect[Astral Shell]);
 		maximize("1000spooky res,hp,mp",false);

@@ -70,7 +70,6 @@ Some of the required IotM are only required for now because they're explicitly u
 ### Required IotM (ordered by release date)
 * [Tome of Clip Art](https://kol.coldfront.net/thekolwiki/index.php/Tome_of_Clip_Art)
 * [Clan VIP Lounge invitation](https://kol.coldfront.net/thekolwiki/index.php/Clan_VIP_Lounge_invitation) &mdash; assumes a fully-stocked VIP lounge
-* [Pocket Meteor Guide](https://kol.coldfront.net/thekolwiki/index.php/Pocket_Meteor_Guide)
 * [corked genie bottle](https://kol.coldfront.net/thekolwiki/index.php/Corked_genie_bottle)
 * [January's Garbge Tote (unopened)](https://kol.coldfront.net/thekolwiki/index.php/January%27s_Garbage_Tote_(unopened))
 * [God Lobster Egg](https://kol.coldfront.net/thekolwiki/index.php/God_Lobster_Egg)
@@ -95,6 +94,7 @@ Some of the required IotM are only required for now because they're explicitly u
 
 While these are not strictly required, not having enough that either save turns or signicicantly help with leveling may cause problems. The blurb after the em dash (&mdash;) is basically what the script uses the IotM for.
 
+* [Pocket Meteor Guide](https://kol.coldfront.net/thekolwiki/index.php/Pocket_Meteor_Guide) &mdash; with saber saves 4 turns on familiar text, 8 on weapon test, 4 on spell test
 * [pantogram](https://kol.coldfront.net/thekolwiki/index.php/Pantogram) &mdash; saves 2 turns on hot test, 3 on combat test, 0.4 on spell test
 * [locked mumming trunk](https://kol.coldfront.net/thekolwiki/index.php/Locked_mumming_trunk) &mdash; 2-4 stats from combat
 * [FantasyRealm membership packet](https://kol.coldfront.net/thekolwiki/index.php/FantasyRealm_membership_packet) &mdash; get a hat with +15 mainstat
