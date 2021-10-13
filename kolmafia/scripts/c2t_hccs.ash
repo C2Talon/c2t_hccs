@@ -434,6 +434,9 @@ boolean c2t_hccs_wishFight(monster mon) {
 }
 
 boolean c2t_hccs_fightGodLobster() {
+	if (!have_familiar($familiar[god lobster]))
+		return false;
+
 	if (get_property('_godLobsterFights').to_int() < 3) {
 		use_familiar($familiar[god lobster]);
 		maximize("mainstat,-equip garbage shirt",false);
@@ -1608,7 +1611,7 @@ boolean c2t_hccs_preNoncombat() {
 
 	ensure_effect($effect[Silent Running]);
 
-	if (have_effect($effect[Silence of the God Lobster]) == 0 && get_property('_godLobsterFights').to_int() < 3) {
+	if (have_familiar($familiar[god lobster]) && have_effect($effect[Silence of the God Lobster]) == 0 && get_property('_godLobsterFights').to_int() < 3) {
 		cli_execute('mood apathetic');
 		use_familiar($familiar[god lobster]);
 		equip($item[God Lobster's Ring]);
@@ -2113,6 +2116,16 @@ void c2t_hccs_fights() {
 	//nostalgia for moxie stuff and run down remaining glob fights
 	while (c2t_hccs_fightGodLobster());
 
+	//moxie needs olives
+	if (my_primestat() == $stat[moxie] && have_effect($effect[Slippery Oiliness]) == 0 && item_amount($item[jumbo olive]) == 0) {
+		//only thing that needs be equipped
+		use_familiar($familiar[melodramedary]);
+		if (!have_equipped($item[fourth of may cosplay saber]))
+			equip($item[Fourth of May Cosplay saber]);
+		//TODO evil olive - change to run away from and feel nostagic+envy+free kill another thing to save a saber use for spell test
+		c2t_assert(c2t_hccs_wishFight($monster[Evil Olive]),"Failed to fight evil olive");
+	}
+
 	use_familiar(levelingFam);
 
 	//summon tentacle
@@ -2135,15 +2148,6 @@ void c2t_hccs_fights() {
 	}
 
 	c2t_hccs_wandererFight();//shouldn't do kramco
-
-	//moxie needs olives
-	if (my_primestat() == $stat[moxie] && have_effect($effect[Slippery Oiliness]) == 0 && item_amount($item[jumbo olive]) == 0) {
-		//only thing that needs be equipped
-		if (!have_equipped($item[fourth of may cosplay saber]))
-			equip($item[Fourth of May Cosplay saber]);
-		//TODO evil olive - change to run away from and feel nostagic+envy+free kill another thing to save a saber use for spell test
-		c2t_assert(c2t_hccs_wishFight($monster[Evil Olive]),"Failed to fight evil olive");
-	}
 
 	//setup for NEP and backup fights
 	string doc,garbage,kramco,fam;

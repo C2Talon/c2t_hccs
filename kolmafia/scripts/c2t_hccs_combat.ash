@@ -112,8 +112,21 @@ void main(int initround, monster foe, string page) {
 				return;
 
 			//nostalgia other monster to get drops from these
-			case $monster[novelty tropical skeleton]:
 			case $monster[possessed can of tomatoes]:
+				//if no god lobster, burn a free kill to get both monsters' drops with nostalgia/envy here
+				if (get_property('lastCopyableMonster').to_monster() == $monster[novelty tropical skeleton]) {
+					mSteal
+					.c2t_bb($skill[Feel Nostalgic])
+					.c2t_bb($skill[Feel Envy])
+					.c2t_bb($skill[become a wolf])
+					.c2t_bb($skill[gulp latte])
+					.c2t_bb(get_property("_chestXRayUsed").to_int() < 3 ? c2t_bb($skill[Chest X-Ray]) : "")
+					.c2t_bb(get_property("_shatteringPunchUsed").to_int() < 3 ? c2t_bb($skill[Shattering Punch]) : "")
+					.c2t_bb($skill[Gingerbread Mob Hit])
+					.c2t_bbSubmit();
+					return;
+				}
+			case $monster[novelty tropical skeleton]:
 				c2t_bbSubmit(
 					mSteal
 					.c2t_bb($skill[become a wolf])
@@ -131,6 +144,20 @@ void main(int initround, monster foe, string page) {
 				);
 				return;
 			case $monster[Evil Olive]:
+				//have to burn a free kill and nostalgia/envy if no god lobster
+				if (!have_familiar($familiar[god lobster])
+					&& have_familiar($familiar[Ghost of Crimbo Carols])
+					&& get_property('lastCopyableMonster').to_monster() == $monster["plain" girl]) {
+
+					mSteal
+					.c2t_bb($skill[Feel Nostalgic])
+					.c2t_bb($skill[Feel Envy])
+					.c2t_bb(get_property("_chestXRayUsed").to_int() < 3 ? c2t_bb($skill[Chest X-Ray]) : "")
+					.c2t_bb(get_property("_shatteringPunchUsed").to_int() < 3 ? c2t_bb($skill[Shattering Punch]) : "")
+					.c2t_bb($skill[Gingerbread Mob Hit])
+					.c2t_bbSubmit();
+					return;
+				}
 			case $monster[hobelf]://apparently this doesn't work?
 			case $monster[elf hobo]://this might though?
 			case $monster[angry pi&ntilde;ata]:
