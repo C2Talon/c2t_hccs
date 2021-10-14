@@ -1349,7 +1349,7 @@ boolean c2t_hccs_preItem() {
 		maximize("mainstat,equip latte,100 bonus lil doctor bag,100 bonus vampyric cloake",false);
 		use_familiar($familiar[melodramedary]);
 
-		while ((available_amount($item[vampyric cloake]) > 0 && have_effect($effect[Bat-Adjacent Form]) == 0) || !get_property('latteUnlocks').contains_text('carrot'))
+		while ((have_equipped($item[vampyric cloake]) && have_effect($effect[Bat-Adjacent Form]) == 0) || !get_property('latteUnlocks').contains_text('carrot'))
 			adv1($location[The Dire Warren],-1,"");
 	}
 
