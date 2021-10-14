@@ -197,7 +197,7 @@ void c2t_hccs_mod2log(string str) {
 
 //pull item from storage
 boolean c2t_hccs_pull(item ite) {
-	if(!can_interact() && !in_hardcore() && item_amount(ite) == 0 && storage_amount(ite) > 0 && pulls_remaining() > 0)
+	if(!can_interact() && !in_hardcore() && available_amount(ite) == 0 && storage_amount(ite) > 0 && pulls_remaining() > 0)
 		return take_storage(1,ite);
 	return false;
 }
@@ -205,7 +205,7 @@ boolean c2t_hccs_pull(item ite) {
 //free kills left
 int c2t_hccs_freeKillsLeft() {
 	int n = 0;
-	if (item_amount($item[lil' doctor&trade; bag]) > 0)
+	if (available_amount($item[lil' doctor&trade; bag]) > 0)
 		n += 3 - get_property("_chestXRayUsed").to_int();
 	if (have_skill($skill[shattering punch]))
 		n += 3 - get_property("_shatteringPunchUsed").to_int();
@@ -280,7 +280,7 @@ void c2t_hccs_getFax(monster mon) {
 
 //gave up trying to play nice, so brute forcing with visit_url()s
 void c2t_hccs_pantagramming() {
-	if (item_amount($item[portable pantogram]) > 0 && item_amount($item[pantogram pants]) == 0) {
+	if (item_amount($item[portable pantogram]) > 0 && available_amount($item[pantogram pants]) == 0) {
 		//use item
 		visit_url("inv_use.php?which=3&whichitem=9573&pwd="+my_hash(),false,true);
 
@@ -694,7 +694,7 @@ boolean c2t_hccs_preCoil() {
 
 	//fax
 	if (!get_property('_photocopyUsed').to_boolean() && item_amount($item[photocopied monster]) == 0) {
-		if (item_amount($item[Industrial Fire Extinguisher]) > 0 && item_amount($item[Fourth of May Cosplay Saber]) > 0)
+		if (available_amount($item[Industrial Fire Extinguisher]) > 0 && available_amount($item[Fourth of May Cosplay Saber]) > 0)
 			c2t_hccs_getFax($monster[ungulith]);
 		else if (is_online("cheesefax"))
 			c2t_hccs_getFax($monster[factory worker (female)]);
@@ -726,11 +726,11 @@ boolean c2t_hccs_preCoil() {
 		cli_execute('backupcamera ml;backupcamera reverser on');
 
 	//knock-off hero cape thing
-	if (item_amount($item[unwrapped knock-off retro superhero cape]) > 0)
+	if (available_amount($item[unwrapped knock-off retro superhero cape]) > 0)
 		cli_execute('retrocape '+my_primestat());
 
 	//ebony epee from lathe
-	if (item_amount($item[ebony epee]) == 0) {
+	if (available_amount($item[ebony epee]) == 0) {
 		if (item_amount($item[SpinMaster&trade; Lathe]) > 0) {
 			visit_url('shop.php?whichshop=lathe');
 			retrieve_item(1,$item[ebony epee]);
@@ -738,7 +738,7 @@ boolean c2t_hccs_preCoil() {
 	}
 	
 	//FantasyRealm hat
-	if (get_property("frAlways").to_boolean() && item_amount($item[FantasyRealm G. E. M.]) == 0) {
+	if (get_property("frAlways").to_boolean() && available_amount($item[FantasyRealm G. E. M.]) == 0) {
 		visit_url('place.php?whichplace=realm_fantasy&action=fr_initcenter');
 		if (my_primestat() == $stat[muscle])
 			run_choice(1);//1280,1 warrior; 1280,2 mage
@@ -1138,7 +1138,7 @@ boolean c2t_hccs_allTheBuffs() {
 		ensure_effect($effect[There's No N In Love]);
 
 	//cast triple size
-	if (item_amount($item[powerful glove]) > 0 && have_effect($effect[Triple-Sized]) == 0 && !c2t_cast($skill[CHEAT CODE: Triple Size]))
+	if (available_amount($item[powerful glove]) > 0 && have_effect($effect[Triple-Sized]) == 0 && !c2t_cast($skill[CHEAT CODE: Triple Size]))
 		abort('Triple size failed');
 
 	//candles
@@ -1345,10 +1345,11 @@ boolean c2t_hccs_preItem() {
 	cli_execute("shrug ur-kel");
 
 	//get latte ingredient from fluffy bunny and cloake item buff
-	if (have_effect($effect[Bat-Adjacent Form]) == 0 || !get_property('latteUnlocks').contains_text('carrot')) {
+	if (have_effect($effect[feeling lost]) == 0 && (have_effect($effect[Bat-Adjacent Form]) == 0 || !get_property('latteUnlocks').contains_text('carrot'))) {
 		maximize("mainstat,equip latte,100 bonus lil doctor bag,100 bonus vampyric cloake",false);
+		use_familiar($familiar[melodramedary]);
 
-		while ((item_amount($item[lil' doctor&trade; bag]) > 0 && have_effect($effect[Bat-Adjacent Form]) == 0) || !get_property('latteUnlocks').contains_text('carrot'))
+		while ((available_amount($item[vampyric cloake]) > 0 && have_effect($effect[Bat-Adjacent Form]) == 0) || !get_property('latteUnlocks').contains_text('carrot'))
 			adv1($location[The Dire Warren],-1,"");
 	}
 
@@ -1384,7 +1385,7 @@ boolean c2t_hccs_preItem() {
 		
 		retrieve_item(1,$item[full meat tank]);
 
-		if (item_amount($item[eldritch effluvium]) == 0 && item_amount($item[eaves droppers]) == 0 && (item_amount($item[cracker]) == 0 || item_amount($item[electronics kit]) == 0))
+		if (item_amount($item[eldritch effluvium]) == 0 && item_amount($item[eaves droppers]) == 0 && (available_amount($item[cracker]) == 0 || item_amount($item[electronics kit]) == 0))
 			retrieve_item(1,$item[eyedrops of the ermine]);
 
 		pizza_effect(
@@ -1452,7 +1453,7 @@ boolean c2t_hccs_preHotRes() {
 	if (have_effect($effect[Do You Crush What I Crush?]) == 0 && have_familiar($familiar[Ghost of Crimbo Carols])) {
 		equip($item[Vampyric Cloake]);
 		equip($slot[weapon],$item[Fourth of May Cosplay Saber]);
-		if (item_amount($item[Industrial Fire Extinguisher]) > 0)
+		if (available_amount($item[Industrial Fire Extinguisher]) > 0)
 			equip($slot[off-hand],$item[Industrial Fire Extinguisher]);
 		if (my_mp() < 30)
 			cli_execute('rest free');
@@ -1550,8 +1551,8 @@ boolean c2t_hccs_preFamiliar() {
 	//sabering fax for meteor shower
 	//using fax/wish here as feeling lost here is very likely
 	if ((have_skill($skill[meteor lore]) && have_effect($effect[meteor showered]) == 0) ||
-		(item_amount($item[lava-proof pants]) == 0
-		&& item_amount($item[heat-resistant necktie]) == 0
+		(available_amount($item[lava-proof pants]) == 0
+		&& available_amount($item[heat-resistant necktie]) == 0
 		&& item_amount($item[corrupted marrow]) == 0)) {
 
 		if (!have_equipped($item[Fourth of May Cosplay Saber]))
@@ -1562,7 +1563,7 @@ boolean c2t_hccs_preFamiliar() {
 			run_turn();
 		}
 		else {
-			if (item_amount($item[industrial fire extinguisher]) > 0)
+			if (available_amount($item[industrial fire extinguisher]) > 0)
 				c2t_assert(c2t_hccs_wishFight($monster[ungulith]),"ungulith wish fail");
 			else
 				c2t_assert(c2t_hccs_wishFight($monster[factory worker (female)]),"factory worker wish fail");
@@ -1606,7 +1607,7 @@ boolean c2t_hccs_preNoncombat() {
 
 	ensure_effect($effect[The Sonata of Sneakiness]);
 	ensure_effect($effect[Smooth Movements]);
-	if (item_amount($item[powerful glove]) > 0 && have_effect($effect[Invisible Avatar]) == 0 && !c2t_cast($skill[CHEAT CODE: Invisible Avatar]))
+	if (available_amount($item[powerful glove]) > 0 && have_effect($effect[Invisible Avatar]) == 0 && !c2t_cast($skill[CHEAT CODE: Invisible Avatar]))
 		abort('Invisible avatar failed');
 
 	ensure_effect($effect[Silent Running]);
@@ -1644,7 +1645,7 @@ boolean c2t_hccs_preNoncombat() {
 
 	//replacing glob buff with this
 	//mafia doesn't seem to support retrieve_item() by itself for this yet, so visit_url() to the rescue:
-	if (item_amount($item[porkpie-mounted popper]) == 0) {
+	if (available_amount($item[porkpie-mounted popper]) == 0) {
 		visit_url("clan_viplounge.php?action=fwshop&whichfloor=2",false,true);
 		//visit_url("shop.php?whichshop=fwshop",false,true);
 		visit_url("shop.php?whichshop=fwshop&action=buyitem&quantity=1&whichrow=1249&pwd",true,true);
@@ -1672,7 +1673,7 @@ boolean c2t_hccs_preWeapon() {
 		abort('Camel spit only at '+get_property('camelSpit')+'%.');
 
 	//cast triple size
-	if (item_amount($item[powerful glove]) > 0 && have_effect($effect[Triple-Sized]) == 0 && !c2t_cast($skill[CHEAT CODE: Triple Size]))
+	if (available_amount($item[powerful glove]) > 0 && have_effect($effect[Triple-Sized]) == 0 && !c2t_cast($skill[CHEAT CODE: Triple Size]))
 		abort('Triple size failed');
 
 	if (my_mp() < 500 && my_mp() != my_maxmp())
@@ -1814,7 +1815,7 @@ boolean c2t_hccs_preWeapon() {
 		print("OU pizza skipped","blue");
 
 	//cargo shorts as backup
-	if (item_amount($item[cargo cultist shorts]) > 0
+	if (available_amount($item[cargo cultist shorts]) > 0
 		&& !c2t_hccs_thresholdMet(TEST_WEAPON)
 		&& c2t_hccs_testTurns(TEST_WEAPON) > 4 //4 is how much cargo would save on spell test, so may as well use here if spell is not better
 		&& have_effect($effect[Rictus of Yeg]) == 0
@@ -1868,9 +1869,9 @@ boolean c2t_hccs_preSpell() {
 	//get up to 2 obsidian nutcracker
 	int nuts = 2;
 	foreach x in $items[Stick-Knife of Loathing,Staff of Simmering Hatred]//,Abracandalabra]
-		if (item_amount(x) > 0)
+		if (available_amount(x) > 0)
 			nuts--;
-	if (!have_familiar($familiar[left-hand man]) && item_amount($item[Abracandalabra]) > 0)
+	if (!have_familiar($familiar[left-hand man]) && available_amount($item[Abracandalabra]) > 0)
 		nuts--;
 	retrieve_item(nuts<0?0:nuts,$item[obsidian nutcracker]);
 
@@ -1879,7 +1880,7 @@ boolean c2t_hccs_preSpell() {
 		ensure_song($effect[Elron's Explosive Etude]);
 
 	// cargo pocket
-	if (item_amount($item[cargo cultist shorts]) > 0 && have_effect($effect[Sigils of Yeg]) == 0 && !get_property('_cargoPocketEmptied').to_boolean())
+	if (available_amount($item[cargo cultist shorts]) > 0 && have_effect($effect[Sigils of Yeg]) == 0 && !get_property('_cargoPocketEmptied').to_boolean())
 		cli_execute("cargo item Yeg's Motel hand soap");
 	c2t_haveUse($item[Yeg's Motel hand soap]);
 
@@ -1920,7 +1921,7 @@ boolean c2t_hccs_preSpell() {
 	if (!in_hardcore() && pulls_remaining() > 0) {
 		//lazy way for now
 		boolean [item] derp;
-		if (item_amount($item[astral statuette]) == 0)
+		if (available_amount($item[astral statuette]) == 0)
 			derp = $items[Cold Stone of Hatred,Fuzzy Slippers of Hatred,Lens of Hatred,witch's bra];
 		else
 			derp = $items[Fuzzy Slippers of Hatred,Lens of Hatred,witch's bra];
@@ -2168,7 +2169,7 @@ void c2t_hccs_fights() {
 	while (get_property("_neverendingPartyFreeTurns").to_int() < 10 || c2t_hccs_freeKillsLeft() > 0) {
 		// -- combat logic --
 		//use doc bag kills first after free fights
-		if (item_amount($item[lil' doctor&trade; bag]) > 0
+		if (available_amount($item[lil' doctor&trade; bag]) > 0
 			&& get_property('_neverendingPartyFreeTurns').to_int() == 10
 			&& get_property('_chestXRayUsed').to_int() < 3)
 				doc = ",equip lil doctor bag";
