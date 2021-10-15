@@ -197,7 +197,7 @@ void c2t_hccs_mod2log(string str) {
 
 //pull item from storage
 boolean c2t_hccs_pull(item ite) {
-	if(!can_interact() && !in_hardcore() && available_amount(ite) == 0 && storage_amount(ite) > 0 && pulls_remaining() > 0)
+	if(!can_interact() && !in_hardcore() && item_amount(ite) == 0 && available_amount(ite) == 0 && storage_amount(ite) > 0 && pulls_remaining() > 0)
 		return take_storage(1,ite);
 	return false;
 }
@@ -1029,17 +1029,18 @@ boolean c2t_hccs_buffExp() {
 
 		// mox exp synthesis; allowing this to be able to fail maybe
 		// if don't have the right candies, drop hardcore
-		if (have_effect($effect[Synthesis: Style]) == 0)
+		if (have_effect($effect[Synthesis: Style]) == 0) {
 			if (item_amount($item[Crimbo candied pecan]) == 0 || item_amount($item[Crimbo fudge]) == 0) {
 				print("Didn't get the right candies for buffs, so dropping hardcore.","blue");
-				c2t_dropHardcore();
+				if (in_hardcore())
+					c2t_dropHardcore();
 				c2t_hccs_pull($item[Crimbo candied pecan]);
 				c2t_hccs_pull($item[Crimbo fudge]);
 			}
 			if (!sweet_synthesis($effect[Synthesis: Style])) //works or no?
 				//probably automate drop to softcore at this point and just pull needed candy
 				print('Note: Synthesis: Style failed');
-
+		}
 		if (numeric_modifier('moxie experience percent') < 89.999) {
 			abort('Insufficient +exp%');
 			return false;
