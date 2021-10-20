@@ -22,14 +22,14 @@ void main(int initround, monster foe, string page) {
 	//should allow backups through?
 	else if (foe.to_string() != get_property("_c2t_lastCombatFoe"))
 		set_property("_c2t_lastCombatFoe",foe.to_string());
+	//to prevent an infinite loop and "speed bump"
 	else {
 		set_property("_c2t_combatReentryCount",(get_property("_c2t_combatReentryCount").to_int()+1).to_string());
+		if (get_property("_c2t_combatReentryCount").to_int() >= 5)
+			abort("The combat script was called at least 5 times without combat resolving");
 		waitq(1);
 		return;
 	}
-	//to prevent an infinite loop
-	if (get_property("_c2t_combatReentryCount").to_int() >= 5)
-		abort("The combat script was called 5 times without combat resolving");
 
 
 	string mHead = "scrollwhendone;";
