@@ -300,9 +300,10 @@ void main(int initround, monster foe, string page) {
 					m += c2t_bb($skill[feel hatred]).c2t_bb($skill[snokebomb]);
 				m.c2t_bbSubmit();
 				//pretty sure most adv1() in the script assume it succeeds in fighting what it's supposed to, which the holiday monster is very much not the right one, so abort to rerun
-				abort("Aborting for safety after encountering a holiday monster. Should be able to simply rerun to resume.");
+				//abort("Aborting for safety after encountering a holiday monster. Should be able to simply rerun to resume.");
 				//going to test using adv1() instead of abort for next round of holiday wanderers
-				//adv1(get_property("lastAdventure").to_location());
+				adv1(get_property("lastAdventure").to_location());
+				//abort("Check to see if it adventured in the correct location");
 				return;
 
 			default:
