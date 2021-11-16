@@ -136,6 +136,8 @@ void c2t_hccs_getFax(monster mon);
 boolean c2t_hccs_fightGodLobster();
 void c2t_hccs_breakfast();
 int c2t_hccs_freeKillsLeft();
+void c2t_hccs_printTestData();
+void c2t_hccs_testData(string testType,int testNum,int turnsTaken,int turnsExpected);
 
 
 void main() {
@@ -472,7 +474,7 @@ void c2t_hccs_testHandler(int test) {
 		return;
 
 	string type;
-	int turns,before;
+	int turns,before,expected;
 
 	//combat familiars will slaughter everything; so make sure they're inactive at the start of test sections, since not every combat bothers with familiar checks
 	if ($familiars[shorter-order cook,left-hand man,imitation crab] contains my_familiar())
@@ -532,7 +534,7 @@ void c2t_hccs_testHandler(int test) {
 	if (get_property("c2t_hccs_haltBeforeTest").to_boolean())
 		abort(`Halting. Double-check test {test}: {TEST_NAME[test]} ({type})`);
 
-	turns = c2t_hccs_testTurns(test);
+	expected = turns = c2t_hccs_testTurns(test);
 	if (turns < 1) {
 		if (test > 4) //ignore over-capping stat tests
 			print(`Notice: over-capping the {type} test by {1-turns} {1-turns==1?"turn":"turns"} worth of resources.`,'blue');
@@ -553,9 +555,30 @@ void c2t_hccs_testHandler(int test) {
 	if (my_turncount() - before > turns)
 		print("Notice: the task took more turns than expected, but still below the threshold, so continuing.");
 
+	//record data for post-run:
+	c2t_hccs_testData(type,test,my_turncount() - before,expected);
+
 	c2t_hccs_printRunTime();
 }
 
+
+//store results of tests
+void c2t_hccs_testData(string testType,int testNum,int turnsTaken,int turnsExpected) {
+	if (testNum == TEST_COIL_WIRE)
+		return;
+
+	set_property("_c2t_hccs_testData",get_property("_c2t_hccs_testData")+(get_property("_c2t_hccs_testData") == ""?"":";")+`{testType},{testNum},{turnsTaken},{turnsExpected}`);
+}
+
+//print results of tests
+void c2t_hccs_printTestData() {
+	string [int] d;
+	print("Summary of tests:");
+	foreach i,x in split_string(get_property("_c2t_hccs_testData"),";") {
+		d = split_string(x,",");
+		print(`{d[0]} test took {d[2]} turn(s){to_int(d[1]) > 4 && to_int(d[3]) < 1?"; it's being overcapped by "+(1-to_int(d[3]))+" turn(s) of resources":""}`);
+	}
+}
 
 //precursor to facilitate using only as many resources as needed and not more
 int c2t_hccs_testTurns(int test) {
@@ -649,6 +672,9 @@ void c2t_hccs_exit() {
 		set_property('customCombatScript',get_property('_saved_customCombatScript'));
 	//don't want CS moods running during manual intervention or when fully finished
 	cli_execute('mood apathetic');
+
+	if (get_property("csServicesPerformed").split_string(",").count() == 11)
+		c2t_hccs_printTestData();
 
 	if (skippedFortunes)
 		print(`Info: clan fortunes were skipped`,"red");
@@ -1347,7 +1373,7 @@ boolean c2t_hccs_preItem() {
 
 	//get latte ingredient from fluffy bunny and cloake item buff
 	if (have_effect($effect[feeling lost]) == 0 && (have_effect($effect[Bat-Adjacent Form]) == 0 || !get_property('latteUnlocks').contains_text('carrot'))) {
-		maximize("mainstat,equip latte,100 bonus lil doctor bag,100 bonus vampyric cloake",false);
+		maximize("mainstat,equip latte,1000 bonus lil doctor bag,1000 bonus vampyric cloake",false);
 		use_familiar($familiar[melodramedary]);
 
 		while ((have_equipped($item[vampyric cloake]) && have_effect($effect[Bat-Adjacent Form]) == 0) || !get_property('latteUnlocks').contains_text('carrot'))
