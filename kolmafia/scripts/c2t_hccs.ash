@@ -2352,13 +2352,12 @@ void c2t_hccs_fights() {
 }
 
 boolean c2t_hccs_wandererFight() {
-	/* probably doesn't matter to do wanderer while feeling lost, unless an unlucky superlikely takes a turn
-	if (have_effect($effect[Feeling Lost]) > 0) {//don't want to be doing wanderer whilst feeling lost
+	//don't want to be doing wanderer whilst feeling lost
+	if (have_effect($effect[Feeling Lost]) > 0) {
 		print("Currently feeling lost, so skipping wanderer(s).","blue");
 		return false;
 	}
-	*/
-		
+
 	string append = ",-equip garbage shirt,exp";
 	if (c2t_isVoterNow())
 		append += ",equip i voted";
