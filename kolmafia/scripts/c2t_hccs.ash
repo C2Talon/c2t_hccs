@@ -1812,28 +1812,28 @@ boolean c2t_hccs_preWeapon() {
 				cli_execute('smash 1 cool whip');
 			}
 
-			// OU pizza requires funky logic, as it's not so simple as to make a priority list for last 2 items
-			// TODO maybe make something to figure out last 2 ingredients so not having to copy/paste so much
-			// this is currently an incomplete, lazy implementation; and will fail rarely
-			if (available_amount($item[Middle of the Road&trade; brand whiskey]) > 1) {
-				pizza_effect(
-					$effect[Outer Wolf&trade;],
-					c2t_priority($item[ointment of the occult],$item[out-of-tune biwa]),
-					c2t_priority($item[useless powder],$item[unremarkable duffel bag]),
-					$item[Middle of the Road&trade; brand whiskey],
-					$item[Middle of the Road&trade; brand whiskey]
-					//c2t_priority($item[Middle of the Road&trade; brand whiskey],$item[surprisingly capacious handbag],$item[PB&J with the crusts cut off])
-				);
+			//select final 2 ingredients that don't affect pizza result
+			item it1,it2;
+			boolean [item] ingredients = $items[Middle of the Road&trade; brand whiskey,surprisingly capacious handbag,PB&J with the crusts cut off];
+
+			it1 = c2t_priority(ingredients);
+			if (item_amount(it1) > 1)
+				it2 = it1;
+			else {
+				remove ingredients[it1];
+				it2 = c2t_priority(ingredients);
 			}
-			else if (available_amount($item[Middle of the Road&trade; brand whiskey]) > 0) {
-				pizza_effect(
-					$effect[Outer Wolf&trade;],
-					c2t_priority($item[ointment of the occult],$item[out-of-tune biwa]),
-					c2t_priority($item[useless powder],$item[unremarkable duffel bag]),
-					$item[Middle of the Road&trade; brand whiskey],
-					c2t_priority($item[surprisingly capacious handbag],$item[PB&J with the crusts cut off])
-				);
-			}
+			c2t_assert(it2 != $item[none],"OU pizza ingredient selection failed");
+
+			//make/eat pizza
+			pizza_effect(
+				$effect[Outer Wolf&trade;],
+				c2t_priority($item[ointment of the occult],$item[out-of-tune biwa]),
+				c2t_priority($item[useless powder],$item[unremarkable duffel bag]),
+				it1,
+				it2
+			);
+
 			if (have_effect($effect[Outer Wolf&trade;]) == 0)
 				abort('OU pizza failed');
 		}
