@@ -10,7 +10,6 @@ import <canadv.ash>
 import <c2t_hccs_aux.ash>
 
 int START_TIME = now_to_int();
-boolean skippedFortunes = false;
 
 //properties
 //can set the following properties via the CLI. This just sets some defaults in case they don't exist to make handling them simpler
@@ -189,7 +188,7 @@ void main() {
 
 void c2t_hccs_printRunTime(boolean f) {
 	int t = now_to_int() - START_TIME;
-	print(`c2t_hccs {f?"took":"has taken"} {floor(t/60000)} minute(s) {(t%60000)/1000.0} second(s) to execute{f?"":" so far"}.`,"blue");
+	print(`c2t_hccs {f?"took":"has taken"} {t/60000} minute(s) {(t%60000)/1000.0} second(s) to execute{f?"":" so far"}.`,"blue");
 }
 
 void c2t_hccs_mod2log(string str) {
@@ -676,9 +675,6 @@ void c2t_hccs_exit() {
 	if (get_property("csServicesPerformed").split_string(",").count() == 11)
 		c2t_hccs_printTestData();
 
-	if (skippedFortunes)
-		print(`Info: clan fortunes were skipped`,"red");
-
 	if (get_property("shockingLickCharges").to_int() > 0)
 		print(`Info: shocking lick charge count from batteries is {get_property("shockingLickCharges")}`,"blue");
 
@@ -687,7 +683,11 @@ void c2t_hccs_exit() {
 
 boolean c2t_hccs_preCoil() {
 	//get a grain of sand for pizza if muscle class
-	if (my_primestat() == $stat[muscle] && available_amount($item[grain of sand]) == 0 && available_amount($item[gnollish autoplunger]) == 0) {
+	if (available_amount($item[beach comb]) > 0
+		&& my_primestat() == $stat[muscle]
+		&& available_amount($item[grain of sand]) == 0
+		&& available_amount($item[gnollish autoplunger]) == 0
+		) {
 		print("Getting grain of sand from the beach","blue");
 		while (get_property('_freeBeachWalksUsed').to_int() < 5 && available_amount($item[grain of sand]) == 0)
 			//arbitrary location
@@ -712,10 +712,8 @@ boolean c2t_hccs_preCoil() {
 		if (is_online(fortunes))
 			while (get_property('_clanFortuneConsultUses').to_int() < 3)
 				cli_execute(`fortune {fortunes};wait 5`);
-		else {
+		else
 			print(`{fortunes} is not online; skipping fortunes`,"red");
-			skippedFortunes = true;
-		}
 	}
 
 	//fax
@@ -788,12 +786,14 @@ boolean c2t_hccs_preCoil() {
 	visit_url('tutorial.php?action=toot');
 	c2t_haveUse($item[letter from King Ralph XI]);
 	c2t_haveUse($item[pork elf goodies sack]);
-	autosell(5,$item[baconstone]);
-	autosell(5,$item[porquoise]);
-	autosell(5,$item[hamethyst]);
+	if (my_meat() < 2500) {//don't autosell if there is some other source of meat
+		autosell(5,$item[baconstone]);
+		autosell(5,$item[porquoise]);
+		autosell(5,$item[hamethyst]);
+	}
 
-	// Buy toy accordion
-	if (my_class() != $class[accordion thief]);
+	//buy toy accordion
+	if (my_class() != $class[accordion thief])
 		retrieve_item(1,$item[toy accordion]);
 	
 	// equip mp stuff
@@ -911,8 +911,8 @@ boolean c2t_hccs_preCoil() {
 				gogogo = 7;
 				cog = 3;
 				tank = 1;
-				//if (available_amount($item[gnollish autoplunger]) == 0)
-				//	create(1,$item[gnollish autoplunger]);
+				if (available_amount($item[beach comb]) == 0)
+					c2t_assert(retrieve_item(1,$item[gnollish autoplunger]),"gnollish autoplunger is a critical pizza ingredient without a beach comb");
 				break;
 			case $stat[mysticality]:
 				gogogo = 8;
@@ -1141,10 +1141,13 @@ boolean c2t_hccs_allTheBuffs() {
 	ensure_effect($effect[Hulkien]); //pillkeeper stats
 	ensure_effect($effect[Fidoxene]);//pillkeeper familiar
 	
-	ensure_effect($effect[You Learned Something Maybe!]); //beach exp
-	ensure_effect($effect[Do I Know You From Somewhere?]);//beach fam wt
-	if (my_primestat() == $stat[moxie])
-		ensure_effect($effect[Pomp & Circumsands]);//beach moxie
+	//beach comb leveling buffs
+	if (available_amount($item[beach comb]) > 0) {
+		ensure_effect($effect[You Learned Something Maybe!]); //beach exp
+		ensure_effect($effect[Do I Know You From Somewhere?]);//beach fam wt
+		if (my_primestat() == $stat[moxie])
+			ensure_effect($effect[Pomp & Circumsands]);//beach moxie
+	}
 
 	// Cast Ode and drink bee's knees
 	// going to skip this for non-moxie to use clip art's buff of same strength
@@ -1498,8 +1501,9 @@ boolean c2t_hccs_preHotRes() {
 	ensure_effect($effect[Elemental Saucesphere]);
 	ensure_effect($effect[Astral Shell]);
 
-	// Beach comb buff.
-	ensure_effect($effect[Hot-Headed]);
+	//beach comb hot buff
+	if (available_amount($item[beach comb]) > 0)
+		ensure_effect($effect[Hot-Headed]);
 
 	//emotion chip
 	c2t_getEffect($effect[Feeling Peaceful],$skill[Feel Peaceful]);
@@ -1747,8 +1751,9 @@ boolean c2t_hccs_preWeapon() {
 		ensure_effect($effect[Weapon of Mass Destruction]);
 	}
 
-	// Beach Comb
-	ensure_effect($effect[Lack of Body-Building]);
+	//beach comb weapon buff
+	if (available_amount($item[beach comb]) > 0)
+		ensure_effect($effect[Lack of Body-Building]);
 
 	// Boombox potion
 	if (available_amount($item[Punching Potion]) > 0)
@@ -1878,8 +1883,9 @@ boolean c2t_hccs_preSpell() {
 	// Pool buff
 	ensure_effect($effect[Mental A-cue-ity]);
 
-	// Beach Comb
-	ensure_effect($effect[We're All Made of Starfish]);
+	//beach comb spell buff
+	if (available_amount($item[beach comb]) > 0)
+		ensure_effect($effect[We're All Made of Starfish]);
 
 	use_skill(1, $skill[Spirit of Peppermint]);
 	
