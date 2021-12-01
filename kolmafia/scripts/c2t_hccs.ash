@@ -1819,13 +1819,16 @@ boolean c2t_hccs_preWeapon() {
 
 			//select final 2 ingredients that don't affect pizza result
 			item it1,it2;
-			boolean [item] ingredients = $items[Middle of the Road&trade; brand whiskey,surprisingly capacious handbag,PB&J with the crusts cut off];
+			item [int] ingredients = {$item[Middle of the Road&trade; brand whiskey],$item[surprisingly capacious handbag],$item[PB&J with the crusts cut off]};
 
 			it1 = c2t_priority(ingredients);
 			if (item_amount(it1) > 1)
 				it2 = it1;
 			else {
-				remove ingredients[it1];
+				foreach i,x in ingredients if (it1 == x) {
+					remove ingredients[i];
+					break;
+				}
 				it2 = c2t_priority(ingredients);
 			}
 			c2t_assert(it2 != $item[none],"OU pizza ingredient selection failed");
