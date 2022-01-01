@@ -1140,8 +1140,10 @@ boolean c2t_hccs_allTheBuffs() {
 	if (get_property('_lyleFavored') == 'false')
 		ensure_effect($effect[Favored by Lyle]);
 	
-	ensure_effect($effect[Hulkien]); //pillkeeper stats
-	ensure_effect($effect[Fidoxene]);//pillkeeper familiar
+	if (available_amount($item[eight days a week pill keeper]) > 0) {
+		ensure_effect($effect[Hulkien]); //pillkeeper stats
+		ensure_effect($effect[Fidoxene]);//pillkeeper familiar
+	}
 	
 	//beach comb leveling buffs
 	if (available_amount($item[beach comb]) > 0) {
@@ -1558,7 +1560,7 @@ boolean c2t_hccs_preHotRes() {
 
 	//pillkeeper
 	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
-		if (have_effect($effect[Rainbowolin]) == 0)
+		if (available_amount($item[eight days a week pill keeper]) > 0 && have_effect($effect[Rainbowolin]) == 0)
 			cli_execute('pillkeeper elemental');
 
 	//pocket wish
