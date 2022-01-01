@@ -1300,10 +1300,10 @@ boolean c2t_hccs_allTheBuffs() {
 // get semirare from limerick dungeon
 boolean c2t_hccs_semirareItem() {
 	if (available_amount($item[cyclops eyedrops]) == 0 && have_effect($effect[One Very Clear Eye]) == 0) {
-		if (get_property('_freePillKeeperUsed') == 'false')//my_spleen_use() == 0)
-			cli_execute('pillkeeper semirare');
-		else
-			abort('free pillkeeper already used?');
+		//11-leaf clover
+		visit_url("hermit.php?autoworthless=on");
+		visit_url("hermit.php?action=trade&whichitem=10881&quantity=1",true,true);
+		visit_url(`inv_use.php?pwd={my_hash()}&which=3&whichitem=10881`,false,true);
 		//recover hp
 		if (my_hp() < (0.5 * my_maxhp()))
 			cli_execute('hottub');
