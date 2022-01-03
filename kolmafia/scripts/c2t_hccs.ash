@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r20876;//fire extinguisher IotM
+since r26088;//11-leaf clover
 
 import <c2t_cartographyHunt.ash>
 import <c2t_lib.ash>
@@ -10,7 +10,6 @@ import <canadv.ash>
 import <c2t_hccs_aux.ash>
 
 int START_TIME = now_to_int();
-boolean FIRST_MAX = true;
 
 //properties
 //can set the following properties via the CLI. This just sets some defaults in case they don't exist to make handling them simpler
@@ -138,7 +137,6 @@ void c2t_hccs_breakfast();
 int c2t_hccs_freeKillsLeft();
 void c2t_hccs_printTestData();
 void c2t_hccs_testData(string testType,int testNum,int turnsTaken,int turnsExpected);
-boolean c2t_hccs_minMaximize(string max);
 
 
 void main() {
@@ -1303,9 +1301,10 @@ boolean c2t_hccs_allTheBuffs() {
 boolean c2t_hccs_semirareItem() {
 	if (available_amount($item[cyclops eyedrops]) == 0 && have_effect($effect[One Very Clear Eye]) == 0) {
 		//11-leaf clover
-		visit_url("hermit.php?autoworthless=on");
-		visit_url("hermit.php?action=trade&whichitem=10881&quantity=1",true,true);
-		visit_url(`inv_use.php?pwd={my_hash()}&which=3&whichitem=10881`,false,true);
+		if (have_effect($effect[Lucky!]) == 0) {
+			retrieve_item($item[11-leaf clover]);
+			use($item[11-leaf clover]);
+		}
 		//recover hp
 		if (my_hp() < (0.5 * my_maxhp()))
 			cli_execute('hottub');
@@ -2321,7 +2320,7 @@ void c2t_hccs_fights() {
 			) {
 
 			use_familiar($familiar[Pocket Professor]);
-			c2t_hccs_minMaximize("mainstat,equip garbage shirt,equip kramco,100familiar weight,equip backup camera");
+			c2t_minMaximize("mainstat,equip garbage shirt,equip kramco,100familiar weight,equip backup camera");
 		}
 		//fish for latte carrot ingredient with backup fights
 		else if (get_property('_pocketProfessorLectures').to_int() > 0
@@ -2335,7 +2334,7 @@ void c2t_hccs_fights() {
 			if (get_property('garbageShirtCharge').to_int() < 17)
 				garbage = ",-equip garbage shirt";
 
-			c2t_hccs_minMaximize("mainstat,exp,equip latte,equip backup camera"+garbage+fam);
+			c2t_minMaximize("mainstat,exp,equip latte,equip backup camera"+garbage+fam);
 			adv1($location[The Dire Warren],-1,"");
 			continue;//don't want to fall into NEP in this state
 		}
@@ -2351,11 +2350,11 @@ void c2t_hccs_fights() {
 			if (get_property('garbageShirtCharge').to_int() < 17)
 				garbage = ",-equip garbage shirt";
 
-			c2t_hccs_minMaximize("mainstat,exp,equip backup camera"+kramco+garbage+fam);
+			c2t_minMaximize("mainstat,exp,equip backup camera"+kramco+garbage+fam);
 		}
 		//rest of the free NEP fights
 		else
-			c2t_hccs_minMaximize("mainstat,exp,equip kramco"+garbage+fam+doc);
+			c2t_minMaximize("mainstat,exp,equip kramco"+garbage+fam+doc);
 
 		adv1($location[The Neverending Party],-1,"");
 	}
@@ -2416,14 +2415,6 @@ boolean c2t_hccs_wandererFight() {
 	equip($slot[familiar],nowEquip);
 
 	return true;
-}
-
-boolean c2t_hccs_minMaximize(string max) {
-	if (max != c2t_lastMaximize() || FIRST_MAX) {
-		FIRST_MAX = false;
-		return maximize(max,false);
-	}
-	return false;
 }
 
 // will fail if haiku dungeon stuff spills outside of itself, so probably avoid that or make sure to do combats elsewhere just before a test
