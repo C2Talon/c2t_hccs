@@ -123,7 +123,8 @@ void main(int initround, monster foe, string page) {
 				}
 				c2t_bbSubmit(
 					mHead + mSteal
-					.c2t_bb(have_effect($effect[Bat-Adjacent Form]) == 0?c2t_bb($skill[Become a Bat]):"")
+					.c2t_bb(have_effect($effect[bat-adjacent form]) == 0?c2t_bb($skill[become a bat]):"")
+					.c2t_bb(have_effect($effect[cosmic ball in the air]) == 0?c2t_bb($skill[bowl straight up]):"")
 					.c2t_bb($skill[reflex hammer])
 					.c2t_bb($skill[snokebomb])
 					.c2t_bb($skill[feel hatred])
@@ -150,6 +151,7 @@ void main(int initround, monster foe, string page) {
 					mSteal
 					.c2t_bb($skill[become a wolf])
 					.c2t_bb($skill[gulp latte])
+					.c2t_bb($skill[bowl straight up])
 					.c2t_bb($skill[throw latte on opponent])
 				);
 				return;

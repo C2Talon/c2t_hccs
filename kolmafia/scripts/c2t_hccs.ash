@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r26088;//11-leaf clover
+since r26092;//cosmic bowling ball
 
 import <c2t_cartographyHunt.ash>
 import <c2t_lib.ash>
@@ -1309,7 +1309,6 @@ boolean c2t_hccs_semirareItem() {
 		if (my_hp() < (0.5 * my_maxhp()))
 			cli_execute('hottub');
 		cli_execute('mood apathetic');
-		cli_execute('counters nowarn Fortune Cookie');
 		adv1($location[The Limerick Dungeon], -1, '');
 	}
 	return true;
