@@ -8,6 +8,7 @@ import <c2t_lib.ash>
 import <c2t_cast.ash>
 import <canadv.ash>
 import <c2t_hccs_aux.ash>
+import <c2t_hccs_resources.ash>
 
 int START_TIME = now_to_int();
 
@@ -121,10 +122,7 @@ void c2t_hccs_testHandler(int test);
 boolean c2t_hccs_testDone(int test);
 void c2t_hccs_doTest(int test);
 void c2t_hccs_fights();
-boolean c2t_hccs_wishFight(monster mon);
 boolean c2t_hccs_wandererFight();
-void c2t_hccs_pantagramming();
-void c2t_hccs_vote();
 int c2t_hccs_testTurns(int test);
 boolean c2t_hccs_thresholdMet(int test);
 boolean c2t_hccs_pull(item ite);
@@ -243,21 +241,18 @@ void c2t_hccs_breakfast() {
 			use_skill(1,ski);
 	}
 
-	//genie bottle
+	//genie bottle //TODO not depend on pocket wishes; i.e. use genie direct
 	while (get_property("_genieWishesUsed").to_int() < 3) {
 		visit_url(`inv_use.php?pwd={my_hash()}&which=3&whichitem=9529`);
 		visit_url("choice.php?whichchoice=1267&wish=for+more+wishes&option=1",true,true);
 	}
 
-	//power plant
-	if (item_amount($item[potted power plant]) > 0 && get_property("_pottedPowerPlant") != "0,0,0,0,0,0,0") {
-		buffer buf = visit_url(`inv_use.php?pwd={my_hash()}&which=3&whichitem=10738`);
-		if (buf.contains_text('name="whichchoice" value="1448"')) {
-			matcher match = create_matcher('<button\\s+type="submit"\\s+name="pp"\\s+value="(\\d)"',buf);
-			while (match.find())
-				visit_url(`choice.php?pwd&whichchoice=1448&option=1&pp={match.group(1)}`,true,true);
-		}
-	}
+	//harvest power plant
+	c2t_hccs_powerPlant(true);
+
+	//peppermint garden
+	if (get_campground() contains $item[peppermint pip packet])
+		cli_execute("garden pick");
 }
 
 void c2t_hccs_getFax(monster mon) {
@@ -277,111 +272,6 @@ void c2t_hccs_getFax(monster mon) {
 		cli_execute('fax send');
 	}
 	c2t_assert(get_property('photocopyMonster') == mon.manuel_name,'wrong fax monster');
-}
-
-//gave up trying to play nice, so brute forcing with visit_url()s
-void c2t_hccs_pantagramming() {
-	if (item_amount($item[portable pantogram]) > 0 && available_amount($item[pantogram pants]) == 0) {
-		//use item
-		visit_url("inv_use.php?which=3&whichitem=9573&pwd="+my_hash(),false,true);
-
-		int temp;
-		switch (my_primestat()) {
-			case $stat[muscle]:
-				temp = 1;
-				break;
-			case $stat[mysticality]:
-				temp = 2;
-				break;
-			case $stat[moxie]:
-				temp = 3;
-				break;
-			default:
-				abort("broken stat?");
-		}
-
-		//primestat,hot res,+mp,+spell,-combat
-		visit_url("choice.php?pwd&whichchoice=1270&option=1&e=1&s1=-2,0&s2=-2,0&s3=-1,0&m="+temp,true,true);
-		cli_execute("refresh all");
-	}
-}
-
-void c2t_hccs_vote() {
-	if (!get_property("voteAlways").to_boolean() && !get_property("_voteToday").to_boolean())
-		return;
-	if (available_amount($item[&quot;I Voted!&quot; sticker]) > 0)
-		return;
-	if (my_daycount() > 1)
-		abort("Need to manually vote. This is not set up to vote except for day 1.");
-
-	buffer buf = visit_url('place.php?whichplace=town_right&action=townright_vote');
-
-	//monster priority
-	boolean [monster] monp = $monsters[angry ghost,government bureaucrat,terrible mutant,slime blob,annoyed snake];
-	monster mon1 = get_property('_voteMonster1').to_monster();
-	monster mon2 = get_property('_voteMonster2').to_monster();
-
-	//for output
-	int radi,che1,che2;
-
-	//select monster
-	foreach mon in monp {
-		//randomise if it's a choice between the last 2
-		if (mon == $monster[slime blob]) {
-			radi = random(2)+1;
-			break;
-		}
-		else if (mon1 == mon) {
-			radi = 1;
-			break;
-		}
-		else if (mon2 == mon) {
-			radi = 2;
-			break;
-		}
-	}
-
-	//votes by class, from 0 to 3
-	switch (my_class()) {
-		default:
-			abort("Unrecognized class for voting?");
-		case $class[seal clubber]:
-			//3 spooky res,10 stench damage,2 fam exp,-2 adventures
-			che1 = 1;//10 stench damage
-			che2 = 2;//2 familiar exp
-			break;
-		case $class[turtle tamer]:
-			//100% weapon damage,10 ML,unrecorded unarmed damage,-20 moxie
-			che1 = 0;//100% weapon damage
-			che2 = 1;//10 ML
-			break;
-		case $class[pastamancer]:
-			//30% gear drop,-10% crit,100% weapon damage,2 fam exp
-			che1 = 2;//100% weapon damage
-			che2 = 3;//2 fam exp
-			break;
-		case $class[sauceror]:
-			//-10 ML,3 exp,-20 mys,3 spooky res
-			che1 = 1;//3 exp
-			che2 = 3;//3 spooky res
-			break;
-		case $class[disco bandit]:
-			//30% max mp,10 hot damage,30% food drop,-20 item drop
-			che1 = 0;//30% max mp
-			che2 = 1;//10 hot damage
-			break;
-		case $class[accordion thief]:
-			//3 stench res,-20 mysticality,30% booze drop,25% initiative
-			che1 = 2;//30% booze drop
-			che2 = 3;//25% initative
-			break;
-	}
-
-	print("Voting for "+(radi==1?mon1:mon2)+", "+get_property('_voteLocal'+(che1+1))+", "+get_property('_voteLocal'+(che2+1)),"blue");
-	buf = visit_url('choice.php?pwd&option=1&whichchoice=1331&g='+radi+'&local[]='+che1+'&local[]='+che2,true,false);
-
-	if (available_amount($item[&quot;I Voted!&quot; sticker]) == 0)
-		abort("Voting failed?");
 }
 
 boolean c2t_haveUse(item ite) {
@@ -420,18 +310,6 @@ int c2t_getEffect(effect eff,item ite,int min) {
 	if (have_effect(eff) < min)
 		print("Unable to use enough "+ite,"blue");
 	return have_effect(eff);
-}
-
-boolean c2t_hccs_wishFight(monster mon) {
-	if (!c2t_wishFight(mon))
-		return false;
-	run_turn();
-	//if (choice_follows_fight()) //saber force breaks this I think?
-		run_choice(-1);//just in case
-
-	if (get_property("lastEncounter") != mon && get_property("lastEncounter") != "Using the Force")
-		return false;
-	return true;
 }
 
 boolean c2t_hccs_fightGodLobster() {
@@ -743,7 +621,7 @@ boolean c2t_hccs_preCoil() {
 	c2t_haveUse($item[astral six-pack]);
 
 	//pantagramming
-	c2t_hccs_pantagramming();
+	c2t_hccs_pantogram();
 
 	//backup camera settings
 	if (get_property('backupCameraMode') != 'ml' || !get_property('backupCameraReverserEnabled').to_boolean())
@@ -819,7 +697,7 @@ boolean c2t_hccs_preCoil() {
 	}
 		
 	// pre-coil pizza to get imitation whetstone for INFE pizza latter
-	if (my_fullness() == 0) {
+	if (c2t_hccs_pizzaCube() && my_fullness() == 0) {
 		// get imitation crab
 		use_familiar($familiar[imitation crab]);
 				
@@ -837,16 +715,39 @@ boolean c2t_hccs_preCoil() {
 				use(1,$item[volleyball]);
 			}
 						
-			eat_pizza(
+			c2t_hccs_pizzaCube(
 				$item[cog and sprocket assembly],
 				$item[cog and sprocket assembly],
 				$item[cog and sprocket assembly],
 				$item[blood-faced volleyball]
-				);	
+				);
 		}
 		else
 			eat(1,$item[diabolic pizza]);
 		use_familiar($familiar[Hovering Sombrero]);
+	}
+	//if cold medicine cabinet, grabbing a stat booze to get some adventures post-coil as I don't have numberology
+	else if (get_campground() contains $item[cold medicine cabinet]) {
+		maximize("100mainstat,mp",false);
+		item itew;
+		buffer bufw = visit_url("campground.php?action=workshed");
+		switch (my_primestat()) {
+			case $stat[muscle]:
+				itew = $item[doc's fortifying wine];
+				break;
+			case $stat[mysticality]:
+				itew = $item[doc's smartifying wine];
+				break;
+			case $stat[moxie]:
+				itew = $item[doc's limbering wine];
+				break;
+		}
+		if (!bufw.contains_text(itew))
+			abort("cmc broke?");
+		run_choice(3);
+
+		//go back to full MP equipment
+		maximize("mp,-equip kramco,-equip i voted",false);
 	}
 	
 	// need to fetch and drink some booze pre-coil. using semi-rare via pillkeeper in sleazy back alley
@@ -911,7 +812,7 @@ boolean c2t_hccs_preCoil() {
 				gogogo = 7;
 				cog = 3;
 				tank = 1;
-				if (available_amount($item[beach comb]) == 0)
+				if (c2t_hccs_pizzaCube() && available_amount($item[beach comb]) == 0)
 					c2t_assert(retrieve_item(1,$item[gnollish autoplunger]),"gnollish autoplunger is a critical pizza ingredient without a beach comb");
 				break;
 			case $stat[mysticality]:
@@ -927,10 +828,12 @@ boolean c2t_hccs_preCoil() {
 			default:
 				abort('something broke with moon sign changing');
 		}
-		//CSAs for later pizzas (3 for CER & HGh) //2 for CER & DIF or CER & KNI
-		c2t_assert(retrieve_item(cog,$item[cog and sprocket assembly]),"Didn't get enough cog and sprocket assembly");
-		//empty meat tank for DIF and INFE pizzas
-		c2t_assert(retrieve_item(tank,$item[empty meat tank]),`Need {tank} emtpy meat tank`);
+		if (c2t_hccs_pizzaCube()) {
+			//CSAs for later pizzas (3 for CER & HGh) //2 for CER & DIF or CER & KNI
+			c2t_assert(retrieve_item(cog,$item[cog and sprocket assembly]),"Didn't get enough cog and sprocket assembly");
+			//empty meat tank for DIF and INFE pizzas
+			c2t_assert(retrieve_item(tank,$item[empty meat tank]),`Need {tank} emtpy meat tank`);
+		}
 		//tune moon sign
 		visit_url('inv_use.php?whichitem=10254&doit=96&whichsign='+gogogo);
 	}
@@ -958,22 +861,9 @@ boolean c2t_hccs_buffExp() {
 		cli_execute('shower '+my_primestat());
 	
 	if (my_primestat() == $stat[muscle]) {
-		use_familiar($familiar[Exotic Parrot]);//an attempt to get its familiar equipment to maybe test
-		if (my_fullness() == 3 && have_effect($effect[HGH-charged]) == 0) {
-			if (available_amount($item[diabolic pizza]) == 0) {
-				if (available_amount($item[hot buttered roll]) == 0)
-					retrieve_item(1,$item[hot buttered roll]);
-				pizza_effect(
-					$effect[HGH-charged],
-					c2t_priority($item[hot buttered roll],$item[Hollandaise helmet],$item[helmet turtle]),
-					c2t_priority($item[gnollish autoplunger],$item[green seashell],$item[grain of sand]),
-					c2t_priority($item[blood-faced volleyball],$item[cog and sprocket assembly]),
-					$item[cog and sprocket assembly]
-				);
-			}
-			else
-				eat(1,$item[diabolic pizza]);
-		}
+		//exp buff via pizza or wish
+		if (!c2t_hccs_pizzaCube($effect[hgh-charged]))
+			c2t_hccs_genie($effect[hgh-charged]);
 		
 		// mus exp synthesis; allowing this to be able to fail maybe
 		if (have_effect($effect[Synthesis: Movement]) == 0) {
@@ -981,7 +871,7 @@ boolean c2t_hccs_buffExp() {
 				print('Note: Synthesis: Movement failed. Going to fight a hobelf and try again.');
 				if (!have_equipped($item[Fourth of May Cosplay saber]))
 					equip($item[Fourth of May Cosplay saber]);
-				if (!c2t_hccs_wishFight($monster[hobelf]))
+				if (!c2t_hccs_genie($monster[hobelf]))
 					abort('Failed to fight hobelf');
 				if (!sweet_synthesis($effect[Synthesis: Movement]))
 					abort('Somehow failed to synthesize even after fighting hobelf');
@@ -994,23 +884,9 @@ boolean c2t_hccs_buffExp() {
 		}
 	}
 	else if (my_primestat() == $stat[mysticality]) {
-		use_familiar($familiar[imitation crab]);
-		
-		retrieve_item(1, $item[meat stack]);
-		retrieve_item(1, $item[full meat tank]);
-		if (my_fullness() == 3 && have_effect($effect[Different Way of Seeing Things]) == 0) {
-			if (available_amount($item[diabolic pizza]) == 0) {
-				pizza_effect(
-					$effect[Different Way of Seeing Things],
-					$item[dry noodles],
-					$item[imitation whetstone],
-					$item[full meat tank],
-					$item[cog and sprocket assembly]
-				);
-			}
-			else
-				eat(1,$item[diabolic pizza]);
-		}
+		//exp buff via pizza or wish
+		if (!c2t_hccs_pizzaCube($effect[different way of seeing things]))
+			c2t_hccs_genie($effect[different way of seeing things]);
 		
 		// mys exp synthesis; allowing this to be able to fail maybe
 		if (have_effect($effect[Synthesis: Learning]) == 0) {
@@ -1018,7 +894,7 @@ boolean c2t_hccs_buffExp() {
 				print('Note: Synthesis: Learning failed. Going to fight a hobelf and try again.');
 				if (!have_equipped($item[Fourth of May Cosplay saber]))
 					equip($item[Fourth of May Cosplay saber]);
-				if (!c2t_hccs_wishFight($monster[hobelf]))
+				if (!c2t_hccs_genie($monster[hobelf]))
 					abort('Failed to fight hobelf');
 				if (!sweet_synthesis($effect[Synthesis: Learning]))
 					abort('Somehow failed to synthesize even after fighting hobelf');
@@ -1034,24 +910,9 @@ boolean c2t_hccs_buffExp() {
 		}
 	}
 	else if (my_primestat() == $stat[moxie]) {
-		//going for KNIg for 200% moxie
-		use_familiar($familiar[imitation crab]);
-
-		// 7 adventures, 12 turns of effect
-		if (my_fullness() == 3 && have_effect($effect[Knightlife]) == 0) {
-			retrieve_item(1,$item[ketchup]);
-			if (available_amount($item[diabolic pizza]) == 0) {
-				pizza_effect(
-					$effect[Knightlife],
-					$item[ketchup],
-					$item[Newbiesport&trade; tent],
-					$item[imitation whetstone],
-					$item[cog and sprocket assembly]
-				);
-			}
-			else
-				eat(1,$item[diabolic pizza]);
-		}
+		//stat buff via pizza cube or exp buff via wish
+		if (!c2t_hccs_pizzaCube($effect[knightlife]))
+			c2t_hccs_genie($effect[thou shant not sing]);
 
 		// mox exp synthesis; allowing this to be able to fail maybe
 		// if don't have the right candies, drop hardcore
@@ -1079,6 +940,13 @@ boolean c2t_hccs_buffExp() {
 
 // should handle leveling up and eventually call free fights
 boolean c2t_hccs_levelup() {
+	//need adventures straight away if running CMC
+	item itew = c2t_priority($item[doc's fortifying wine],$item[doc's smartifying wine],$item[doc's limbering wine]);
+	if (itew != $item[none]) {
+		c2t_getEffect($effect[Ode to Booze],$skill[The Ode to Booze],1);
+		drink(1,itew);
+	}
+
 	if (my_level() < 7 && c2t_hccs_buffExp()) {
 		if (item_amount($item[familiar scrapbook]) > 0)
 			equip($item[familiar scrapbook]);
@@ -1138,10 +1006,8 @@ boolean c2t_hccs_allTheBuffs() {
 	if (get_property('_lyleFavored') == 'false')
 		ensure_effect($effect[Favored by Lyle]);
 	
-	if (available_amount($item[eight days a week pill keeper]) > 0) {
-		ensure_effect($effect[Hulkien]); //pillkeeper stats
-		ensure_effect($effect[Fidoxene]);//pillkeeper familiar
-	}
+	c2t_hccs_pillkeeper($effect[Hulkien]); //stats
+	c2t_hccs_pillkeeper($effect[Fidoxene]);//familiar
 	
 	//beach comb leveling buffs
 	if (available_amount($item[beach comb]) > 0) {
@@ -1161,6 +1027,7 @@ boolean c2t_hccs_allTheBuffs() {
 		//drink(1,$item[perfect dark and stormy]);
 		//cli_execute('drink perfect dark and stormy');
 	}
+
 	//just in case
 	if (have_effect($effect[Ode to Booze]) > 0)
 		cli_execute('shrug ode to booze');
@@ -1288,6 +1155,12 @@ boolean c2t_hccs_allTheBuffs() {
 		use(item_amount($item[rhinestone]),$item[rhinestone]);
 	}
 
+	//synthesize item
+	if (get_campground() contains $item[peppermint pip packet] && have_effect($effect[Synthesis: Collection]) == 0) {
+		retrieve_item($item[peppermint twist]);
+		sweet_synthesis($item[peppermint sprout],$item[peppermint twist]);
+	}
+
 
 	use_familiar($familiar[hovering sombrero]);
 	
@@ -1299,17 +1172,20 @@ boolean c2t_hccs_allTheBuffs() {
 
 // get semirare from limerick dungeon
 boolean c2t_hccs_semirareItem() {
-	if (available_amount($item[cyclops eyedrops]) == 0 && have_effect($effect[One Very Clear Eye]) == 0) {
-		//11-leaf clover
-		if (have_effect($effect[Lucky!]) == 0) {
-			retrieve_item($item[11-leaf clover]);
-			use($item[11-leaf clover]);
+	if (!(get_campground() contains $item[Peppermint Pip Packet]) && have_skill($skill[sweet synthesis])) {
+		c2t_assert(my_adventures() > 0,"no adventures for limerick dungeon lucky adventure");
+		if (available_amount($item[cyclops eyedrops]) == 0 && have_effect($effect[One Very Clear Eye]) == 0) {
+			//11-leaf clover
+			if (have_effect($effect[Lucky!]) == 0) {
+				retrieve_item($item[11-leaf clover]);
+				use($item[11-leaf clover]);
+			}
+			//recover hp
+			if (my_hp() < (0.5 * my_maxhp()))
+				cli_execute('hottub');
+			cli_execute('mood apathetic');
+			adv1($location[The Limerick Dungeon], -1, '');
 		}
-		//recover hp
-		if (my_hp() < (0.5 * my_maxhp()))
-			cli_execute('hottub');
-		cli_execute('mood apathetic');
-		adv1($location[The Limerick Dungeon], -1, '');
 	}
 	return true;
 }
@@ -1393,42 +1269,13 @@ boolean c2t_hccs_preItem() {
 	ensure_effect($effect[The Spirit of Taking]);
 
 	// might move back to levelup part
-	if (have_effect($effect[Certainty]) == 0) {
-		if (my_fullness() != 6)
-			abort('fullness not where it should be for CER pizza');
-		if (available_amount($item[electronics kit]) == 0)
-			abort('missing electronics kit for CER pizza');
+	if (have_effect($effect[synthesis: collection]) == 0)//skip pizza if synth item
+		c2t_hccs_pizzaCube($effect[certainty]);
 
-		pizza_effect(
-			$effect[Certainty],
-			$item[cog and sprocket assembly],
-			$item[electronics kit],
-			$item[razor-sharp can lid],
-			c2t_priority($item[Middle of the Road&trade; brand whiskey],$item[PB&J with the crusts cut off],$item[surprisingly capacious handbag])
-		);
-	}
-	
 	// might move back to level up part
-	if (have_effect($effect[Infernal Thirst]) == 0) {
-		if (my_fullness() != 9)
-			abort('fullness not where it should be for INFE pizza');
-		// random chance to get cracker until able to reliably replace electronics kit in recipe
-		use_familiar($familiar[Exotic Parrot]);
-		
-		retrieve_item(1,$item[full meat tank]);
+	if (!c2t_hccs_pizzaCube($effect[infernal thirst]))
+		c2t_hccs_genie($effect[infernal thirst]);
 
-		if (item_amount($item[eldritch effluvium]) == 0 && item_amount($item[eaves droppers]) == 0 && (available_amount($item[cracker]) == 0 || item_amount($item[electronics kit]) == 0))
-			retrieve_item(1,$item[eyedrops of the ermine]);
-
-		pizza_effect(
-			$effect[Infernal Thirst],
-			$item[imitation whetstone],
-			c2t_priority($item[neverending wallet chain], $item[Newbiesport&trade; tent]),
-			$item[full meat tank],
-			c2t_priority($item[eldritch effluvium],$item[eaves droppers],$item[eyedrops of the ermine],$item[electronics kit])
-		);
-	}
-	
 	//spice ghost
 	if (my_class() == $class[pastamancer]) {
 		if (my_thrall() != $thrall[Spice Ghost]) {
@@ -1558,13 +1405,11 @@ boolean c2t_hccs_preHotRes() {
 
 	//pillkeeper
 	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
-		if (available_amount($item[eight days a week pill keeper]) > 0 && have_effect($effect[Rainbowolin]) == 0)
-			cli_execute('pillkeeper elemental');
+		c2t_hccs_pillkeeper($effect[Rainbowolin]);
 
 	//pocket wish
 	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
-		if (get_property('_genieWishesUsed').to_int() < 3 || available_amount($item[pocket wish]) > 0)
-			cli_execute("genie effect "+$effect[Fireproof Lips]);
+		c2t_hccs_genie($effect[Fireproof Lips]);
 
 	//speakeasy drink
 	if (!c2t_hccs_thresholdMet(TEST_HOT_RES)) {
@@ -1597,9 +1442,9 @@ boolean c2t_hccs_preFamiliar() {
 		}
 		else {
 			if (available_amount($item[industrial fire extinguisher]) > 0)
-				c2t_assert(c2t_hccs_wishFight($monster[ungulith]),"ungulith wish fail");
+				c2t_assert(c2t_hccs_genie($monster[ungulith]),"ungulith wish fail");
 			else
-				c2t_assert(c2t_hccs_wishFight($monster[factory worker (female)]),"factory worker wish fail");
+				c2t_assert(c2t_hccs_genie($monster[factory worker (female)]),"factory worker wish fail");
 		}
 	}
 
@@ -1692,9 +1537,8 @@ boolean c2t_hccs_preNoncombat() {
 
 
 	//disquiet riot wish potential if 2 or more wishes remain and not close to min turn
-	if (!c2t_hccs_thresholdMet(TEST_NONCOMBAT) && c2t_hccs_testTurns(TEST_NONCOMBAT) >= 9)
-		if (have_effect($effect[Disquiet Riot]) == 0 && item_amount($item[pocket wish]) > 1)
-			cli_execute('genie effect disquiet riot');
+	if (!c2t_hccs_thresholdMet(TEST_NONCOMBAT) && c2t_hccs_testTurns(TEST_NONCOMBAT) >= 9)//TODO better cost/benefit
+		c2t_hccs_genie($effect[disquiet riot]);
 
 	c2t_hccs_mod2log("modtrace combat rate");
 
@@ -1806,48 +1650,9 @@ boolean c2t_hccs_preWeapon() {
 	maximize('weapon damage', false);
 
 	//OU pizza if needed
-	if (!c2t_hccs_thresholdMet(TEST_WEAPON) && c2t_hccs_testTurns(TEST_WEAPON) > 3) {//TODO
-		if (have_effect($effect[Outer Wolf&trade;]) == 0 && my_fullness() == 12) {
-			// Should have a second grapefruit from Scurvy.
-			// but maybe not enough reagents
-			retrieve_item(1,$item[ointment of the occult]);
+	if (!c2t_hccs_thresholdMet(TEST_WEAPON) && c2t_hccs_testTurns(TEST_WEAPON) > 3)//TODO ? cost/benifit?
+		c2t_hccs_pizzaCube($effect[Outer Wolf&trade;]);
 
-			//preferring useless powder over duffel bag
-			if (available_amount($item[useless powder]) == 0) {
-				// get useless powder.
-				retrieve_item(1,$item[cool whip]);
-				cli_execute('smash 1 cool whip');
-			}
-
-			//select final 2 ingredients that don't affect pizza result
-			item it1,it2;
-			item [int] ingredients = {$item[Middle of the Road&trade; brand whiskey],$item[surprisingly capacious handbag],$item[PB&J with the crusts cut off]};
-
-			it1 = c2t_priority(ingredients);
-			if (item_amount(it1) > 1)
-				it2 = it1;
-			else {
-				foreach i,x in ingredients if (it1 == x) {
-					remove ingredients[i];
-					break;
-				}
-				it2 = c2t_priority(ingredients);
-			}
-			c2t_assert(it2 != $item[none],"OU pizza ingredient selection failed");
-
-			//make/eat pizza
-			pizza_effect(
-				$effect[Outer Wolf&trade;],
-				c2t_priority($item[ointment of the occult],$item[out-of-tune biwa]),
-				c2t_priority($item[useless powder],$item[unremarkable duffel bag]),
-				it1,
-				it2
-			);
-
-			if (have_effect($effect[Outer Wolf&trade;]) == 0)
-				abort('OU pizza failed');
-		}
-	}
 	if (have_effect($effect[Outer Wolf&trade;]) == 0)
 		print("OU pizza skipped","blue");
 
@@ -1940,15 +1745,12 @@ boolean c2t_hccs_preSpell() {
 	//if I ever feel like blowing the resources:
 	if (get_property('_c2t_hccs_dstab').to_boolean()) {
 		//the only way is all the way
-		if (item_amount($item[pocket wish]) > 0 && have_effect($effect[Witch Breaded]) == 0) {
-			cli_execute('genie effect witch breaded');
+		c2t_hccs_genie($effect[witch breaded]);
 
-			// not actually going to use this for now as it's not profitable; TODO might make it conditional on a user setting or mall price though
-			//batteries
-			c2t_getEffect($effect[D-Charged],$item[battery (D)]);
-			c2t_getEffect($effect[AA-Charged],$item[battery (AA)]);
-			c2t_getEffect($effect[AAA-Charged],$item[battery (AAA)]);
-		}
+		//batteries
+		c2t_getEffect($effect[D-Charged],$item[battery (D)]);
+		c2t_getEffect($effect[AA-Charged],$item[battery (AA)]);
+		c2t_getEffect($effect[AAA-Charged],$item[battery (AAA)]);
 	}
 
 	//for potential astral statuette on familiar
@@ -2162,7 +1964,7 @@ void c2t_hccs_fights() {
 		if (!have_equipped($item[fourth of may cosplay saber]))
 			equip($item[Fourth of May Cosplay saber]);
 		//TODO evil olive - change to run away from and feel nostagic+envy+free kill another thing to save a saber use for spell test
-		c2t_assert(c2t_hccs_wishFight($monster[Evil Olive]),"Failed to fight evil olive");
+		c2t_assert(c2t_hccs_genie($monster[Evil Olive]),"Failed to fight evil olive");
 	}
 
 	use_familiar(levelingFam);
@@ -2246,14 +2048,13 @@ void c2t_hccs_fights() {
 			use(1,$item[gummi turtle]);
 
 		//eat CER pizza ASAP
-		if (have_effect($effect[Certainty]) == 0 && item_amount($item[electronics kit]) > 0 && item_amount($item[Middle of the Road&trade; brand whiskey]) > 0)
-			pizza_effect(
-				$effect[Certainty],
-				$item[cog and sprocket assembly],
-				$item[electronics kit],
-				$item[razor-sharp can lid],
-				$item[Middle of the Road&trade; brand whiskey]
-			);
+		if (c2t_hccs_pizzaCube()
+			&& have_effect($effect[synthesis: collection]) == 0//skip pizza if synth item
+			&& have_effect($effect[Certainty]) == 0
+			&& item_amount($item[electronics kit]) > 0
+			&& item_amount($item[Middle of the Road&trade; brand whiskey]) > 0)
+
+			c2t_hccs_pizzaCube($effect[certainty]);
 
 		//drink hot socks ASAP
 		if (have_effect($effect[1701]) == 0 && my_meat() > 5000) {//1701 is the desired version of $effet[Hip to the Jive]
