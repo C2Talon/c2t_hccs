@@ -20,7 +20,7 @@ To uninstall, run the following on the gCLI:
 * Not likely to run out-of-the-box for most. Hoping to change this eventually
 * Able to be re-run at any point in a run, hopefully after manually correcting whatever caused it to stop
 * Will abort when a non-coil test does not meet its turn threshold after preparations for it are done, which defaults to 1 turn
-* Pre-Valhalla: put diabolic pizza cube in the workshed
+* Pre-Valhalla: put diabolic pizza cube in the workshed. Pizza cube can be optional _if_ you have most of the IotM in the lists below
 * In Valhalla:
     - Choose any class
     - Choose the corresponding "knoll" moonsign
