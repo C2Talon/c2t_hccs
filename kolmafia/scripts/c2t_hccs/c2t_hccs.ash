@@ -248,7 +248,7 @@ void c2t_hccs_breakfast() {
 	}
 
 	//harvest power plant
-	c2t_hccs_powerPlant(true);
+	c2t_hccs_powerPlant();
 
 	//peppermint garden
 	if (get_campground() contains $item[peppermint pip packet])

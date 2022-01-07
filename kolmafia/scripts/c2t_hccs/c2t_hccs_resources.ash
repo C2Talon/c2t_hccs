@@ -238,7 +238,7 @@ boolean c2t_hccs_pizzaCube(effect eff) {
 		case $effect[outer wolf&trade;]:
 			choose = {$item[Middle of the Road&trade; brand whiskey],$item[surprisingly capacious handbag],$item[PB&J with the crusts cut off]};
 			retrieve_item(1,$item[ointment of the occult]);
-			if (item_amount($item[useless powder]).to_boolean()) {
+			if (item_amount($item[useless powder]) == 0) {
 				retrieve_item(1,$item[cool whip]);
 				cli_execute("smash 1 cool whip");
 			}
@@ -292,12 +292,9 @@ boolean c2t_hccs_pizzaCube(item it1,item it2,item it3,item it4) {
 }
 
 //i--power plant
-boolean c2t_hccs_powerPlant() return available_amount($item[potted power plant]).to_boolean();
-boolean c2t_hccs_powerPlant(boolean harvest) {
-	if (!c2t_hccs_powerPlant())
+boolean c2t_hccs_powerPlant() {
+	if (item_amount($item[potted power plant]) == 0)
 		return false;
-	if (!harvest)//only returning false if player does not have power plant
-		return true;
 	if (get_property("_pottedPowerPlant") != "0,0,0,0,0,0,0") {
 		buffer buf = visit_url(`inv_use.php?pwd={my_hash()}&which=3&whichitem=10738`);
 		if (buf.contains_text('name="whichchoice" value="1448"')) {
