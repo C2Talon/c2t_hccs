@@ -11,6 +11,7 @@ import <c2t_lib.ash>
   -=-+-=-+-=-+-=-+-=-+-=-*/
 //d--genie
 //d--pantogram
+//d--peppermint garden
 //d--pillkeeper
 //d--pizza cube
 //d--power plant
@@ -31,6 +32,11 @@ void c2t_hccs_pantogram();
 
 //makes pantogram pants, where type can be either "spell" or "weapon"
 void c2t_hccs_pantogram(string type);
+
+
+//d--peppermint garden
+//returns true if garden is peppermint
+boolean c2t_hccs_peppermintGarden();
 
 
 //d--pillkeeper
@@ -73,6 +79,7 @@ void c2t_hccs_vote();
   -=-+-=-+-=-+-=-+-=-+-=-*/
 //i--genie
 //i--pantogram
+//i--peppermint garden
 //i--pillkeeper
 //i--pizza cube
 //i--power plant
@@ -130,6 +137,9 @@ void c2t_hccs_pantogram(string type) {
 		cli_execute("refresh all");//mafia doesn't know the pants exist until this
 	}
 }
+
+//i--peppermint garden
+boolean c2t_hccs_peppermintGarden() return get_campground() contains $item[peppermint pip packet];
 
 //i--pillkeeper
 boolean c2t_hccs_pillkeeper() return available_amount($item[eight days a week pill keeper]).to_boolean();

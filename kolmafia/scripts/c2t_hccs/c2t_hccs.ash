@@ -251,7 +251,7 @@ void c2t_hccs_breakfast() {
 	c2t_hccs_powerPlant();
 
 	//peppermint garden
-	if (get_campground() contains $item[peppermint pip packet])
+	if (c2t_hccs_peppermintGarden())
 		cli_execute("garden pick");
 }
 
@@ -860,6 +860,13 @@ boolean c2t_hccs_buffExp() {
 	if (!get_property('_aprilShower').to_boolean())
 		cli_execute('shower '+my_primestat());
 	
+	//TODO make synthesize selections smarter so the item one doesn't have to be so early
+	//synthesize item //put this before all other syntheses so the others don't use too many sprouts
+	if (c2t_hccs_peppermintGarden() && have_effect($effect[synthesis: collection]) == 0) {
+		retrieve_item($item[peppermint twist]);
+		sweet_synthesis($item[peppermint sprout],$item[peppermint twist]);
+	}
+
 	if (my_primestat() == $stat[muscle]) {
 		//exp buff via pizza or wish
 		if (!c2t_hccs_pizzaCube($effect[hgh-charged]))
@@ -917,15 +924,36 @@ boolean c2t_hccs_buffExp() {
 		// mox exp synthesis; allowing this to be able to fail maybe
 		// if don't have the right candies, drop hardcore
 		if (have_effect($effect[Synthesis: Style]) == 0) {
-			if (item_amount($item[Crimbo candied pecan]) == 0 || item_amount($item[Crimbo fudge]) == 0) {
+			item it1,it2;
+			it1 = it2 = $item[none];
+			if (item_amount($item[crimbo candied pecan]).to_boolean() && item_amount($item[crimbo fudge]).to_boolean()) {
+				it1 = $item[crimbo candied pecan];
+				it2 = $item[crimbo fudge];
+			}
+			else if (c2t_hccs_peppermintGarden()) {
+				if (item_amount($item[crimbo fudge]).to_boolean()) {
+					it1 = $item[crimbo fudge];
+					it2 = $item[peppermint sprout];
+				}
+				else if (item_amount($item[crimbo peppermint bark]).to_boolean()) {
+					it1 = $item[crimbo peppermint bark];
+					it2 = $item[peppermint twist];
+				}
+			}
+			if (it2 == $item[none]) {
 				print("Didn't get the right candies for buffs, so dropping hardcore.","blue");
 				if (in_hardcore())
 					c2t_dropHardcore();
-				c2t_hccs_pull($item[Crimbo candied pecan]);
-				c2t_hccs_pull($item[Crimbo fudge]);
+				//TODO maybe make pull selection smarter
+				it1 = $item[crimbo candied pecan];
+				it2 = $item[crimbo fudge];
+				c2t_hccs_pull(it1);
+				c2t_hccs_pull(it2);
 			}
-			if (!sweet_synthesis($effect[Synthesis: Style])) //works or no?
-				//probably automate drop to softcore at this point and just pull needed candy
+			else//make a peppermint twist if needed
+				retrieve_item(it2);
+
+			if (!sweet_synthesis(it1,it2))
 				print('Note: Synthesis: Style failed');
 		}
 		if (numeric_modifier('moxie experience percent') < 89.999) {
@@ -946,6 +974,8 @@ boolean c2t_hccs_levelup() {
 		c2t_getEffect($effect[Ode to Booze],$skill[The Ode to Booze],1);
 		drink(1,itew);
 	}
+	//TODO summon crimbo booze or something else if needed
+	c2t_assert(my_adventures() > 0,"not going to get far with zero adventures");
 
 	if (my_level() < 7 && c2t_hccs_buffExp()) {
 		if (item_amount($item[familiar scrapbook]) > 0)
@@ -1043,7 +1073,8 @@ boolean c2t_hccs_allTheBuffs() {
 	//candles
 	c2t_haveUse($item[Napalm In The Morning&trade; candle]);
 	c2t_haveUse($item[votive of confidence]);
-	
+
+
 	//boxing daycare, synthesis, and bastille
 	if (my_primestat() == $stat[muscle]) {
 		if (get_property("daycareOpen").to_boolean() && have_effect($effect[Muddled]) == 0)
@@ -1155,12 +1186,6 @@ boolean c2t_hccs_allTheBuffs() {
 		use(item_amount($item[rhinestone]),$item[rhinestone]);
 	}
 
-	//synthesize item
-	if (get_campground() contains $item[peppermint pip packet] && have_effect($effect[Synthesis: Collection]) == 0) {
-		retrieve_item($item[peppermint twist]);
-		sweet_synthesis($item[peppermint sprout],$item[peppermint twist]);
-	}
-
 
 	use_familiar($familiar[hovering sombrero]);
 	
@@ -1172,7 +1197,7 @@ boolean c2t_hccs_allTheBuffs() {
 
 // get semirare from limerick dungeon
 boolean c2t_hccs_semirareItem() {
-	if (!(get_campground() contains $item[Peppermint Pip Packet]) && have_skill($skill[sweet synthesis])) {
+	if (!c2t_hccs_peppermintGarden() && have_skill($skill[sweet synthesis])) {
 		c2t_assert(my_adventures() > 0,"no adventures for limerick dungeon lucky adventure");
 		if (available_amount($item[cyclops eyedrops]) == 0 && have_effect($effect[One Very Clear Eye]) == 0) {
 			//11-leaf clover
