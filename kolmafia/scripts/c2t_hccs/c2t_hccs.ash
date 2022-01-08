@@ -125,7 +125,6 @@ void c2t_hccs_fights();
 boolean c2t_hccs_wandererFight();
 int c2t_hccs_testTurns(int test);
 boolean c2t_hccs_thresholdMet(int test);
-boolean c2t_hccs_pull(item ite);
 void c2t_hccs_mod2log(string str);
 void c2t_hccs_printRunTime(boolean final);
 void c2t_hccs_printRunTime() c2t_hccs_printRunTime(false);
@@ -194,12 +193,6 @@ void c2t_hccs_mod2log(string str) {
 		logprint(cli_execute_output(str));
 }
 
-//pull item from storage
-boolean c2t_hccs_pull(item ite) {
-	if(!can_interact() && !in_hardcore() && item_amount(ite) == 0 && available_amount(ite) == 0 && storage_amount(ite) > 0 && pulls_remaining() > 0)
-		return take_storage(1,ite);
-	return false;
-}
 
 //free kills left
 int c2t_hccs_freeKillsLeft() {
@@ -783,13 +776,13 @@ boolean c2t_hccs_preCoil() {
 	if (my_mp() < 11)
 		cli_execute('rest free');
 
-	// borrowed time
+	// first tome use // borrowed time
 	if (!get_property('_borrowedTimeUsed').to_boolean()) {//&& get_property('tomeSummons').to_int() == 0) {
 		c2t_assert(retrieve_item(1,$item[borrowed time]),"borrowed time fail");
 		use(1,$item[borrowed time]);
 	}
 
-	// box of familiar jacks
+	// second tome use // box of familiar jacks
 	// going to get camel equipment straight away
 	if (available_amount($item[dromedary drinking helmet]) == 0) {//&& get_property('tomeSummons').to_int() == 1) {
 		c2t_assert(retrieve_item(1,$item[box of familiar jacks]),"box of familiar jacks fail");
@@ -862,29 +855,17 @@ boolean c2t_hccs_buffExp() {
 	
 	//TODO make synthesize selections smarter so the item one doesn't have to be so early
 	//synthesize item //put this before all other syntheses so the others don't use too many sprouts
-	if (c2t_hccs_peppermintGarden() && have_effect($effect[synthesis: collection]) == 0) {
-		retrieve_item($item[peppermint twist]);
-		sweet_synthesis($item[peppermint sprout],$item[peppermint twist]);
-	}
+	c2t_hccs_sweetSynthesis($effect[synthesis: collection]);
 
 	if (my_primestat() == $stat[muscle]) {
 		//exp buff via pizza or wish
 		if (!c2t_hccs_pizzaCube($effect[hgh-charged]))
 			c2t_hccs_genie($effect[hgh-charged]);
-		
-		// mus exp synthesis; allowing this to be able to fail maybe
-		if (have_effect($effect[Synthesis: Movement]) == 0) {
-			if (!sweet_synthesis($effect[Synthesis: Movement])) { //works or no?
-				print('Note: Synthesis: Movement failed. Going to fight a hobelf and try again.');
-				if (!have_equipped($item[Fourth of May Cosplay saber]))
-					equip($item[Fourth of May Cosplay saber]);
-				if (!c2t_hccs_genie($monster[hobelf]))
-					abort('Failed to fight hobelf');
-				if (!sweet_synthesis($effect[Synthesis: Movement]))
-					abort('Somehow failed to synthesize even after fighting hobelf');
-			}
-		}
-		
+
+		// mus exp synthesis
+		if (!c2t_hccs_sweetSynthesis($effect[synthesis: movement]))
+			abort('Somehow failed to synthesize exp');
+
 		if (numeric_modifier('muscle experience percent') < 89.999) {
 			abort('Insufficient +exp%');
 			return false;
@@ -895,18 +876,9 @@ boolean c2t_hccs_buffExp() {
 		if (!c2t_hccs_pizzaCube($effect[different way of seeing things]))
 			c2t_hccs_genie($effect[different way of seeing things]);
 		
-		// mys exp synthesis; allowing this to be able to fail maybe
-		if (have_effect($effect[Synthesis: Learning]) == 0) {
-			if (!sweet_synthesis($effect[Synthesis: Learning])) { //works or no?
-				print('Note: Synthesis: Learning failed. Going to fight a hobelf and try again.');
-				if (!have_equipped($item[Fourth of May Cosplay saber]))
-					equip($item[Fourth of May Cosplay saber]);
-				if (!c2t_hccs_genie($monster[hobelf]))
-					abort('Failed to fight hobelf');
-				if (!sweet_synthesis($effect[Synthesis: Learning]))
-					abort('Somehow failed to synthesize even after fighting hobelf');
-			}
-		}
+		// mys exp synthesis
+		if (!c2t_hccs_sweetSynthesis($effect[synthesis: learning]))
+			abort('Somehow failed to synthesize exp');
 		
 		//face
 		ensure_effect($effect[Inscrutable Gaze]);
@@ -921,41 +893,11 @@ boolean c2t_hccs_buffExp() {
 		if (!c2t_hccs_pizzaCube($effect[knightlife]))
 			c2t_hccs_genie($effect[thou shant not sing]);
 
-		// mox exp synthesis; allowing this to be able to fail maybe
-		// if don't have the right candies, drop hardcore
-		if (have_effect($effect[Synthesis: Style]) == 0) {
-			item it1,it2;
-			it1 = it2 = $item[none];
-			if (item_amount($item[crimbo candied pecan]).to_boolean() && item_amount($item[crimbo fudge]).to_boolean()) {
-				it1 = $item[crimbo candied pecan];
-				it2 = $item[crimbo fudge];
-			}
-			else if (c2t_hccs_peppermintGarden()) {
-				if (item_amount($item[crimbo fudge]).to_boolean()) {
-					it1 = $item[crimbo fudge];
-					it2 = $item[peppermint sprout];
-				}
-				else if (item_amount($item[crimbo peppermint bark]).to_boolean()) {
-					it1 = $item[crimbo peppermint bark];
-					it2 = $item[peppermint twist];
-				}
-			}
-			if (it2 == $item[none]) {
-				print("Didn't get the right candies for buffs, so dropping hardcore.","blue");
-				if (in_hardcore())
-					c2t_dropHardcore();
-				//TODO maybe make pull selection smarter
-				it1 = $item[crimbo candied pecan];
-				it2 = $item[crimbo fudge];
-				c2t_hccs_pull(it1);
-				c2t_hccs_pull(it2);
-			}
-			else//make a peppermint twist if needed
-				retrieve_item(it2);
+		// mox exp synthesis
+		// hardcore will be dropped if candies not aligned properly
+		if (!c2t_hccs_sweetSynthesis($effect[synthesis: style]))
+			abort('Somehow failed to synthesize exp');
 
-			if (!sweet_synthesis(it1,it2))
-				print('Note: Synthesis: Style failed');
-		}
 		if (numeric_modifier('moxie experience percent') < 89.999) {
 			abort('Insufficient +exp%');
 			return false;
@@ -1079,113 +1021,34 @@ boolean c2t_hccs_allTheBuffs() {
 	if (my_primestat() == $stat[muscle]) {
 		if (get_property("daycareOpen").to_boolean() && have_effect($effect[Muddled]) == 0)
 			cli_execute('daycare mus');
-		if (have_effect($effect[Synthesis: Strong]) == 0) {
-			if (available_amount($item[Crimbo candied pecan]) > 0)
-				retrieve_item(1, $item[jaba&ntilde;ero-flavored chewing gum]);
-			else if (available_amount($item[Crimbo peppermint bark]) > 0)
-				retrieve_item(1, $item[tamarind-flavored chewing gum]);
-			sweet_synthesis($effect[Synthesis: Strong]);
-		}
+		c2t_hccs_sweetSynthesis($effect[synthesis: strong]);
 		if (get_property('_bastilleGames').to_int() == 0)
 			cli_execute('bastille muscle');
 	}
 	else if (my_primestat() == $stat[mysticality]) {
 		if (get_property("daycareOpen").to_boolean() && have_effect($effect[Uncucumbered]) == 0)
 			cli_execute('daycare mys');
-		if (have_effect($effect[Synthesis: Smart]) == 0) {
-			if (available_amount($item[Crimbo peppermint bark]) > 0)
-				retrieve_item(1, $item[lime-and-chile-flavored chewing gum]);
-			else if (available_amount($item[Crimbo fudge]) > 0)
-				retrieve_item(1, $item[tamarind-flavored chewing gum]);
-			sweet_synthesis($effect[Synthesis: Smart]);
-		}
+		c2t_hccs_sweetSynthesis($effect[synthesis: smart]);
 		if (get_property('_bastilleGames').to_int() == 0)
 			cli_execute('bastille myst brutalist');
 	}
 	else if (my_primestat() == $stat[moxie]) {
 		if (get_property("daycareOpen").to_boolean() && have_effect($effect[Ten out of Ten]) == 0)
 			cli_execute('daycare mox');
-		if (have_effect($effect[Synthesis: Cool]) == 0) {
-			if (available_amount($item[Crimbo peppermint bark]) > 0)
-				retrieve_item(1,$item[pickle-flavored chewing gum]);
-			else if (available_amount($item[Crimbo fudge]) > 0)
-				retrieve_item(1,$item[lime-and-chile-flavored chewing gum]);
-			else if (available_amount($item[Crimbo candied pecan]) > 0)
-				retrieve_item(1,$item[tamarind-flavored chewing gum]);
-			sweet_synthesis($effect[Synthesis: Cool]);
-		}
+		c2t_hccs_sweetSynthesis($effect[synthesis: cool]);
 		if (get_property('_bastilleGames').to_int() == 0)
 			cli_execute('bastille moxie brutalist');
 	}
 
-	// Check G-9, then genie effect Experimental Effect G-9/New and Improved
-	if (my_primestat() != $stat[moxie]) {// going to wish for an evil olive to saber YR for moxie
-		if ((my_primestat() == $stat[muscle] &&
-			(have_effect($effect[Synthesis: Strong]) == 0 || have_effect($effect[Synthesis: Movement]) == 0)) ||
-			(my_primestat() == $stat[mysticality] && 
-			(have_effect($effect[Synthesis: Smart]) == 0 || have_effect($effect[Synthesis: Learning]) == 0))
-			) {
-			//edge case recoveries:
-			//this one assumes hobelf wasn't fought earlier, since this shouldn't be needed if so. otherwise, too many saber yr allocations
-			effect synth;
-			item candy1;
-			if (my_primestat() == $stat[muscle]) {
-				synth = $effect[Synthesis: Strong];
-				candy1 = $item[Crimbo fudge];
-			}
-			else if (my_primestat() == $stat[mysticality]) {
-				synth = $effect[Synthesis: Smart];
-				candy1 = $item[Crimbo candied pecan];
-			}
-			if (have_effect(synth) == 0 && item_amount(candy1) > 0) {
-				if (item_amount($item[pile of candy]) == 0) {
-					if (!have_equipped($item[fourth of may cosplay saber]))
-						equip($item[fourth of may cosplay saber]);
-					c2t_cartographyHunt($location[South of the Border],$monster[angry pi&ntilde;ata]);
-					run_turn();
-					run_choice(-1);
-				}
-				sweet_synthesis(synth);
-				c2t_assert(have_effect(synth) > 0,"Synthesis failed even after fighting an angry pinata");
-			}
-
-			//not going to wish for g9 anymore
-			else
-				abort("Synthesize didn't work properly");
-
-			/*
-			print("Wishing for stat boost","blue");
-			if (have_effect($effect[Experimental Effect G-9]) == 0 && have_effect($effect[New and Improved]) == 0) {
-				effect g9 = $effect[Experimental Effect G-9];
-				if (g9.numeric_modifier('muscle percent') < 0.001) {
-					// Not cached. This should trick Mafia into caching the G-9 value for the day.
-					visit_url('desc_effect.php?whicheffect=' + g9.descid);
-					if (g9.numeric_modifier('muscle percent') < 0.001)
-						abort('Check G9');
-				}
-				//if (my_primestat() == $stat[muscle]) {
-					if (g9.numeric_modifier('muscle percent') > 200)
-						wish_effect(g9);
-					else
-						wish_effect($effect[New and Improved]);
-				//}
-			}
-			*/
-		}
-		else if (have_effect($effect[Purity of Spirit]) == 0) {
-			print("Saving wish for disquiet riot, but using last tome for stat boost","blue");
-			retrieve_item(1,$item[cold-filtered water]);
-			use(1,$item[cold-filtered water]);
-		}
-	}
-	//no longer using bee's knees for stat boost on non-moxie, but still need same strength buff?
-	else if (have_effect($effect[Purity of Spirit]) == 0) {
-		//technically should have the item already, so just making sure
+	//third tome use //no longer using bee's knees for stat boost on non-moxie, but still need same strength buff?
+	if (have_effect($effect[Purity of Spirit]) == 0) {
 		retrieve_item(1,$item[cold-filtered water]);
 		use(1,$item[cold-filtered water]);
-		use(item_amount($item[rhinestone]),$item[rhinestone]);
 	}
 
+	//rhinestones to help moxie leveling
+	if (my_primestat() == $stat[moxie])
+		use(item_amount($item[rhinestone]),$item[rhinestone]);
 
 	use_familiar($familiar[hovering sombrero]);
 	
@@ -1197,7 +1060,7 @@ boolean c2t_hccs_allTheBuffs() {
 
 // get semirare from limerick dungeon
 boolean c2t_hccs_semirareItem() {
-	if (!c2t_hccs_peppermintGarden() && have_skill($skill[sweet synthesis])) {
+	if (!c2t_hccs_peppermintGarden()) {
 		c2t_assert(my_adventures() > 0,"no adventures for limerick dungeon lucky adventure");
 		if (available_amount($item[cyclops eyedrops]) == 0 && have_effect($effect[One Very Clear Eye]) == 0) {
 			//11-leaf clover
@@ -1423,10 +1286,7 @@ boolean c2t_hccs_preHotRes() {
 
 	//synthesis: hot
 	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
-		if (have_effect($effect[Synthesis: Hot]) == 0) {
-			retrieve_item(2, $item[jaba&ntilde;ero-flavored chewing gum]);
-			sweet_synthesis($item[jaba&ntilde;ero-flavored chewing gum], $item[jaba&ntilde;ero-flavored chewing gum]);
-		}
+		c2t_hccs_sweetSynthesis($effect[synthesis: hot]);
 
 	//pillkeeper
 	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))

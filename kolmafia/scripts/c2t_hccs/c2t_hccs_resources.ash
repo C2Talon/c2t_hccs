@@ -4,6 +4,16 @@
 //resources; mostly of the IotM variety; mostly limited to what I use
 
 import <c2t_lib.ash>
+import <c2t_cartographyHunt.ash>
+
+
+//c2t_hccs_pull is temporarily here until I can figure out how I want to deal with circular references
+//pull item from storage
+boolean c2t_hccs_pull(item ite) {
+	if(!can_interact() && !in_hardcore() && item_amount(ite) == 0 && available_amount(ite) == 0 && storage_amount(ite) > 0 && pulls_remaining() > 0)
+		return take_storage(1,ite);
+	return false;
+}
 
 
 /*-=-+-=-+-=-+-=-+-=-+-=-
@@ -15,6 +25,7 @@ import <c2t_lib.ash>
 //d--pillkeeper
 //d--pizza cube
 //d--power plant
+//d--sweet synthesis
 //d--vote
 
 
@@ -69,6 +80,15 @@ boolean c2t_hccs_powerPlant();
 boolean c2t_hccs_powerPlant(boolean harvest);
 
 
+//d--sweet synthesis
+//returns true if have the skill
+boolean c2t_hccs_sweetSynthesis();
+
+//tries to get a synthesis effect with a pre-determined configuration
+//returns true if the effect obtained
+boolean c2t_hccs_sweetSynthesis(effect eff);
+
+
 //d--vote
 //votes in voting booth
 void c2t_hccs_vote();
@@ -83,6 +103,7 @@ void c2t_hccs_vote();
 //i--pillkeeper
 //i--pizza cube
 //i--power plant
+//i--sweet synthesis
 //i--vote
 
 
@@ -315,6 +336,152 @@ boolean c2t_hccs_powerPlant() {
 	}
 	return true;
 }
+
+//d--sweet synthesis
+boolean c2t_hccs_sweetSynthesis() return have_skill($skill[sweet synthesis]);
+boolean c2t_hccs_sweetSynthesis(effect eff) {
+	if (!c2t_hccs_sweetSynthesis())
+		return false;
+	if (have_effect(eff).to_boolean())
+		return true;
+
+	item it1,it2;
+	it1 = it2 = $item[none];
+
+	switch (eff) {
+		default:
+			return false;
+
+		case $effect[synthesis: collection]://item
+			if (!c2t_hccs_peppermintGarden())
+				return false;
+			it1 = $item[peppermint sprout];
+			it2 = $item[peppermint twist];
+			break;
+
+		case $effect[synthesis: movement]://mus exp
+		case $effect[synthesis: learning]://mys exp
+			if (sweet_synthesis(eff))
+				return true;
+			print(`Note: {eff} failed. Going to fight a hobelf and try again.`);
+			if (!have_equipped($item[fourth of may cosplay saber]))
+				equip($item[fourth of may cosplay saber]);
+
+			c2t_assert(c2t_hccs_genie($monster[hobelf]),'Failed to fight hobelf');
+			c2t_assert(sweet_synthesis(eff),`Getting {eff} somehow still failed.`);
+			return true;
+
+		case $effect[synthesis: style]://mox exp
+			if (item_amount($item[crimbo candied pecan]).to_boolean() && item_amount($item[crimbo fudge]).to_boolean()) {
+				it1 = $item[crimbo candied pecan];
+				it2 = $item[crimbo fudge];
+			}
+			else if (c2t_hccs_peppermintGarden()) {
+				if (item_amount($item[crimbo fudge]).to_boolean()) {
+					it1 = $item[crimbo fudge];
+					it2 = $item[peppermint sprout];
+				}
+				else if (item_amount($item[crimbo peppermint bark]).to_boolean()) {
+					it1 = $item[crimbo peppermint bark];
+					it2 = $item[peppermint twist];
+				}
+			}
+			else {
+				//have to waste a wish & saber use on olives as moxie, so can't recover candy failure with those like other classes
+				print("Didn't get the right candies for buffs, so dropping hardcore.","blue");
+				if (in_hardcore())
+					c2t_dropHardcore();
+				//TODO maybe make pull selection smarter
+				it1 = $item[crimbo candied pecan];
+				it2 = $item[crimbo fudge];
+				c2t_hccs_pull(it1);
+				c2t_hccs_pull(it2);
+			}
+			break;
+
+		case $effect[synthesis: strong]://mus stat
+			if (item_amount($item[crimbo candied pecan]).to_boolean()) {
+				it1 = $item[crimbo candied pecan];
+				it2 = $item[jaba&ntilde;ero-flavored chewing gum];
+			}
+			else if (item_amount($item[crimbo peppermint bark]).to_boolean()) {
+				it1 = $item[crimbo peppermint bark];
+				it2 = $item[tamarind-flavored chewing gum];
+			}
+			else if (item_amount($item[peppermint sprout]).to_boolean()) {
+				it1 = $item[peppermint sprout];
+				it2 = $item[jaba&ntilde;ero-flavored chewing gum];
+			}
+			else if (item_amount($item[peppermint twist]).to_boolean()) {
+				it1 = $item[peppermint twist];
+				it2 = $item[pickle-flavored chewing gum];
+			}
+			else if (item_amount($item[crimbo fudge]).to_boolean()) {
+				it1 = $item[crimbo fudge];
+				it2 = $item[pile of candy];
+			}
+			break;
+
+		case $effect[synthesis: smart]://mys stat
+			if (item_amount($item[crimbo peppermint bark]).to_boolean()) {
+				it1 = $item[crimbo peppermint bark];
+				it2 = $item[lime-and-chile-flavored chewing gum];
+			}
+			else if (item_amount($item[crimbo fudge]).to_boolean()) {
+				it1 = $item[crimbo fudge];
+				it2 = $item[tamarind-flavored chewing gum];
+			}
+			else if (item_amount($item[peppermint sprout]).to_boolean() || item_amount($item[peppermint twist]).to_boolean()) {
+				it1 = $item[peppermint twist];
+				it2 = $item[jaba&ntilde;ero-flavored chewing gum];
+			}
+			else if (item_amount($item[crimbo candied pecan]).to_boolean()) {
+				it1 = $item[crimbo candied pecan];
+				it2 = $item[pile of candy];
+			}
+			break;
+
+		case $effect[synthesis: cool]://mox stat
+			if (item_amount($item[crimbo peppermint bark]).to_boolean()) {
+				it1 = $item[crimbo peppermint bark];
+				it2 = $item[pickle-flavored chewing gum];
+			}
+			else if (item_amount($item[crimbo fudge]).to_boolean()) {
+				it1 = $item[crimbo fudge];
+				it2 = $item[lime-and-chile-flavored chewing gum];
+			}
+			else if (item_amount($item[crimbo candied pecan]).to_boolean()) {
+				it1 = $item[crimbo candied pecan];
+				it2 = $item[tamarind-flavored chewing gum];
+			}
+			else if (item_amount($item[peppermint sprout]).to_boolean()) {
+				it1 = $item[peppermint sprout];
+				it2 = $item[tamarind-flavored chewing gum];
+			}
+			break;
+
+		case $effect[synthesis: hot]://hot res
+			retrieve_item(2,$item[jaba&ntilde;ero-flavored chewing gum]);
+			it1 = $item[jaba&ntilde;ero-flavored chewing gum];
+			it2 = $item[jaba&ntilde;ero-flavored chewing gum];
+			break;
+	}
+
+	//previous edge cases
+	if (it2 == $item[pile of candy] && item_amount(it2) == 0) {
+		if (!have_equipped($item[fourth of may cosplay saber]))
+			equip($item[fourth of may cosplay saber]);
+		c2t_cartographyHunt($location[south of the border],$monster[angry pi&ntilde;ata]);
+		run_turn();
+		run_choice(-1);
+	}
+
+	if (it2 == $item[none] || !retrieve_item(it1) || !retrieve_item(it2))
+		return false;
+
+	return sweet_synthesis(it1,it2);
+}
+
 
 //i--vote
 void c2t_hccs_vote() {
