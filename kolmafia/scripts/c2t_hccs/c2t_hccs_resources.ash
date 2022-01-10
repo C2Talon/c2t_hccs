@@ -73,11 +73,8 @@ boolean c2t_hccs_pizzaCube(item it1,item it2,item it3,item it4);
 
 
 //d--power plant
-//returns whether power plant is available or not
+//returns whether power plant is available or not & harvests if it is
 boolean c2t_hccs_powerPlant();
-
-//harvests power plant if `harvest` is true
-boolean c2t_hccs_powerPlant(boolean harvest);
 
 
 //d--sweet synthesis
@@ -133,7 +130,7 @@ boolean c2t_hccs_genie(monster mon) {
 //i--pantogram
 void c2t_hccs_pantogram() c2t_hccs_pantogram("spell");
 void c2t_hccs_pantogram(string type) {
-	int test = type == "weapon"?0:0;//TODO actually implement this
+	string mod = type.to_lower_case() == "weapon"?"-1,0":"-2,0";
 	if (item_amount($item[portable pantogram]) > 0 && available_amount($item[pantogram pants]) == 0) {
 		//use item
 		visit_url("inv_use.php?which=3&whichitem=9573&pwd="+my_hash(),false,true);
@@ -154,7 +151,7 @@ void c2t_hccs_pantogram(string type) {
 		}
 
 		//primestat,hot res,+mp,+spell,-combat
-		visit_url("choice.php?pwd&whichchoice=1270&option=1&e=1&s1=-2,0&s2=-2,0&s3=-1,0&m="+temp,true,true);
+		visit_url(`choice.php?pwd&whichchoice=1270&option=1&e=1&s1=-2,0&s2={mod}&s3=-1,0&m={temp}`,true,true);
 		cli_execute("refresh all");//mafia doesn't know the pants exist until this
 	}
 }
@@ -366,10 +363,8 @@ boolean c2t_hccs_sweetSynthesis(effect eff) {
 			print(`Note: {eff} failed. Going to fight a hobelf and try again.`);
 			if (!have_equipped($item[fourth of may cosplay saber]))
 				equip($item[fourth of may cosplay saber]);
-
-			c2t_assert(c2t_hccs_genie($monster[hobelf]),'Failed to fight hobelf');
-			c2t_assert(sweet_synthesis(eff),`Getting {eff} somehow still failed.`);
-			return true;
+			c2t_hccs_genie($monster[hobelf]);
+			return sweet_synthesis(eff);
 
 		case $effect[synthesis: style]://mox exp
 			if (item_amount($item[crimbo candied pecan]).to_boolean() && item_amount($item[crimbo fudge]).to_boolean()) {

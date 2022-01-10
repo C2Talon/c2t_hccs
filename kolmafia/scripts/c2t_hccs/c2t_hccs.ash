@@ -234,15 +234,6 @@ void c2t_hccs_breakfast() {
 			use_skill(1,ski);
 	}
 
-	//genie bottle //TODO not depend on pocket wishes; i.e. use genie direct
-	while (get_property("_genieWishesUsed").to_int() < 3) {
-		visit_url(`inv_use.php?pwd={my_hash()}&which=3&whichitem=9529`);
-		visit_url("choice.php?whichchoice=1267&wish=for+more+wishes&option=1",true,true);
-	}
-
-	//harvest power plant
-	c2t_hccs_powerPlant();
-
 	//peppermint garden
 	if (c2t_hccs_peppermintGarden())
 		cli_execute("garden pick");
@@ -864,7 +855,7 @@ boolean c2t_hccs_buffExp() {
 
 		// mus exp synthesis
 		if (!c2t_hccs_sweetSynthesis($effect[synthesis: movement]))
-			abort('Somehow failed to synthesize exp');
+			print('Failed to synthesize exp buff','red');
 
 		if (numeric_modifier('muscle experience percent') < 89.999) {
 			abort('Insufficient +exp%');
@@ -878,8 +869,8 @@ boolean c2t_hccs_buffExp() {
 		
 		// mys exp synthesis
 		if (!c2t_hccs_sweetSynthesis($effect[synthesis: learning]))
-			abort('Somehow failed to synthesize exp');
-		
+			print('Failed to synthesize exp buff','red');
+
 		//face
 		ensure_effect($effect[Inscrutable Gaze]);
 
@@ -896,7 +887,7 @@ boolean c2t_hccs_buffExp() {
 		// mox exp synthesis
 		// hardcore will be dropped if candies not aligned properly
 		if (!c2t_hccs_sweetSynthesis($effect[synthesis: style]))
-			abort('Somehow failed to synthesize exp');
+			print('Failed to synthesize exp buff','red');
 
 		if (numeric_modifier('moxie experience percent') < 89.999) {
 			abort('Insufficient +exp%');
@@ -951,97 +942,95 @@ boolean c2t_hccs_allTheBuffs() {
 	// equip mp stuff
 	maximize("mp,-equip kramco",false);
 	
-	if (have_effect($effect[One Very Clear Eye]) == 0) {
+	if (have_effect($effect[one very clear eye]) == 0) {
 		while (c2t_hccs_wandererFight());//do vote monster if ready before spending turn
 		if (c2t_hccs_semirareItem())
 			c2t_getEffect($effect[One Very Clear Eye],$item[cyclops eyedrops]);
 	}
 
 	//emotion chip stat buff
-	c2t_getEffect($effect[Feeling Excited],$skill[Feel Excitement]);
+	c2t_getEffect($effect[feeling excited],$skill[feel excitement]);
 
-	c2t_getEffect($effect[The Magical Mojomuscular Melody],$skill[The Magical Mojomuscular Melody]);
+	c2t_getEffect($effect[the magical mojomuscular melody],$skill[the magical mojomuscular melody]);
 	
-	// daycare stat gain
+	//boxing daycare stat gain
 	if (get_property("daycareOpen").to_boolean() && get_property('_daycareGymScavenges').to_int() == 0) {
 		visit_url('place.php?whichplace=town_wrong&action=townwrong_boxingdaycare');
 		run_choice(3);//1334,3 boxing daycare lobby->boxing daycare
 		run_choice(2);//1336,2 scavenge
 	}
-	
-	
+
+	//bastille
+	if (item_amount($item[bastille battalion control rig]).to_boolean() && get_property('_bastilleGames').to_int() == 0)
+		cli_execute('bastille mainstat brutalist');
+
 	// getaway camp buff //probably causes infinite loop without getaway camp
 	if (get_property('_campAwaySmileBuffs').to_int() == 0)
 		visit_url('place.php?whichplace=campaway&action=campaway_sky');
 	
 	//monorail
 	if (get_property('_lyleFavored') == 'false')
-		ensure_effect($effect[Favored by Lyle]);
+		ensure_effect($effect[favored by lyle]);
 	
-	c2t_hccs_pillkeeper($effect[Hulkien]); //stats
-	c2t_hccs_pillkeeper($effect[Fidoxene]);//familiar
+	c2t_hccs_pillkeeper($effect[hulkien]); //stats
+	c2t_hccs_pillkeeper($effect[fidoxene]);//familiar
 	
 	//beach comb leveling buffs
 	if (available_amount($item[beach comb]) > 0) {
-		ensure_effect($effect[You Learned Something Maybe!]); //beach exp
-		ensure_effect($effect[Do I Know You From Somewhere?]);//beach fam wt
+		ensure_effect($effect[you learned something maybe!]); //beach exp
+		ensure_effect($effect[do i know you from somewhere?]);//beach fam wt
 		if (my_primestat() == $stat[moxie])
-			ensure_effect($effect[Pomp & Circumsands]);//beach moxie
+			ensure_effect($effect[pomp & circumsands]);//beach moxie
 	}
 
+	//TODO only use bee's knees and other less-desirable buffs if below some buff threshold
 	// Cast Ode and drink bee's knees
 	// going to skip this for non-moxie to use clip art's buff of same strength
-	if (my_primestat() == $stat[moxie] && have_effect($effect[On the Trolley]) == 0 && my_inebriety() == 0) {
+	if (my_primestat() == $stat[moxie] && have_effect($effect[on the trolley]) == 0) {
 		c2t_assert(my_meat() >= 500,"Need 500 meat for speakeasy booze");
-		c2t_getEffect($effect[Ode to Booze],$skill[The Ode to Booze],5);
-		cli_execute('drink 1 Bee\'s Knees');
+		c2t_getEffect($effect[ode to booze],$skill[the ode to booze],5);
+		cli_execute("drink 1 bee's knees");
 		//probably don't need to drink the perfect drink; have to double-check all inebriety checks before removing
 		//drink(1,$item[perfect dark and stormy]);
 		//cli_execute('drink perfect dark and stormy');
 	}
 
 	//just in case
-	if (have_effect($effect[Ode to Booze]) > 0)
+	if (have_effect($effect[ode to booze]) > 0)
 		cli_execute('shrug ode to booze');
 	
 	//fortune buff item
 	if (get_property('_clanFortuneBuffUsed') == 'false')
-		ensure_effect($effect[There's No N In Love]);
+		ensure_effect($effect[there's no n in love]);
 
 	//cast triple size
-	if (available_amount($item[powerful glove]) > 0 && have_effect($effect[Triple-Sized]) == 0 && !c2t_cast($skill[CHEAT CODE: Triple Size]))
+	if (available_amount($item[powerful glove]) > 0 && have_effect($effect[triple-sized]) == 0 && !c2t_cast($skill[cheat code: triple size]))
 		abort('Triple size failed');
 
+	//boxing daycare buff
+	if (get_property("daycareOpen").to_boolean() && !get_property("_daycareSpa").to_boolean())
+		cli_execute(`daycare {my_primestat().to_lower_case()}`);
+
 	//candles
-	c2t_haveUse($item[Napalm In The Morning&trade; candle]);
+	c2t_haveUse($item[napalm In the morning&trade; candle]);
 	c2t_haveUse($item[votive of confidence]);
 
-
-	//boxing daycare, synthesis, and bastille
+	//synthesis
 	if (my_primestat() == $stat[muscle]) {
-		if (get_property("daycareOpen").to_boolean() && have_effect($effect[Muddled]) == 0)
-			cli_execute('daycare mus');
-		c2t_hccs_sweetSynthesis($effect[synthesis: strong]);
-		if (get_property('_bastilleGames').to_int() == 0)
-			cli_execute('bastille muscle');
+		if (!c2t_hccs_sweetSynthesis($effect[synthesis: strong]))
+			print("Failed to synthesize stat buff","red");
 	}
 	else if (my_primestat() == $stat[mysticality]) {
-		if (get_property("daycareOpen").to_boolean() && have_effect($effect[Uncucumbered]) == 0)
-			cli_execute('daycare mys');
-		c2t_hccs_sweetSynthesis($effect[synthesis: smart]);
-		if (get_property('_bastilleGames').to_int() == 0)
-			cli_execute('bastille myst brutalist');
+		if (!c2t_hccs_sweetSynthesis($effect[synthesis: smart]))
+			print("Failed to synthesize stat buff","red");
 	}
 	else if (my_primestat() == $stat[moxie]) {
-		if (get_property("daycareOpen").to_boolean() && have_effect($effect[Ten out of Ten]) == 0)
-			cli_execute('daycare mox');
-		c2t_hccs_sweetSynthesis($effect[synthesis: cool]);
-		if (get_property('_bastilleGames').to_int() == 0)
-			cli_execute('bastille moxie brutalist');
+		if (!c2t_hccs_sweetSynthesis($effect[synthesis: cool]))
+			print("Failed to synthesize stat buff","red");
 	}
 
 	//third tome use //no longer using bee's knees for stat boost on non-moxie, but still need same strength buff?
-	if (have_effect($effect[Purity of Spirit]) == 0) {
+	if (have_effect($effect[purity of spirit]) == 0) {
 		retrieve_item(1,$item[cold-filtered water]);
 		use(1,$item[cold-filtered water]);
 	}
@@ -1060,20 +1049,21 @@ boolean c2t_hccs_allTheBuffs() {
 
 // get semirare from limerick dungeon
 boolean c2t_hccs_semirareItem() {
-	if (!c2t_hccs_peppermintGarden()) {
-		c2t_assert(my_adventures() > 0,"no adventures for limerick dungeon lucky adventure");
-		if (available_amount($item[cyclops eyedrops]) == 0 && have_effect($effect[One Very Clear Eye]) == 0) {
-			//11-leaf clover
-			if (have_effect($effect[Lucky!]) == 0) {
-				retrieve_item($item[11-leaf clover]);
-				use($item[11-leaf clover]);
-			}
-			//recover hp
-			if (my_hp() < (0.5 * my_maxhp()))
-				cli_execute('hottub');
-			cli_execute('mood apathetic');
-			adv1($location[The Limerick Dungeon], -1, '');
+	if (c2t_hccs_peppermintGarden() && c2t_hccs_sweetSynthesis())
+		return false;
+
+	c2t_assert(my_adventures() > 0,"no adventures for limerick dungeon lucky adventure");
+	if (available_amount($item[cyclops eyedrops]) == 0 && have_effect($effect[one very clear eye]) == 0) {
+		//11-leaf clover
+		if (have_effect($effect[lucky!]) == 0) {
+			retrieve_item($item[11-leaf clover]);
+			use($item[11-leaf clover]);
 		}
+		//recover hp
+		if (my_hp() < (0.5 * my_maxhp()))
+			cli_execute('hottub');
+		cli_execute('mood apathetic');
+		adv1($location[the limerick dungeon], -1, '');
 	}
 	return true;
 }
@@ -1185,11 +1175,7 @@ boolean c2t_hccs_preItem() {
 	ensure_effect($effect[Nearly All-Natural]);//bag of grain
 	ensure_effect($effect[Steely-Eyed Squint]);
 
-	//extra hand for latte in cases of 2 item drop weapons
-	if (have_familiar($familiar[left-hand man]))
-		use_familiar($familiar[left-hand man]);
-	
-	maximize('item,2 booze drop,-equip broken champagne bottle,-equip surprisingly capacious handbag,-equip red-hot sausage fork', false);
+	maximize('item,2 booze drop,-equip broken champagne bottle,-equip surprisingly capacious handbag,-equip red-hot sausage fork,switch left-hand man', false);
 
 
 	//THINGS I DON'T ALWAYS WANT TO USE FOR ITEM TEST
@@ -1201,13 +1187,13 @@ boolean c2t_hccs_preItem() {
 	if (!c2t_hccs_thresholdMet(TEST_ITEM)) {
 		retrieve_item(1,$item[oversized sparkler]);
 		//repeat of previous maximize call
-		maximize('item,2 booze drop,-equip broken champagne bottle,-equip surprisingly capacious handbag,-equip red-hot sausage fork', false);
+		maximize('item,2 booze drop,-equip broken champagne bottle,-equip surprisingly capacious handbag,-equip red-hot sausage fork,switch left-hand man', false);
 	}
 
 	//power plant; last to save batteries if not needed
 	if (!c2t_hccs_thresholdMet(TEST_ITEM))
-		if (item_amount($item[potted power plant]) > 0)
-			c2t_getEffect($effect[Lantern-Charged],$item[battery (lantern)]);
+		if (c2t_hccs_powerPlant())
+			c2t_getEffect($effect[lantern-charged],$item[battery (lantern)]);
 
 	c2t_hccs_mod2log("modtrace item drop;modtrace booze drop");
 
@@ -1633,23 +1619,21 @@ boolean c2t_hccs_preSpell() {
 		c2t_hccs_genie($effect[witch breaded]);
 
 		//batteries
-		c2t_getEffect($effect[D-Charged],$item[battery (D)]);
-		c2t_getEffect($effect[AA-Charged],$item[battery (AA)]);
-		c2t_getEffect($effect[AAA-Charged],$item[battery (AAA)]);
+		if (c2t_hccs_powerPlant()) {
+			c2t_getEffect($effect[d-charged],$item[battery (d)]);
+			c2t_getEffect($effect[aa-charged],$item[battery (aa)]);
+			c2t_getEffect($effect[aaa-charged],$item[battery (aaa)]);
+		}
 	}
-
-	//for potential astral statuette on familiar
-	if (have_familiar($familiar[left-hand man]))
-		use_familiar($familiar[left-hand man]);
 
 	//need to figure out pulls
 	if (!in_hardcore() && pulls_remaining() > 0) {
 		//lazy way for now
 		boolean [item] derp;
 		if (available_amount($item[astral statuette]) == 0)
-			derp = $items[Cold Stone of Hatred,Fuzzy Slippers of Hatred,Lens of Hatred,witch's bra];
+			derp = $items[cold stone of hatred,fuzzy slippers of hatred,lens of hatred,witch's bra];
 		else
-			derp = $items[Fuzzy Slippers of Hatred,Lens of Hatred,witch's bra];
+			derp = $items[fuzzy slippers of hatred,lens of hatred,witch's bra];
 
 		foreach x in derp {
 			if (pulls_remaining() == 0)
@@ -1660,7 +1644,7 @@ boolean c2t_hccs_preSpell() {
 			print(`Still had {pulls_remaining()} pulls remaining for the last test`,"red");
 	}
 
-	maximize('spell damage', false);
+	maximize('spell damage,switch left-hand man', false);
 
 	c2t_hccs_mod2log("modtrace spell damage");
 
