@@ -4,6 +4,7 @@
 //resources; mostly of the IotM variety; mostly limited to what I use and limited to the scope of CS
 
 import <c2t_lib.ash>
+import <c2t_hccs_lib.ash>
 import <c2t_cartographyHunt.ash>
 
 
@@ -144,6 +145,9 @@ boolean c2t_hccs_coldMedicineCabinet() {
 }
 boolean c2t_hccs_coldMedicineCabinet(string arg) {
 	if (!c2t_hccs_coldMedicineCabinet())
+		return false;
+	//only want to get 1 thing at most from the cabinet; also to not break on re-entries
+	if (get_property("_coldMedicineConsults").to_int() > 0)
 		return false;
 	if (arg.to_lower_case() != "drink")
 		return false;
