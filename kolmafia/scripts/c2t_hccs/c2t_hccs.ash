@@ -1203,15 +1203,21 @@ boolean c2t_hccs_preItem() {
 boolean c2t_hccs_preHotRes() {
 	//cloake buff and fireproof foam suit for +32 hot res total, but also weapon and spell test buffs
 	//weapon/spell buff should last 15 turns, which is enough to get through hot(1), NC(9), and weapon(1) tests to also affect the spell test
-	if (have_effect($effect[Do You Crush What I Crush?]) == 0 && have_familiar($familiar[Ghost of Crimbo Carols])) {
-		equip($item[Vampyric Cloake]);
-		equip($slot[weapon],$item[Fourth of May Cosplay Saber]);
-		if (available_amount($item[Industrial Fire Extinguisher]) > 0)
-			equip($slot[off-hand],$item[Industrial Fire Extinguisher]);
+	if ((have_effect($effect[do you crush what i crush?]) == 0 && have_familiar($familiar[ghost of crimbo carols]))
+		|| (have_effect($effect[fireproof foam suit]) == 0 && available_amount($item[industrial fire extinguisher]) > 0 && have_skill($skill[double-fisted skull smashing]))
+		|| (have_effect($effect[misty form]) == 0 && available_amount($item[vampyric cloake]) > 0)
+		) {
+
+		if (available_amount($item[vampyric cloake]) > 0)
+			equip($item[vampyric cloake]);
+		equip($slot[weapon],$item[fourth of may cosplay saber]);
+		if (available_amount($item[industrial fire extinguisher]) > 0)
+			equip($slot[off-hand],$item[industrial fire extinguisher]);
+		use_familiar(c2t_priority($familiars[ghost of crimbo carols,exotic parrot]));
+
 		if (my_mp() < 30)
 			cli_execute('rest free');
-		use_familiar($familiar[Ghost of Crimbo Carols]);
-		adv1($location[The Dire Warren],-1,"");
+		adv1($location[the dire warren],-1,"");
 		run_turn();
 	}
 
@@ -1806,21 +1812,22 @@ void c2t_hccs_fights() {
 
 
 	//get crimbo ghost buff from dudes at NEP
-	if (have_familiar($familiar[Ghost of Crimbo Carols]) && have_effect($effect[Holiday Yoked]) == 0) {
+	if ((have_familiar($familiar[ghost of crimbo carols]) && have_effect($effect[holiday yoked]) == 0)
+		|| my_primestat() == $stat[moxie]) {//to nostalgia runproof mascara
+
 		if (get_property('_latteDrinkUsed').to_boolean())
 			cli_execute('latte refill cinnamon pumpkin vanilla');
-		use_familiar($familiar[Ghost of Crimbo Carols]);
+		if (have_familiar($familiar[ghost of crimbo carols]))
+			use_familiar($familiar[ghost of crimbo carols]);
 		maximize("mainstat,equip latte,-equip i voted,-equip backup camera",false);
 
 		//going to grab runproof mascara from globster if moxie instead of having to wait post-kramco
 		if (my_primestat() == $stat[moxie]) {
-			c2t_cartographyHunt($location[The Neverending Party],$monster[party girl]);
+			c2t_cartographyHunt($location[the neverending party],$monster[party girl]);
 			run_turn();
 		}
 		else
-			adv1($location[The Neverending Party],-1,"");
-
-		c2t_assert(have_effect($effect[Holiday Yoked]) > 0,"Something broke trying to get Holiday Yoked");
+			adv1($location[the neverending party],-1,"");
 	}
 
 	//nostalgia for moxie stuff and run down remaining glob fights

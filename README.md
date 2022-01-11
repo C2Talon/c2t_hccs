@@ -81,7 +81,6 @@ Some of the required IotM are only required for now because they're explicitly u
 * [packaged Pocket Professor](https://kol.coldfront.net/thekolwiki/index.php/Packaged_Pocket_Professor)
 * [baby camelCalf](https://kol.coldfront.net/thekolwiki/index.php/Baby_camelCalf)
 * [Comprehensive Cartographic Compendium](https://kol.coldfront.net/thekolwiki/index.php/Comprehensive_Cartographic_Compendium)
-* [box o' ghosts](https://kol.coldfront.net/thekolwiki/index.php/Box_o%27_ghosts)
 * [emotion chip](https://kol.coldfront.net/thekolwiki/index.php/Emotion_chip)
 * [packaged backup camera](https://kol.coldfront.net/thekolwiki/index.php/Packaged_backup_camera)
 
@@ -110,6 +109,7 @@ While these are not strictly required, not having enough that either save turns 
 * [packaged SpinMaster&trade; lathe](https://kol.coldfront.net/thekolwiki/index.php/Packaged_SpinMaster%E2%84%A2_lathe) &mdash; saves 4 turns on weapon test with ebony epee
 * [Bagged Cargo Cultist Shorts](https://kol.coldfront.net/thekolwiki/index.php/Bagged_Cargo_Cultist_Shorts) &mdash; saves 8 turns on weapon test or 4 turns on spell test; makes hp test trivial
 * [packaged knock-off retro superhero cape](https://kol.coldfront.net/thekolwiki/index.php/Packaged_knock-off_retro_superhero_cape) &mdash; saves 3 turns on hot test; 30% mainstat for leveling
+* [box o' ghosts](https://kol.coldfront.net/thekolwiki/index.php/Box_o%27_ghosts) &mdash; 50% stat buff for leveling; saves 4 turns on weapon test, 2 on spell test
 * [power seed](https://kol.coldfront.net/thekolwiki/index.php/Power_seed) &mdash; saves 6.7 turns on item test
 * [shortest-order cook](https://kol.coldfront.net/thekolwiki/index.php/Shortest-order_cook) &mdash; can save 2 turns on familiar test if lucky
 * [packaged familiar scrapbook](https://kol.coldfront.net/thekolwiki/index.php/Packaged_familiar_scrapbook) &mdash; equip before using ten-percent bonus

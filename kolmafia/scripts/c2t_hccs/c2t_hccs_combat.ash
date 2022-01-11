@@ -8,8 +8,8 @@ import <c2t_lib.ash>
 
 void main(int initround, monster foe, string page) {
 	//saber force
-	if (have_effect($effect[meteor showered]) > 0 || have_effect($effect[Fireproof Foam Suit]) > 0) {
-		c2t_bb($skill[Use the Force]).c2t_bbSubmit();
+	if (have_effect($effect[meteor showered]) > 0 || have_effect($effect[fireproof foam suit]) > 0) {
+		c2t_bb($skill[use the force]).c2t_bbSubmit();
 		return;
 	}
 
@@ -164,18 +164,17 @@ void main(int initround, monster foe, string page) {
 					.c2t_bb($skill[meteor shower])
 				);
 				return;
-			case $monster[Evil Olive]:
+			case $monster[evil olive]:
 				//have to burn a free kill and nostalgia/envy if no god lobster
 				if (!have_familiar($familiar[god lobster])
-					&& have_familiar($familiar[Ghost of Crimbo Carols])
 					&& get_property('lastCopyableMonster').to_monster() == $monster["plain" girl]) {
 
 					mSteal
-					.c2t_bb($skill[Feel Nostalgic])
-					.c2t_bb($skill[Feel Envy])
-					.c2t_bb(get_property("_chestXRayUsed").to_int() < 3 ? c2t_bb($skill[Chest X-Ray]) : "")
-					.c2t_bb(get_property("_shatteringPunchUsed").to_int() < 3 ? c2t_bb($skill[Shattering Punch]) : "")
-					.c2t_bb($skill[Gingerbread Mob Hit])
+					.c2t_bb($skill[feel nostalgic])
+					.c2t_bb($skill[feel envy])
+					.c2t_bb(get_property("_chestXRayUsed").to_int() < 3 ? c2t_bb($skill[chest x-ray]) : "")
+					.c2t_bb(get_property("_shatteringPunchUsed").to_int() < 3 ? c2t_bb($skill[shattering punch]) : "")
+					.c2t_bb($skill[gingerbread mob hit])
 					.c2t_bbSubmit();
 					return;
 				}
@@ -183,7 +182,7 @@ void main(int initround, monster foe, string page) {
 			case $monster[elf hobo]://this might though?
 			case $monster[angry pi&ntilde;ata]:
 				mSteal
-					.c2t_bb($skill[Use the Force])//don't care about tracking a potential stolen item, so cut it straight away
+					.c2t_bb($skill[use the force])//don't care about tracking a potential stolen item, so cut it straight away
 					.c2t_bbSubmit();
 				return;
 
