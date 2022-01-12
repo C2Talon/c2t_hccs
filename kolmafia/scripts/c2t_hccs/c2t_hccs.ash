@@ -1689,7 +1689,8 @@ void c2t_hccs_fights() {
 
 	//get crimbo ghost buff from dudes at NEP
 	if ((have_familiar($familiar[ghost of crimbo carols]) && have_effect($effect[holiday yoked]) == 0)
-		|| my_primestat() == $stat[moxie]) {//to nostalgia runproof mascara
+		|| (my_primestat() == $stat[moxie] && have_effect($effect[unrunnable face]) == 0 && item_amount($item[runproof mascara]) == 0)//to nostalgia runproof mascara
+		) {
 
 		if (get_property('_latteDrinkUsed').to_boolean())
 			cli_execute('latte refill cinnamon pumpkin vanilla');

@@ -331,7 +331,7 @@ string c2t_hccs_bowlSideways(string m) {
 
 	if (out == m)
 		return m;
-	if (get_property("csServicesPerformed").split_string(",").count() != 1)
+	if (get_property("csServicesPerformed") != "Coil Wire")
 		return m;
 	if (my_familiar() == $familiar[ghost of crimbo carols])
 		return m;
