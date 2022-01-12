@@ -3,63 +3,16 @@
 
 since r26092;//cosmic bowling ball
 
+import <c2t_hccs_lib.ash>
+import <c2t_hccs_resources.ash>
+import <c2t_hccs_properties.ash>
+import <c2t_hccs_aux.ash>
 import <c2t_cartographyHunt.ash>
 import <c2t_lib.ash>
 import <c2t_cast.ash>
 import <canadv.ash>
-import <c2t_hccs_aux.ash>
-import <c2t_hccs_resources.ash>
 
 int START_TIME = now_to_int();
-
-//properties
-//can set the following properties via the CLI. This just sets some defaults in case they don't exist to make handling them simpler
-/*
-set c2t_hccs_haltBeforeTest = false
-aborts after prepping for each test but before actually doing it at the council
-*/
-if (!property_exists("c2t_hccs_haltBeforeTest",false))
-	set_property("c2t_hccs_haltBeforeTest","false");
-/*
-set c2t_hccs_printModtrace = false
-prints a modtrace to the CLI and log just before non-stat tests
-*/
-if (!property_exists("c2t_hccs_printModtrace",false))
-	set_property("c2t_hccs_printModtrace","true");
-/*
-set c2t_hccs_joinClan = 90485
-This is the clan that the script will join for the VIP lounge and fortune teller
-Takes an int or string, where int would be clanid (preferred), and string would be the clan name
-*/
-if (!property_exists("c2t_hccs_joinClan",false))
-	set_property("c2t_hccs_joinClan","90485");
-/*
-set c2t_hccs_clanFortunes = CheeseFax
-This is the name of the person/bot that you want to do the fortune teller with
-*/
-if (!property_exists("c2t_hccs_clanFortunes",false))
-	set_property("c2t_hccs_clanFortunes","CheeseFax");
-/*
-set c2t_hccs_skipFinalService = false
-If this is set to true, the final service will be skipped leaving you in-run once finished
-*/
-if (!property_exists("c2t_hccs_skipFinalService",false))
-	set_property("c2t_hccs_skipFinalService","false");
-/*
-set c2t_hccs_thresholds = 1,1,1,1,1,1,1,1,1,1
-These are the 10 thresholds corresponding to the minimum turns to allow each test to take
-The order is hp,mus,mys,mox,fam,weapon,spell,nc,item,hot -- which is the same as the game
-The script will stop just before doing a test if a threshold is not met after doing all the pre-test stuff
-Example: 1,1,1,1,35,1,31,1,1,1 will allow the familiar test to take 35 turns, the spell test to take 31 turns, and all others must be 1 turn
-*/
-if (!property_exists("c2t_hccs_thresholds",false))
-	set_property("c2t_hccs_thresholds","1,1,1,1,1,1,1,1,1,1");
-/*
-set c2t_bb_printMacro = true
-Prints the combat macro the script submits in combat
-*/
-if (!property_exists("c2t_bb_printMacro",false))
-	set_property("c2t_bb_printMacro","true");
 
 
 //wtb enum
@@ -872,7 +825,7 @@ boolean c2t_hccs_buffExp() {
 			print('Failed to synthesize exp buff','red');
 
 		//face
-		ensure_effect($effect[Inscrutable Gaze]);
+		c2t_hccs_getEffect($effect[Inscrutable Gaze]);
 
 		if (numeric_modifier('mysticality experience percent') < 99.999) {
 			abort('Insufficient +exp%');
@@ -970,17 +923,17 @@ boolean c2t_hccs_allTheBuffs() {
 	
 	//monorail
 	if (get_property('_lyleFavored') == 'false')
-		ensure_effect($effect[favored by lyle]);
+		c2t_hccs_getEffect($effect[favored by lyle]);
 	
 	c2t_hccs_pillkeeper($effect[hulkien]); //stats
 	c2t_hccs_pillkeeper($effect[fidoxene]);//familiar
 	
 	//beach comb leveling buffs
 	if (available_amount($item[beach comb]) > 0) {
-		ensure_effect($effect[you learned something maybe!]); //beach exp
-		ensure_effect($effect[do i know you from somewhere?]);//beach fam wt
+		c2t_hccs_getEffect($effect[you learned something maybe!]); //beach exp
+		c2t_hccs_getEffect($effect[do i know you from somewhere?]);//beach fam wt
 		if (my_primestat() == $stat[moxie])
-			ensure_effect($effect[pomp & circumsands]);//beach moxie
+			c2t_hccs_getEffect($effect[pomp & circumsands]);//beach moxie
 	}
 
 	//TODO only use bee's knees and other less-desirable buffs if below some buff threshold
@@ -1001,7 +954,7 @@ boolean c2t_hccs_allTheBuffs() {
 	
 	//fortune buff item
 	if (get_property('_clanFortuneBuffUsed') == 'false')
-		ensure_effect($effect[there's no n in love]);
+		c2t_hccs_getEffect($effect[there's no n in love]);
 
 	//cast triple size
 	if (available_amount($item[powerful glove]) > 0 && have_effect($effect[triple-sized]) == 0 && !c2t_cast($skill[cheat code: triple size]))
@@ -1142,9 +1095,9 @@ boolean c2t_hccs_preItem() {
 	if (!get_property('latteModifier').contains_text('Item Drop') && get_property('_latteBanishUsed') == 'true')
 		cli_execute('latte refill cinnamon carrot vanilla');
 
-	ensure_effect($effect[Fat Leon's Phat Loot Lyric]);
-	ensure_effect($effect[Singer's Faithful Ocelot]);
-	ensure_effect($effect[The Spirit of Taking]);
+	c2t_hccs_getEffect($effect[Fat Leon's Phat Loot Lyric]);
+	c2t_hccs_getEffect($effect[Singer's Faithful Ocelot]);
+	c2t_hccs_getEffect($effect[The Spirit of Taking]);
 
 	// might move back to levelup part
 	if (have_effect($effect[synthesis: collection]) == 0)//skip pizza if synth item
@@ -1165,15 +1118,15 @@ boolean c2t_hccs_preItem() {
 	else {
 		if (my_mp() < 250)
 			cli_execute('eat magical sausage');
-		ensure_effect($effect[Spice Haze]);
+		c2t_hccs_getEffect($effect[Spice Haze]);
 	}
 
 	//AT-only buff
 	if (my_class() == $class[accordion thief])
 		ensure_song($effect[The Ballad of Richie Thingfinder]);
 
-	ensure_effect($effect[Nearly All-Natural]);//bag of grain
-	ensure_effect($effect[Steely-Eyed Squint]);
+	c2t_hccs_getEffect($effect[Nearly All-Natural]);//bag of grain
+	c2t_hccs_getEffect($effect[Steely-Eyed Squint]);
 
 	maximize('item,2 booze drop,-equip broken champagne bottle,-equip surprisingly capacious handbag,-equip red-hot sausage fork,switch left-hand man', false);
 
@@ -1223,24 +1176,24 @@ boolean c2t_hccs_preHotRes() {
 
 	use_familiar($familiar[Exotic Parrot]);
 
-	ensure_effect($effect[Blood Bond]);
-	ensure_effect($effect[Leash of Linguini]);
-	ensure_effect($effect[Empathy]);
+	c2t_hccs_getEffect($effect[Blood Bond]);
+	c2t_hccs_getEffect($effect[Leash of Linguini]);
+	c2t_hccs_getEffect($effect[Empathy]);
 
-	ensure_effect($effect[Elemental Saucesphere]);
-	ensure_effect($effect[Astral Shell]);
+	c2t_hccs_getEffect($effect[Elemental Saucesphere]);
+	c2t_hccs_getEffect($effect[Astral Shell]);
 
 	//beach comb hot buff
 	if (available_amount($item[beach comb]) > 0)
-		ensure_effect($effect[Hot-Headed]);
+		c2t_hccs_getEffect($effect[Hot-Headed]);
 
 	//emotion chip
 	c2t_getEffect($effect[Feeling Peaceful],$skill[Feel Peaceful]);
 
 	//familiar weight
-	ensure_effect($effect[Blood Bond]);
-	ensure_effect($effect[Leash of Linguini]);
-	ensure_effect($effect[Empathy]);
+	c2t_hccs_getEffect($effect[Blood Bond]);
+	c2t_hccs_getEffect($effect[Leash of Linguini]);
+	c2t_hccs_getEffect($effect[Empathy]);
 
 	maximize('100hot res, familiar weight', false);
 	// need to run this twice because familiar weight thresholds interfere with it?
@@ -1256,7 +1209,7 @@ boolean c2t_hccs_preHotRes() {
 	//magenta seashell
 	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
 		if (available_amount($item[magenta seashell]) > 0)
-			ensure_effect($effect[Too Cool for (Fish) School]);
+			c2t_hccs_getEffect($effect[Too Cool for (Fish) School]);
 
 	//potion for sleazy hands & hot powder
 	if (!c2t_hccs_thresholdMet(TEST_HOT_RES)) {
@@ -1274,7 +1227,7 @@ boolean c2t_hccs_preHotRes() {
 
 	//pocket maze
 	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
-		ensure_effect($effect[Amazing]);
+		c2t_hccs_getEffect($effect[Amazing]);
 
 	//synthesis: hot
 	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
@@ -1326,12 +1279,12 @@ boolean c2t_hccs_preFamiliar() {
 	}
 
 	// Pool buff
-	ensure_effect($effect[Billiards Belligerence]);
+	c2t_hccs_getEffect($effect[Billiards Belligerence]);
 
 	if (my_hp() < 30) use_skill(1, $skill[Cannelloni Cocoon]);
-	ensure_effect($effect[Blood Bond]);
-	ensure_effect($effect[Leash of Linguini]);
-	ensure_effect($effect[Empathy]);
+	c2t_hccs_getEffect($effect[Blood Bond]);
+	c2t_hccs_getEffect($effect[Leash of Linguini]);
+	c2t_hccs_getEffect($effect[Empathy]);
 
 	//AT-only buff
 	if (my_class() == $class[accordion thief])
@@ -1352,20 +1305,20 @@ boolean c2t_hccs_preFamiliar() {
 
 boolean c2t_hccs_preNoncombat() {
 	if (my_hp() < 30) use_skill(1, $skill[Cannelloni Cocoon]);
-	ensure_effect($effect[Blood Bond]);
-	ensure_effect($effect[Leash of Linguini]);
-	ensure_effect($effect[Empathy]);
+	c2t_hccs_getEffect($effect[Blood Bond]);
+	c2t_hccs_getEffect($effect[Leash of Linguini]);
+	c2t_hccs_getEffect($effect[Empathy]);
 
 	// Pool buff. Should fall through to weapon damage.
 	//not going to use this here, as it doesn't do to the noncombat rate in the moment anyway
-	//ensure_effect($effect[Billiards Belligerence]);
+	//c2t_hccs_getEffect($effect[Billiards Belligerence]);
 
-	ensure_effect($effect[The Sonata of Sneakiness]);
-	ensure_effect($effect[Smooth Movements]);
+	c2t_hccs_getEffect($effect[The Sonata of Sneakiness]);
+	c2t_hccs_getEffect($effect[Smooth Movements]);
 	if (available_amount($item[powerful glove]) > 0 && have_effect($effect[Invisible Avatar]) == 0 && !c2t_cast($skill[CHEAT CODE: Invisible Avatar]))
 		abort('Invisible avatar failed');
 
-	ensure_effect($effect[Silent Running]);
+	c2t_hccs_getEffect($effect[Silent Running]);
 
 	if (have_familiar($familiar[god lobster]) && have_effect($effect[Silence of the God Lobster]) == 0 && get_property('_godLobsterFights').to_int() < 3) {
 		cli_execute('mood apathetic');
@@ -1392,8 +1345,8 @@ boolean c2t_hccs_preNoncombat() {
 		use_skill(1,$skill[Feel Lonely]);
 	
 	// Rewards // use these after globster fight, just in case of losing
-	ensure_effect($effect[Throwing Some Shade]);
-	ensure_effect($effect[A Rose by Any Other Material]);
+	c2t_hccs_getEffect($effect[Throwing Some Shade]);
+	c2t_hccs_getEffect($effect[A Rose by Any Other Material]);
 
 
 	use_familiar($familiar[Disgeist]);
@@ -1451,39 +1404,39 @@ boolean c2t_hccs_preWeapon() {
 	}
 
 	if (available_amount($item[twinkly nuggets]) > 0)
-		ensure_effect($effect[Twinkly Weapon]);
+		c2t_hccs_getEffect($effect[Twinkly Weapon]);
 
-	ensure_effect($effect[Carol of the Bulls]);
-	ensure_effect($effect[Rage of the Reindeer]);
-	ensure_effect($effect[Frenzied, Bloody]);
-	ensure_effect($effect[Scowl of the Auk]);
-	ensure_effect($effect[Tenacity of the Snapper]);
+	c2t_hccs_getEffect($effect[Carol of the Bulls]);
+	c2t_hccs_getEffect($effect[Rage of the Reindeer]);
+	c2t_hccs_getEffect($effect[Frenzied, Bloody]);
+	c2t_hccs_getEffect($effect[Scowl of the Auk]);
+	c2t_hccs_getEffect($effect[Tenacity of the Snapper]);
 	
 	//don't have these skills yet. maybe should add check for all skill uses to make universal?
 	if (have_skill($skill[Song of the North]))
-		ensure_effect($effect[Song of the North]);
+		c2t_hccs_getEffect($effect[Song of the North]);
 	if (have_skill($skill[Jackasses' Symphony of Destruction]))
 		ensure_song($effect[Jackasses' Symphony of Destruction]);
 
 	if (available_amount($item[vial of hamethyst juice]) > 0)
-		ensure_effect($effect[Ham-Fisted]);
+		c2t_hccs_getEffect($effect[Ham-Fisted]);
 
 	// Hatter buff
 	if (available_amount($item[&quot;DRINK ME&quot; potion]) > 0) {
 		retrieve_item(1, $item[goofily-plumed helmet]);
-		ensure_effect($effect[Weapon of Mass Destruction]);
+		c2t_hccs_getEffect($effect[Weapon of Mass Destruction]);
 	}
 
 	//beach comb weapon buff
 	if (available_amount($item[beach comb]) > 0)
-		ensure_effect($effect[Lack of Body-Building]);
+		c2t_hccs_getEffect($effect[Lack of Body-Building]);
 
 	// Boombox potion
 	if (available_amount($item[Punching Potion]) > 0)
-		ensure_effect($effect[Feeling Punchy]);
+		c2t_hccs_getEffect($effect[Feeling Punchy]);
 
 	// Pool buff. Should have fallen through from noncom
-	ensure_effect($effect[Billiards Belligerence]);
+	c2t_hccs_getEffect($effect[Billiards Belligerence]);
 
 	//meteor shower
 	if ((have_skill($skill[meteor lore]) && have_effect($effect[meteor showered]) == 0)
@@ -1508,21 +1461,21 @@ boolean c2t_hccs_preWeapon() {
 	
 	//tainted seal's blood
 	if (available_amount($item[tainted seal's blood]) > 0)
-		ensure_effect($effect[Corruption of Wretched Wally]);
+		c2t_hccs_getEffect($effect[Corruption of Wretched Wally]);
 
 
 	// turtle tamer saves ~1 turn with this part, and 4 from voting
 	if (my_class() == $class[turtle tamer]) {
 		if (have_effect($effect[Boon of She-Who-Was]) == 0) {
-			ensure_effect($effect[Blessing of She-Who-Was]);
-			ensure_effect($effect[Boon of She-Who-Was]);
+			c2t_hccs_getEffect($effect[Blessing of She-Who-Was]);
+			c2t_hccs_getEffect($effect[Boon of She-Who-Was]);
 		}
-		ensure_effect($effect[Blessing of the War Snapper]);
+		c2t_hccs_getEffect($effect[Blessing of the War Snapper]);
 	}
 	else
-		ensure_effect($effect[Disdain of the War Snapper]);
+		c2t_hccs_getEffect($effect[Disdain of the War Snapper]);
 	
-	ensure_effect($effect[Bow-Legged Swagger]);
+	c2t_hccs_getEffect($effect[Bow-Legged Swagger]);
 	
 	maximize('weapon damage', false);
 
@@ -1555,32 +1508,32 @@ boolean c2t_hccs_preSpell() {
 	// if spit upon == 1, simmering will just waste a turn to do essentially nothing.
 	// probably good idea to add check for similar effects to not just waste a turn
 	if (have_effect($effect[Spit Upon]) != 1 && have_effect($effect[Do You Crush What I Crush?]) != 1)
-		ensure_effect($effect[Simmering]);
+		c2t_hccs_getEffect($effect[Simmering]);
 
 	while (c2t_hccs_wandererFight()); //check for after using a turn to cast Simmering
 
 	//don't have this skill yet. Maybe should add check for all skill uses to make universal?
 	if (have_skill($skill[Song of Sauce]))
-		ensure_effect($effect[Song of Sauce]);
+		c2t_hccs_getEffect($effect[Song of Sauce]);
 	if (have_skill($skill[Jackasses' Symphony of Destruction]))
-		ensure_effect($effect[Jackasses' Symphony of Destruction]);
+		c2t_hccs_getEffect($effect[Jackasses' Symphony of Destruction]);
 	
-	ensure_effect($effect[Carol of the Hells]);
+	c2t_hccs_getEffect($effect[Carol of the Hells]);
 
 	// Pool buff
-	ensure_effect($effect[Mental A-cue-ity]);
+	c2t_hccs_getEffect($effect[Mental A-cue-ity]);
 
 	//beach comb spell buff
 	if (available_amount($item[beach comb]) > 0)
-		ensure_effect($effect[We're All Made of Starfish]);
+		c2t_hccs_getEffect($effect[We're All Made of Starfish]);
 
 	use_skill(1, $skill[Spirit of Peppermint]);
 	
 	// face
-	ensure_effect($effect[Arched Eyebrow of the Archmage]);
+	c2t_hccs_getEffect($effect[Arched Eyebrow of the Archmage]);
 
 	if (available_amount($item[flask of baconstone juice]) > 0)
-		ensure_effect($effect[Baconstoned]);
+		c2t_hccs_getEffect($effect[Baconstoned]);
 
 	//pull stick-knife if able to equip
 	if (my_basestat($stat[mysticality]) >= 150)
@@ -1611,12 +1564,12 @@ boolean c2t_hccs_preSpell() {
 	}
 
 	if (have_skill($skill[Deep Dark Visions]) && have_effect($effect[Visions of the Deep Dark Deeps]) == 0) {
-		ensure_effect($effect[Elemental Saucesphere]);
-		ensure_effect($effect[Astral Shell]);
+		c2t_hccs_getEffect($effect[Elemental Saucesphere]);
+		c2t_hccs_getEffect($effect[Astral Shell]);
 		maximize("1000spooky res,hp,mp",false);
 		if (my_hp() < 800)
 			use_skill(1,$skill[Cannelloni Cocoon]);
-		ensure_effect($effect[Visions of the Deep Dark Deeps]);
+		c2t_hccs_getEffect($effect[Visions of the Deep Dark Deeps]);
 	}
 
 	//if I ever feel like blowing the resources:

@@ -7,15 +7,6 @@ import <c2t_lib.ash>
 import <c2t_cartographyHunt.ash>
 
 
-//c2t_hccs_pull is temporarily here until I can figure out how I want to deal with circular references
-//pull item from storage
-boolean c2t_hccs_pull(item ite) {
-	if(!can_interact() && !in_hardcore() && item_amount(ite) == 0 && available_amount(ite) == 0 && storage_amount(ite) > 0 && pulls_remaining() > 0)
-		return take_storage(1,ite);
-	return false;
-}
-
-
 /*-=-+-=-+-=-+-=-+-=-+-=-
   function declarations
   -=-+-=-+-=-+-=-+-=-+-=-*/
