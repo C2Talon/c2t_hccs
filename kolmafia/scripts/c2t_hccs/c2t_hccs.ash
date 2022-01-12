@@ -1092,7 +1092,7 @@ boolean c2t_hccs_preHotRes() {
 		use_familiar(c2t_priority($familiars[ghost of crimbo carols,exotic parrot]));
 
 		if (my_mp() < 30)
-			cli_execute('rest free');
+			c2t_hccs_restoreMp();
 		adv1($location[the dire warren],-1,"");
 		run_turn();
 	}
@@ -1575,7 +1575,7 @@ void c2t_hccs_fights() {
 		cli_execute('mood apathetic');
 
 		if (my_hp() < 0.5 * my_maxhp())
-			cli_execute('rest free');
+			c2t_hccs_restoreMp();
 
 		use_familiar($familiar[melodramedary]);
 		equip($item[dromedary drinking helmet]);
@@ -1726,7 +1726,7 @@ void c2t_hccs_fights() {
 	if (have_skill($skill[evoke eldritch horror]) && !get_property('_eldritchHorrorEvoked').to_boolean()) {
 		maximize("mainstat,100exp,-equip garbage shirt"+famEq,false);
 		if (my_mp() < 80)
-			cli_execute('rest free');
+			c2t_hccs_restoreMp();
 		use_skill(1,$skill[evoke eldritch horror]);
 		run_combat();
 
@@ -1824,7 +1824,7 @@ void c2t_hccs_fights() {
 		if (my_level() >= 11 && item_amount($item[astral pilsner]) == 6) {
 			cli_execute('shrug Shanty of Superiority');
 			if (my_mp() < 100)
-				cli_execute('rest free');//probably bad
+				c2t_hccs_restoreMp();
 			use_skill(1,$skill[the ode to booze]);
 			drink(5,$item[astral pilsner]);
 			cli_execute('shrug Ode to Booze');
@@ -1936,7 +1936,7 @@ boolean c2t_hccs_wandererFight() {
 
 	if (my_hp() < my_maxhp()/2 || my_mp() < 10) {
 		c2t_hccs_breakfast();
-		cli_execute('rest free');
+		c2t_hccs_restoreMp();
 	}
 	print("Running wanderer fight","blue");
 	//saving last maximizer string and familiar stuff; outfits generally break here

@@ -26,6 +26,9 @@ boolean c2t_hccs_haveUse(item ite,int min);
 //returns true in the case of pulling an item or if the item already is available
 boolean c2t_hccs_pull(item ite);
 
+//rudamentary mp restoration using free rests and magical sausages
+boolean c2t_hccs_restoreMp();
+
 
 /*===============
   implementations
@@ -76,7 +79,7 @@ boolean c2t_hccs_getEffect(effect eff) {
 
 		//TODO better MP recovery
 		if (my_mp() < mp_cost(ski))
-			cli_execute("rest free");
+			c2t_hccs_restoreMp();
 
 		use_skill(ski);
 	}
@@ -141,5 +144,22 @@ boolean c2t_hccs_pull(item ite) {
 	else if (available_amount(ite) > 0)
 		return true;
 	return false;
+}
+
+boolean c2t_hccs_restoreMp() {
+	int start = my_mp()
+	int total = total_free_rests();
+	int used = get_property("timesRested").to_int();
+
+	if (my_maxmp() > 500 && retrieve_item($item[magical sausage]))
+		eat($item[magical sausage]);
+	else if (total-used > 0)
+		cli_execute("rest free");
+	else if (retrieve_item($item[magical sausage]))
+		eat($item[magical sausage]);
+	else
+		print("Unable to recover MP with magical sausages or free rests","red");
+
+	return my_mp() > start;
 }
 
