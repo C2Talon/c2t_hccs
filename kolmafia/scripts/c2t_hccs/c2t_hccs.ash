@@ -43,11 +43,6 @@ TEST_NAME[TEST_WEAPON] = "Reduce Gazelle Population";
 TEST_NAME[TEST_SPELL] = "Make Sausage";
 
 
-boolean c2t_haveUse(skill ski);
-boolean c2t_haveUse(skill ski,int min);
-boolean c2t_haveUse(item ite);
-boolean c2t_haveUse(item ite,int min);
-
 void c2t_hccs_init();
 void c2t_hccs_exit();
 boolean c2t_hccs_preCoil();
@@ -77,10 +72,8 @@ boolean c2t_hccs_thresholdMet(int test);
 void c2t_hccs_mod2log(string str);
 void c2t_hccs_printRunTime(boolean final);
 void c2t_hccs_printRunTime() c2t_hccs_printRunTime(false);
-void c2t_hccs_getFax(monster mon);
 boolean c2t_hccs_fightGodLobster();
 void c2t_hccs_breakfast();
-int c2t_hccs_freeKillsLeft();
 void c2t_hccs_printTestData();
 void c2t_hccs_testData(string testType,int testNum,int turnsTaken,int turnsExpected);
 
@@ -143,18 +136,6 @@ void c2t_hccs_mod2log(string str) {
 }
 
 
-//free kills left
-int c2t_hccs_freeKillsLeft() {
-	int n = 0;
-	if (available_amount($item[lil' doctor&trade; bag]) > 0)
-		n += 3 - get_property("_chestXRayUsed").to_int();
-	if (have_skill($skill[shattering punch]))
-		n += 3 - get_property("_shatteringPunchUsed").to_int();
-	if (have_skill($skill[gingerbread mob hit]) && !get_property("_gingerbreadMobHitUsed").to_boolean())
-		n++;
-	return n;
-}
-
 //limited breakfast to only what might be used
 void c2t_hccs_breakfast() {
 	skill ski = $skill[advanced saucecrafting];
@@ -188,35 +169,8 @@ void c2t_hccs_breakfast() {
 		cli_execute("garden pick");
 }
 
-void c2t_hccs_getFax(monster mon) {
-	print(`getting fax of {mon}`,"blue");
-	for i from 1 to 3 {
-		if (mon == $monster[factory worker (female)]) {
-			chat_private('cheesefax','fax factory worker');
-			wait(15);//10 has failed multiple times
-			cli_execute('fax get');
-		}
-		else
-			faxbot(mon);
 
-		if (get_property('photocopyMonster') == mon.manuel_name)
-			break;
 
-		cli_execute('fax send');
-	}
-	c2t_assert(get_property('photocopyMonster') == mon.manuel_name,'wrong fax monster');
-}
-
-boolean c2t_haveUse(item ite) {
-	return c2t_haveUse(ite,1);
-}
-boolean c2t_haveUse(item ite,int min) {
-	if (available_amount(ite) >= min) {
-		use(min,ite);
-		return true;
-	}
-	return false;
-}
 
 boolean c2t_hccs_fightGodLobster() {
 	if (!have_familiar($familiar[god lobster]))
@@ -519,12 +473,12 @@ boolean c2t_hccs_preCoil() {
 	//cod piece steps
 	/*if (!retrieve_item(1,$item[fish hatchet])) {
 		retrieve_item(1,$item[codpiece]);
-		c2t_haveUse(1,$item[codpiece]);
-		c2t_haveUse(8,$item[bubblin' crude]);
+		c2t_hccs_haveUse(1,$item[codpiece]);
+		c2t_hccs_haveUse(8,$item[bubblin' crude]);
 		autosell(1,$item[oil cap]);
 	}*/
 
-	c2t_haveUse($item[astral six-pack]);
+	c2t_hccs_haveUse($item[astral six-pack]);
 
 	//pantagramming
 	c2t_hccs_pantogram();
@@ -568,8 +522,8 @@ boolean c2t_hccs_preCoil() {
 
 	// Sell pork gems
 	visit_url('tutorial.php?action=toot');
-	c2t_haveUse($item[letter from king ralph xi]);
-	c2t_haveUse($item[pork elf goodies sack]);
+	c2t_hccs_haveUse($item[letter from king ralph xi]);
+	c2t_hccs_haveUse($item[pork elf goodies sack]);
 	if (my_meat() < 2500) {//don't autosell if there is some other source of meat
 		autosell(5,$item[baconstone]);
 		autosell(5,$item[porquoise]);
@@ -835,7 +789,7 @@ boolean c2t_hccs_levelup() {
 	if (my_level() < 7 && c2t_hccs_buffExp()) {
 		if (item_amount($item[familiar scrapbook]) > 0)
 			equip($item[familiar scrapbook]);
-		c2t_haveUse($item[a ten-percent bonus]);
+		c2t_hccs_haveUse($item[a ten-percent bonus]);
 	}
 	if (my_level() < 7)
 		abort('initial leveling broke');
@@ -934,8 +888,8 @@ boolean c2t_hccs_allTheBuffs() {
 		cli_execute(`daycare {my_primestat().to_lower_case()}`);
 
 	//candles
-	c2t_haveUse($item[napalm in the morning&trade; candle]);
-	c2t_haveUse($item[votive of confidence]);
+	c2t_hccs_haveUse($item[napalm in the morning&trade; candle]);
+	c2t_hccs_haveUse($item[votive of confidence]);
 
 	//synthesis
 	if (my_primestat() == $stat[muscle]) {
@@ -1173,7 +1127,7 @@ boolean c2t_hccs_preHotRes() {
 
 	//daily candle
 	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
-		c2t_haveUse($item[rainbow glitter candle]);
+		c2t_hccs_haveUse($item[rainbow glitter candle]);
 
 	//magenta seashell
 	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
@@ -1264,7 +1218,7 @@ boolean c2t_hccs_preFamiliar() {
 
 	//should only get 1 per run, if any; would use in NEP combat loop, but no point as sombrero would already be already giving max stats
 	if (!c2t_hccs_thresholdMet(TEST_FAMILIAR))
-		c2t_haveUse($item[short stack of pancakes]);
+		c2t_hccs_haveUse($item[short stack of pancakes]);
 
 	c2t_hccs_mod2log("modtrace familiar weight");
 
@@ -1462,7 +1416,7 @@ boolean c2t_hccs_preWeapon() {
 		&& have_effect($effect[rictus of yeg]) == 0
 		&& !get_property('_cargoPocketEmptied').to_boolean())
 			cli_execute("cargo item yeg's motel toothbrush");
-	c2t_haveUse($item[yeg's motel toothbrush]);
+	c2t_hccs_haveUse($item[yeg's motel toothbrush]);
 
 	c2t_hccs_mod2log("modtrace weapon damage");
 
@@ -1524,7 +1478,7 @@ boolean c2t_hccs_preSpell() {
 	// cargo pocket
 	if (available_amount($item[cargo cultist shorts]) > 0 && have_effect($effect[sigils of yeg]) == 0 && !get_property('_cargoPocketEmptied').to_boolean())
 		cli_execute("cargo item Yeg's Motel hand soap");
-	c2t_haveUse($item[yeg's motel hand soap]);
+	c2t_hccs_haveUse($item[yeg's motel hand soap]);
 
 	// meteor lore // moxie can't do this, as it wastes a saber on evil olive -- moxie should be able to do this now with nostalgia earlier?
 	if (have_skill($skill[meteor lore]) && have_effect($effect[meteor showered]) == 0 && get_property('_saberForceUses').to_int() < 5) {

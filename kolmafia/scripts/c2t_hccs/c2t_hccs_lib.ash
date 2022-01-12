@@ -1,13 +1,26 @@
 //c2t hccs lib
 //c2t
 
+
+import <c2t_lib.ash>
+
 /*============
   declarations
   ============*/
 
+//returns number of free kills left from among doc bag, shattering punch, and gingerbread mob hit
+int c2t_hccs_freeKillsLeft();
+
 //get an effect
 //returns true if effect obtained
 boolean c2t_hccs_getEffect(effect eff);
+
+//get fax of mon
+void c2t_hccs_getFax(monster mon);
+
+//if have the thing, use the thing
+boolean c2t_hccs_haveUse(item ite);
+boolean c2t_hccs_haveUse(item ite,int min);
 
 //pull 1 of an item from storage if not already have it
 //returns true in the case of pulling an item or if the item already is available
@@ -17,6 +30,17 @@ boolean c2t_hccs_pull(item ite);
 /*===============
   implementations
   ===============*/
+
+int c2t_hccs_freeKillsLeft() {
+	int n = 0;
+	if (available_amount($item[lil' doctor&trade; bag]) > 0)
+		n += 3 - get_property("_chestXRayUsed").to_int();
+	if (have_skill($skill[shattering punch]))
+		n += 3 - get_property("_shatteringPunchUsed").to_int();
+	if (have_skill($skill[gingerbread mob hit]) && !get_property("_gingerbreadMobHitUsed").to_boolean())
+		n++;
+	return n;
+}
 
 boolean c2t_hccs_getEffect(effect eff) {
 	if (have_effect(eff).to_boolean())
@@ -74,8 +98,36 @@ boolean c2t_hccs_getEffect(effect eff) {
 	return have_effect(eff).to_boolean();
 }
 
+void c2t_hccs_getFax(monster mon) {
+	print(`getting fax of {mon}`,"blue");
+	for i from 1 to 3 {
+		if (mon == $monster[factory worker (female)]) {
+			chat_private('cheesefax','fax factory worker');
+			wait(15);//10 has failed multiple times
+			cli_execute('fax get');
+		}
+		else
+			faxbot(mon);
 
-//pull item from storage
+		if (get_property('photocopyMonster') == mon.manuel_name)
+			break;
+
+		cli_execute('fax send');
+	}
+	c2t_assert(get_property('photocopyMonster') == mon.manuel_name,'wrong fax monster');
+}
+
+boolean c2t_hccs_haveUse(item ite) {
+	return c2t_hccs_haveUse(ite,1);
+}
+boolean c2t_hccs_haveUse(item ite,int min) {
+	if (available_amount(ite) >= min) {
+		use(min,ite);
+		return true;
+	}
+	return false;
+}
+
 boolean c2t_hccs_pull(item ite) {
 	if(!can_interact() && !in_hardcore() && item_amount(ite) == 0 && available_amount(ite) == 0 && storage_amount(ite) > 0 && pulls_remaining() > 0)
 		return take_storage(1,ite);
