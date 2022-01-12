@@ -38,15 +38,15 @@ void main (int id,string page) {
 		//5: Pick a fight
 		case 1324:
 			//going for stat exp buff initially, then combats afterward
-			if (my_primestat() == $stat[muscle] && have_effect($effect[Spiced Up]) == 0) {
+			if (my_primestat() == $stat[muscle] && have_effect($effect[spiced up]) == 0) {
 				run_choice(2);
 				run_choice(2);//1325/2
 			}
-			else if (my_primestat() == $stat[mysticality] && have_effect($effect[Tomes of Opportunity]) == 0) {
+			else if (my_primestat() == $stat[mysticality] && have_effect($effect[tomes of opportunity]) == 0) {
 				run_choice(1);
 				run_choice(2);//1326/2
 			}
-			else if (my_primestat() == $stat[moxie] && have_effect($effect[The Best Hair You've Ever Had]) == 0) {
+			else if (my_primestat() == $stat[moxie] && have_effect($effect[the best hair you've ever had]) == 0) {
 				run_choice(4);
 				run_choice(2);//1328/2
 			}

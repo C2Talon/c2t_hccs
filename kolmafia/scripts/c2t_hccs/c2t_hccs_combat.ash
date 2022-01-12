@@ -83,23 +83,23 @@ void main(int initround, monster foe, string page) {
 	string m;
 
 	//run with ghost caroler for buffs at NEP and dire warren at different times
-	if (my_familiar() == $familiar[Ghost of Crimbo Carols]) {
+	if (my_familiar() == $familiar[ghost of crimbo carols]) {
 		m = mHead + mSteal;
 		if (foe == $monster[fluffy bunny]) {
-			m += c2t_bb($skill[Become a Cloud of Mist]);
-			m += c2t_bb($skill[Fire Extinguisher: Foam Yourself]);
+			m += c2t_bb($skill[become a cloud of mist]);
+			m += c2t_bb($skill[fire extinguisher: foam yourself]);
 			m.c2t_bbSubmit();
 		}
 		else {//NEP
-			m += c2t_bb($skill[Gulp Latte]);
-			m += c2t_bb($skill[Offer Latte to Opponent]);
-			m += c2t_bb($skill[Throw Latte on Opponent]);
+			m += c2t_bb($skill[gulp latte]);
+			m += c2t_bb($skill[offer latte to opponent]);
+			m += c2t_bb($skill[throw latte on opponent]);
 			m.c2t_bbSubmit();
 		}
 		return;
 	}
 	//saber random thing at this location for meteor shower buff -- saber happens elsewhere
-	else if (get_property("lastAdventure").to_location() == $location[Thugnderdome]) {
+	else if (get_property("lastAdventure").to_location() == $location[thugnderdome]) {
 		m = mHead + mSteal.c2t_bb($skill[meteor shower]);
 
 		//camel spit for weapon test, which is directly after combat test
@@ -136,13 +136,13 @@ void main(int initround, monster foe, string page) {
 				//if no god lobster, burn a free kill to get both monsters' drops with nostalgia/envy here
 				if (get_property('lastCopyableMonster').to_monster() == $monster[novelty tropical skeleton]) {
 					mSteal
-					.c2t_bb($skill[Feel Nostalgic])
-					.c2t_bb($skill[Feel Envy])
+					.c2t_bb($skill[feel nostalgic])
+					.c2t_bb($skill[feel envy])
 					.c2t_bb($skill[become a wolf])
 					.c2t_bb($skill[gulp latte])
-					.c2t_bb(get_property("_chestXRayUsed").to_int() < 3 ? c2t_bb($skill[Chest X-Ray]) : "")
-					.c2t_bb(get_property("_shatteringPunchUsed").to_int() < 3 ? c2t_bb($skill[Shattering Punch]) : "")
-					.c2t_bb($skill[Gingerbread Mob Hit])
+					.c2t_bb(get_property("_chestXRayUsed").to_int() < 3 ? c2t_bb($skill[chest x-ray]) : "")
+					.c2t_bb(get_property("_shatteringPunchUsed").to_int() < 3 ? c2t_bb($skill[shattering punch]) : "")
+					.c2t_bb($skill[gingerbread mob hit])
 					.c2t_bbSubmit();
 					return;
 				}
@@ -199,19 +199,19 @@ void main(int initround, monster foe, string page) {
 					return;
 				}
 				//feel pride still thinks it can be used after max uses for some reason
-				m += get_property("_feelPrideUsed").to_int() < 3 ? c2t_bb($skill[Feel Pride]) : "";
+				m += get_property("_feelPrideUsed").to_int() < 3 ? c2t_bb($skill[feel pride]) : "";
 
 				//free kills after NEP free fights
 				if (get_property('_neverendingPartyFreeTurns').to_int() == 10 && !get_property('_gingerbreadMobHitUsed').to_boolean()) {
 					c2t_bbSubmit(
 						m
-						.c2t_bb($skill[Sing Along])
+						.c2t_bb($skill[sing along])
 						//free kill skills
 						//won't use otoscope anywhere else, so might as well use it while doc bag equipped
-						.c2t_bb(get_property("_otoscopeUsed").to_int() < 3 ? c2t_bb($skill[Otoscope]) : "")
-						.c2t_bb(get_property("_chestXRayUsed").to_int() < 3 ? c2t_bb($skill[Chest X-Ray]) : "")
-						.c2t_bb(get_property("_shatteringPunchUsed").to_int() < 3 ? c2t_bb($skill[Shattering Punch]) : "")
-						.c2t_bb($skill[Gingerbread Mob Hit])
+						.c2t_bb(get_property("_otoscopeUsed").to_int() < 3 ? c2t_bb($skill[otoscope]) : "")
+						.c2t_bb(get_property("_chestXRayUsed").to_int() < 3 ? c2t_bb($skill[chest x-ray]) : "")
+						.c2t_bb(get_property("_shatteringPunchUsed").to_int() < 3 ? c2t_bb($skill[shattering punch]) : "")
+						.c2t_bb($skill[gingerbread mob hit])
 					);
 				}
 				//free combats at NEP
@@ -236,22 +236,22 @@ void main(int initround, monster foe, string page) {
 				return;
 
 			//nostalgia goes here
-			case $monster[God Lobster]:
+			case $monster[god lobster]:
 				m = mHead;
 				//grabbing moxie buff item
 				if (my_primestat() == $stat[moxie]
-					&& have_effect($effect[Unrunnable Face]) == 0
+					&& have_effect($effect[unrunnable face]) == 0
 					&& item_amount($item[runproof mascara]) == 0
 					&& get_property('lastCopyableMonster').to_monster() == $monster[party girl]) {
 
-					m += c2t_bb($skill[Feel Nostalgic]);
-					m += c2t_bb($skill[Feel Envy]);
+					m += c2t_bb($skill[feel nostalgic]);
+					m += c2t_bb($skill[feel envy]);
 				}
 				if (get_property('lastCopyableMonster').to_monster() == $monster[novelty tropical skeleton]
 					|| get_property('lastCopyableMonster').to_monster() == $monster[possessed can of tomatoes]) {
 
-					m += c2t_bb($skill[Feel Nostalgic]);
-					m += c2t_bb($skill[Feel Envy]);
+					m += c2t_bb($skill[feel nostalgic]);
+					m += c2t_bb($skill[feel envy]);
 				}
 
 				m += mBasic;
@@ -280,15 +280,15 @@ void main(int initround, monster foe, string page) {
 
 			//free run from holiday monsters
 			//Feast of Boris
-			case $monster[Candied Yam Golem]:
-			case $monster[Malevolent Tofurkey]:
-			case $monster[Possessed Can of Cranberry Sauce]:
-			case $monster[Stuffing Golem]:
+			case $monster[candied yam golem]:
+			case $monster[malevolent tofurkey]:
+			case $monster[possessed can of cranberry sauce]:
+			case $monster[stuffing golem]:
 			//El Dia de Los Muertos Borrachos
-			case $monster[Novia Cad&aacute;ver]:
-			case $monster[Novio Cad&aacute;ver]:
-			case $monster[Padre Cad&aacute;ver]:
-			case $monster[Persona Inocente Cad&aacute;ver]:
+			case $monster[novia cad&aacute;ver]:
+			case $monster[novio cad&aacute;ver]:
+			case $monster[padre cad&aacute;ver]:
+			case $monster[persona inocente cad&aacute;ver]:
 			//talk like a pirate day
 			case $monster[ambulatory pirate]:
 			case $monster[migratory pirate]:

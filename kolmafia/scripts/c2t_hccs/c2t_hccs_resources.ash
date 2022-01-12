@@ -161,16 +161,16 @@ boolean c2t_hccs_pillkeeper(effect eff) {
 	switch (eff) {
 		default:
 			return false;
-		case $effect[Rainbowolin]:
+		case $effect[rainbowolin]:
 			cli_execute("pillkeeper elemental");
 			break;
-		case $effect[Hulkien]:
+		case $effect[hulkien]:
 			cli_execute("pillkeeper stats");
 			break;
-		case $effect[Fidoxene]:
+		case $effect[fidoxene]:
 			cli_execute("pillkeeper familiar");
 			break;
-		case $effect[Lucky!]:
+		case $effect[lucky!]:
 			cli_execute("pillkeeper semirare");
 			break;
 	}
@@ -225,7 +225,7 @@ boolean c2t_hccs_pizzaCube(effect eff) {
 			use_familiar($familiar[imitation crab]);
 			retrieve_item(1,$item[ketchup]);
 			it1 = $item[ketchup];
-			it2 = $item[Newbiesport&trade; tent];
+			it2 = $item[newbiesport&trade; tent];
 			it3 = $item[imitation whetstone];
 			it4 = $item[cog and sprocket assembly];
 			break;
@@ -235,7 +235,7 @@ boolean c2t_hccs_pizzaCube(effect eff) {
 			it1 = $item[cog and sprocket assembly];
 			it2 = $item[electronics kit];
 			it3 = $item[razor-sharp can lid];
-			it4 = c2t_priority($item[Middle of the Road&trade; brand whiskey],$item[PB&J with the crusts cut off],$item[surprisingly capacious handbag]);
+			it4 = c2t_priority($item[middle of the road&trade; brand whiskey],$item[pb&j with the crusts cut off],$item[surprisingly capacious handbag]);
 			break;
 
 		case $effect[infernal thirst]:
@@ -249,13 +249,13 @@ boolean c2t_hccs_pizzaCube(effect eff) {
 				retrieve_item(1,$item[eyedrops of the ermine]);
 
 			it1 = $item[imitation whetstone];
-			it2 = c2t_priority($item[neverending wallet chain], $item[Newbiesport&trade; tent]);
+			it2 = c2t_priority($item[neverending wallet chain], $item[newbiesport&trade; tent]);
 			it3 = $item[full meat tank];
 			it4 = c2t_priority($item[eldritch effluvium],$item[eaves droppers],$item[eyedrops of the ermine],$item[electronics kit]);
 			break;
 
 		case $effect[outer wolf&trade;]:
-			choose = {$item[Middle of the Road&trade; brand whiskey],$item[surprisingly capacious handbag],$item[PB&J with the crusts cut off]};
+			choose = {$item[middle of the road&trade; brand whiskey],$item[surprisingly capacious handbag],$item[pb&j with the crusts cut off]};
 			retrieve_item(1,$item[ointment of the occult]);
 			if (item_amount($item[useless powder]) == 0) {
 				retrieve_item(1,$item[cool whip]);
@@ -473,7 +473,7 @@ boolean c2t_hccs_sweetSynthesis(effect eff) {
 void c2t_hccs_vote() {
 	if (!get_property("voteAlways").to_boolean() && !get_property("_voteToday").to_boolean())
 		return;
-	if (available_amount($item[&quot;I Voted!&quot; sticker]) > 0)
+	if (available_amount($item[&quot;i voted!&quot; sticker]) > 0)
 		return;
 	if (my_daycount() > 1)
 		abort("Need to manually vote. This is not set up to vote except for day 1.");
@@ -544,7 +544,7 @@ void c2t_hccs_vote() {
 	print("Voting for "+(radi==1?mon1:mon2)+", "+get_property('_voteLocal'+(che1+1))+", "+get_property('_voteLocal'+(che2+1)),"blue");
 	buf = visit_url('choice.php?pwd&option=1&whichchoice=1331&g='+radi+'&local[]='+che1+'&local[]='+che2,true,false);
 
-	if (available_amount($item[&quot;I Voted!&quot; sticker]) == 0)
+	if (available_amount($item[&quot;i voted!&quot; sticker]) == 0)
 		abort("Voting failed?");
 }
 
