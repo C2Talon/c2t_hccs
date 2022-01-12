@@ -2,9 +2,15 @@
 //c2t
 
 import <c2t_lib.ash>
+import <c2t_hccs_lib.ash>
 
 
 // consult script for CS
+
+//the logic for bowling sideways to bolt into c2t_bb
+string c2t_hccs_bowlSideways();
+string c2t_hccs_bowlSideways(string m);
+
 
 void main(int initround, monster foe, string page) {
 	//saber force
@@ -39,6 +45,7 @@ void main(int initround, monster foe, string page) {
 	string mBasic =	c2t_bb($skill[disarming thrust])
 		.c2t_bb($skill[detect weakness])
 		.c2t_bb($skill[micrometeorite])
+		.c2t_hccs_bowlSideways()
 		.c2t_bbIf("sealclubber || turtletamer || discobandit || accordionthief",
 			c2t_bb($skill[curse of weaksauce])
 			.c2t_bb($skill[sing along])
@@ -59,6 +66,7 @@ void main(int initround, monster foe, string page) {
 	string mChain =	c2t_bb($skill[disarming thrust])
 		.c2t_bb($skill[detect weakness])
 		.c2t_bb($skill[micrometeorite])
+		.c2t_hccs_bowlSideways()
 		.c2t_bbIf("sealclubber || turtletamer || discobandit || accordionthief",
 			c2t_bb($skill[curse of weaksauce])
 			.c2t_bbIf("discobandit || accordionthief",c2t_bb($skill[saucy salve]))
@@ -314,6 +322,28 @@ void main(int initround, monster foe, string page) {
 	}
 }	
 
+string c2t_hccs_bowlSideways() return c2t_hccs_bowlSideways("");
+string c2t_hccs_bowlSideways(string m) {
+	string out = m+c2t_bb($skill[bowl sideways]);
+	int backup = get_property("_backUpUses").to_int();
+	int nep = 10-get_property("_neverendingPartyFreeTurns").to_int();
+	int free = c2t_hccs_freeKillsLeft();
 
+	if (out == m)
+		return m;
+	if (get_property("csServicesPerformed").split_string(",").count() != 1)
+		return m;
+	if (my_familiar() == $familiar[ghost of crimbo carols])
+		return m;
+	if (my_location() != $location[the neverending party])
+		return m;
+	if (my_familiar() == $familiar[pocket professor])//professor copies should be in the zone
+		return out;
+	if (backup > 0 && backup < 11)//backups unaffected, so skip while doing them
+		return m;
+	if (nep+free > 1)
+		return out;
+	return m;
+}
 
 
