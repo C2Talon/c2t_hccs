@@ -43,10 +43,6 @@ TEST_NAME[TEST_WEAPON] = "Reduce Gazelle Population";
 TEST_NAME[TEST_SPELL] = "Make Sausage";
 
 
-int c2t_getEffect(effect eff,skill ski);
-int c2t_getEffect(effect eff,skill ski,int min);
-int c2t_getEffect(effect eff,item ite);
-int c2t_getEffect(effect eff,item ite,int min);
 boolean c2t_haveUse(skill ski);
 boolean c2t_haveUse(skill ski,int min);
 boolean c2t_haveUse(item ite);
@@ -222,33 +218,6 @@ boolean c2t_haveUse(item ite,int min) {
 	return false;
 }
 
-int c2t_getEffect(effect eff,skill ski) {
-	return c2t_getEffect(eff,ski,1);	
-}
-int c2t_getEffect(effect eff,skill ski,int min) {
-	//TODO find a more efficient way to do this
-	while (have_effect(eff) < min && have_skill(ski))
-		use_skill(ski);
-	if (have_effect(eff) < min)
-		abort("Unable to cast enough "+ski);
-	return have_effect(eff);
-}
-int c2t_getEffect(effect eff,item ite) {
-	return c2t_getEffect(eff,ite,1);
-}
-int c2t_getEffect(effect eff,item ite,int min) {
-	//TODO find a more efficient way to do this
-	//not going to allow repeated use of items for now
-	if (have_effect(eff) < min) {
-		if (item_amount(ite) == 0)
-			retrieve_item(1,ite);//or maybe create() ?
-		use(1,ite);
-	}
-	if (have_effect(eff) < min)
-		print("Unable to use enough "+ite,"blue");
-	return have_effect(eff);
-}
-
 boolean c2t_hccs_fightGodLobster() {
 	if (!have_familiar($familiar[god lobster]))
 		return false;
@@ -275,7 +244,7 @@ boolean c2t_hccs_fightGodLobster() {
 
 		//should have gotten runproof mascara as moxie from globster
 		if (my_primestat() == $stat[moxie])
-			c2t_getEffect($effect[unrunnable face],$item[runproof mascara]);
+			c2t_hccs_getEffect($effect[unrunnable face]);
 
 		return true;
 	}
@@ -647,7 +616,7 @@ boolean c2t_hccs_preCoil() {
 				
 				if (have_effect($effect[bloody hand]) == 0) {
 					hermit(1,$item[seal tooth]);
-					c2t_getEffect($effect[bloody hand],$item[seal tooth]);
+					c2t_hccs_getEffect($effect[bloody hand]);
 				}
 				use(1,$item[volleyball]);
 			}
@@ -857,7 +826,7 @@ boolean c2t_hccs_levelup() {
 	//need adventures straight away if running CMC
 	item itew = c2t_priority($item[doc's fortifying wine],$item[doc's smartifying wine],$item[doc's limbering wine]);
 	if (itew != $item[none]) {
-		c2t_getEffect($effect[ode to booze],$skill[the ode to booze],1);
+		c2t_hccs_getEffect($effect[ode to booze]);
 		drink(1,itew);
 	}
 	//TODO summon crimbo booze or something else if needed
@@ -898,13 +867,13 @@ boolean c2t_hccs_allTheBuffs() {
 	if (have_effect($effect[one very clear eye]) == 0) {
 		while (c2t_hccs_wandererFight());//do vote monster if ready before spending turn
 		if (c2t_hccs_semirareItem())
-			c2t_getEffect($effect[one very clear eye],$item[cyclops eyedrops]);
+			c2t_hccs_getEffect($effect[one very clear eye]);
 	}
 
 	//emotion chip stat buff
-	c2t_getEffect($effect[feeling excited],$skill[feel excitement]);
+	c2t_hccs_getEffect($effect[feeling excited]);
 
-	c2t_getEffect($effect[the magical mojomuscular melody],$skill[the magical mojomuscular melody]);
+	c2t_hccs_getEffect($effect[the magical mojomuscular melody]);
 	
 	//boxing daycare stat gain
 	if (get_property("daycareOpen").to_boolean() && get_property('_daycareGymScavenges').to_int() == 0) {
@@ -941,7 +910,7 @@ boolean c2t_hccs_allTheBuffs() {
 	// going to skip this for non-moxie to use clip art's buff of same strength
 	if (my_primestat() == $stat[moxie] && have_effect($effect[on the trolley]) == 0) {
 		c2t_assert(my_meat() >= 500,"Need 500 meat for speakeasy booze");
-		c2t_getEffect($effect[ode to booze],$skill[the ode to booze],5);
+		c2t_hccs_getEffect($effect[ode to booze]);
 		cli_execute("drink 1 bee's knees");
 		//probably don't need to drink the perfect drink; have to double-check all inebriety checks before removing
 		//drink(1,$item[perfect dark and stormy]);
@@ -1135,7 +1104,7 @@ boolean c2t_hccs_preItem() {
 
 	//if familiar test is ever less than 19 turns, feel lost will need to be completely removed or the test order changed
 	if (!c2t_hccs_thresholdMet(TEST_ITEM))
-		c2t_getEffect($effect[feeling lost],$skill[feel lost]);
+		c2t_hccs_getEffect($effect[feeling lost]);
 
 	if (!c2t_hccs_thresholdMet(TEST_ITEM)) {
 		retrieve_item(1,$item[oversized sparkler]);
@@ -1146,7 +1115,7 @@ boolean c2t_hccs_preItem() {
 	//power plant; last to save batteries if not needed
 	if (!c2t_hccs_thresholdMet(TEST_ITEM))
 		if (c2t_hccs_powerPlant())
-			c2t_getEffect($effect[lantern-charged],$item[battery (lantern)]);
+			c2t_hccs_getEffect($effect[lantern-charged]);
 
 	c2t_hccs_mod2log("modtrace item drop;modtrace booze drop");
 
@@ -1188,7 +1157,7 @@ boolean c2t_hccs_preHotRes() {
 		c2t_hccs_getEffect($effect[hot-headed]);
 
 	//emotion chip
-	c2t_getEffect($effect[feeling peaceful],$skill[feel peaceful]);
+	c2t_hccs_getEffect($effect[feeling peaceful]);
 
 	//familiar weight
 	c2t_hccs_getEffect($effect[blood bond]);
@@ -1219,10 +1188,10 @@ boolean c2t_hccs_preHotRes() {
 		cli_execute('smash * red-hot sausage fork');
 
 		if (available_amount($item[hot powder]) > 0)
-			c2t_getEffect($effect[flame-retardant trousers],$item[hot powder]);
+			c2t_hccs_getEffect($effect[flame-retardant trousers]);
 
 		if (available_amount($item[sleaze nuggets]) > 0 || available_amount($item[lotion of sleaziness]) > 0)
-			c2t_getEffect($effect[sleazy hands],$item[lotion of sleaziness]);
+			c2t_hccs_getEffect($effect[sleazy hands]);
 	}
 
 	//pocket maze
@@ -1452,7 +1421,7 @@ boolean c2t_hccs_preWeapon() {
 		adv1($location[thugnderdome],-1,"");//everything is saberable and no crazy NCs
 	}
 
-	c2t_getEffect($effect[cowrruption],$item[corrupted marrow]);
+	c2t_hccs_getEffect($effect[cowrruption]);
 
 	if (have_effect($effect[engorged weapon]) == 0) {
 		retrieve_item(1,$item[meleegra&trade; pills]);
@@ -1579,9 +1548,9 @@ boolean c2t_hccs_preSpell() {
 
 		//batteries
 		if (c2t_hccs_powerPlant()) {
-			c2t_getEffect($effect[d-charged],$item[battery (d)]);
-			c2t_getEffect($effect[aa-charged],$item[battery (aa)]);
-			c2t_getEffect($effect[aaa-charged],$item[battery (aaa)]);
+			c2t_hccs_getEffect($effect[d-charged]);
+			c2t_hccs_getEffect($effect[aa-charged]);
+			c2t_hccs_getEffect($effect[aaa-charged]);
 		}
 	}
 
@@ -1890,10 +1859,10 @@ void c2t_hccs_fights() {
 			if (my_mp() < 150)
 				cli_execute('eat mag saus');
 			cli_execute('shrug stevedave');
-			c2t_getEffect($effect[ode to booze],$skill[the ode to booze],3);
+			c2t_hccs_getEffect($effect[ode to booze]);
 			cli_execute('drink hot socks');
 			cli_execute('shrug ode to booze');
-			c2t_getEffect($effect[stevedave's shanty of superiority],$skill[stevedave's shanty of superiority]);
+			c2t_hccs_getEffect($effect[stevedave's shanty of superiority]);
 		}
 
 		//drink astral pilsners once level 11; saving 1 for use in mime army shotglass post-run
@@ -1915,18 +1884,18 @@ void c2t_hccs_fights() {
 		//potion buffs when enough meat obtained
 		if (have_effect($effect[tomato power]) == 0 && (get_campground() contains $item[dramatic&trade; range])) {
 			if (my_primestat() == $stat[muscle]) {
-				c2t_getEffect($effect[phorcefullness],$item[philter of phorce]);
-				c2t_getEffect($effect[stabilizing oiliness],$item[oil of stability]);
+				c2t_hccs_getEffect($effect[phorcefullness]);
+				c2t_hccs_getEffect($effect[stabilizing oiliness]);
 			}
 			else if (my_primestat() == $stat[mysticality]) {
-				c2t_getEffect($effect[mystically oiled],$item[ointment of the occult]);
-				c2t_getEffect($effect[expert oiliness],$item[oil of expertise]);
+				c2t_hccs_getEffect($effect[mystically oiled]);
+				c2t_hccs_getEffect($effect[expert oiliness]);
 			}
 			else if (my_primestat() == $stat[moxie]) {
-				c2t_getEffect($effect[superhuman sarcasm],$item[serum of sarcasm]);
-				c2t_getEffect($effect[slippery oiliness],$item[oil of slipperiness]);
+				c2t_hccs_getEffect($effect[superhuman sarcasm]);
+				c2t_hccs_getEffect($effect[slippery oiliness]);
 			}
-			c2t_getEffect($effect[tomato power],$item[tomato juice of powerful power]);
+			c2t_hccs_getEffect($effect[tomato power]);
 			c2t_assert(have_effect($effect[tomato power]) > 0,'It somehow missed again.');
 		}
 
@@ -2008,7 +1977,7 @@ boolean c2t_hccs_wandererFight() {
 		return false;
 
 	if (turns_played() == 0)
-		c2t_getEffect($effect[feeling excited],$skill[feel excitement]);
+		c2t_hccs_getEffect($effect[feeling excited]);
 
 	if (my_hp() < my_maxhp()/2 || my_mp() < 10) {
 		c2t_hccs_breakfast();
