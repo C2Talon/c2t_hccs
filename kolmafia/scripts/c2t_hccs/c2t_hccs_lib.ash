@@ -82,6 +82,13 @@ boolean c2t_hccs_getEffect(effect eff) {
 	}
 	else if (cmd.starts_with("use ")) {
 		spl = cmd.split_string(" ");
+
+		//short circuit until i figure out how to deal with this
+		if (spl[1] == "either") {
+			cli_execute(cmd);
+			return have_effect(eff).to_boolean();
+		}
+
 		for i from 2 to spl.count()-1
 			tmp += i == 2?spl[i]:` {spl[i]}`;
 		ite = tmp.to_item();
