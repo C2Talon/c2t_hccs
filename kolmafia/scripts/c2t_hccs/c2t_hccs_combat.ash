@@ -214,6 +214,7 @@ void main(int initround, monster foe, string page) {
 					c2t_bbSubmit(
 						m
 						.c2t_bb($skill[sing along])
+						.c2t_hccs_bowlSideways()
 						//free kill skills
 						//won't use otoscope anywhere else, so might as well use it while doc bag equipped
 						.c2t_bb(get_property("_otoscopeUsed").to_int() < 3 ? c2t_bb($skill[otoscope]) : "")

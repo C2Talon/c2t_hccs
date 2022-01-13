@@ -95,8 +95,8 @@ void main() {
 			c2t_hccs_testHandler(TEST_MOX);
 		}
 		
-		c2t_hccs_testHandler(TEST_MUS);
 		c2t_hccs_testHandler(TEST_MYS);
+		c2t_hccs_testHandler(TEST_MUS);
 		c2t_hccs_testhandler(TEST_HP);
 
 		//best time to open guild as SC if need be, or fish for wanderers, so warn and abort if < 93% spit
@@ -146,9 +146,11 @@ void c2t_hccs_breakfast() {
 	if (get_property("_candySummons").to_int() == 0 && have_skill(ski) && my_mp() >= mp_cost(ski))
 		use_skill(1,ski);
 
-	ski = $skill[prevent scurvy and sobriety];
-	if (!get_property("_preventScurvy").to_boolean() && have_skill(ski) && my_mp() >= mp_cost(ski))
-		use_skill(1,ski);
+	if (my_primestat() == $stat[muscle]) {
+		ski = $skill[prevent scurvy and sobriety];
+		if (!get_property("_preventScurvy").to_boolean() && have_skill(ski) && my_mp() >= mp_cost(ski))
+			use_skill(1,ski);
+	}
 
 	//mys classes want the D
 	if (my_primestat() == $stat[mysticality]) {
@@ -917,7 +919,10 @@ boolean c2t_hccs_allTheBuffs() {
 
 	use_familiar($familiar[hovering sombrero]);
 	
-	cli_execute('telescope high');
+	//telescope
+	if (get_property("telescopeUpgrades").to_int() > 0)
+		cli_execute('telescope high');
+
 	cli_execute('mcd 10');
 
 	return true;
@@ -1534,14 +1539,37 @@ boolean c2t_hccs_preSpell() {
 }
 
 
-
-
-
 // stat tests are super lazy for now
 // TODO need to figure out a way to not overdo buffs, as some buffers may be needed for pizzas
 boolean c2t_hccs_preHp() {
 	if (!c2t_hccs_thresholdMet(TEST_HP))
 		maximize('hp',false);
+
+	//hp buffs
+	if (!c2t_hccs_thresholdMet(TEST_HP)) {
+		if (!c2t_hccs_getEffect($effect[song of starch]))
+			c2t_hccs_getEffect($effect[song of bravado]);
+		c2t_hccs_getEffect($effect[reptilian fortitude]);
+	}
+
+	//mus buffs //basically copy/paste from mus test sans bravado
+	if (!c2t_hccs_thresholdMet(TEST_HP))
+		//TODO AT songs
+		foreach x in $effects[
+			//skills
+			quiet determination,
+			big,
+			disdain of the war snapper,
+			patience of the tortoise,
+			rage of the reindeer,
+			seal clubbing frenzy,
+			//using items
+			go get 'em\, tiger!,
+			//skill skills from IotM
+			feeling excited
+			]
+			c2t_hccs_getEffect(x);
+
 	return c2t_hccs_thresholdMet(TEST_HP);
 }
 
@@ -1549,12 +1577,49 @@ boolean c2t_hccs_preMus() {
 	//TODO if pastamancer, add summon of mus thrall if need? currently using equaliser potion out of laziness
 	if (!c2t_hccs_thresholdMet(TEST_MUS))
 		maximize('mus',false);
+
+	if (!c2t_hccs_thresholdMet(TEST_MUS))
+		//TODO AT songs
+		foreach x in $effects[
+			//skills
+			quiet determination,
+			big,
+			song of bravado,
+			disdain of the war snapper,
+			patience of the tortoise,
+			rage of the reindeer,
+			seal clubbing frenzy,
+			//potions
+			go get 'em\, tiger!,
+			//skill skills from IotM
+			feeling excited
+			]
+			c2t_hccs_getEffect(x);
+
 	return c2t_hccs_thresholdMet(TEST_MUS);
 }
 
 boolean c2t_hccs_preMys() {
 	if (!c2t_hccs_thresholdMet(TEST_MYS))
 		maximize('mys',false);
+
+	if (!c2t_hccs_thresholdMet(TEST_MYS))
+		//TODO AT songs
+		foreach x in $effects[
+			//skills
+			quiet judgement,
+			big,
+			song of bravado,
+			disdain of she-who-was,
+			pasta oneness,
+			saucemastery,
+			//potions
+			glittering eyelashes,
+			//skill skills from IotM
+			feeling excited
+			]
+			c2t_hccs_getEffect(x);
+
 	return c2t_hccs_thresholdMet(TEST_MYS);
 }
 
@@ -1562,6 +1627,29 @@ boolean c2t_hccs_preMox() {
 	//TODO if pastamancer, add summon of mox thrall if need? currently using equaliser potion out of laziness
 	if (!c2t_hccs_thresholdMet(TEST_MOX))
 		maximize('mox',false);
+
+	if (!c2t_hccs_thresholdMet(TEST_MOX)) {
+		//TODO AT songs
+		//face
+		if (!c2t_hccs_getEffect($effect[quiet desperation]))
+			c2t_hccs_getEffect($effect[disco smirk]);
+
+		//other
+		foreach x in $effects[
+			//skills
+			big,
+			song of bravado,
+			blubbered up,
+			disco state of mind,
+			mariachi mood,
+			//potions
+			butt-rock hair,
+			//skill skills from IotM
+			feeling excited
+			]
+			c2t_hccs_getEffect(x);
+	}
+
 	return c2t_hccs_thresholdMet(TEST_MOX);
 }
 
