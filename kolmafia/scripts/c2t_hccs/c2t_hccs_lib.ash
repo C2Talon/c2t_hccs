@@ -147,7 +147,7 @@ boolean c2t_hccs_pull(item ite) {
 }
 
 boolean c2t_hccs_restoreMp() {
-	int start = my_mp()
+	int start = my_mp();
 	int total = total_free_rests();
 	int used = get_property("timesRested").to_int();
 
