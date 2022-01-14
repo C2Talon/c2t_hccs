@@ -20,7 +20,14 @@ void c2t_hccs_getFax(monster mon);
 
 //if have the thing, use the thing
 boolean c2t_hccs_haveUse(item ite);
-boolean c2t_hccs_haveUse(item ite,int min);
+//n is for number of things to use
+boolean c2t_hccs_haveUse(int n,item ite);
+
+//if have the skill, use the skill
+//will use c2t_hccs_restoreMp() as needed
+boolean c2t_hccs_haveUse(skill ski);
+//n is for number of times to use
+boolean c2t_hccs_haveUse(int n,skill ski);
 
 //pull 1 of an item from storage if not already have it
 //returns true in the case of pulling an item or if the item already is available
@@ -72,16 +79,10 @@ boolean c2t_hccs_getEffect(effect eff) {
 			tmp += i == 2?spl[i]:` {spl[i]}`;
 		ski = tmp.to_skill();
 
-		if (!have_skill(ski)) {
+		if (!c2t_hccs_haveUse(ski)) {
 			print(`Info: don't have the skill "{ski}" to get the "{eff}" effect`);
 			return false;
 		}
-
-		//TODO better MP recovery
-		if (my_mp() < mp_cost(ski))
-			c2t_hccs_restoreMp();
-
-		use_skill(ski);
 	}
 	else if (cmd.starts_with("use ")) {
 		spl = cmd.split_string(" ");
@@ -128,14 +129,22 @@ void c2t_hccs_getFax(monster mon) {
 }
 
 boolean c2t_hccs_haveUse(item ite) {
-	return c2t_hccs_haveUse(ite,1);
+	return c2t_hccs_haveUse(1,ite);
 }
-boolean c2t_hccs_haveUse(item ite,int min) {
-	if (available_amount(ite) >= min) {
-		use(min,ite);
-		return true;
-	}
+boolean c2t_hccs_haveUse(int n,item ite) {
+	if (available_amount(ite) >= n)
+		return use(n,ite);
 	return false;
+}
+boolean c2t_hccs_haveUse(skill ski) {
+	return c2t_hccs_haveUse(1,ski);
+}
+boolean c2t_hccs_haveUse(int n,skill ski) {
+	if (!have_skill(ski))
+		return false;
+	if (my_mp() < mp_cost(ski)*n)
+		c2t_hccs_restoreMp();
+	return use_skill(n,ski);
 }
 
 boolean c2t_hccs_pull(item ite) {

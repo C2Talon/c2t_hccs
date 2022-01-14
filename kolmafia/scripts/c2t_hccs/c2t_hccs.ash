@@ -138,33 +138,25 @@ void c2t_hccs_mod2log(string str) {
 
 //limited breakfast to only what might be used
 void c2t_hccs_breakfast() {
-	skill ski = $skill[advanced saucecrafting];
-	if (get_property("reagentSummons").to_int() == 0 && have_skill(ski) && my_mp() >= mp_cost(ski))
-		use_skill(1,ski);
+	//needed for potion crafting
+	if (get_property("reagentSummons").to_int() == 0)
+		c2t_hccs_haveUse(1,$skill[advanced saucecrafting]);
 
-	ski = $skill[summon crimbo candy];
-	if (get_property("_candySummons").to_int() == 0 && have_skill(ski) && my_mp() >= mp_cost(ski))
-		use_skill(1,ski);
+	//crimbo candy
+	if (c2t_hccs_sweetSynthesis() && get_property("_candySummons").to_int() == 0)
+		c2t_hccs_haveUse(1,$skill[summon crimbo candy]);
 
-	if (my_primestat() == $stat[muscle]) {
-		ski = $skill[prevent scurvy and sobriety];
-		if (!get_property("_preventScurvy").to_boolean() && have_skill(ski) && my_mp() >= mp_cost(ski))
-			use_skill(1,ski);
-	}
+	//limes
+	if (my_primestat() == $stat[muscle] && !get_property("_preventScurvy").to_boolean())
+		c2t_hccs_haveUse(1,$skill[prevent scurvy and sobriety]);
 
 	//mys classes want the D
-	if (my_primestat() == $stat[mysticality]) {
-		ski = $skill[pastamastery];
-		if (get_property("noodleSummons").to_int() == 0 && have_skill(ski) && my_mp() >= mp_cost(ski))
-			use_skill(1,ski);
-	}
+	if (my_primestat() == $stat[mysticality] && get_property("noodleSummons").to_int() == 0)
+		c2t_hccs_haveUse(1,$skill[pastamastery]);
 
 	//mox class stat boost for leveling
-	if (my_primestat() == $stat[moxie]) {
-		ski = $skill[acquire rhinestones];
-		if (!get_property("_rhinestonesAcquired").to_boolean() && have_skill(ski) && my_mp() >= mp_cost(ski))
-			use_skill(1,ski);
-	}
+	if (my_primestat() == $stat[moxie] && get_property("_rhinestonesAcquired").to_boolean())
+		c2t_hccs_haveUse(1,$skill[acquire rhinestones]);
 
 	//peppermint garden
 	if (c2t_hccs_peppermintGarden())
@@ -466,7 +458,7 @@ boolean c2t_hccs_preCoil() {
 			c2t_hccs_getFax($monster[ungulith]);
 	}
 
-	use_skill(1,$skill[spirit of peppermint]);
+	c2t_hccs_haveUse($skill[spirit of peppermint]);
 	
 	//fish hatchet
 	if (!get_property('_floundryItemCreated').to_boolean() && !retrieve_item(1,$item[fish hatchet]))
@@ -540,24 +532,11 @@ boolean c2t_hccs_preCoil() {
 	maximize("mp,-equip kramco,-equip i voted",false);
 
 	// should have enough MP for this much; just being lazy here for now
-	if (have_effect($effect[the magical mojomuscular melody]) == 0)
-		if (!use_skill(1,$skill[the magical mojomuscular melody]))
-			abort('mojomus fail');
-	if (get_property('_candySummons').to_int() == 0)
-		if (!use_skill(1,$skill[summon crimbo candy]))
-			abort('crimbo candy fail');
+	c2t_hccs_getEffect($effect[the magical mojomuscular melody]);
 
-	//prevent scurvy
-	if (available_amount($item[lime]) == 0) {
-		if (my_mp() < 50) {
-			if (get_property('timesRested').to_int() < total_free_rests())
-				visit_url('place.php?whichplace=campaway&action=campaway_tentclick');
-		}
-		if (!use_skill(1,$skill[prevent scurvy and sobriety]))
-			abort('couldn\'t get rum and limes');
-		c2t_hccs_breakfast();
-	}
-		
+	//breakfasty things
+	c2t_hccs_breakfast();
+
 	// pre-coil pizza to get imitation whetstone for INFE pizza latter
 	if (c2t_hccs_pizzaCube() && my_fullness() == 0) {
 		// get imitation crab
@@ -908,6 +887,8 @@ boolean c2t_hccs_allTheBuffs() {
 	}
 
 	//third tome use //no longer using bee's knees for stat boost on non-moxie, but still need same strength buff?
+	if (my_mp() < 11)
+		cli_execute('rest free');
 	if (have_effect($effect[purity of spirit]) == 0) {
 		retrieve_item(1,$item[cold-filtered water]);
 		use(1,$item[cold-filtered water]);
@@ -954,20 +935,16 @@ boolean c2t_hccs_lovePotion(boolean useit) {
 }
 
 boolean c2t_hccs_lovePotion(boolean useit,boolean dumpit) {
+	if (!have_skill($skill[love mixology]))
+		return false;
+
 	item love_potion = $item[love potion #0];
 	effect love_effect = $effect[tainted love potion];
 	
 	if (have_effect(love_effect) == 0) {
-		if (available_amount(love_potion) == 0) {
-			if (my_mp() < 50) { //this block is assuming my setup
-				c2t_hccs_breakfast();
-				if (get_property('timesRested').to_int() < total_free_rests())
-					visit_url('place.php?whichplace=campaway&action=campaway_tentclick');
-				else
-					abort('Ran out of free rests. Recover mp another way.');
-			}
-			use_skill(1,$skill[love mixology]);
-		}
+		if (available_amount(love_potion) == 0)
+			c2t_hccs_haveUse($skill[love mixology]);
+
 		visit_url('desc_effect.php?whicheffect='+love_effect.descid);
 		
 		if ((my_primestat() == $stat[muscle] && 
@@ -1036,17 +1013,19 @@ boolean c2t_hccs_preItem() {
 		c2t_hccs_genie($effect[infernal thirst]);
 
 	//spice ghost
-	if (my_class() == $class[pastamancer]) {
-		if (my_thrall() != $thrall[spice ghost]) {
+	if (have_skill($skill[bind spice ghost])) {
+		if (my_class() == $class[pastamancer]) {
+			if (my_thrall() != $thrall[spice ghost]) {
+				if (my_mp() < 250)
+					cli_execute('eat magical sausage');
+				c2t_hccs_haveUse($skill[bind spice ghost]);
+			}
+		}
+		else {
 			if (my_mp() < 250)
 				cli_execute('eat magical sausage');
-			use_skill($skill[bind spice ghost]);
+			c2t_hccs_getEffect($effect[spice haze]);
 		}
-	}
-	else {
-		if (my_mp() < 250)
-			cli_execute('eat magical sausage');
-		c2t_hccs_getEffect($effect[spice haze]);
 	}
 
 	//AT-only buff
@@ -1269,8 +1248,7 @@ boolean c2t_hccs_preNoncombat() {
 	}
 
 	//emotion chip feel lonely
-	if (have_effect($effect[feeling lonely]) == 0 && get_property('_feelLonelyUsed').to_int() < $skill[feel lonely].dailylimit)
-		use_skill(1,$skill[feel lonely]);
+	c2t_hccs_getEffect($effect[feeling lonely]);
 	
 	// Rewards // use these after globster fight, just in case of losing
 	c2t_hccs_getEffect($effect[throwing some shade]);
@@ -1382,10 +1360,7 @@ boolean c2t_hccs_preWeapon() {
 
 	c2t_hccs_getEffect($effect[cowrruption]);
 
-	if (have_effect($effect[engorged weapon]) == 0) {
-		retrieve_item(1,$item[meleegra&trade; pills]);
-		use(1,$item[meleegra&trade; pills]);
-	}
+	c2t_hccs_getEffect($effect[engorged weapon]);
 	
 	//tainted seal's blood
 	if (available_amount($item[tainted seal's blood]) > 0)
@@ -1455,7 +1430,7 @@ boolean c2t_hccs_preSpell() {
 	if (available_amount($item[beach comb]) > 0)
 		c2t_hccs_getEffect($effect[we're all made of starfish]);
 
-	use_skill(1, $skill[spirit of peppermint]);
+	c2t_hccs_haveUse($skill[spirit of peppermint]);
 	
 	// face
 	c2t_hccs_getEffect($effect[arched eyebrow of the archmage]);
@@ -1720,8 +1695,7 @@ void c2t_hccs_fights() {
 		cli_execute('shrug mojomus');
 	if (have_effect($effect[carlweather's cantata of confrontation]) > 0)
 		cli_execute('shrug cantata');
-	if (have_effect($effect[stevedave's shanty of superiority]) == 0)
-		use_skill(1,$skill[stevedave's shanty of superiority]);
+	c2t_hccs_getEffect($effect[stevedave's shanty of superiority]);
 	
 	//sort out familiar
 	string famEq;
@@ -1756,20 +1730,20 @@ void c2t_hccs_fights() {
 		cli_execute('mood hccs-mox');
 
 	//spice ghost
-	if (my_class() == $class[pastamancer]) {
+	if (my_class() == $class[pastamancer] && have_skill($skill[bind spice ghost])) {
 		if (my_thrall() != $thrall[spice ghost]) {
 			if (my_mp() < 250)
 				cli_execute('eat magical sausage');
-			use_skill($skill[bind spice ghost]);
+			c2t_hccs_haveUse($skill[bind spice ghost]);
 		}
 	}
 
 	//turtle tamer blessing
 	if (my_class() == $class[turtle tamer]) {
 		if (have_effect($effect[blessing of the war snapper]) == 0 && have_effect($effect[grand blessing of the war snapper]) == 0 && have_effect($effect[glorious blessing of the war snapper]) == 0)
-			use_skill($skill[blessing of the war snapper]);
+			c2t_hccs_haveUse($skill[blessing of the war snapper]);
 		if (have_effect($effect[boon of the war snapper]) == 0)
-			use_skill(1,$skill[spirit boon]);
+			c2t_hccs_haveUse(1,$skill[spirit boon]);
 	}
 
 	use_familiar(levelingFam);
@@ -1815,7 +1789,7 @@ void c2t_hccs_fights() {
 		maximize("mainstat,100exp,-equip garbage shirt"+famEq,false);
 		if (my_mp() < 80)
 			c2t_hccs_restoreMp();
-		use_skill(1,$skill[evoke eldritch horror]);
+		c2t_hccs_haveUse(1,$skill[evoke eldritch horror]);
 		run_combat();
 
 		//in case the tentacle boss shows up; will cause an instant loss in a wish fight if health left at 0
@@ -1911,12 +1885,10 @@ void c2t_hccs_fights() {
 		//drink astral pilsners once level 11; saving 1 for use in mime army shotglass post-run
 		if (my_level() >= 11 && item_amount($item[astral pilsner]) == 6) {
 			cli_execute('shrug Shanty of Superiority');
-			if (my_mp() < 100)
-				c2t_hccs_restoreMp();
-			use_skill(1,$skill[the ode to booze]);
+			c2t_hccs_haveUse(1,$skill[the ode to booze]);
 			drink(5,$item[astral pilsner]);
 			cli_execute('shrug Ode to Booze');
-			use_skill(1,$skill[stevedave's shanty of superiority]);
+			c2t_hccs_haveUse(1,$skill[stevedave's shanty of superiority]);
 		}
 
 		//explicitly buying and using range as it rarely bugs out
