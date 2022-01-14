@@ -1,7 +1,7 @@
 //c2t hccs resources
 //c2t
 
-//resources; mostly of the IotM variety; mostly limited to what I use
+//resources; mostly of the IotM variety; mostly limited to what I use and limited to the scope of CS
 
 import <c2t_lib.ash>
 import <c2t_cartographyHunt.ash>
@@ -10,6 +10,7 @@ import <c2t_cartographyHunt.ash>
 /*-=-+-=-+-=-+-=-+-=-+-=-
   function declarations
   -=-+-=-+-=-+-=-+-=-+-=-*/
+//d--briefcase
 //d--genie
 //d--pantogram
 //d--peppermint garden
@@ -20,13 +21,20 @@ import <c2t_cartographyHunt.ash>
 //d--vote
 
 
+//d--briefcase
+//returns true if have the briefcase
+boolean c2t_hccs_briefcase();
+
+//passes `arg` to Ezandora's briefcase script needing only the core of what is needed, e.g. "hot", "-combat", etc., limited in scope to what is relevant to CS
+//returns true if have the briefcase
+boolean c2t_hccs_briefcase(string arg);
+
 //d--genie
 //gets effect from genie if not already have; returns true if have effect
 boolean c2t_hccs_genie(effect eff);
 
 //fights monster from genie; returns true if monster fought
 boolean c2t_hccs_genie(monster mon);
-
 
 //d--pantogram
 //makes pantogram pants with stats of mainstat,hot res,mp,spell,-combat
@@ -85,6 +93,7 @@ void c2t_hccs_vote();
 /*-=-+-=-+-=-+-=-+-=-+-=-
   function implementations
   -=-+-=-+-=-+-=-+-=-+-=-*/
+//i--briefcase
 //i--genie
 //i--pantogram
 //i--peppermint garden
@@ -94,6 +103,24 @@ void c2t_hccs_vote();
 //i--sweet synthesis
 //i--vote
 
+
+//i--briefcase
+boolean c2t_hccs_briefcase() return available_amount($item[kremlin's greatest briefcase]) > 0;
+boolean c2t_hccs_briefcase(string arg) {
+	if (!c2t_hccs_briefcase())
+		return false;
+
+	switch (arg.to_lower_case()) {
+		default://user error
+			abort(`"{arg}" is not valid for the briefcase`);
+		case "-combat":
+		case "hot":
+		case "weapon":
+		case "spell":
+			cli_execute(`briefcase e {arg.to_lower_case()}`);
+	}
+	return true;
+}
 
 //i--genie
 boolean c2t_hccs_genie(effect eff) {

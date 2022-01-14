@@ -134,6 +134,7 @@ void main(int initround, monster foe, string page) {
 					.c2t_bb(have_effect($effect[bat-adjacent form]) == 0?c2t_bb($skill[become a bat]):"")
 					.c2t_bb(have_effect($effect[cosmic ball in the air]) == 0?c2t_bb($skill[bowl straight up]):"")
 					.c2t_bb($skill[reflex hammer])
+					.c2t_bb($skill[kgb tranquilizer dart])
 					.c2t_bb($skill[snokebomb])
 					.c2t_bb($skill[feel hatred])
 				);
@@ -304,6 +305,7 @@ void main(int initround, monster foe, string page) {
 			case $monster[peripatetic pirate]:
 				m = mHead + mSteal;
 				m += c2t_bb($skill[reflex hammer]);
+				m += c2t_bb($skill[kgb tranquilizer dart]);
 				if (get_property("_snokebombUsed").to_int() < get_property("_feelHatredUsed").to_int())
 					m += c2t_bb($skill[snokebomb]).c2t_bb($skill[feel hatred]);
 				else

@@ -992,7 +992,7 @@ boolean c2t_hccs_preItem() {
 
 	//get latte ingredient from fluffy bunny and cloake item buff
 	if (have_effect($effect[feeling lost]) == 0 && (have_effect($effect[bat-adjacent form]) == 0 || !get_property('latteUnlocks').contains_text('carrot'))) {
-		maximize("mainstat,equip latte,1000 bonus lil doctor bag,1000 bonus vampyric cloake",false);
+		maximize("mainstat,equip latte,1000 bonus lil doctor bag,1000 bonus kremlin's greatest briefcase,1000 bonus vampyric cloake",false);
 		use_familiar($familiar[melodramedary]);
 
 		while ((have_equipped($item[vampyric cloake]) && have_effect($effect[bat-adjacent form]) == 0) || !get_property('latteUnlocks').contains_text('carrot'))
@@ -1138,6 +1138,11 @@ boolean c2t_hccs_preHotRes() {
 	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
 		c2t_hccs_getEffect($effect[amazing]);
 
+	//briefcase
+	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
+		if (c2t_hccs_briefcase("hot"))
+			maximize('100hot res, familiar weight', false);
+
 	//synthesis: hot
 	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
 		c2t_hccs_sweetSynthesis($effect[synthesis: hot]);
@@ -1273,6 +1278,10 @@ boolean c2t_hccs_preNoncombat() {
 	//doubling up to make sure, as it's been finicky:
 	maximize('-100combat, familiar weight', false);
 
+	//briefcase
+	if (!c2t_hccs_thresholdMet(TEST_NONCOMBAT))
+		if (c2t_hccs_briefcase("-combat"))
+			maximize('-100combat, familiar weight', false);
 
 	//disquiet riot wish potential if 2 or more wishes remain and not close to min turn
 	if (!c2t_hccs_thresholdMet(TEST_NONCOMBAT) && c2t_hccs_testTurns(TEST_NONCOMBAT) >= 9)//TODO better cost/benefit
@@ -1381,6 +1390,9 @@ boolean c2t_hccs_preWeapon() {
 		c2t_hccs_getEffect($effect[disdain of the war snapper]);
 	
 	c2t_hccs_getEffect($effect[bow-legged swagger]);
+
+	//briefcase
+	//c2t_hccs_briefcase("weapon");//this is the default, but just in case
 	
 	maximize('weapon damage', false);
 
@@ -1507,6 +1519,9 @@ boolean c2t_hccs_preSpell() {
 		if (pulls_remaining() > 0)
 			print(`Still had {pulls_remaining()} pulls remaining for the last test`,"red");
 	}
+
+	//briefcase //TODO count spell-damage-providing accessories and values before deciding to use the briefcase
+	c2t_hccs_briefcase("spell");
 
 	maximize('spell damage,switch left-hand man', false);
 
@@ -1664,7 +1679,7 @@ void c2t_hccs_fights() {
 
 			if (get_property('lastCopyableMonster').to_monster() != $monster[novelty tropical skeleton]) {
 				//max mp to max latte gulp to fuel buffs
-				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,-equip backup camera,100 bonus lil doctor bag,-familiar",false);
+				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,-equip backup camera,100 bonus lil doctor bag,100 bonus kremlin's greatest briefcase,-familiar",false);
 
 				c2t_cartographyHunt($location[the skeleton store],$monster[novelty tropical skeleton]);
 				run_turn();
@@ -1684,7 +1699,7 @@ void c2t_hccs_fights() {
 					cli_execute('latte refill cinnamon pumpkin vanilla');
 				//max mp to max latte gulp to fuel buffs
 				use_familiar($familiar[melodramedary]);
-				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,-equip backup camera,100 bonus lil doctor bag,-familiar",false);
+				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,-equip backup camera,100 bonus lil doctor bag,100 bonus kremlin's greatest briefcase,-familiar",false);
 
 				c2t_cartographyHunt($location[the haunted pantry],$monster[possessed can of tomatoes]);
 				run_turn();
