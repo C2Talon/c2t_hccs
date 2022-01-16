@@ -309,6 +309,7 @@ void c2t_hccs_printTestData() {
 		d = split_string(x,",");
 		print(`{d[0]} test took {d[2]} turn(s){to_int(d[1]) > 4 && to_int(d[3]) < 1?"; it's being overcapped by "+(1-to_int(d[3]))+" turn(s) of resources":""}`);
 	}
+	print(`Organ use: {my_fullness()}/{my_inebriety()}/{my_spleen_use()}`);
 }
 
 //precursor to facilitate using only as many resources as needed and not more
@@ -1619,6 +1620,7 @@ boolean c2t_hccs_preMox() {
 			mariachi mood,
 			//potions
 			butt-rock hair,
+			unrunnable face,
 			//skill skills from IotM
 			feeling excited
 			]
