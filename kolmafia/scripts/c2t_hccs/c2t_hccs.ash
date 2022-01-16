@@ -309,6 +309,7 @@ void c2t_hccs_printTestData() {
 		d = split_string(x,",");
 		print(`{d[0]} test took {d[2]} turn(s){to_int(d[1]) > 4 && to_int(d[3]) < 1?"; it's being overcapped by "+(1-to_int(d[3]))+" turn(s) of resources":""}`);
 	}
+	print(`Days/turns: {my_daycount()}/{turns_played()}`);
 	print(`Organ use: {my_fullness()}/{my_inebriety()}/{my_spleen_use()}`);
 }
 
