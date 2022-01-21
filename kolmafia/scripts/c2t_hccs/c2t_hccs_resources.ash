@@ -241,6 +241,7 @@ boolean c2t_hccs_pizzaCube(effect eff) {
 
 		case $effect[different way of seeing things]:
 			use_familiar($familiar[imitation crab]);
+			retrieve_item(1,$item[imitation whetstone]);
 			retrieve_item(1,$item[full meat tank]);
 			it1 = $item[dry noodles];
 			it2 = $item[imitation whetstone];
@@ -250,6 +251,7 @@ boolean c2t_hccs_pizzaCube(effect eff) {
 
 		case $effect[knightlife]:
 			use_familiar($familiar[imitation crab]);
+			retrieve_item(1,$item[imitation whetstone]);
 			retrieve_item(1,$item[ketchup]);
 			it1 = $item[ketchup];
 			it2 = $item[newbiesport&trade; tent];
@@ -268,6 +270,7 @@ boolean c2t_hccs_pizzaCube(effect eff) {
 		case $effect[infernal thirst]:
 			use_familiar($familiar[exotic parrot]);
 			retrieve_item(1,$item[full meat tank]);
+			retrieve_item(1,$item[imitation whetstone]);
 
 			if (item_amount($item[eldritch effluvium]) == 0
 				&& item_amount($item[eaves droppers]) == 0
