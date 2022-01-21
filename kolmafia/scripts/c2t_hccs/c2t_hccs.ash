@@ -543,7 +543,7 @@ boolean c2t_hccs_preCoil() {
 	if (c2t_hccs_pizzaCube() && my_fullness() == 0) {
 		// get imitation crab
 		use_familiar($familiar[imitation crab]);
-				
+
 		// make pizza
 		if (item_amount($item[diabolic pizza]) == 0) {
 			retrieve_item(3,$item[cog and sprocket assembly]);
@@ -557,7 +557,7 @@ boolean c2t_hccs_preCoil() {
 				}
 				use(1,$item[volleyball]);
 			}
-						
+
 			c2t_hccs_pizzaCube(
 				$item[cog and sprocket assembly],
 				$item[cog and sprocket assembly],
@@ -570,28 +570,8 @@ boolean c2t_hccs_preCoil() {
 		use_familiar($familiar[hovering sombrero]);
 	}
 	//if cold medicine cabinet, grabbing a stat booze to get some adventures post-coil as I don't have numberology
-	else if (get_campground() contains $item[cold medicine cabinet]) {
-		maximize("100mainstat,mp",false);
-		item itew;
-		buffer bufw = visit_url("campground.php?action=workshed");
-		switch (my_primestat()) {
-			case $stat[muscle]:
-				itew = $item[doc's fortifying wine];
-				break;
-			case $stat[mysticality]:
-				itew = $item[doc's smartifying wine];
-				break;
-			case $stat[moxie]:
-				itew = $item[doc's limbering wine];
-				break;
-		}
-		if (!bufw.contains_text(itew))
-			abort("cmc broke?");
-		run_choice(3);
-
-		//go back to full MP equipment
-		maximize("mp,-equip kramco,-equip i voted",false);
-	}
+	else
+		c2t_hccs_coldMedicineCabinet("drink");
 	
 	// need to fetch and drink some booze pre-coil. using semi-rare via pillkeeper in sleazy back alley
 	/* going to be using borrowed time, so no longer need

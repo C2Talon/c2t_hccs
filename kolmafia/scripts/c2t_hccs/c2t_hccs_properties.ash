@@ -59,3 +59,34 @@ Prints the combat macro the script submits in combat
 if (!property_exists("c2t_bb_printMacro",false))
 	set_property("c2t_bb_printMacro","true");
 
+
+
+/*-=-+-=-+-=-+-=-+-=-
+  disable resources
+  -=-+-=-+-=-+-=-+-=-*/
+
+/*
+Use the respective CLI command to set the property to disable a particular resource.
+By disabling a resource, the script won't use _any_ limited resource from it.
+I.e. it's an all or nothing thing.
+
+-- briefcase --
+set c2t_hccs_disable.briefcase = true
+
+-- cold medicine cabinet --
+set c2t_hccs_disable.coldMedicineCabinet = true
+
+-- pantogram --
+set c2t_hccs_disable.pantogram = true
+
+-- pillkeeper --
+set c2t_hccs_disable.pillkeeper = true
+
+-- pizza cube --
+set c2t_hccs_disable.pizzaCube = true
+
+-- power plant --
+set c2t_hccs_disable.powerPlant = true
+
+*/
+

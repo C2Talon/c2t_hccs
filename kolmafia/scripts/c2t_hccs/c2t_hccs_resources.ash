@@ -7,10 +7,14 @@ import <c2t_lib.ash>
 import <c2t_cartographyHunt.ash>
 
 
+//some of these resources can be "disabled" via a property. check c2t_hccs_properties.ash at the bottom under "disable resources" for a full list
+
+
 /*-=-+-=-+-=-+-=-+-=-+-=-
   function declarations
   -=-+-=-+-=-+-=-+-=-+-=-*/
 //d--briefcase
+//d--cold medicine cabinet
 //d--genie
 //d--pantogram
 //d--peppermint garden
@@ -24,6 +28,13 @@ import <c2t_cartographyHunt.ash>
 //d--briefcase
 //returns true if have the briefcase
 boolean c2t_hccs_briefcase();
+
+//d--cold medicine cabinet
+//returns true if the cabinet is in the workshed
+boolean c2t_hccs_coldMedicineCabinet();
+
+//interfaces with cold medicine cabinet; only gets a drink via "drink" for now
+boolean c2t_hccs_coldMedicineCabinet(string arg);
 
 //passes `arg` to Ezandora's briefcase script needing only the core of what is needed, e.g. "hot", "-combat", etc., limited in scope to what is relevant to CS
 //returns true if have the briefcase
@@ -94,6 +105,7 @@ void c2t_hccs_vote();
   function implementations
   -=-+-=-+-=-+-=-+-=-+-=-*/
 //i--briefcase
+//i--cold medicine cabinet
 //i--genie
 //i--pantogram
 //i--peppermint garden
@@ -105,7 +117,10 @@ void c2t_hccs_vote();
 
 
 //i--briefcase
-boolean c2t_hccs_briefcase() return available_amount($item[kremlin's greatest briefcase]) > 0;
+boolean c2t_hccs_briefcase() {
+	return available_amount($item[kremlin's greatest briefcase]) > 0
+		&& !get_property("c2t_hccs_disable.briefcase").to_boolean();
+}
 boolean c2t_hccs_briefcase(string arg) {
 	if (!c2t_hccs_briefcase())
 		return false;
@@ -119,6 +134,40 @@ boolean c2t_hccs_briefcase(string arg) {
 		case "spell":
 			cli_execute(`briefcase e {arg.to_lower_case()}`);
 	}
+	return true;
+}
+
+//i--cold medicine cabinet
+boolean c2t_hccs_coldMedicineCabinet() {
+	return (get_campground() contains $item[cold medicine cabinet])
+		&& !get_property("c2t_hccs_disable.coldMedicineCabinet").to_boolean();
+}
+boolean c2t_hccs_coldMedicineCabinet(string arg) {
+	if (!c2t_hccs_coldMedicineCabinet())
+		return false;
+	if (arg.to_lower_case() != "drink")
+		return false;
+
+	maximize("100mainstat,mp",false);
+	item itew;
+	buffer bufw = visit_url("campground.php?action=workshed");
+	switch (my_primestat()) {
+		case $stat[muscle]:
+			itew = $item[doc's fortifying wine];
+			break;
+		case $stat[mysticality]:
+			itew = $item[doc's smartifying wine];
+			break;
+		case $stat[moxie]:
+			itew = $item[doc's limbering wine];
+			break;
+	}
+	if (!bufw.contains_text(itew))
+		abort("cmc broke?");
+	run_choice(3);
+
+	//go back to full MP equipment
+	maximize("mp,-equip kramco,-equip i voted",false);
 	return true;
 }
 
@@ -148,6 +197,9 @@ boolean c2t_hccs_genie(monster mon) {
 //i--pantogram
 void c2t_hccs_pantogram() c2t_hccs_pantogram("spell");
 void c2t_hccs_pantogram(string type) {
+	if (get_property("c2t_hccs_disable.pantogram").to_boolean())
+		return;
+
 	string mod = type.to_lower_case() == "weapon"?"-1,0":"-2,0";
 	if (item_amount($item[portable pantogram]) > 0 && available_amount($item[pantogram pants]) == 0) {
 		//use item
@@ -178,7 +230,10 @@ void c2t_hccs_pantogram(string type) {
 boolean c2t_hccs_peppermintGarden() return get_campground() contains $item[peppermint pip packet];
 
 //i--pillkeeper
-boolean c2t_hccs_pillkeeper() return available_amount($item[eight days a week pill keeper]).to_boolean();
+boolean c2t_hccs_pillkeeper() {
+	return available_amount($item[eight days a week pill keeper]) > 0
+		&& !get_property("c2t_hccs_disable.pillkeeper").to_boolean();
+}
 boolean c2t_hccs_pillkeeper(effect eff) {
 	if (have_effect(eff).to_boolean())
 		return true;
@@ -206,7 +261,10 @@ boolean c2t_hccs_pillkeeper(effect eff) {
 }
 
 //i--pizza cube
-boolean c2t_hccs_pizzaCube() return get_campground() contains $item[diabolic pizza cube];
+boolean c2t_hccs_pizzaCube() {
+	return (get_campground() contains $item[diabolic pizza cube])
+		&& !get_property("c2t_hccs_disable.pizzaCube").to_boolean();
+}
 boolean c2t_hccs_pizzaCube(effect eff) {
 	if (available_amount($item[diabolic pizza]).to_boolean()) {
 		print("pizza found while trying to make one, so eating it","red");
@@ -342,6 +400,8 @@ boolean c2t_hccs_pizzaCube(item it1,item it2,item it3,item it4) {
 
 //i--power plant
 boolean c2t_hccs_powerPlant() {
+	if (get_property("c2t_hccs_disable.powerPlant").to_boolean())
+		return false;
 	if (item_amount($item[potted power plant]) == 0)
 		return false;
 	if (get_property("_pottedPowerPlant") != "0,0,0,0,0,0,0") {
