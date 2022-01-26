@@ -111,6 +111,7 @@ boolean c2t_hccs_getEffect(effect eff) {
 
 void c2t_hccs_getFax(monster mon) {
 	print(`getting fax of {mon}`,"blue");
+	cli_execute("chat");
 	for i from 1 to 3 {
 		if (mon == $monster[factory worker (female)]) {
 			chat_private('cheesefax','fax factory worker');
