@@ -386,7 +386,10 @@ void c2t_hccs_init() {
 	if (get_property('customCombatScript') != "c2t_hccs")
 		set_property('_saved_customCombatScript',get_property('customCombatScript'));
 	set_property('customCombatScript',"c2t_hccs");
-	
+	//preadventure script for HP/MP recovery
+	set_property('_saved_betweenBattleScript',get_property("betweenBattleScript"));
+	set_property('betweenBattleScript','c2t_hccs_preAdv.ash');
+
 	visit_url('council.php');// Initialize council.
 }
 
@@ -395,6 +398,7 @@ void c2t_hccs_exit() {
 	set_property('autoSatisfyWithNPCs',get_property('_saved_autoSatisfyWithNPCs'));
 	set_property('autoSatisfyWithCoinmasters',get_property('_saved_autoSatisfyWithCoinmasters'));
 	set_property('choiceAdventureScript',get_property('_saved_choiceAdventureScript'));
+	set_property('betweenBattleScript',get_property('_saved_betweenBattleScript'));
 
 	if (get_property('_saved_hpAutoRecovery') != "")
 		set_property('hpAutoRecovery',get_property('_saved_hpAutoRecovery'));
