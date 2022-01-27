@@ -22,7 +22,7 @@ void c2t_hccs_preAdv() {
 	//restore hp
 	if (my_hp() < floor(my_maxhp() * hpt))
 		if (!restore_hp(floor(my_maxhp()*0.9))
-			|| !c2t_hccs_haveUse(1+(my_maxhp()-my_hp())/1000,$skill[cannelloni cocoon]))
+			&& !c2t_hccs_haveUse(1+(my_maxhp()-my_hp())/1000,$skill[cannelloni cocoon]))
 			print("Had some trouble restoring HP?","red");
 
 	//restore mp
