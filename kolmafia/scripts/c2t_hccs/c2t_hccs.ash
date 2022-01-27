@@ -526,8 +526,14 @@ boolean c2t_hccs_preCoil() {
 	c2t_hccs_haveUse($item[pork elf goodies sack]);
 	if (my_meat() < 2500) {//don't autosell if there is some other source of meat
 		autosell(5,$item[baconstone]);
-		autosell(5,$item[porquoise]);
 		autosell(5,$item[hamethyst]);
+		if (c2t_hccs_pizzaCube())
+			autosell(5,$item[porquoise]);
+		else {
+			int temp = item_amount($item[porquoise]);
+			if (temp > 0)
+				autosell(temp-1,$item[porquoise]);
+		}
 	}
 
 	//buy toy accordion
