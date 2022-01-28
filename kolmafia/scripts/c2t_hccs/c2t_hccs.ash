@@ -155,7 +155,7 @@ void c2t_hccs_breakfast() {
 		c2t_hccs_haveUse(1,$skill[pastamastery]);
 
 	//mox class stat boost for leveling
-	if (my_primestat() == $stat[moxie] && get_property("_rhinestonesAcquired").to_boolean())
+	if (my_primestat() == $stat[moxie] && !get_property("_rhinestonesAcquired").to_boolean())
 		c2t_hccs_haveUse(1,$skill[acquire rhinestones]);
 
 	//peppermint garden
