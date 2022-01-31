@@ -910,7 +910,7 @@ boolean c2t_hccs_semirareItem() {
 	if (available_amount($item[cyclops eyedrops]) == 0 && have_effect($effect[one very clear eye]) == 0) {
 		//11-leaf clover
 		if (have_effect($effect[lucky!]) == 0) {
-			retrieve_item($item[11-leaf clover]);
+			hermit(1,$item[11-leaf clover]);
 			use($item[11-leaf clover]);
 		}
 		//recover hp
