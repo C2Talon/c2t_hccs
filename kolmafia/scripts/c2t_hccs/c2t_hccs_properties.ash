@@ -76,6 +76,9 @@ set c2t_hccs_disable.briefcase = true
 -- cold medicine cabinet --
 set c2t_hccs_disable.coldMedicineCabinet = true
 
+-- combat lover's locket --
+set c2t_hccs_disable.combatLoversLocket = true
+
 -- pantogram --
 set c2t_hccs_disable.pantogram = true
 

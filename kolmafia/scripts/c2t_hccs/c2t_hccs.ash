@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r26092;//cosmic bowling ball
+since r26218;//locket support
 
 import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>
@@ -456,12 +456,18 @@ boolean c2t_hccs_preCoil() {
 
 	//fax
 	if (!get_property('_photocopyUsed').to_boolean() && item_amount($item[photocopied monster]) == 0) {
-		if (available_amount($item[industrial fire extinguisher]) > 0 && available_amount($item[fourth of may cosplay saber]) > 0)
-			c2t_hccs_getFax($monster[ungulith]);
-		else if (is_online("cheesefax"))
-			c2t_hccs_getFax($monster[factory worker (female)]);
-		else
-			c2t_hccs_getFax($monster[ungulith]);
+		if (available_amount($item[industrial fire extinguisher]) > 0 && available_amount($item[fourth of may cosplay saber]) > 0) {
+			if (!(get_locket_monsters() contains $monster[ungulith]))
+				c2t_hccs_getFax($monster[ungulith]);
+		}
+		else if (is_online("cheesefax")) {
+			if (!(get_locket_monsters() contains $monster[factory worker (female)]))
+				c2t_hccs_getFax($monster[factory worker (female)]);
+		}
+		else {
+			if (!(get_locket_monsters() contains $monster[ungulith]))
+				c2t_hccs_getFax($monster[ungulith]);
+		}
 	}
 
 	c2t_hccs_haveUse($skill[spirit of peppermint]);
@@ -1175,10 +1181,14 @@ boolean c2t_hccs_preFamiliar() {
 			run_turn();
 		}
 		else {
-			if (available_amount($item[industrial fire extinguisher]) > 0)
-				c2t_assert(c2t_hccs_genie($monster[ungulith]),"ungulith wish fail");
-			else
-				c2t_assert(c2t_hccs_genie($monster[factory worker (female)]),"factory worker wish fail");
+			if (available_amount($item[industrial fire extinguisher]) > 0) {
+				if (!c2t_hccs_combatLoversLocket($monster[ungulith]) && !c2t_hccs_genie($monster[ungulith]))
+					abort("ungulith fight fail");
+			}
+			else {
+				if (!c2t_hccs_combatLoversLocket($monster[factory worker (female)]) && !c2t_hccs_genie($monster[factory worker (female)]))
+					abort("factory worker fight fail");
+			}
 		}
 	}
 
@@ -1787,7 +1797,8 @@ void c2t_hccs_fights() {
 		if (!have_equipped($item[fourth of may cosplay saber]))
 			equip($item[fourth of may cosplay saber]);
 		//TODO evil olive - change to run away from and feel nostagic+envy+free kill another thing to save a saber use for spell test
-		c2t_assert(c2t_hccs_genie($monster[evil olive]),"Failed to fight evil olive");
+		if (!c2t_hccs_combatLoversLocket($monster[evil olive]) && !c2t_hccs_genie($monster[evil olive]))
+			abort("Failed to fight evil olive");
 	}
 
 	use_familiar(levelingFam);

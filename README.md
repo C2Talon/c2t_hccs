@@ -61,6 +61,10 @@ These are set via the gCLI. Basically so people don't have to edit the script it
 * Example: `1,1,1,1,35,1,31,1,1,1` will allow the familiar test to take 35 turns, the spell test to take 31 turns, and all others must be 1 turn
 * Defaults to `1,1,1,1,1,1,1,1,1,1`
 
+### Disabling resources
+
+Some resources can be disabled via a property. It's an all-or-nothing thing, which is somewhat detailed in [c2t_hccs_properties.ash](https://github.com/C2Talon/c2t_hccs/blob/master/kolmafia/scripts/c2t_hccs/c2t_hccs_properties.ash#L65)
+
 ## IotM
 
 The script assumes several IotM are owned and will break without them. In addition, the [sweet synthesis](https://kol.coldfront.net/thekolwiki/index.php/Sweet_Synthesis) and [Summon Crimbo Candy](https://kol.coldfront.net/thekolwiki/index.php/Summon_Crimbo_Candy) skills, as well as the [Imitation Crab](https://kol.coldfront.net/thekolwiki/index.php/Imitation_Crab) familiar, are currently required.
@@ -118,6 +122,7 @@ While these are not strictly required, not having enough that either save turns 
 * [packaged industrial fire extinguisher](https://kol.coldfront.net/thekolwiki/index.php/Packaged_industrial_fire_extinguisher) &mdash; 30 turns saved on hot test with saber and 3 more turns by itself
 * [packaged cold medicine cabinet](https://kol.coldfront.net/thekolwiki/index.php/Packaged_cold_medicine_cabinet) &mdash; drinks a 30% stat booze from this for initial adventures and leveling help post-coil test
 * [undrilled cosmic bowling ball](https://kol.coldfront.net/thekolwiki/index.php/Undrilled_cosmic_bowling_ball) &mdash; 50% stat gain in NEP; saves 1.67 adventures on item test; some extra item and meat gain during leveling fights
+* [combat lover's locket lockbox](https://kol.coldfront.net/thekolwiki/index.php/Combat_lover%27s_locket_lockbox) &mdash; up to 3 monsters to fight to save wishes and time spent on fax
 
 ## TODO (eventually)
 

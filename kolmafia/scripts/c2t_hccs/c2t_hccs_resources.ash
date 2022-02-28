@@ -6,6 +6,7 @@
 import <c2t_lib.ash>
 import <c2t_hccs_lib.ash>
 import <c2t_cartographyHunt.ash>
+import <c2t_reminisce.ash>
 
 
 //some of these resources can be "disabled" via a property. check c2t_hccs_properties.ash at the bottom under "disable resources" for a full list
@@ -16,6 +17,7 @@ import <c2t_cartographyHunt.ash>
   -=-+-=-+-=-+-=-+-=-+-=-*/
 //d--briefcase
 //d--cold medicine cabinet
+//d--combat lover's locket
 //d--genie
 //d--pantogram
 //d--peppermint garden
@@ -30,6 +32,11 @@ import <c2t_cartographyHunt.ash>
 //returns true if have the briefcase
 boolean c2t_hccs_briefcase();
 
+//passes `arg` to Ezandora's briefcase script needing only the core of what is needed, e.g. "hot", "-combat", etc., limited in scope to what is relevant to CS
+//returns true if have the briefcase
+boolean c2t_hccs_briefcase(string arg);
+
+
 //d--cold medicine cabinet
 //returns true if the cabinet is in the workshed
 boolean c2t_hccs_coldMedicineCabinet();
@@ -37,9 +44,15 @@ boolean c2t_hccs_coldMedicineCabinet();
 //interfaces with cold medicine cabinet; only gets a drink via "drink" for now
 boolean c2t_hccs_coldMedicineCabinet(string arg);
 
-//passes `arg` to Ezandora's briefcase script needing only the core of what is needed, e.g. "hot", "-combat", etc., limited in scope to what is relevant to CS
-//returns true if have the briefcase
-boolean c2t_hccs_briefcase(string arg);
+
+//d--combat lover's locket
+//returns `true` if have the locket
+boolean c2t_hccs_combatLoversLocket();
+
+//fight `mon` from locket
+//returns `true` if `mon` was fought
+boolean c2t_hccs_combatLoversLocket(monster mon);
+
 
 //d--genie
 //gets effect from genie if not already have; returns true if have effect
@@ -47,6 +60,7 @@ boolean c2t_hccs_genie(effect eff);
 
 //fights monster from genie; returns true if monster fought
 boolean c2t_hccs_genie(monster mon);
+
 
 //d--pantogram
 //makes pantogram pants with stats of mainstat,hot res,mp,spell,-combat
@@ -107,6 +121,7 @@ void c2t_hccs_vote();
   -=-+-=-+-=-+-=-+-=-+-=-*/
 //i--briefcase
 //i--cold medicine cabinet
+//i--combat lover's locket
 //i--genie
 //i--pantogram
 //i--peppermint garden
@@ -172,6 +187,25 @@ boolean c2t_hccs_coldMedicineCabinet(string arg) {
 
 	//go back to full MP equipment
 	maximize("mp,-equip kramco,-equip i voted",false);
+	return true;
+}
+
+//i--combat lover's locket
+boolean c2t_hccs_combatLoversLocket() {
+	return available_amount($item[combat lover's locket]) > 0
+		&& !get_property("c2t_hccs_disable.combatLoversLocket").to_boolean();
+}
+boolean c2t_hccs_combatLoversLocket(monster mon) {//mostly same as c2t_hccs_genie(mon)
+	if (!c2t_hccs_combatLoversLocket())
+		return false;
+	if (!c2t_reminisce(mon))
+		return false;
+	run_turn();
+	//if (choice_follows_fight()) //saber force breaks this I think?
+		run_choice(-1);//just in case
+
+	if (get_property("lastEncounter") != mon && get_property("lastEncounter") != "Using the Force")
+		return false;
 	return true;
 }
 
@@ -448,7 +482,8 @@ boolean c2t_hccs_sweetSynthesis(effect eff) {
 			print(`Note: {eff} failed. Going to fight a hobelf and try again.`);
 			if (!have_equipped($item[fourth of may cosplay saber]))
 				equip($item[fourth of may cosplay saber]);
-			c2t_hccs_genie($monster[hobelf]);
+			if (!c2t_hccs_combatLoversLocket($monster[hobelf]))
+				c2t_hccs_genie($monster[hobelf]);
 			return sweet_synthesis(eff);
 
 		case $effect[synthesis: style]://mox exp
