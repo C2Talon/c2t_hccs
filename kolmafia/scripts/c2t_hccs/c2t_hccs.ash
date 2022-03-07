@@ -474,7 +474,7 @@ boolean c2t_hccs_preCoil() {
 	
 	//fish hatchet
 	if (!get_property('_floundryItemCreated').to_boolean() && !retrieve_item(1,$item[fish hatchet]))
-		abort('Failed to get a fish hatchet');
+		print('Failed to get a fish hatchet',"red");
 
 	//cod piece steps
 	/*if (!retrieve_item(1,$item[fish hatchet])) {
@@ -1393,6 +1393,10 @@ boolean c2t_hccs_preWeapon() {
 
 	//briefcase
 	//c2t_hccs_briefcase("weapon");//this is the default, but just in case
+
+	//pull stick-knife if able to equip
+	if (my_basestat($stat[mysticality]) >= 150)
+		c2t_hccs_pull($item[stick-knife of loathing]);
 	
 	maximize('weapon damage', false);
 
