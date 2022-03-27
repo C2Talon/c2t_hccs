@@ -482,8 +482,8 @@ boolean c2t_hccs_sweetSynthesis(effect eff) {
 			print(`Note: {eff} failed. Going to fight a hobelf and try again.`);
 			if (!have_equipped($item[fourth of may cosplay saber]))
 				equip($item[fourth of may cosplay saber]);
-			if (!c2t_hccs_combatLoversLocket($monster[hobo elf]))
-				c2t_hccs_genie($monster[hobo elf]);
+			if (!c2t_hccs_combatLoversLocket($monster[elf hobo]))
+				c2t_hccs_genie($monster[elf hobo]);
 			return sweet_synthesis(eff);
 
 		case $effect[synthesis: style]://mox exp
