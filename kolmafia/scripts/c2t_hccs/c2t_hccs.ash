@@ -7,6 +7,7 @@ import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>
 import <c2t_hccs_properties.ash>
 import <c2t_hccs_aux.ash>
+import <c2t_hccs_preAdv.ash>
 import <c2t_cartographyHunt.ash>
 import <c2t_lib.ash>
 import <c2t_cast.ash>
@@ -176,14 +177,13 @@ boolean c2t_hccs_fightGodLobster() {
 
 		// fight and get equipment
 		c2t_setChoice(1310,1);//get equipment
-		if (my_hp() < 0.5 * my_maxhp())
-			visit_url('clan_viplounge.php?where=hottub');
 
 		item temp = c2t_priority($item[god lobster's ring],$item[god lobster's scepter],$item[astral pet sweater]);
 		if (temp != $item[none])
 			equip($slot[familiar],temp);
 
 		//combat & choice
+		c2t_hccs_preAdv();
 		visit_url('main.php?fightgodlobster=1');
 		run_turn();
 		if (choice_follows_fight())
@@ -1247,6 +1247,7 @@ boolean c2t_hccs_preNoncombat() {
 
 		//fight and get buff
 		c2t_setChoice(1310,2); //get buff
+		c2t_hccs_preAdv();
 		visit_url('main.php?fightgodlobster=1');
 		run_turn();
 		if (choice_follows_fight())

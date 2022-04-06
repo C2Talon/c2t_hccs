@@ -7,6 +7,7 @@ import <c2t_lib.ash>
 import <c2t_hccs_lib.ash>
 import <c2t_cartographyHunt.ash>
 import <c2t_reminisce.ash>
+import <c2t_hccs_preAdv.ash>
 
 
 //some of these resources can be "disabled" via a property. check c2t_hccs_properties.ash at the bottom under "disable resources" for a full list
@@ -198,6 +199,7 @@ boolean c2t_hccs_combatLoversLocket() {
 boolean c2t_hccs_combatLoversLocket(monster mon) {//mostly same as c2t_hccs_genie(mon)
 	if (!c2t_hccs_combatLoversLocket())
 		return false;
+	c2t_hccs_preAdv();
 	if (!c2t_reminisce(mon))
 		return false;
 	run_turn();
@@ -221,6 +223,7 @@ boolean c2t_hccs_genie(effect eff) {
 	return have_effect(eff).to_boolean();
 }
 boolean c2t_hccs_genie(monster mon) {
+	c2t_hccs_preAdv();
 	if (!c2t_wishFight(mon))
 		return false;
 	run_turn();
