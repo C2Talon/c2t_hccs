@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r26218;//locket support
+since r26334;//umbrella support
 
 import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>
@@ -206,6 +206,7 @@ void c2t_hccs_testHandler(int test) {
 
 	string type;
 	int turns,before,expected;
+	boolean met = false;
 
 	//combat familiars will slaughter everything; so make sure they're inactive at the start of test sections, since not every combat bothers with familiar checks
 	if ($familiars[shorter-order cook,left-hand man,imitation crab] contains my_familiar())
@@ -217,47 +218,53 @@ void c2t_hccs_testHandler(int test) {
 	print('Running pre-'+TEST_NAME[test]+' stuff...','blue');
 	switch (test) {
 		case TEST_HP:
-			c2t_hccs_preHp();
+			met = c2t_hccs_preHp();
 			type = "HP";
 			break;
 		case TEST_MUS:
-			c2t_hccs_preMus();
+			met = c2t_hccs_preMus();
 			type = "mus";
 			break;
 		case TEST_MYS:
-			c2t_hccs_preMys();
+			met = c2t_hccs_preMys();
 			type = "mys";
 			break;
 		case TEST_MOX:
-			c2t_hccs_preMox();
+			met = c2t_hccs_preMox();
 			type = "mox";
 			break;
 		case TEST_FAMILIAR:
-			c2t_hccs_preFamiliar();
+			met = c2t_hccs_preFamiliar();
 			type = "familiar";
+			c2t_hccs_mod2log("modtrace familiar weight");
 			break;
 		case TEST_WEAPON:
-			c2t_hccs_preWeapon();
+			met = c2t_hccs_preWeapon();
 			type = "weapon";
+			c2t_hccs_mod2log("modtrace weapon damage");
 			break;
 		case TEST_SPELL:
-			c2t_hccs_preSpell();
+			met = c2t_hccs_preSpell();
 			type = "spell";
+			c2t_hccs_mod2log("modtrace spell damage");
 			break;
 		case TEST_NONCOMBAT:
-			c2t_hccs_preNoncombat();
+			met = c2t_hccs_preNoncombat();
 			type = "noncombat";
+			c2t_hccs_mod2log("modtrace combat rate");
 			break;
 		case TEST_ITEM:
-			c2t_hccs_preItem();
+			met = c2t_hccs_preItem();
 			type = "item";
+			c2t_hccs_mod2log("modtrace item drop;modtrace booze drop");
 			break;
 		case TEST_HOT_RES:
-			c2t_hccs_preHotRes();
+			met = c2t_hccs_preHotRes();
 			type = "hot resist";
+			c2t_hccs_mod2log("modtrace hot resistance");
 			break;
 		case TEST_COIL_WIRE:
-			c2t_hccs_preCoil();
+			met = c2t_hccs_preCoil();
 			break;
 		default:
 			abort('Something went horribly wrong with the test handler');
@@ -272,7 +279,7 @@ void c2t_hccs_testHandler(int test) {
 		turns = 1;
 	}
 
-	if (!c2t_hccs_thresholdMet(test))
+	if (!met)
 		abort(`Pre-{TEST_NAME[test]} ({type}) test fail. Currently only can complete the test in {turns} {turns==1?"turn":"turns"}.`);
 
 	if (test != TEST_COIL_WIRE)
@@ -923,7 +930,7 @@ boolean c2t_hccs_semirareItem() {
 		if (my_hp() < (0.5 * my_maxhp()))
 			cli_execute('hottub');
 		cli_execute('mood apathetic');
-		adv1($location[the limerick dungeon], -1, '');
+		adv1($location[the limerick dungeon],-1,'');
 	}
 	return true;
 }
@@ -970,7 +977,7 @@ boolean c2t_hccs_lovePotion(boolean useit,boolean dumpit) {
 			}
 		}
 		else if (useit) {
-			use(1, love_potion);
+			use(1,love_potion);
 			return true;
 		}
 		else {
@@ -1033,27 +1040,29 @@ boolean c2t_hccs_preItem() {
 	c2t_hccs_getEffect($effect[nearly all-natural]);//bag of grain
 	c2t_hccs_getEffect($effect[steely-eyed squint]);
 
-	maximize('item,2 booze drop,-equip broken champagne bottle,-equip surprisingly capacious handbag,-equip red-hot sausage fork,switch left-hand man', false);
+	//unbreakable umbrella
+	cli_execute("try;umbrella item");
 
+	maximize('item,2 booze drop,-equip broken champagne bottle,-equip surprisingly capacious handbag,-equip red-hot sausage fork,switch left-hand man',false);
+	if (c2t_hccs_thresholdMet(TEST_ITEM))
+		return true;
 
 	//THINGS I DON'T ALWAYS WANT TO USE FOR ITEM TEST
 
 	//if familiar test is ever less than 19 turns, feel lost will need to be completely removed or the test order changed
-	if (!c2t_hccs_thresholdMet(TEST_ITEM))
-		c2t_hccs_getEffect($effect[feeling lost]);
+	c2t_hccs_getEffect($effect[feeling lost]);
+	if (c2t_hccs_thresholdMet(TEST_ITEM))
+		return true;
 
-	if (!c2t_hccs_thresholdMet(TEST_ITEM)) {
-		retrieve_item(1,$item[oversized sparkler]);
-		//repeat of previous maximize call
-		maximize('item,2 booze drop,-equip broken champagne bottle,-equip surprisingly capacious handbag,-equip red-hot sausage fork,switch left-hand man', false);
-	}
+	retrieve_item(1,$item[oversized sparkler]);
+	//repeat of previous maximize call
+	maximize('item,2 booze drop,-equip broken champagne bottle,-equip surprisingly capacious handbag,-equip red-hot sausage fork,switch left-hand man',false);
+	if (c2t_hccs_thresholdMet(TEST_ITEM))
+		return true;
 
 	//power plant; last to save batteries if not needed
-	if (!c2t_hccs_thresholdMet(TEST_ITEM))
-		if (c2t_hccs_powerPlant())
-			c2t_hccs_getEffect($effect[lantern-charged]);
-
-	c2t_hccs_mod2log("modtrace item drop;modtrace booze drop");
+	if (c2t_hccs_powerPlant())
+		c2t_hccs_getEffect($effect[lantern-charged]);
 
 	return c2t_hccs_thresholdMet(TEST_ITEM);
 }
@@ -1100,26 +1109,27 @@ boolean c2t_hccs_preHotRes() {
 	c2t_hccs_getEffect($effect[leash of linguini]);
 	c2t_hccs_getEffect($effect[empathy]);
 
-	maximize('100hot res, familiar weight', false);
+	maximize('100hot res,familiar weight',false);
 	// need to run this twice because familiar weight thresholds interfere with it?
-	maximize('100hot res, familiar weight', false);
+	maximize('100hot res,familiar weight',false);
+	if (c2t_hccs_thresholdMet(TEST_HOT_RES))
+		return true;
 
 
 	//THINGS I DON'T USE FOR HOT TEST ANYMORE, but will fall back on if other things break
 
 	//daily candle
-	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
-		c2t_hccs_haveUse($item[rainbow glitter candle]);
+	if (c2t_hccs_haveUse($item[rainbow glitter candle]) && c2t_hccs_thresholdMet(TEST_HOT_RES))
+		return true;
 
 	//magenta seashell
-	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
-		if (available_amount($item[magenta seashell]) > 0)
-			c2t_hccs_getEffect($effect[too cool for (fish) school]);
+	if (c2t_hccs_getEffect($effect[too cool for (fish) school]) && c2t_hccs_thresholdMet(TEST_HOT_RES))
+		return true;
 
 	//potion for sleazy hands & hot powder
-	if (!c2t_hccs_thresholdMet(TEST_HOT_RES)) {
+	if (have_effect($effect[flame-retardant trousers]) == 0 || have_effect($effect[sleazy hands]) == 0) {
 		//potion making not needed with retro cape
-		retrieve_item(1, $item[tenderizing hammer]);
+		retrieve_item(1,$item[tenderizing hammer]);
 		cli_execute('smash * ratty knitted cap');
 		cli_execute('smash * red-hot sausage fork');
 
@@ -1128,39 +1138,40 @@ boolean c2t_hccs_preHotRes() {
 
 		if (available_amount($item[sleaze nuggets]) > 0 || available_amount($item[lotion of sleaziness]) > 0)
 			c2t_hccs_getEffect($effect[sleazy hands]);
+
+		if (c2t_hccs_thresholdMet(TEST_HOT_RES))
+			return true;
 	}
 
 	//pocket maze
-	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
-		c2t_hccs_getEffect($effect[amazing]);
+	if (c2t_hccs_getEffect($effect[amazing]) && c2t_hccs_thresholdMet(TEST_HOT_RES))
+		return true;
 
 	//briefcase
-	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
-		if (c2t_hccs_briefcase("hot"))
-			maximize('100hot res, familiar weight', false);
-
-	//synthesis: hot
-	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
-		c2t_hccs_sweetSynthesis($effect[synthesis: hot]);
-
-	//pillkeeper
-	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
-		c2t_hccs_pillkeeper($effect[rainbowolin]);
-
-	//pocket wish
-	if (!c2t_hccs_thresholdMet(TEST_HOT_RES))
-		c2t_hccs_genie($effect[fireproof lips]);
-
-	//speakeasy drink
-	if (!c2t_hccs_thresholdMet(TEST_HOT_RES)) {
-		if (have_effect($effect[feeling no pain]) == 0) {
-			c2t_assert(my_meat() >= 500,'Not enough meat. Please autosell stuff.');
-			ensure_ode(2);
-			cli_execute('drink 1 Ish Kabibble');
-		}
+	if (c2t_hccs_briefcase("hot")) {
+		maximize('100hot res,familiar weight',false);
+		if (c2t_hccs_thresholdMet(TEST_HOT_RES))
+			return true;
 	}
 
-	c2t_hccs_mod2log("modtrace hot resistance");
+	//synthesis: hot
+	if (c2t_hccs_sweetSynthesis($effect[synthesis: hot]) && c2t_hccs_thresholdMet(TEST_HOT_RES))
+		return true;
+
+	//pillkeeper
+	if (c2t_hccs_pillkeeper($effect[rainbowolin]) && c2t_hccs_thresholdMet(TEST_HOT_RES))
+		return true;
+
+	//pocket wish
+	if (c2t_hccs_genie($effect[fireproof lips]) && c2t_hccs_thresholdMet(TEST_HOT_RES))
+		return true;
+
+	//speakeasy drink
+	if (have_effect($effect[feeling no pain]) == 0) {
+		c2t_assert(my_meat() >= 500,'Not enough meat. Please autosell stuff.');
+		ensure_ode(2);
+		cli_execute('drink 1 Ish Kabibble');
+	}
 
 	return c2t_hccs_thresholdMet(TEST_HOT_RES);
 }
@@ -1195,7 +1206,7 @@ boolean c2t_hccs_preFamiliar() {
 	// Pool buff
 	c2t_hccs_getEffect($effect[billiards belligerence]);
 
-	if (my_hp() < 30) use_skill(1, $skill[cannelloni cocoon]);
+	if (my_hp() < 30) use_skill(1,$skill[cannelloni cocoon]);
 	c2t_hccs_getEffect($effect[blood bond]);
 	c2t_hccs_getEffect($effect[leash of linguini]);
 	c2t_hccs_getEffect($effect[empathy]);
@@ -1205,20 +1216,19 @@ boolean c2t_hccs_preFamiliar() {
 		ensure_song($effect[chorale of companionship]);
 
 	use_familiar($familiar[exotic parrot]);
-	maximize('familiar weight', false);
+	maximize('familiar weight',false);
+	if (c2t_hccs_thresholdMet(TEST_FAMILIAR))
+		return true;
 
 	//should only get 1 per run, if any; would use in NEP combat loop, but no point as sombrero would already be already giving max stats
-	if (!c2t_hccs_thresholdMet(TEST_FAMILIAR))
-		c2t_hccs_haveUse($item[short stack of pancakes]);
-
-	c2t_hccs_mod2log("modtrace familiar weight");
+	c2t_hccs_haveUse($item[short stack of pancakes]);
 
 	return c2t_hccs_thresholdMet(TEST_FAMILIAR);
 }
 
 
 boolean c2t_hccs_preNoncombat() {
-	if (my_hp() < 30) use_skill(1, $skill[cannelloni cocoon]);
+	if (my_hp() < 30) use_skill(1,$skill[cannelloni cocoon]);
 	c2t_hccs_getEffect($effect[blood bond]);
 	c2t_hccs_getEffect($effect[leash of linguini]);
 	c2t_hccs_getEffect($effect[empathy]);
@@ -1265,9 +1275,20 @@ boolean c2t_hccs_preNoncombat() {
 
 	use_familiar($familiar[disgeist]);
 
+	//unbreakable umbrella
+	cli_execute("try;umbrella nc");
+
+	maximize('-100combat,familiar weight',false);
+	maximize('-100combat,familiar weight',false);
+	if (c2t_hccs_thresholdMet(TEST_NONCOMBAT))
+		return true;
+
 	//replacing glob buff with this
 	//mafia doesn't seem to support retrieve_item() by itself for this yet, so visit_url() to the rescue:
-	if (available_amount($item[porkpie-mounted popper]) == 0) {
+	if (!retrieve_item(1,$item[porkpie-mounted popper])) {
+		print("Buying limited-quantity items from the fireworks shop seems to still be broken. Feel free to add to the report at the following link saying that the bug is still a thing, but only if your clan actually has a fireworks shop:","red");//having a fully-stocked clan VIP lounge is technically a requirement for this script, so just covering my bases here
+		print_html('<a href="https://kolmafia.us/threads/sometimes-unable-to-buy-limited-items-from-underground-fireworks-shop.27277/">https://kolmafia.us/threads/sometimes-unable-to-buy-limited-items-from-underground-fireworks-shop.27277/</a>');
+		print("For now, just going to do it manually:","red");
 		visit_url("clan_viplounge.php?action=fwshop&whichfloor=2",false,true);
 		//visit_url("shop.php?whichshop=fwshop",false,true);
 		visit_url("shop.php?whichshop=fwshop&action=buyitem&quantity=1&whichrow=1249&pwd",true,true);
@@ -1275,20 +1296,20 @@ boolean c2t_hccs_preNoncombat() {
 	//double-checking, and what will be used when mafia finally supports it:
 	retrieve_item(1,$item[porkpie-mounted popper]);
 
-	maximize('-100combat, familiar weight', false);
-	//doubling up to make sure, as it's been finicky:
-	maximize('-100combat, familiar weight', false);
+	maximize('-100combat,familiar weight',false);
+	if (c2t_hccs_thresholdMet(TEST_NONCOMBAT))
+		return true;
 
 	//briefcase
-	if (!c2t_hccs_thresholdMet(TEST_NONCOMBAT))
-		if (c2t_hccs_briefcase("-combat"))
-			maximize('-100combat, familiar weight', false);
+	if (c2t_hccs_briefcase("-combat")) {
+		maximize('-100combat,familiar weight',false);
+		if (c2t_hccs_thresholdMet(TEST_NONCOMBAT))
+			return true;
+	}
 
 	//disquiet riot wish potential if 2 or more wishes remain and not close to min turn
-	if (!c2t_hccs_thresholdMet(TEST_NONCOMBAT) && c2t_hccs_testTurns(TEST_NONCOMBAT) >= 9)//TODO better cost/benefit
+	if (c2t_hccs_testTurns(TEST_NONCOMBAT) >= 9)//TODO better cost/benefit
 		c2t_hccs_genie($effect[disquiet riot]);
-
-	c2t_hccs_mod2log("modtrace combat rate");
 
 	return c2t_hccs_thresholdMet(TEST_NONCOMBAT);
 }
@@ -1341,7 +1362,7 @@ boolean c2t_hccs_preWeapon() {
 
 	// Hatter buff
 	if (available_amount($item[&quot;drink me&quot; potion]) > 0) {
-		retrieve_item(1, $item[goofily-plumed helmet]);
+		retrieve_item(1,$item[goofily-plumed helmet]);
 		c2t_hccs_getEffect($effect[weapon of mass destruction]);
 	}
 
@@ -1398,26 +1419,29 @@ boolean c2t_hccs_preWeapon() {
 	//pull stick-knife if able to equip
 	if (my_basestat($stat[mysticality]) >= 150)
 		c2t_hccs_pull($item[stick-knife of loathing]);
+
+	//unbreakable umbrella
+	cli_execute("try;umbrella weapon");
 	
-	maximize('weapon damage', false);
+	maximize('weapon damage,switch left-hand man',false);
+	if (c2t_hccs_thresholdMet(TEST_WEAPON))
+		return true;
 
 	//OU pizza if needed
-	if (!c2t_hccs_thresholdMet(TEST_WEAPON) && c2t_hccs_testTurns(TEST_WEAPON) > 3)//TODO ? cost/benifit?
+	if (c2t_hccs_testTurns(TEST_WEAPON) > 3)//TODO ? cost/benifit?
 		c2t_hccs_pizzaCube($effect[outer wolf&trade;]);
-
 	if (have_effect($effect[outer wolf&trade;]) == 0)
 		print("OU pizza skipped","blue");
+	if (c2t_hccs_thresholdMet(TEST_WEAPON))
+		return true;
 
 	//cargo shorts as backup
 	if (available_amount($item[cargo cultist shorts]) > 0
-		&& !c2t_hccs_thresholdMet(TEST_WEAPON)
 		&& c2t_hccs_testTurns(TEST_WEAPON) > 4 //4 is how much cargo would save on spell test, so may as well use here if spell is not better
 		&& have_effect($effect[rictus of yeg]) == 0
 		&& !get_property('_cargoPocketEmptied').to_boolean())
 			cli_execute("cargo item yeg's motel toothbrush");
 	c2t_hccs_haveUse($item[yeg's motel toothbrush]);
-
-	c2t_hccs_mod2log("modtrace weapon damage");
 
 	return c2t_hccs_thresholdMet(TEST_WEAPON);
 }
@@ -1528,9 +1552,10 @@ boolean c2t_hccs_preSpell() {
 	//briefcase //TODO count spell-damage-providing accessories and values before deciding to use the briefcase
 	c2t_hccs_briefcase("spell");
 
-	maximize('spell damage,switch left-hand man', false);
+	//unbreakable umbrella
+	cli_execute("try;umbrella spell");
 
-	c2t_hccs_mod2log("modtrace spell damage");
+	maximize('spell damage,switch left-hand man',false);
 
 	return c2t_hccs_thresholdMet(TEST_SPELL);
 }
@@ -1539,114 +1564,124 @@ boolean c2t_hccs_preSpell() {
 // stat tests are super lazy for now
 // TODO need to figure out a way to not overdo buffs, as some buffers may be needed for pizzas
 boolean c2t_hccs_preHp() {
-	if (!c2t_hccs_thresholdMet(TEST_HP))
-		maximize('hp',false);
+	if (c2t_hccs_thresholdMet(TEST_HP))
+		return true;
+
+	maximize('hp',false);
+	if (c2t_hccs_thresholdMet(TEST_HP))
+		return true;
 
 	//hp buffs
-	if (!c2t_hccs_thresholdMet(TEST_HP)) {
-		if (!c2t_hccs_getEffect($effect[song of starch]))
-			c2t_hccs_getEffect($effect[song of bravado]);
-		c2t_hccs_getEffect($effect[reptilian fortitude]);
-	}
+	if (!c2t_hccs_getEffect($effect[song of starch]))
+		c2t_hccs_getEffect($effect[song of bravado]);
+	c2t_hccs_getEffect($effect[reptilian fortitude]);
+	if (c2t_hccs_thresholdMet(TEST_HP))
+		return true;
 
 	//mus buffs //basically copy/paste from mus test sans bravado
-	if (!c2t_hccs_thresholdMet(TEST_HP))
-		//TODO AT songs
-		foreach x in $effects[
-			//skills
-			quiet determination,
-			big,
-			disdain of the war snapper,
-			patience of the tortoise,
-			rage of the reindeer,
-			seal clubbing frenzy,
-			//using items
-			go get 'em\, tiger!,
-			//skill skills from IotM
-			feeling excited
-			]
-			c2t_hccs_getEffect(x);
+	//TODO AT songs
+	foreach x in $effects[
+		//skills
+		quiet determination,
+		big,
+		disdain of the war snapper,
+		patience of the tortoise,
+		rage of the reindeer,
+		seal clubbing frenzy,
+		//using items
+		go get 'em\, tiger!,
+		//skill skills from IotM
+		feeling excited
+		]
+		c2t_hccs_getEffect(x);
 
 	return c2t_hccs_thresholdMet(TEST_HP);
 }
 
 boolean c2t_hccs_preMus() {
 	//TODO if pastamancer, add summon of mus thrall if need? currently using equaliser potion out of laziness
-	if (!c2t_hccs_thresholdMet(TEST_MUS))
-		maximize('mus',false);
+	if (c2t_hccs_thresholdMet(TEST_MUS))
+		return true;
 
-	if (!c2t_hccs_thresholdMet(TEST_MUS))
-		//TODO AT songs
-		foreach x in $effects[
-			//skills
-			quiet determination,
-			big,
-			song of bravado,
-			disdain of the war snapper,
-			patience of the tortoise,
-			rage of the reindeer,
-			seal clubbing frenzy,
-			//potions
-			go get 'em\, tiger!,
-			//skill skills from IotM
-			feeling excited
-			]
-			c2t_hccs_getEffect(x);
+	maximize('mus',false);
+	if (c2t_hccs_thresholdMet(TEST_MUS))
+		return true;
+
+	//TODO AT songs
+	foreach x in $effects[
+		//skills
+		quiet determination,
+		big,
+		song of bravado,
+		disdain of the war snapper,
+		patience of the tortoise,
+		rage of the reindeer,
+		seal clubbing frenzy,
+		//potions
+		go get 'em\, tiger!,
+		//skill skills from IotM
+		feeling excited
+		]
+		c2t_hccs_getEffect(x);
 
 	return c2t_hccs_thresholdMet(TEST_MUS);
 }
 
 boolean c2t_hccs_preMys() {
-	if (!c2t_hccs_thresholdMet(TEST_MYS))
-		maximize('mys',false);
+	if (c2t_hccs_thresholdMet(TEST_MYS))
+		return true;
 
-	if (!c2t_hccs_thresholdMet(TEST_MYS))
-		//TODO AT songs
-		foreach x in $effects[
-			//skills
-			quiet judgement,
-			big,
-			song of bravado,
-			disdain of she-who-was,
-			pasta oneness,
-			saucemastery,
-			//potions
-			glittering eyelashes,
-			//skill skills from IotM
-			feeling excited
-			]
-			c2t_hccs_getEffect(x);
+	maximize('mys',false);
+	if (c2t_hccs_thresholdMet(TEST_MYS))
+		return true;
+
+	//TODO AT songs
+	foreach x in $effects[
+		//skills
+		quiet judgement,
+		big,
+		song of bravado,
+		disdain of she-who-was,
+		pasta oneness,
+		saucemastery,
+		//potions
+		glittering eyelashes,
+		//skill skills from IotM
+		feeling excited
+		]
+		c2t_hccs_getEffect(x);
 
 	return c2t_hccs_thresholdMet(TEST_MYS);
 }
 
 boolean c2t_hccs_preMox() {
 	//TODO if pastamancer, add summon of mox thrall if need? currently using equaliser potion out of laziness
-	if (!c2t_hccs_thresholdMet(TEST_MOX))
-		maximize('mox',false);
+	if (c2t_hccs_thresholdMet(TEST_MOX))
+		return true;
 
-	if (!c2t_hccs_thresholdMet(TEST_MOX)) {
-		//TODO AT songs
-		//face
-		if (!c2t_hccs_getEffect($effect[quiet desperation]))
-			c2t_hccs_getEffect($effect[disco smirk]);
+	maximize('mox',false);
+	if (c2t_hccs_thresholdMet(TEST_MOX))
+		return true;
 
-		//other
-		foreach x in $effects[
-			//skills
-			big,
-			song of bravado,
-			blubbered up,
-			disco state of mind,
-			mariachi mood,
-			//potions
-			butt-rock hair,
-			unrunnable face,
-			//skill skills from IotM
-			feeling excited
-			]
-			c2t_hccs_getEffect(x);
-	}
+	//TODO AT songs
+	//face
+	if (!c2t_hccs_getEffect($effect[quiet desperation]))
+		c2t_hccs_getEffect($effect[disco smirk]);
+	//other
+	foreach x in $effects[
+		//skills
+		big,
+		song of bravado,
+		blubbered up,
+		disco state of mind,
+		mariachi mood,
+		//potions
+		butt-rock hair,
+		unrunnable face,
+		//skill skills from IotM
+		feeling excited
+		]
+		c2t_hccs_getEffect(x);
 
 	return c2t_hccs_thresholdMet(TEST_MOX);
 }
@@ -1675,10 +1710,10 @@ void c2t_hccs_fights() {
 				visit_url('shop.php?whichshop=meatsmith&action=talk');
 				run_choice(1);
 			}
-			if (!can_adv($location[the skeleton store], false))
+			if (!can_adv($location[the skeleton store],false))
 				abort('Cannot open skeleton store!');
 			if ($location[the skeleton store].turns_spent == 0 && !$location[the skeleton store].noncombat_queue.contains_text('Skeletons In Store'))
-				adv1($location[the skeleton store], -1, '');
+				adv1($location[the skeleton store],-1,'');
 			if (!$location[the skeleton store].noncombat_queue.contains_text('Skeletons In Store'))
 				abort('Something went wrong at skeleton store.');
 
