@@ -208,12 +208,12 @@ void c2t_hccs_testHandler(int test) {
 	int turns,before,expected;
 	boolean met = false;
 
+	//wanderer fight(s) before prepping stuff
+	while (my_turncount() >= 60 && c2t_hccs_wandererFight());
+
 	//combat familiars will slaughter everything; so make sure they're inactive at the start of test sections, since not every combat bothers with familiar checks
 	if ($familiars[shorter-order cook,left-hand man,imitation crab] contains my_familiar())
 		use_familiar($familiar[melodramedary]);
-
-	//wanderer fight(s) before prepping stuff
-	while (my_turncount() >= 60 && c2t_hccs_wandererFight());
 
 	print('Running pre-'+TEST_NAME[test]+' stuff...','blue');
 	switch (test) {
