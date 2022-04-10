@@ -4,6 +4,8 @@ Kolmafia script to handle a hardcore community service run with my set of skills
 
 This is a continual work-in-progress. It is not likely to run out-of-the-box for most, but others may be able to glean things from it. To see what is needed to run smoothly without changes, see: https://cheesellc.com/kol/profile.php?u=Zdrvst
 
+Bugs? Report them here: https://github.com/C2Talon/c2t_hccs/issues
+
 ## Installation / Uninstallation
 
 To install, run the following on the gCLI:
@@ -123,6 +125,7 @@ While these are not strictly required, not having enough that either save turns 
 * [packaged cold medicine cabinet](https://kol.coldfront.net/thekolwiki/index.php/Packaged_cold_medicine_cabinet) &mdash; drinks a 30% stat booze from this for initial adventures and leveling help post-coil test
 * [undrilled cosmic bowling ball](https://kol.coldfront.net/thekolwiki/index.php/Undrilled_cosmic_bowling_ball) &mdash; 50% stat gain in NEP; saves 1.67 adventures on item test; some extra item and meat gain during leveling fights
 * [combat lover's locket lockbox](https://kol.coldfront.net/thekolwiki/index.php/Combat_lover%27s_locket_lockbox) &mdash; up to 3 monsters to fight to save wishes and time spent on fax
+* [Undamaged Unbreakable Umbrella](https://kol.coldfront.net/thekolwiki/index.php/Undamaged_Unbreakable_Umbrella) &mash; saves up to 1.7 turns on item test, 6 on combat test, 1 on weapon test, 0.5 on spell test
 
 ## TODO (eventually)
 
