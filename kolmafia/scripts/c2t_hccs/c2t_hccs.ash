@@ -396,6 +396,9 @@ void c2t_hccs_init() {
 	//preadventure script for HP/MP recovery
 	set_property('_saved_betweenBattleScript',get_property("betweenBattleScript"));
 	set_property('betweenBattleScript','c2t_hccs_preAdv.ash');
+	//clan
+	if (get_clan_id() != get_property('c2t_hccs_joinClan').to_int())
+		set_property('_saved_joinClan',get_clan_id());
 
 	visit_url('council.php');// Initialize council.
 }
@@ -411,14 +414,17 @@ void c2t_hccs_exit() {
 		set_property('hpAutoRecovery',get_property('_saved_hpAutoRecovery'));
 	set_property('manaBurningThreshold',get_property('_saved_manaBurningThreshold'));
 
-	//only want to restore combat script if CS finished, as it's needed for manual interventions
-	if (get_property("csServicesPerformed").split_string(",").count() == 11 && get_property('_saved_customCombatScript') != "")
-		set_property('customCombatScript',get_property('_saved_customCombatScript'));
 	//don't want CS moods running during manual intervention or when fully finished
 	cli_execute('mood apathetic');
 
-	if (get_property("csServicesPerformed").split_string(",").count() == 11)
+	//restore some things only when all tests are done
+	if (get_property("csServicesPerformed").split_string(",").count() == 11) {
+		if (property_exists('_saved_customCombatScript'))
+			set_property('customCombatScript',get_property('_saved_customCombatScript'));
+		if (property_exists("_saved_joinClan"))
+			c2t_joinClan(get_property("_saved_joinClan").to_int());
 		c2t_hccs_printTestData();
+	}
 
 	if (get_property("shockingLickCharges").to_int() > 0)
 		print(`Info: shocking lick charge count from batteries is {get_property("shockingLickCharges")}`,"blue");
@@ -1457,6 +1463,9 @@ boolean c2t_hccs_preSpell() {
 		c2t_hccs_getEffect($effect[simmering]);
 
 	while (c2t_hccs_wandererFight()); //check for after using a turn to cast Simmering
+
+	if ($familiars[shorter-order cook,left-hand man,imitation crab] contains my_familiar())
+		use_familiar($familiar[melodramedary]);
 
 	//don't have this skill yet. Maybe should add check for all skill uses to make universal?
 	if (have_skill($skill[song of sauce]))

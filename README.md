@@ -125,7 +125,7 @@ While these are not strictly required, not having enough that either save turns 
 * [packaged cold medicine cabinet](https://kol.coldfront.net/thekolwiki/index.php/Packaged_cold_medicine_cabinet) &mdash; drinks a 30% stat booze from this for initial adventures and leveling help post-coil test
 * [undrilled cosmic bowling ball](https://kol.coldfront.net/thekolwiki/index.php/Undrilled_cosmic_bowling_ball) &mdash; 50% stat gain in NEP; saves 1.67 adventures on item test; some extra item and meat gain during leveling fights
 * [combat lover's locket lockbox](https://kol.coldfront.net/thekolwiki/index.php/Combat_lover%27s_locket_lockbox) &mdash; up to 3 monsters to fight to save wishes and time spent on fax
-* [Undamaged Unbreakable Umbrella](https://kol.coldfront.net/thekolwiki/index.php/Undamaged_Unbreakable_Umbrella) &mash; saves up to 1.7 turns on item test, 6 on combat test, 1 on weapon test, 0.5 on spell test
+* [Undamaged Unbreakable Umbrella](https://kol.coldfront.net/thekolwiki/index.php/Undamaged_Unbreakable_Umbrella) &mdash; saves up to 1.7 turns on item test, 6 on combat test, 1 on weapon test, 0.5 on spell test
 
 ## TODO (eventually)
 
