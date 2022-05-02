@@ -33,7 +33,7 @@ void main(int initround, monster foe, string page) {
 		set_property("_c2t_combatReentryCount",(get_property("_c2t_combatReentryCount").to_int()+1).to_string());
 		if (get_property("_c2t_combatReentryCount").to_int() >= 5)
 			abort("The combat script was called at least 5 times without combat resolving");
-		waitq(1);
+		c2t_bbSubmit("twiddle;");
 		return;
 	}
 
