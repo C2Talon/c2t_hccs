@@ -160,7 +160,7 @@ void c2t_hccs_breakfast() {
 		c2t_hccs_haveUse(1,$skill[acquire rhinestones]);
 
 	//peppermint garden
-	if (c2t_hccs_peppermintGarden())
+	if (c2t_hccs_gardenPeppermint())
 		cli_execute("garden pick");
 }
 
@@ -636,15 +636,12 @@ boolean c2t_hccs_preCoil() {
 		cli_execute('rest free');
 
 	// first tome use // borrowed time
-	if (!get_property('_borrowedTimeUsed').to_boolean()) {//&& get_property('tomeSummons').to_int() == 0) {
-		c2t_assert(retrieve_item(1,$item[borrowed time]),"borrowed time fail");
+	if (!get_property('_borrowedTimeUsed').to_boolean() && c2t_hccs_tomeClipArt($item[borrowed time]))
 		use(1,$item[borrowed time]);
-	}
 
 	// second tome use // box of familiar jacks
 	// going to get camel equipment straight away
-	if (available_amount($item[dromedary drinking helmet]) == 0) {//&& get_property('tomeSummons').to_int() == 1) {
-		c2t_assert(retrieve_item(1,$item[box of familiar jacks]),"box of familiar jacks fail");
+	if (available_amount($item[dromedary drinking helmet]) == 0 && c2t_hccs_tomeClipArt($item[box of familiar jacks])) {
 		use_familiar($familiar[melodramedary]);
 		use(1,$item[box of familiar jacks]);
 	}
@@ -900,10 +897,8 @@ boolean c2t_hccs_allTheBuffs() {
 	//third tome use //no longer using bee's knees for stat boost on non-moxie, but still need same strength buff?
 	if (my_mp() < 11)
 		cli_execute('rest free');
-	if (have_effect($effect[purity of spirit]) == 0) {
-		retrieve_item(1,$item[cold-filtered water]);
+	if (have_effect($effect[purity of spirit]) == 0 && c2t_hccs_tomeClipArt($item[cold-filtered water]))
 		use(1,$item[cold-filtered water]);
-	}
 
 	//rhinestones to help moxie leveling
 	if (my_primestat() == $stat[moxie])
@@ -922,7 +917,7 @@ boolean c2t_hccs_allTheBuffs() {
 
 // get semirare from limerick dungeon
 boolean c2t_hccs_semirareItem() {
-	if (c2t_hccs_peppermintGarden() && c2t_hccs_sweetSynthesis())
+	if (c2t_hccs_gardenPeppermint() && c2t_hccs_sweetSynthesis())
 		return false;
 
 	c2t_assert(my_adventures() > 0,"no adventures for limerick dungeon lucky adventure");

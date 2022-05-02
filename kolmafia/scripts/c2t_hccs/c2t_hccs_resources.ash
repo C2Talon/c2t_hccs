@@ -19,13 +19,15 @@ import <c2t_hccs_preAdv.ash>
 //d--briefcase
 //d--cold medicine cabinet
 //d--combat lover's locket
+//d--garden peppermint
 //d--genie
 //d--pantogram
-//d--peppermint garden
 //d--pillkeeper
 //d--pizza cube
 //d--power plant
 //d--sweet synthesis
+//d--tome clip art
+//d--tome sugar
 //d--vote
 
 
@@ -55,6 +57,11 @@ boolean c2t_hccs_combatLoversLocket();
 boolean c2t_hccs_combatLoversLocket(monster mon);
 
 
+//d--garden peppermint
+//returns true if garden is peppermint
+boolean c2t_hccs_gardenPeppermint();
+
+
 //d--genie
 //gets effect from genie if not already have; returns true if have effect
 boolean c2t_hccs_genie(effect eff);
@@ -69,11 +76,6 @@ void c2t_hccs_pantogram();
 
 //makes pantogram pants, where type can be either "spell" or "weapon"
 void c2t_hccs_pantogram(string type);
-
-
-//d--peppermint garden
-//returns true if garden is peppermint
-boolean c2t_hccs_peppermintGarden();
 
 
 //d--pillkeeper
@@ -112,6 +114,22 @@ boolean c2t_hccs_sweetSynthesis();
 boolean c2t_hccs_sweetSynthesis(effect eff);
 
 
+//d--tome clip art
+//returns true if have the skill
+boolean c2t_hccs_tomeClipArt();
+
+//returns true if item obtained
+boolean c2t_hccs_tomeClipArt(item it);
+
+
+//d--tome sugar
+//returns true if have the skill
+boolean c2t_hccs_tomeSugar();
+
+//returns true if item obtained
+boolean c2t_hccs_tomeSugar(item it);
+
+
 //d--vote
 //votes in voting booth
 void c2t_hccs_vote();
@@ -123,9 +141,9 @@ void c2t_hccs_vote();
 //i--briefcase
 //i--cold medicine cabinet
 //i--combat lover's locket
+//i--garden peppermint
 //i--genie
 //i--pantogram
-//i--peppermint garden
 //i--pillkeeper
 //i--pizza cube
 //i--power plant
@@ -213,14 +231,14 @@ boolean c2t_hccs_combatLoversLocket(monster mon) {//mostly same as c2t_hccs_geni
 
 //i--genie
 boolean c2t_hccs_genie(effect eff) {
-	if (have_effect(eff).to_boolean())
+	if (have_effect(eff) > 0)
 		return true;
 	if (get_property("_genieWishesUsed").to_int() >= 3 && available_amount($item[pocket wish]) == 0)
 		return false;
 
 	cli_execute(`genie effect {eff}`);
 
-	return have_effect(eff).to_boolean();
+	return have_effect(eff) > 0;
 }
 boolean c2t_hccs_genie(monster mon) {
 	c2t_hccs_preAdv();
@@ -267,8 +285,8 @@ void c2t_hccs_pantogram(string type) {
 	}
 }
 
-//i--peppermint garden
-boolean c2t_hccs_peppermintGarden() return get_campground() contains $item[peppermint pip packet];
+//i--garden peppermint
+boolean c2t_hccs_gardenPeppermint() return get_campground() contains $item[peppermint pip packet];
 
 //i--pillkeeper
 boolean c2t_hccs_pillkeeper() {
@@ -276,7 +294,7 @@ boolean c2t_hccs_pillkeeper() {
 		&& !get_property("c2t_hccs_disable.pillkeeper").to_boolean();
 }
 boolean c2t_hccs_pillkeeper(effect eff) {
-	if (have_effect(eff).to_boolean())
+	if (have_effect(eff) > 0)
 		return true;
 	if (!c2t_hccs_pillkeeper())
 		return false;
@@ -298,7 +316,7 @@ boolean c2t_hccs_pillkeeper(effect eff) {
 			break;
 	}
 
-	return have_effect(eff).to_boolean();
+	return have_effect(eff) > 0;
 }
 
 //i--pizza cube
@@ -307,11 +325,11 @@ boolean c2t_hccs_pizzaCube() {
 		&& !get_property("c2t_hccs_disable.pizzaCube").to_boolean();
 }
 boolean c2t_hccs_pizzaCube(effect eff) {
-	if (available_amount($item[diabolic pizza]).to_boolean()) {
+	if (available_amount($item[diabolic pizza]) > 0) {
 		print("pizza found while trying to make one, so eating it","red");
 		eat($item[diabolic pizza]);
 	}
-	if (have_effect(eff).to_boolean())
+	if (have_effect(eff) > 0)
 		return true;
 	if (!c2t_hccs_pizzaCube())
 		return false;
@@ -324,7 +342,7 @@ boolean c2t_hccs_pizzaCube(effect eff) {
 	item it1,it2,it3,it4;
 	item [int] choose;
 
-	if (!available_amount($item[diabolic pizza]).to_boolean())
+	if (available_amount($item[diabolic pizza]) == 0)
 	switch (eff) {
 		default:
 			return false;
@@ -359,7 +377,7 @@ boolean c2t_hccs_pizzaCube(effect eff) {
 			break;
 
 		case $effect[certainty]:
-			c2t_assert(available_amount($item[electronics kit]).to_boolean(),"missing electronics kit for CER pizza");
+			c2t_assert(available_amount($item[electronics kit]) > 0,"missing electronics kit for CER pizza");
 			it1 = $item[cog and sprocket assembly];
 			it2 = $item[electronics kit];
 			it3 = $item[razor-sharp can lid];
@@ -408,7 +426,7 @@ boolean c2t_hccs_pizzaCube(effect eff) {
 
 	c2t_hccs_pizzaCube(it1,it2,it3,it4);
 	use_familiar(fam);
-	return have_effect(eff).to_boolean();
+	return have_effect(eff) > 0;
 }
 boolean c2t_hccs_pizzaCube(item it1,item it2,item it3,item it4) {
 	if (!c2t_hccs_pizzaCube())
@@ -417,7 +435,7 @@ boolean c2t_hccs_pizzaCube(item it1,item it2,item it3,item it4) {
 		print("no organ space for a pizza","red");
 		return false;
 	}
-	if (available_amount($item[diabolic pizza]).to_boolean()) {
+	if (available_amount($item[diabolic pizza]) > 0) {
 		print("pizza found while trying to make one, so eating that instead","red");
 		eat($item[diabolic pizza]);
 		return true;
@@ -456,12 +474,12 @@ boolean c2t_hccs_powerPlant() {
 	return true;
 }
 
-//d--sweet synthesis
+//i--sweet synthesis
 boolean c2t_hccs_sweetSynthesis() return have_skill($skill[sweet synthesis]);
 boolean c2t_hccs_sweetSynthesis(effect eff) {
 	if (!c2t_hccs_sweetSynthesis())
 		return false;
-	if (have_effect(eff).to_boolean())
+	if (have_effect(eff) > 0)
 		return true;
 
 	item it1,it2;
@@ -472,7 +490,7 @@ boolean c2t_hccs_sweetSynthesis(effect eff) {
 			return false;
 
 		case $effect[synthesis: collection]://item
-			if (!c2t_hccs_peppermintGarden())
+			if (!c2t_hccs_gardenPeppermint())
 				return false;
 			it1 = $item[peppermint sprout];
 			it2 = $item[peppermint twist];
@@ -490,89 +508,106 @@ boolean c2t_hccs_sweetSynthesis(effect eff) {
 			return sweet_synthesis(eff);
 
 		case $effect[synthesis: style]://mox exp
-			if (item_amount($item[crimbo candied pecan]).to_boolean() && item_amount($item[crimbo fudge]).to_boolean()) {
+			if (item_amount($item[crimbo candied pecan]) > 0 && item_amount($item[crimbo fudge]) > 0) {
 				it1 = $item[crimbo candied pecan];
 				it2 = $item[crimbo fudge];
+				break;
 			}
-			else if (c2t_hccs_peppermintGarden()) {
-				if (item_amount($item[crimbo fudge]).to_boolean()) {
+			if (c2t_hccs_gardenPeppermint()) {
+				if (item_amount($item[crimbo fudge]) > 0) {
 					it1 = $item[crimbo fudge];
 					it2 = $item[peppermint sprout];
+					break;
 				}
-				else if (item_amount($item[crimbo peppermint bark]).to_boolean()) {
+				if (item_amount($item[crimbo peppermint bark]) > 0) {
 					it1 = $item[crimbo peppermint bark];
 					it2 = $item[peppermint twist];
+					break;
 				}
 			}
-			else {
-				//have to waste a wish & saber use on olives as moxie, so can't recover candy failure with those like other classes
-				print("Didn't get the right candies for buffs, so dropping hardcore.","blue");
-				if (in_hardcore())
-					c2t_dropHardcore();
-				//TODO maybe make pull selection smarter
-				it1 = $item[crimbo candied pecan];
-				it2 = $item[crimbo fudge];
-				c2t_hccs_pull(it1);
-				c2t_hccs_pull(it2);
+			if (c2t_hccs_tomeSugar()) {
+				if (item_amount($item[crimbo candied pecan]) > 0) {
+					it1 = $item[crimbo candied pecan];
+					it2 = $item[sugar shillelagh];
+				}
+				else if (item_amount($item[crimbo peppermint bark]) > 0) {
+					it1 = $item[crimbo peppermint bark];
+					it2 = $item[sugar sheet];
+				}
+				else if (item_amount($item[crimbo fudge]) > 0) {
+					it1 = $item[crimbo fudge];
+					it2 = $item[sugar shank];
+				}
+				if (c2t_hccs_tomeSugar(it2))
+					break;
 			}
+			//have to waste a wish & saber use on olives as moxie, so can't recover candy failure with those like other classes
+			print("Didn't get the right candies for buffs, so dropping hardcore.","blue");
+			if (in_hardcore())
+				c2t_dropHardcore();
+			//TODO maybe make pull selection smarter
+			it1 = $item[crimbo candied pecan];
+			it2 = $item[crimbo fudge];
+			c2t_hccs_pull(it1);
+			c2t_hccs_pull(it2);
 			break;
 
 		case $effect[synthesis: strong]://mus stat
-			if (item_amount($item[crimbo candied pecan]).to_boolean()) {
+			if (item_amount($item[crimbo candied pecan]) > 0) {
 				it1 = $item[crimbo candied pecan];
 				it2 = $item[jaba&ntilde;ero-flavored chewing gum];
 			}
-			else if (item_amount($item[crimbo peppermint bark]).to_boolean()) {
+			else if (item_amount($item[crimbo peppermint bark]) > 0) {
 				it1 = $item[crimbo peppermint bark];
 				it2 = $item[tamarind-flavored chewing gum];
 			}
-			else if (item_amount($item[peppermint sprout]).to_boolean()) {
+			else if (item_amount($item[peppermint sprout]) > 0) {
 				it1 = $item[peppermint sprout];
 				it2 = $item[jaba&ntilde;ero-flavored chewing gum];
 			}
-			else if (item_amount($item[peppermint twist]).to_boolean()) {
+			else if (item_amount($item[peppermint twist]) > 0) {
 				it1 = $item[peppermint twist];
 				it2 = $item[pickle-flavored chewing gum];
 			}
-			else if (item_amount($item[crimbo fudge]).to_boolean()) {
+			else if (item_amount($item[crimbo fudge]) > 0) {
 				it1 = $item[crimbo fudge];
 				it2 = $item[pile of candy];
 			}
 			break;
 
 		case $effect[synthesis: smart]://mys stat
-			if (item_amount($item[crimbo peppermint bark]).to_boolean()) {
+			if (item_amount($item[crimbo peppermint bark]) > 0) {
 				it1 = $item[crimbo peppermint bark];
 				it2 = $item[lime-and-chile-flavored chewing gum];
 			}
-			else if (item_amount($item[crimbo fudge]).to_boolean()) {
+			else if (item_amount($item[crimbo fudge]) > 0) {
 				it1 = $item[crimbo fudge];
 				it2 = $item[tamarind-flavored chewing gum];
 			}
-			else if (item_amount($item[peppermint sprout]).to_boolean() || item_amount($item[peppermint twist]).to_boolean()) {
+			else if (item_amount($item[peppermint sprout]) > 0 || item_amount($item[peppermint twist]) > 0) {
 				it1 = $item[peppermint twist];
 				it2 = $item[jaba&ntilde;ero-flavored chewing gum];
 			}
-			else if (item_amount($item[crimbo candied pecan]).to_boolean()) {
+			else if (item_amount($item[crimbo candied pecan]) > 0) {
 				it1 = $item[crimbo candied pecan];
 				it2 = $item[pile of candy];
 			}
 			break;
 
 		case $effect[synthesis: cool]://mox stat
-			if (item_amount($item[crimbo peppermint bark]).to_boolean()) {
+			if (item_amount($item[crimbo peppermint bark]) > 0) {
 				it1 = $item[crimbo peppermint bark];
 				it2 = $item[pickle-flavored chewing gum];
 			}
-			else if (item_amount($item[crimbo fudge]).to_boolean()) {
+			else if (item_amount($item[crimbo fudge]) > 0) {
 				it1 = $item[crimbo fudge];
 				it2 = $item[lime-and-chile-flavored chewing gum];
 			}
-			else if (item_amount($item[crimbo candied pecan]).to_boolean()) {
+			else if (item_amount($item[crimbo candied pecan]) > 0) {
 				it1 = $item[crimbo candied pecan];
 				it2 = $item[tamarind-flavored chewing gum];
 			}
-			else if (item_amount($item[peppermint sprout]).to_boolean()) {
+			else if (item_amount($item[peppermint sprout]) > 0) {
 				it1 = $item[peppermint sprout];
 				it2 = $item[tamarind-flavored chewing gum];
 			}
@@ -600,6 +635,38 @@ boolean c2t_hccs_sweetSynthesis(effect eff) {
 	return sweet_synthesis(it1,it2);
 }
 
+//i--tome clip art
+boolean c2t_hccs_tomeClipArt() {
+	return have_skill($skill[summon clip art]);
+		//&& get_property("tomeSummons").to_int() < 3;
+}
+boolean c2t_hccs_tomeClipArt(item it) {
+	if (item_amount(it) > 0)
+		return true;
+	if (!c2t_hccs_tomeClipArt())
+		return false;
+	if (get_property("tomeSummons").to_int() >= 3)
+		return false;
+	return retrieve_item(it);
+}
+
+//i--tome sugar
+boolean c2t_hccs_tomeSugar() {
+	return have_skill($skill[summon sugar sheets]);
+		//&& get_property("tomeSummons").to_int() < 3;
+}
+boolean c2t_hccs_tomeSugar(item it) {
+	if (item_amount(it) > 0)
+		return true;
+	if (item_amount($item[sugar sheet]) == 0) {
+		if (!c2t_hccs_tomeSugar())
+			return false;
+		if (get_property("tomeSummons").to_int() >= 3)
+			return false;
+		c2t_hccs_haveUse($skill[summon sugar sheet]);
+	}
+	return retrieve_item(it);
+}
 
 //i--vote
 void c2t_hccs_vote() {
