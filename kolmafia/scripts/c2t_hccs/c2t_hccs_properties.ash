@@ -70,6 +70,9 @@ Use the respective CLI command to set the property to disable a particular resou
 By disabling a resource, the script won't use _any_ limited resource from it.
 I.e. it's an all or nothing thing.
 
+-- backup camera --
+set c2t_hccs_disable.backupCamera = true
+
 -- briefcase --
 set c2t_hccs_disable.briefcase = true
 
@@ -78,6 +81,9 @@ set c2t_hccs_disable.coldMedicineCabinet = true
 
 -- combat lover's locket --
 set c2t_hccs_disable.combatLoversLocket = true
+
+-- melodramedary --
+set c2t_hccs_disable.melodramedary = true
 
 -- pantogram --
 set c2t_hccs_disable.pantogram = true
@@ -90,6 +96,9 @@ set c2t_hccs_disable.pizzaCube = true
 
 -- power plant --
 set c2t_hccs_disable.powerPlant = true
+
+-- shorter-order cook --
+set c2t_hccs_disable.shorterOrderCook = true
 
 */
 

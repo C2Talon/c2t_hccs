@@ -77,6 +77,7 @@ boolean c2t_hccs_fightGodLobster();
 void c2t_hccs_breakfast();
 void c2t_hccs_printTestData();
 void c2t_hccs_testData(string testType,int testNum,int turnsTaken,int turnsExpected);
+familiar c2t_hccs_levelingFamiliar(boolean safeOnly);
 
 
 void main() {
@@ -101,7 +102,7 @@ void main() {
 		c2t_hccs_testhandler(TEST_HP);
 
 		//best time to open guild as SC if need be, or fish for wanderers, so warn and abort if < 93% spit
-		if (get_property('camelSpit').to_int() < 93 && !get_property("_c2t_hccs_earlySpitWarn").to_boolean()) {
+		if (c2t_hccs_melodramedary() && get_property('camelSpit').to_int() < 93 && !get_property("_c2t_hccs_earlySpitWarn").to_boolean()) {
 			set_property("_c2t_hccs_earlySpitWarn","true");
 			abort('Camel spit only at '+get_property('camelSpit')+'%');
 		}
@@ -212,8 +213,7 @@ void c2t_hccs_testHandler(int test) {
 	while (my_turncount() >= 60 && c2t_hccs_wandererFight());
 
 	//combat familiars will slaughter everything; so make sure they're inactive at the start of test sections, since not every combat bothers with familiar checks
-	if ($familiars[shorter-order cook,left-hand man,imitation crab] contains my_familiar())
-		use_familiar($familiar[melodramedary]);
+	c2t_hccs_levelingFamiliar(true);
 
 	print('Running pre-'+TEST_NAME[test]+' stuff...','blue');
 	switch (test) {
@@ -504,7 +504,7 @@ boolean c2t_hccs_preCoil() {
 
 	//backup camera settings
 	if (get_property('backupCameraMode') != 'ml' || !get_property('backupCameraReverserEnabled').to_boolean())
-		cli_execute('backupcamera ml;backupcamera reverser on');
+		cli_execute('try;backupcamera ml;backupcamera reverser on');
 
 	//knock-off hero cape thing
 	if (available_amount($item[unwrapped knock-off retro superhero cape]) > 0)
@@ -596,7 +596,7 @@ boolean c2t_hccs_preCoil() {
 		}
 		else
 			eat(1,$item[diabolic pizza]);
-		use_familiar($familiar[hovering sombrero]);
+		c2t_hccs_levelingFamiliar(true);
 	}
 	//if cold medicine cabinet, grabbing a stat booze to get some adventures post-coil as I don't have numberology
 	else
@@ -641,7 +641,10 @@ boolean c2t_hccs_preCoil() {
 
 	// second tome use // box of familiar jacks
 	// going to get camel equipment straight away
-	if (available_amount($item[dromedary drinking helmet]) == 0 && c2t_hccs_tomeClipArt($item[box of familiar jacks])) {
+	if (c2t_hccs_melodramedary()
+		&& available_amount($item[dromedary drinking helmet]) == 0
+		&& c2t_hccs_tomeClipArt($item[box of familiar jacks])) {
+
 		use_familiar($familiar[melodramedary]);
 		use(1,$item[box of familiar jacks]);
 	}
@@ -904,8 +907,8 @@ boolean c2t_hccs_allTheBuffs() {
 	if (my_primestat() == $stat[moxie])
 		use(item_amount($item[rhinestone]),$item[rhinestone]);
 
-	use_familiar($familiar[hovering sombrero]);
-	
+	c2t_hccs_levelingFamiliar(true);
+
 	//telescope
 	if (get_property("telescopeUpgrades").to_int() > 0)
 		cli_execute('telescope high');
@@ -997,7 +1000,7 @@ boolean c2t_hccs_preItem() {
 	//get latte ingredient from fluffy bunny and cloake item buff
 	if (have_effect($effect[feeling lost]) == 0 && (have_effect($effect[bat-adjacent form]) == 0 || !get_property('latteUnlocks').contains_text('carrot'))) {
 		maximize("mainstat,equip latte,1000 bonus lil doctor bag,1000 bonus kremlin's greatest briefcase,1000 bonus vampyric cloake",false);
-		use_familiar($familiar[melodramedary]);
+		c2t_hccs_levelingFamiliar(true);
 
 		while ((have_equipped($item[vampyric cloake]) && have_effect($effect[bat-adjacent form]) == 0) || !get_property('latteUnlocks').contains_text('carrot'))
 			adv1($location[the dire warren],-1,"");
@@ -1316,7 +1319,7 @@ boolean c2t_hccs_preNoncombat() {
 }
 
 boolean c2t_hccs_preWeapon() {
-	if (get_property('camelSpit').to_int() != 100 && have_effect($effect[spit upon]) == 0)
+	if (c2t_hccs_melodramedary() && get_property('camelSpit').to_int() != 100 && have_effect($effect[spit upon]) == 0)
 		abort('Camel spit only at '+get_property('camelSpit')+'%.');
 
 	//cast triple size
@@ -1387,7 +1390,10 @@ boolean c2t_hccs_preWeapon() {
 		//only 2 things needed for combat:
 		if (!have_equipped($item[fourth of may cosplay saber]))
 			equip($item[fourth of may cosplay saber]);
-		use_familiar(c2t_priority($familiars[melodramedary]));
+		if (c2t_hccs_melodramedary())
+			use_familiar($familiar[melodramedary]);
+		else
+			c2t_hccs_levelingFamiliar(true);
 
 		adv1($location[thugnderdome],-1,"");//everything is saberable and no crazy NCs
 	}
@@ -1459,9 +1465,6 @@ boolean c2t_hccs_preSpell() {
 
 	while (c2t_hccs_wandererFight()); //check for after using a turn to cast Simmering
 
-	if ($familiars[shorter-order cook,left-hand man,imitation crab] contains my_familiar())
-		use_familiar($familiar[melodramedary]);
-
 	//don't have this skill yet. Maybe should add check for all skill uses to make universal?
 	if (have_skill($skill[song of sauce]))
 		c2t_hccs_getEffect($effect[song of sauce]);
@@ -1509,6 +1512,7 @@ boolean c2t_hccs_preSpell() {
 
 	// meteor lore // moxie can't do this, as it wastes a saber on evil olive -- moxie should be able to do this now with nostalgia earlier?
 	if (have_skill($skill[meteor lore]) && have_effect($effect[meteor showered]) == 0 && get_property('_saberForceUses').to_int() < 5) {
+		c2t_hccs_levelingFamiliar(true);
 		maximize("mainstat,equip fourth of may cosplay saber",false);
 		adv1($location[thugnderdome],-1,"");//everything is saberable and no crazy NCs
 	}
@@ -1571,7 +1575,7 @@ boolean c2t_hccs_preHp() {
 	if (c2t_hccs_thresholdMet(TEST_HP))
 		return true;
 
-	maximize('hp',false);
+	maximize('hp,switch left-hand man',false);
 	if (c2t_hccs_thresholdMet(TEST_HP))
 		return true;
 
@@ -1607,7 +1611,7 @@ boolean c2t_hccs_preMus() {
 	if (c2t_hccs_thresholdMet(TEST_MUS))
 		return true;
 
-	maximize('mus',false);
+	maximize('mus,switch left-hand man',false);
 	if (c2t_hccs_thresholdMet(TEST_MUS))
 		return true;
 
@@ -1635,7 +1639,7 @@ boolean c2t_hccs_preMys() {
 	if (c2t_hccs_thresholdMet(TEST_MYS))
 		return true;
 
-	maximize('mys',false);
+	maximize('mys,switch left-hand man',false);
 	if (c2t_hccs_thresholdMet(TEST_MYS))
 		return true;
 
@@ -1663,7 +1667,7 @@ boolean c2t_hccs_preMox() {
 	if (c2t_hccs_thresholdMet(TEST_MOX))
 		return true;
 
-	maximize('mox',false);
+	maximize('mox,switch left-hand man',false);
 	if (c2t_hccs_thresholdMet(TEST_MOX))
 		return true;
 
@@ -1691,6 +1695,7 @@ boolean c2t_hccs_preMox() {
 }
 
 void c2t_hccs_fights() {
+	string fam;
 	//TODO move familiar changes and maximizer calls inside of blocks
 	// saber yellow ray stuff
 	if (available_amount($item[tomato juice of powerful power]) == 0
@@ -1702,8 +1707,8 @@ void c2t_hccs_fights() {
 		if (my_hp() < 0.5 * my_maxhp())
 			c2t_hccs_restoreMp();
 
-		use_familiar($familiar[melodramedary]);
-		equip($item[dromedary drinking helmet]);
+		if (c2t_hccs_levelingFamiliar(true) == $familiar[melodramedary] && available_amount($item[dromedary drinking helmet]) > 0)
+			fam = ",equip dromedary drinking helmet";
 		
 		// Fruits in skeleton store (Saber YR)
 		if ((available_amount($item[ointment of the occult]) == 0 && available_amount($item[grapefruit]) == 0 && have_effect($effect[mystically oiled]) == 0)
@@ -1723,7 +1728,7 @@ void c2t_hccs_fights() {
 
 			if (get_property('lastCopyableMonster').to_monster() != $monster[novelty tropical skeleton]) {
 				//max mp to max latte gulp to fuel buffs
-				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,-equip backup camera,100 bonus lil doctor bag,100 bonus kremlin's greatest briefcase,-familiar",false);
+				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,100 bonus lil doctor bag,100 bonus kremlin's greatest briefcase"+fam,false);
 
 				c2t_cartographyHunt($location[the skeleton store],$monster[novelty tropical skeleton]);
 				run_turn();
@@ -1742,8 +1747,8 @@ void c2t_hccs_fights() {
 				if (get_property('_latteDrinkUsed').to_boolean())
 					cli_execute('latte refill cinnamon pumpkin vanilla');
 				//max mp to max latte gulp to fuel buffs
-				use_familiar($familiar[melodramedary]);
-				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,-equip backup camera,100 bonus lil doctor bag,100 bonus kremlin's greatest briefcase,-familiar",false);
+				c2t_hccs_levelingFamiliar(true);
+				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,100 bonus lil doctor bag,100 bonus kremlin's greatest briefcase"+fam,false);
 
 				c2t_cartographyHunt($location[the haunted pantry],$monster[possessed can of tomatoes]);
 				run_turn();
@@ -1760,19 +1765,9 @@ void c2t_hccs_fights() {
 	c2t_hccs_getEffect($effect[stevedave's shanty of superiority]);
 	
 	//sort out familiar
-	string famEq;
-	if (my_class() == $class[seal clubber] || available_amount($item[dromedary drinking helmet]) > 0) {
-		use_familiar($familiar[melodramedary]);
-		if (available_amount($item[dromedary drinking helmet]) > 0) {
-			equip($item[dromedary drinking helmet]);
-			famEq = ",equip dromedary drinking helmet";
-		}
-	}
-	else
-		use_familiar($familiar[hovering sombrero]);
+	if (c2t_hccs_levelingFamiliar(false) == $familiar[melodramedary] && available_amount($item[dromedary drinking helmet]) > 0)
+		fam = ",equip dromedary drinking helmet";
 
-	familiar levelingFam = my_familiar();
-	
 	//mumming trunk stats on leveling familiar
 	if (item_amount($item[mumming trunk]) > 0) {
 		if (my_primestat() == $stat[muscle] && !get_property('_mummeryUses').contains_text('3'))
@@ -1808,9 +1803,6 @@ void c2t_hccs_fights() {
 			c2t_hccs_haveUse(1,$skill[spirit boon]);
 	}
 
-	use_familiar(levelingFam);
-
-
 	//get crimbo ghost buff from dudes at NEP
 	if ((have_familiar($familiar[ghost of crimbo carols]) && have_effect($effect[holiday yoked]) == 0)
 		|| (my_primestat() == $stat[moxie] && have_effect($effect[unrunnable face]) == 0 && item_amount($item[runproof mascara]) == 0)//to nostalgia runproof mascara
@@ -1820,7 +1812,7 @@ void c2t_hccs_fights() {
 			cli_execute('latte refill cinnamon pumpkin vanilla');
 		if (have_familiar($familiar[ghost of crimbo carols]))
 			use_familiar($familiar[ghost of crimbo carols]);
-		maximize("mainstat,equip latte,-equip i voted,-equip backup camera",false);
+		maximize("mainstat,equip latte,-equip i voted,",false);
 
 		//going to grab runproof mascara from globster if moxie instead of having to wait post-kramco
 		if (my_primestat() == $stat[moxie]) {
@@ -1837,7 +1829,7 @@ void c2t_hccs_fights() {
 	//moxie needs olives
 	if (my_primestat() == $stat[moxie] && have_effect($effect[slippery oiliness]) == 0 && item_amount($item[jumbo olive]) == 0) {
 		//only thing that needs be equipped
-		use_familiar($familiar[melodramedary]);
+		c2t_hccs_levelingFamiliar(true);
 		if (!have_equipped($item[fourth of may cosplay saber]))
 			equip($item[fourth of may cosplay saber]);
 		//TODO evil olive - change to run away from and feel nostagic+envy+free kill another thing to save a saber use for spell test
@@ -1845,11 +1837,12 @@ void c2t_hccs_fights() {
 			abort("Failed to fight evil olive");
 	}
 
-	use_familiar(levelingFam);
+	if (c2t_hccs_levelingFamiliar(false) == $familiar[left-hand man])
+		fam = ",equip unbreakable umbrella";
 
 	//summon tentacle
 	if (have_skill($skill[evoke eldritch horror]) && !get_property('_eldritchHorrorEvoked').to_boolean()) {
-		maximize("mainstat,100exp,-equip garbage shirt"+famEq,false);
+		maximize("mainstat,100exp,-equip garbage shirt"+fam,false);
 		if (my_mp() < 80)
 			c2t_hccs_restoreMp();
 		c2t_hccs_haveUse(1,$skill[evoke eldritch horror]);
@@ -1862,26 +1855,22 @@ void c2t_hccs_fights() {
 
 	// Your Mushroom Garden
 	if ((get_campground() contains $item[packet of mushroom spores]) && get_property('_mushroomGardenFights').to_int() == 0) {
-		maximize("mainstat,-equip garbage shirt"+famEq,false);
+		maximize("mainstat,-equip garbage shirt"+fam,false);
 		adv1($location[your mushroom garden],-1,"");
 	}
 
 	c2t_hccs_wandererFight();//shouldn't do kramco
 
 	//setup for NEP and backup fights
-	string doc,garbage,kramco,fam;
+	string doc,garbage,kramco;
 
-	//set camel
-	if (get_property('camelSpit').to_int() != 100) {
-		use_familiar($familiar[melodramedary]);
-		fam = ",equip dromedary drinking helmet";
-	}
-
-	if (get_property('backupCameraMode') != 'ml')
+	if (c2t_hccs_backupCamera() && get_property('backupCameraMode') != 'ml')
 		cli_execute('backupcamera ml');
 
 	if (!get_property('_gingerbreadMobHitUsed').to_boolean())
 		print("Running backup camera and Neverending Party fights","blue");
+
+	set_location($location[the neverending party]);
 
 	//NEP loop //neverending party and backup camera fights
 	while (get_property("_neverendingPartyFreeTurns").to_int() < 10 || c2t_hccs_freeKillsLeft() > 0) {
@@ -1894,21 +1883,10 @@ void c2t_hccs_fights() {
 		else
 			doc = "";
 
-		//change to other familiar when spit maxed
-		if (get_property('camelSpit').to_int() == 100) {
-			if (have_familiar($familiar[shorter-order cook]) && item_amount($item[short stack of pancakes]) == 0 && have_effect($effect[shortly stacked]) == 0) {
-				if (my_familiar() != $familiar[shorter-order cook]) {
-					//give cook's combat bonus familiar exp to professor
-					use_familiar($familiar[pocket professor]);
-					use_familiar($familiar[shorter-order cook]);
-				}
-			}
-			else
-				use_familiar(c2t_priority($familiars[baby sandworm,galloping grill,hovering sombrero]));
+		if (c2t_hccs_levelingFamiliar(false) != $familiar[melodramedary])
 			fam = "";
-		}
-		else//swap off pocket professor after it happens
-			use_familiar($familiar[melodramedary]);
+		if (my_familiar() == $familiar[left-hand man])
+			fam = ",equip unbreakable umbrella";
 
 		//backup fights will turns this off after a point, so keep turning it on
 		if (get_property('garbageShirtCharge').to_int() > 0)
@@ -1983,12 +1961,17 @@ void c2t_hccs_fights() {
 			cli_execute('eat magical sausage');
 
 		//hopefully stop it before a possible break if my logic is off
-		if (get_property('_pocketProfessorLectures').to_int() == 0 && get_property('_backUpUses').to_int() >= 10)
-			abort('Pocket professor has not been used yet, while backup camera charges left is '+(11-get_property('_backUpUses').to_int()));
+		if (c2t_hccs_backupCamera() && get_property('_pocketProfessorLectures').to_int() == 0 && c2t_hccs_backupCameraLeft() <= 1)
+			abort('Pocket professor has not been used yet, while backup camera charges left is '+c2t_hccs_backupCameraLeft());
 
+		//professor chain sausage goblins in NEP first thing if no backup camera
+		if (!c2t_hccs_backupCamera() && get_property('_pocketProfessorLectures').to_int() == 0) {
+			use_familiar($familiar[pocket professor]);
+			maximize("mainstat,equip garbage shirt,equip kramco,100familiar weight",false);
+		}
 		//9+ professor copies, after getting exp buff from NC and used sauceror potions
-		if (get_property('_pocketProfessorLectures').to_int() == 0
-			&& get_property('_backUpUses').to_int() < 11
+		else if (get_property('_pocketProfessorLectures').to_int() == 0
+			&& c2t_hccs_backupCameraLeft() > 0
 			&& (have_effect($effect[spiced up]) > 0 || have_effect($effect[tomes of opportunity]) > 0 || have_effect($effect[the best hair you've ever had]) > 0)
 			&& have_effect($effect[tomato power]) > 0
 			//target monster for professor copies. using back up camera to bootstrap
@@ -1996,12 +1979,12 @@ void c2t_hccs_fights() {
 			) {
 
 			use_familiar($familiar[pocket professor]);
-			c2t_minMaximize("mainstat,equip garbage shirt,equip kramco,100familiar weight,equip backup camera");
+			maximize("mainstat,equip garbage shirt,equip kramco,100familiar weight,equip backup camera",false);
 		}
 		//fish for latte carrot ingredient with backup fights
 		else if (get_property('_pocketProfessorLectures').to_int() > 0
 			&& !get_property('latteUnlocks').contains_text('carrot')
-			&& get_property('_backUpUses').to_int() < 11
+			&& c2t_hccs_backupCameraLeft() > 0
 			//target monster
 			&& get_property('lastCopyableMonster').to_monster() == $monster[sausage goblin]
 			) {
@@ -2010,12 +1993,12 @@ void c2t_hccs_fights() {
 			if (get_property('garbageShirtCharge').to_int() < 17)
 				garbage = ",-equip garbage shirt";
 
-			c2t_minMaximize("mainstat,exp,equip latte,equip backup camera"+garbage+fam);
+			maximize("mainstat,exp,equip latte,equip backup camera"+garbage+fam,false);
 			adv1($location[the dire warren],-1,"");
 			continue;//don't want to fall into NEP in this state
 		}
 		//inital and post-latte backup fights
-		else if (get_property('_backUpUses').to_int() < 11 && get_property('lastCopyableMonster').to_monster() == $monster[sausage goblin]) {
+		else if (c2t_hccs_backupCameraLeft() > 0 && get_property('lastCopyableMonster').to_monster() == $monster[sausage goblin]) {
 			//only use kramco offhand if target is sausage goblin to not mess things up
 			if (get_property('lastCopyableMonster').to_monster() == $monster[sausage goblin])
 				kramco = ",equip kramco";
@@ -2026,11 +2009,11 @@ void c2t_hccs_fights() {
 			if (get_property('garbageShirtCharge').to_int() < 17)
 				garbage = ",-equip garbage shirt";
 
-			c2t_minMaximize("mainstat,exp,equip backup camera"+kramco+garbage+fam);
+			maximize("mainstat,exp,equip backup camera"+kramco+garbage+fam,false);
 		}
 		//rest of the free NEP fights
 		else
-			c2t_minMaximize("mainstat,exp,equip kramco"+garbage+fam+doc);
+			maximize("mainstat,exp,equip kramco"+garbage+fam+doc,false);
 
 		adv1($location[the neverending party],-1,"");
 	}
@@ -2067,22 +2050,15 @@ boolean c2t_hccs_wandererFight() {
 	familiar nowFam = my_familiar();
 	item nowEquip = equipped_item($slot[familiar]);
 
-	if (get_property('camelSpit').to_int() < 100 && !get_property("csServicesPerformed").contains_text(TEST_NAME[TEST_WEAPON])) {
-		use_familiar($familiar[melodramedary]);
+	if (c2t_hccs_levelingFamiliar(false) == $familiar[melodramedary])
 		append += ",equip dromedary drinking helmet";
+	else if (my_familiar() == $familiar[left-hand man]) {
+		equip($slot[familiar],$item[unbreakable umbrella]);
+		append += ",-familiar";
 	}
-	else if (have_familiar($familiar[shorter-order cook]) && get_property('camelSpit').to_int() == 100 && !get_property("csServicesPerformed").contains_text(TEST_NAME[TEST_FAMILIAR]) && item_amount($item[short stack of pancakes]) == 0) {
-		if (my_familiar() != $familiar[shorter-order cook]) {
-			//give cook's combat bonus familiar exp to professor
-			use_familiar($familiar[pocket professor]);
-			use_familiar($familiar[shorter-order cook]);
-		}
-	}
-	else
-		use_familiar(c2t_priority($familiars[baby sandworm,galloping grill,hovering sombrero]));
 
-	//backup camera may swap off voter monster, so don't equip it
-	maximize("mainstat,-equip backup camera"+append,false);
+	set_location($location[the neverending party]);
+	maximize("mainstat,exp"+append,false);
 	adv1($location[the neverending party],-1,"");
 
 	//hopefully restore to previous state without outfits
@@ -2091,6 +2067,38 @@ boolean c2t_hccs_wandererFight() {
 	equip($slot[familiar],nowEquip);
 
 	return true;
+}
+
+//switches to leveling familiar and returns which it is
+familiar c2t_hccs_levelingFamiliar(boolean safeOnly) {
+	familiar out;
+
+	if (c2t_hccs_melodramedary()
+		&& c2t_hccs_melodramedarySpit() < 100
+		&& !get_property("csServicesPerformed").contains_text(TEST_NAME[TEST_WEAPON])) {
+
+		out = $familiar[melodramedary];
+	}
+	else if (!safeOnly) {
+		if (c2t_hccs_shorterOrderCook()
+			&& !get_property("csServicesPerformed").contains_text(TEST_NAME[TEST_FAMILIAR])
+			&& item_amount($item[short stack of pancakes]) == 0) {
+
+			out = $familiar[shorter-order cook];
+			if (my_familiar() != out)
+				//give cook's combat bonus familiar exp to professor
+				use_familiar($familiar[pocket professor]);
+		}
+		else if (available_amount($item[unbreakable umbrella]) > 0 && have_familiar($familiar[left-hand man]))
+			out = $familiar[left-hand man];
+		else
+			out = c2t_priority($familiars[galloping grill,hovering sombrero]);
+	}
+	else
+		out = $familiar[hovering sombrero];
+
+	use_familiar(out);
+	return out;
 }
 
 // will fail if haiku dungeon stuff spills outside of itself, so probably avoid that or make sure to do combats elsewhere just before a test

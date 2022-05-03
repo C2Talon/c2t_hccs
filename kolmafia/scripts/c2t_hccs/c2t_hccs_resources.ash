@@ -16,19 +16,30 @@ import <c2t_hccs_preAdv.ash>
 /*-=-+-=-+-=-+-=-+-=-+-=-
   function declarations
   -=-+-=-+-=-+-=-+-=-+-=-*/
+//d--backup camera
 //d--briefcase
 //d--cold medicine cabinet
 //d--combat lover's locket
 //d--garden peppermint
 //d--genie
+//d--melodramedary
 //d--pantogram
 //d--pillkeeper
 //d--pizza cube
 //d--power plant
+//d--shorter-order cook
 //d--sweet synthesis
 //d--tome clip art
 //d--tome sugar
 //d--vote
+
+
+//d--backup camera
+//returns true if have backup camera
+boolean c2t_hccs_backupCamera();
+
+//returns number of uses left
+int c2t_hccs_backupCameraLeft();
 
 
 //d--briefcase
@@ -70,6 +81,14 @@ boolean c2t_hccs_genie(effect eff);
 boolean c2t_hccs_genie(monster mon);
 
 
+//d--melodramedary
+//returns true if have melodramedary
+boolean c2t_hccs_melodramedary();
+
+//returns spit charge
+int c2t_hccs_melodramedarySpit();
+
+
 //d--pantogram
 //makes pantogram pants with stats of mainstat,hot res,mp,spell,-combat
 void c2t_hccs_pantogram();
@@ -105,6 +124,11 @@ boolean c2t_hccs_pizzaCube(item it1,item it2,item it3,item it4);
 boolean c2t_hccs_powerPlant();
 
 
+//d--shorter-order cook
+//returns true if have short-order cook
+boolean c2t_hccs_shorterOrderCook();
+
+
 //d--sweet synthesis
 //returns true if have the skill
 boolean c2t_hccs_sweetSynthesis();
@@ -138,17 +162,34 @@ void c2t_hccs_vote();
 /*-=-+-=-+-=-+-=-+-=-+-=-
   function implementations
   -=-+-=-+-=-+-=-+-=-+-=-*/
+//i--backup camera
 //i--briefcase
 //i--cold medicine cabinet
 //i--combat lover's locket
 //i--garden peppermint
 //i--genie
+//i--melodramedary
 //i--pantogram
 //i--pillkeeper
 //i--pizza cube
 //i--power plant
+//i--shorter-order cook
 //i--sweet synthesis
+//i--tome clip art
+//i--tome sugar
 //i--vote
+
+
+//i--backup camera
+boolean c2t_hccs_backupCamera() {
+	return available_amount($item[backup camera]) > 0
+		&& !get_property("c2t_hccs_disable.backupCamera").to_boolean();
+}
+int c2t_hccs_backupCameraLeft() {
+	if (!c2t_hccs_backupCamera())
+		return 0;
+	return 11-get_property('_backUpUses').to_int();
+}
 
 
 //i--briefcase
@@ -251,6 +292,17 @@ boolean c2t_hccs_genie(monster mon) {
 	if (get_property("lastEncounter") != mon && get_property("lastEncounter") != "Using the Force")
 		return false;
 	return true;
+}
+
+//i--melodramedary
+boolean c2t_hccs_melodramedary() {
+	return have_familiar($familiar[melodramedary])
+		&& !get_property("c2t_hccs_disable.melodramedary").to_boolean();
+}
+int c2t_hccs_melodramedarySpit() {
+	if (!c2t_hccs_melodramedary())
+		return 0;
+	return get_property('camelSpit').to_int();
 }
 
 //i--pantogram
@@ -474,6 +526,12 @@ boolean c2t_hccs_powerPlant() {
 	return true;
 }
 
+//i--shorter-order cook
+boolean c2t_hccs_shorterOrderCook() {
+	return have_familiar($familiar[shorter-order cook])
+		&& !get_property("c2t_hccs_disable.shorterOrderCook").to_boolean();
+}
+
 //i--sweet synthesis
 boolean c2t_hccs_sweetSynthesis() return have_skill($skill[sweet synthesis]);
 boolean c2t_hccs_sweetSynthesis(effect eff) {
@@ -663,7 +721,7 @@ boolean c2t_hccs_tomeSugar(item it) {
 			return false;
 		if (get_property("tomeSummons").to_int() >= 3)
 			return false;
-		c2t_hccs_haveUse($skill[summon sugar sheet]);
+		c2t_hccs_haveUse($skill[summon sugar sheets]);
 	}
 	return retrieve_item(it);
 }

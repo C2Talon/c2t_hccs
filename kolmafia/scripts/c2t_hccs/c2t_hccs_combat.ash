@@ -3,6 +3,7 @@
 
 import <c2t_lib.ash>
 import <c2t_hccs_lib.ash>
+import <c2t_hccs_resources.ash>
 
 
 // consult script for CS
@@ -107,7 +108,7 @@ void main(int initround, monster foe, string page) {
 		return;
 	}
 	//saber random thing at this location for meteor shower buff -- saber happens elsewhere
-	else if (get_property("lastAdventure").to_location() == $location[thugnderdome]) {
+	else if (my_location() == $location[thugnderdome]) {
 		m = mHead + mSteal.c2t_bb($skill[meteor shower]);
 
 		//camel spit for weapon test, which is directly after combat test
@@ -122,7 +123,7 @@ void main(int initround, monster foe, string page) {
 		switch (foe) {
 			//only use 1 become the bat for item test and initial latte throw
 			case $monster[fluffy bunny]:
-				if (have_equipped($item[backup camera]) && get_property("_backUpUses").to_int() < 11) {
+				if (have_equipped($item[backup camera]) && c2t_hccs_backupCameraLeft() > 0) {
 					c2t_bbSubmit(
 						c2t_bb($skill[back-up to your last enemy])
 						.c2t_bb("twiddle;")
@@ -202,7 +203,7 @@ void main(int initround, monster foe, string page) {
 			case $monster[party girl]:
 			case $monster["plain" girl]:
 				m = mHead + mSteal;
-				if (have_equipped($item[backup camera]) && get_property("_backUpUses").to_int() < 11) {
+				if (have_equipped($item[backup camera]) && c2t_hccs_backupCameraLeft() > 0) {
 					m += c2t_bb($skill[back-up to your last enemy]).c2t_bb("twiddle;");
 					m.c2t_bbSubmit();
 					return;
@@ -306,7 +307,7 @@ void main(int initround, monster foe, string page) {
 				m = mHead + mSteal;
 				m += c2t_bb($skill[reflex hammer]);
 				m += c2t_bb($skill[kgb tranquilizer dart]);
-				if (get_property("_snokebombUsed").to_int() < get_property("_feelHatredUsed").to_int())
+				if (get_property("_snokebombUsed").to_int() <= get_property("_feelHatredUsed").to_int())
 					m += c2t_bb($skill[snokebomb]).c2t_bb($skill[feel hatred]);
 				else
 					m += c2t_bb($skill[feel hatred]).c2t_bb($skill[snokebomb]);
@@ -314,7 +315,7 @@ void main(int initround, monster foe, string page) {
 				//pretty sure most adv1() in the script assume it succeeds in fighting what it's supposed to, which the holiday monster is very much not the right one, so abort to rerun
 				//abort("Aborting for safety after encountering a holiday monster. Should be able to simply rerun to resume.");
 				//going to test using adv1() instead of abort for next round of holiday wanderers
-				adv1(get_property("lastAdventure").to_location());
+				adv1(my_location());
 				//abort("Check to see if it adventured in the correct location");
 				return;
 
