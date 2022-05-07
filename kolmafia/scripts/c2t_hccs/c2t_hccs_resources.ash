@@ -31,6 +31,7 @@ import <c2t_hccs_preAdv.ash>
 //d--sweet synthesis
 //d--tome clip art
 //d--tome sugar
+//d--vip floundry
 //d--vote
 
 
@@ -154,6 +155,11 @@ boolean c2t_hccs_tomeSugar();
 boolean c2t_hccs_tomeSugar(item it);
 
 
+//d--vip floundry
+//returns true if current clan has floundry
+boolean c2t_hccs_vipFloundry();
+
+
 //d--vote
 //votes in voting booth
 void c2t_hccs_vote();
@@ -177,6 +183,7 @@ void c2t_hccs_vote();
 //i--sweet synthesis
 //i--tome clip art
 //i--tome sugar
+//i--vip floundry
 //i--vote
 
 
@@ -724,6 +731,12 @@ boolean c2t_hccs_tomeSugar(item it) {
 		c2t_hccs_haveUse($skill[summon sugar sheets]);
 	}
 	return retrieve_item(it);
+}
+
+//i--vip floundry
+boolean c2t_hccs_vipFloundry() {
+	return (get_clan_lounge() contains $item[clan floundry])
+		&& !get_property("c2t_hccs_disable.vipFloundry").to_boolean();
 }
 
 //i--vote

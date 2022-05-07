@@ -486,8 +486,9 @@ boolean c2t_hccs_preCoil() {
 	c2t_hccs_haveUse($skill[spirit of peppermint]);
 	
 	//fish hatchet
-	if (!get_property('_floundryItemCreated').to_boolean() && !retrieve_item(1,$item[fish hatchet]))
-		print('Failed to get a fish hatchet',"red");
+	if (c2t_hccs_vipFloundry())
+		if (!get_property('_floundryItemCreated').to_boolean() && !retrieve_item(1,$item[fish hatchet]))
+			print('Failed to get a fish hatchet',"red");
 
 	//cod piece steps
 	/*if (!retrieve_item(1,$item[fish hatchet])) {

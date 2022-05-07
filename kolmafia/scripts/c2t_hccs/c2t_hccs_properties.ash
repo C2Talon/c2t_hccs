@@ -100,5 +100,8 @@ set c2t_hccs_disable.powerPlant = true
 -- shorter-order cook --
 set c2t_hccs_disable.shorterOrderCook = true
 
+-- vip floundry --
+set c2t_hccs_disable.vipFloundry = true
+
 */
 
