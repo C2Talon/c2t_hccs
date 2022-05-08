@@ -1520,9 +1520,9 @@ boolean c2t_hccs_preSpell() {
 	if (have_familiar($familiar[Machine Elf])) {
 		string clan = get_property("c2t_hccs_joinElfClan");
 		if (clan.to_int() != 0)
-			c2t_assert(c2t_joinElfClan(clan.to_int()),`Could not join clan {clan}`);
+			c2t_assert(c2t_joinClan(clan.to_int()),`Could not join clan {clan}`);
 		else
-			c2t_assert(c2t_joinElfClan(clan),`Could not join clan {clan}`);
+			c2t_assert(c2t_joinClan(clan),`Could not join clan {clan}`);
 
 
 	
@@ -1533,15 +1533,15 @@ boolean c2t_hccs_preSpell() {
 		set_property("choiceAdventure326", 1);
 		adv1($location[The Slime Tube]); -1;
 		run_combat();
-		
-		string clan = get_property("c2t_hccs_joinClan");
-			if (clan.to_int() != 0)
-				c2t_assert(c2t_joinClan(clan.to_int()),`Could not join clan {clan}`);
-			else
-				c2t_assert(c2t_joinClan(clan),`Could not join clan {clan}`);
+	}
+	// Seperated to get back into original clan
+	string clan = get_property("c2t_hccs_joinClan");
+		if (clan.to_int() != 0)
+			c2t_assert(c2t_joinClan(clan.to_int()),`Could not join clan {clan}`);
+		else
+			c2t_assert(c2t_joinClan(clan),`Could not join clan {clan}`);
 	
 	
-			   
 
 	// Pool buff
 	c2t_hccs_getEffect($effect[mental a-cue-ity]);
