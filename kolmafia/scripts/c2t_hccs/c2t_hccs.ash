@@ -1182,6 +1182,14 @@ boolean c2t_hccs_preHotRes() {
 }
 
 boolean c2t_hccs_preFamiliar() {
+	//Equip Saber for Enforcer fight
+	if (!have_equipped($item[fourth of may cosplay saber]))
+		equip($item[fourth of may cosplay saber]);
+	
+	//Remove Combat Familiar for LOV Engineer
+	if ($familiars[shorter-order cook,left-hand man,imitation crab] contains my_familiar())
+		use_familiar($familiar[melodramedary]);
+	
 	//LOV Tunnel
 	if(!get_property("_loveTunnelUsed").to_boolean()){
 		visit_url("place.php?whichplace=town_wrong&action=townwrong_tunnel");
