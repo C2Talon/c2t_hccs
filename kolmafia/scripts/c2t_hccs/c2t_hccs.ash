@@ -1182,6 +1182,21 @@ boolean c2t_hccs_preHotRes() {
 }
 
 boolean c2t_hccs_preFamiliar() {
+	//LOV Tunnel
+	if(!get_property("_loveTunnelUsed").to_boolean()){
+		visit_url("place.php?whichplace=town_wrong&action=townwrong_tunnel");
+		visit_url("choice.php?whichchoice=1222&option=1&pwd");
+		visit_url("choice.php?whichchoice=1223&option=1&pwd");
+		run_combat();
+		visit_url("choice.php?whichchoice=1224&option=3&pwd");
+		visit_url("choice.php?whichchoice=1225&option=1&pwd");
+		run_combat();
+		visit_url("choice.php?whichchoice=1226&option=2&pwd");
+		visit_url("choice.php?whichchoice=1227&option=1&pwd");
+		run_combat();
+		visit_url("choice.php?whichchoice=1228&option=3&pwd");
+	}
+	
 	//sabering fax for meteor shower
 	//using fax/wish here as feeling lost here is very likely
 	if ((have_skill($skill[meteor lore]) && have_effect($effect[meteor showered]) == 0) ||
@@ -1215,6 +1230,7 @@ boolean c2t_hccs_preFamiliar() {
 	c2t_hccs_getEffect($effect[blood bond]);
 	c2t_hccs_getEffect($effect[leash of linguini]);
 	c2t_hccs_getEffect($effect[empathy]);
+	c2t_hccs_getEffect($effect[Robot Friends]);
 
 	//AT-only buff
 	if (my_class() == $class[accordion thief])
@@ -1473,6 +1489,30 @@ boolean c2t_hccs_preSpell() {
 		c2t_hccs_getEffect($effect[jackasses' symphony of destruction]);
 	
 	c2t_hccs_getEffect($effect[carol of the hells]);
+					   
+	//Added use of batteries, Alice potion, and LOV Elixir	
+	c2t_hccs_getEffect($effect[The Magic of LOV]);
+	c2t_hccs_getEffect($effect[Pisces in the Skyces]);
+	c2t_hccs_getEffect($effect[AAA-Charged]);
+	c2t_hccs_getEffect($effect[AA-Charged]);
+	c2t_hccs_getEffect($effect[D-Charged]);		
+		
+	//Elf Buff
+	use_familiar($familiar[Machine Elf]);
+	c2t_hccs_getEffect($effect[Blood Bubble]);
+	c2t_hccs_getEffect($effect[Resting Beach Face]);
+	c2t_hccs_getEffect($effect[Springy Fusilli]);
+	c2t_hccs_getEffect($effect[Silent Hunting]);
+	cli_execute("backupcamera init");
+	cli_execute("equip acc1 backup camera");
+		
+	cli_execute("clanhop Knights of the Octagonal Table");
+		
+	set_property("choiceAdventure326", 1);
+	adv1($location[The Slime Tube]); -1;
+	run_combat();
+		
+	cli_execute("clanhop Bonus Adventures From Hell");				   
 
 	// Pool buff
 	c2t_hccs_getEffect($effect[mental a-cue-ity]);
