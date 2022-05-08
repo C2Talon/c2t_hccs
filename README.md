@@ -48,6 +48,10 @@ These are set via the gCLI. Basically so people don't have to edit the script it
 * Takes an `int` or `string`, where `int` would be clanid (preferred), and `string` would be the clan name
 * Defaults to `90485` (Bonus Adventures From Hell)
 
+* `set c2t_hccs_joinElfClan = 0`
+* This is the clan that the script will join for the Elf Buff
+* Defaults to `0` You will need to set this. 
+
 `set c2t_hccs_clanFortunes = CheeseFax`
 * This is the name of the person/bot that you want to do the fortune teller with
 * Defaults to `CheeseFax`
