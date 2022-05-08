@@ -126,6 +126,8 @@ While these are not strictly required, not having enough that either save turns 
 * [undrilled cosmic bowling ball](https://kol.coldfront.net/thekolwiki/index.php/Undrilled_cosmic_bowling_ball) &mdash; 50% stat gain in NEP; saves 1.67 adventures on item test; some extra item and meat gain during leveling fights
 * [combat lover's locket lockbox](https://kol.coldfront.net/thekolwiki/index.php/Combat_lover%27s_locket_lockbox) &mdash; up to 3 monsters to fight to save wishes and time spent on fax
 * [Undamaged Unbreakable Umbrella](https://kol.coldfront.net/thekolwiki/index.php/Undamaged_Unbreakable_Umbrella) &mdash; saves up to 1.7 turns on item test, 6 on combat test, 1 on weapon test, 0.5 on spell test
+* [Machine Elf](https://kol.coldfront.net/thekolwiki/index.php/Machine_Elf) &mdash; Doesn't use fights yet, gets inner elf from personal clan, youll need to change this to one of yours, saves up to 2 turns on spell test.
+* [Tunnel of LOV](https://kol.coldfront.net/thekolwiki/index.php/The_Tunnel_of_L.O.V.E.) &mdash; Needs cleaning, get's Elixir #3 + #6, Fam Weight Buff, LOV Earrings, LOV Chocolate, saves up to 2 turn on weapon test, 2 on spell test, 2 on Familiar test.
 
 ## TODO (eventually)
 
