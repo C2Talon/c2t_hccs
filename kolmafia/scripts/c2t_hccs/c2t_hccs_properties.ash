@@ -34,7 +34,12 @@ This is the name of the person/bot that you want to do the fortune teller with
 */
 if (!property_exists("c2t_hccs_clanFortunes",false))
 	set_property("c2t_hccs_clanFortunes","CheeseFax");
-
+/*
+set c2t_hccs_joinElfClan = 8097
+This is the clan that the script will join for Elf Buff
+*/
+if (!property_exists("c2t_hccs_joinElfClan",false))
+	set_property("c2t_hccs_joinElfClan","0");
 /*
 set c2t_hccs_skipFinalService = false
 If this is set to true, the final service will be skipped leaving you in-run once finished
