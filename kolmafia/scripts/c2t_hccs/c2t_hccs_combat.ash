@@ -233,6 +233,8 @@ void main(int initround, monster foe, string page) {
 
 			//most basic of combats
 			case $monster[piranha plant]:
+			case $monster[LOV Enforcer]:
+			case $monster[LOV Equivocator]:
 			case $monster[government bureaucrat]:
 			case $monster[terrible mutant]:
 			case $monster[angry ghost]:
@@ -284,6 +286,28 @@ void main(int initround, monster foe, string page) {
 					)
 				);
 				return;
+				
+			case $monster[LOV Engineer]:
+				c2t_bbSubmit(
+					mHead + mSteal
+					.c2t_bb($skill[weapon of the pastalord])
+					.c2t_bbIf("pastamancer || sauceror",
+						c2t_bb(4,$skill[weapon of the pastalord])
+					)
+				);
+				return;	
+			case $monster[LOV Enforcer]:
+				c2t_bbSubmit("attack;repeat;");
+				return;	
+				
+			case $monster[Mother Slime]:
+				c2t_bbSubmit(
+					mHead + mSteal
+					.c2t_bb($skill[snokebomb])
+					)
+				;
+				return;	
+
 
 			case $monster[sssshhsssblllrrggghsssssggggrrgglsssshhssslblgl]:
 				c2t_bbSubmit("attack;repeat;");
