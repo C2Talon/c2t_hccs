@@ -36,8 +36,7 @@ boolean c2t_hccs_pull(item ite);
 //rudamentary mp restoration using free rests and magical sausages
 boolean c2t_hccs_restoreMp();
 
-//Asdon Fuel Up
-boolean c2t_hccs_FuelUp();
+
 
 
 /*===============
@@ -175,15 +174,7 @@ boolean c2t_hccs_restoreMp() {
 
 	return my_mp() > start;
 }
-			      
-boolean c2t_hccs_FuelUp() {
-	buy(1, $item`all-purpose flower`);
-    	use(1, $item`all-purpose flower`);
-    	buy(availableAmount($item`wad of dough`), $item`soda water`);
-    	create(availableAmount($item`wad of dough`), $item`loaf of soda bread`);
-    	cliExecute(`asdonmartin fuel ${availableAmount($item`loaf of soda bread`)} soda bread`);
-}
+
 	
-}
 
 
