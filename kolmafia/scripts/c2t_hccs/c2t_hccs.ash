@@ -1379,6 +1379,7 @@ boolean c2t_hccs_preWeapon() {
 	c2t_hccs_getEffect($effect[frenzied, bloody]);
 	c2t_hccs_getEffect($effect[scowl of the auk]);
 	c2t_hccs_getEffect($effect[tenacity of the snapper]);
+	c2t_hccs_getEffect($effect[The Power of LOV]);
 	
 	//don't have these skills yet. maybe should add check for all skill uses to make universal?
 	if (have_skill($skill[song of the north]))
@@ -1506,21 +1507,31 @@ boolean c2t_hccs_preSpell() {
 	c2t_hccs_getEffect($effect[D-Charged]);		
 		
 	//Elf Buff
-	use_familiar($familiar[Machine Elf]);
-	c2t_hccs_getEffect($effect[Blood Bubble]);
-	c2t_hccs_getEffect($effect[Resting Beach Face]);
-	c2t_hccs_getEffect($effect[Springy Fusilli]);
-	c2t_hccs_getEffect($effect[Silent Hunting]);
-	cli_execute("backupcamera init");
-	cli_execute("equip acc1 backup camera");
+	if (have_familiar($familiar[Machine Elf]) {
+		string clan = get_property("c2t_hccs_joinElfClan");
+		if (clan.to_int() != 0)
+			c2t_assert(c2t_joinElfClan(clan.to_int()),`Could not join clan {clan}`);
+		else
+			c2t_assert(c2t_joinElfClan(clan),`Could not join clan {clan}`);
+
+
+	
+		use_familiar($familiar[Machine Elf]);
+		c2t_hccs_getEffect($effect[Blood Bubble]);
 		
-	cli_execute("clanhop Knights of the Octagonal Table");
 		
-	set_property("choiceAdventure326", 1);
-	adv1($location[The Slime Tube]); -1;
-	run_combat();
+		set_property("choiceAdventure326", 1);
+		adv1($location[The Slime Tube]); -1;
+		run_combat();
 		
-	cli_execute("clanhop Bonus Adventures From Hell");				   
+		string clan = get_property("c2t_hccs_joinClan");
+			if (clan.to_int() != 0)
+				c2t_assert(c2t_joinClan(clan.to_int()),`Could not join clan {clan}`);
+			else
+				c2t_assert(c2t_joinClan(clan),`Could not join clan {clan}`);
+	
+	
+			   
 
 	// Pool buff
 	c2t_hccs_getEffect($effect[mental a-cue-ity]);
