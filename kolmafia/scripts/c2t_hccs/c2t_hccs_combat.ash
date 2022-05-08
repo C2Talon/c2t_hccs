@@ -233,7 +233,6 @@ void main(int initround, monster foe, string page) {
 
 			//most basic of combats
 			case $monster[piranha plant]:
-			case $monster[LOV Enforcer]:
 			case $monster[LOV Equivocator]:
 			case $monster[government bureaucrat]:
 			case $monster[terrible mutant]:
