@@ -1517,7 +1517,7 @@ boolean c2t_hccs_preSpell() {
 	c2t_hccs_getEffect($effect[D-Charged]);		
 		
 	//Elf Buff
-	if (have_familiar($familiar[Machine Elf]) {
+	if (have_familiar($familiar[Machine Elf])) {
 		string clan = get_property("c2t_hccs_joinElfClan");
 		if (clan.to_int() != 0)
 			c2t_assert(c2t_joinElfClan(clan.to_int()),`Could not join clan {clan}`);
