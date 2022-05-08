@@ -1013,6 +1013,16 @@ boolean c2t_hccs_preItem() {
 	c2t_hccs_getEffect($effect[fat leon's phat loot lyric]);
 	c2t_hccs_getEffect($effect[singer's faithful ocelot]);
 	c2t_hccs_getEffect($effect[the spirit of taking]);
+				   
+	//Source Terminal Buff
+	if (get_campground() contains $item[Source Terminal]) {
+        c2t_hccs_getEffect($effect[items.enh]);
+    	}	
+				   	   
+	//Asdon Martin Buff
+	if (get_campground() contains $item[Asdon Martin keyfob]) {
+        c2t_hccs_getEffect($effect[Driving Observantly]);
+    	}				   
 
 	// might move back to levelup part
 	if (have_effect($effect[synthesis: collection]) == 0)//skip pizza if synth item
