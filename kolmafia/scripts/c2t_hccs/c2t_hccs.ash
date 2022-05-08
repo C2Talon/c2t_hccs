@@ -721,6 +721,10 @@ boolean c2t_hccs_buffExp() {
 	// shower exp buff
 	if (!get_property('_aprilShower').to_boolean())
 		cli_execute('shower '+my_primestat());
+				
+	//Crack Open MayDay Crate, effect should make it through fights and hot res
+	if (available_amount($item[MayDay&trade; supply package]) > 0)
+		c2t_hccs_haveUse($item[MayDay&trade; supply package]);		
 	
 	//TODO make synthesize selections smarter so the item one doesn't have to be so early
 	//synthesize item //put this before all other syntheses so the others don't use too many sprouts
@@ -888,6 +892,12 @@ boolean c2t_hccs_allTheBuffs() {
 	//boxing daycare buff
 	if (get_property("daycareOpen").to_boolean() && !get_property("_daycareSpa").to_boolean())
 		cli_execute(`daycare {my_primestat().to_lower_case()}`);
+					   
+	//Gafter's Tape Buff
+	if (my_primestat() == $stat[moxie]) {
+		if (available_amount($item[gaffer's tape]) > 0)
+		c2t_hccs_haveUse($item[gaffer's tape]);
+	}				   
 
 	//candles
 	c2t_hccs_haveUse($item[napalm in the morning&trade; candle]);
@@ -1035,6 +1045,14 @@ boolean c2t_hccs_preItem() {
         	c2t_hccs_getEffect($effect[Driving Observantly]);
     	}					   
 
+	//Sell Space Blanket if available may need more meat for loaves, etc.
+	if (available_amount($item[space blanket]) > 0)
+		autosell(1,$item[space blanket]);			   
+				   
+	//MayDay Glowstick Effect
+	if (available_amount($item[emergency glowstick]) > 0)
+		c2t_hccs_haveUse($item[emergency glowstick]);			   
+				   
 	// might move back to levelup part
 	if (have_effect($effect[synthesis: collection]) == 0)//skip pizza if synth item
 		c2t_hccs_pizzaCube($effect[certainty]);
