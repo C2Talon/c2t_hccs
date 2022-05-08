@@ -1,5 +1,11 @@
 # c2t_hccs
 
+This is a fork from c2t_hccs. Ive added a couple IotM I had that werent suported and added minimal support. 
+* [Machine Elf](https://kol.coldfront.net/thekolwiki/index.php/Machine_Elf)
+* [Tunnel of LOV](https://kol.coldfront.net/thekolwiki/index.php/The_Tunnel_of_L.O.V.E.)
+* [Asdon Martin](https://kol.coldfront.net/thekolwiki/index.php/Asdon_Martin)
+* [Source Terminal](https://kol.coldfront.net/thekolwiki/index.php/Source_terminal)
+
 Kolmafia script to handle a hardcore community service run with my set of skills and IotMs and with any class.
 
 This is a continual work-in-progress. It is not likely to run out-of-the-box for most, but others may be able to glean things from it. To see what is needed to run smoothly without changes, see: https://cheesellc.com/kol/profile.php?u=Zdrvst
