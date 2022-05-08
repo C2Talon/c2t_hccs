@@ -652,6 +652,15 @@ boolean c2t_hccs_preCoil() {
 	
 	// beach access
 	c2t_assert(retrieve_item(1,$item[bitchin' meatcar]),"Couldn't get a bitchin' meatcar");
+					 
+	//Asdon Grab for loaves
+	if (get_campground() contains $item[Asdon Martin keyfob]) {
+		buy(8,$item[wad of dough]);
+	}	
+	//Grab Anti Cheese for possible government
+	if (get_campground() contains $item[Source Terminal]) {
+        cli_execute('place.php?whichplace=desertbeach&action=db_nukehouse');
+    	}					 
 
 	// tune moon sign
 	if (!get_property('moonTuned').to_boolean()) {
@@ -1021,8 +1030,10 @@ boolean c2t_hccs_preItem() {
 				   	   
 	//Asdon Martin Buff
 	if (get_campground() contains $item[Asdon Martin keyfob]) {
-        c2t_hccs_getEffect($effect[Driving Observantly]);
-    	}				   
+		create(8,$item[loaf of soda bread]);
+		cli_execute( "asdonmartin fuel 8 loaf of soda bread" );
+        	c2t_hccs_getEffect($effect[Driving Observantly]);
+    	}					   
 
 	// might move back to levelup part
 	if (have_effect($effect[synthesis: collection]) == 0)//skip pizza if synth item
