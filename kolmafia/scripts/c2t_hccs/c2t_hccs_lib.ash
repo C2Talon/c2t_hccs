@@ -175,36 +175,4 @@ boolean c2t_hccs_restoreMp() {
 
 }
 
-void c2t_hccs_dough(int goal) {
-    while (available_amount($item[wad of dough]) < goal) {
-        buy(1, $item[all-purpose flower]);
-        use(1, $item[all-purpose flower]);
-    }
-}			      
-			      
-int fuel_asdon(int goal) {
-    int starting_fuel = get_fuel();
-    print(`Fueling asdon. Currently {starting_fuel} litres.`);
-    int estimated = (goal - starting_fuel) / 5;
-    int bread = available_amount($item[loaf of soda bread]);
-    c2t_hccs_dough(estimated - bread);
-    c2t_hccs_item(estimated - bread, $item[soda water]);
-    c2t_hccs_create_item(estimated, $item[loaf of soda bread]);
-    cli_execute(`asdonmartin fuel {estimated} loaf of soda bread`);
-    while (get_fuel() < goal) {
-        c2t_hccs_dough(1);
-        c2t_hccs_item(1, $item[soda water]);
-        c2t_hccs_create_item(1, $item[loaf of soda bread]);
-        cli_execute("asdonmartin fuel 1 loaf of soda bread");
-    }
-    int ending_fuel = get_fuel();
-    print(`Done fueling. Now {ending_fuel} litres.`);
-    return ending_fuel;
-}
 
-void c2t_hccs_asdon_effect(effect ef) {
-    if (have_effect(ef) == 0) {
-        fuel_asdon(37);
-    }
-    c2t_hccs_effect(ef);
-}
