@@ -11,8 +11,6 @@ Kolmafia script to handle a hardcore community service run with my set of skills
 
 This is a continual work-in-progress. It is not likely to run out-of-the-box for most, but others may be able to glean things from it. To see what is needed to run smoothly without changes, see: https://cheesellc.com/kol/profile.php?u=Zdrvst
 
-Bugs? Report them here: https://github.com/C2Talon/c2t_hccs/issues
-
 ## Installation / Uninstallation
 
 To install, run the following on the gCLI:
@@ -38,7 +36,7 @@ To uninstall, run the following on the gCLI:
     - Exception: the script will cast and handle stevedave's shanty of superiority and ur-kel's aria of annoyance, so either put them in the mood as well or leave 2 song slots open for them
     - The moods I use can be seen in [mood examples.txt](https://github.com/c2talon/c2t_hccs/blob/master/mood%20examples.txt) to use as a starting point.
 
-## User-defined properties the script uses
+## ## User settings and disabling resources
 
 These are set via the gCLI. Basically so people don't have to edit the script itself to change some simple, but critical, things.
 
@@ -77,6 +75,10 @@ These are set via the gCLI. Basically so people don't have to edit the script it
 ### Disabling resources
 
 Some resources can be disabled via a property. It's an all-or-nothing thing, which is somewhat detailed in [c2t_hccs_properties.ash](https://github.com/C2Talon/c2t_hccs/blob/master/kolmafia/scripts/c2t_hccs/c2t_hccs_properties.ash#L65)
+
+Most settings can be changed via a relay script. To start the relay script, find the drop-down menu at the top-right corner of the menu pane and select `c2t hccs`, as seen here:
+![relay script location](https://github.com/C2Talon/c2t_hccs/blob/master/relay_script_location.png "relay script location")
+Some resources can be disabled with the same relay script.
 
 ## IotM
 
@@ -142,6 +144,9 @@ While these are not strictly required, not having enough that either save turns 
 * [Asdon Martin](https://kol.coldfront.net/thekolwiki/index.php/Asdon_Martin) &mdash; saves up to 6.66 turns on items test. Unsure if conflicts with moon sign change as it uses loafs of soda bread. CAUTION
 * [Source Terminal](https://kol.coldfront.net/thekolwiki/index.php/Source_terminal) &mdash; saves up to 2 turns on item test.
 * [MayDay™ supply package](https://kol.coldfront.net/thekolwiki/index.php/MayDay%E2%84%A2_supply_package) RtS Effect minor level help + hot res, if acquired - support for emergency glowstick (1.7 turns on item test) + space blanket (Autosell in-case) + gaffer's tape (Buff Moxie class)
+
+## Bugs?
+Report bugs here: https://github.com/C2Talon/c2t_hccs/issues
 
 ## TODO (eventually)
 
