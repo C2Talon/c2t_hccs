@@ -1838,8 +1838,7 @@ void c2t_hccs_fights() {
 			abort("Failed to fight evil olive");
 	}
 
-	if (c2t_hccs_levelingFamiliar(false) == $familiar[left-hand man])
-		fam = ",equip unbreakable umbrella";
+	c2t_hccs_levelingFamiliar(false);
 
 	//summon tentacle
 	if (have_skill($skill[evoke eldritch horror]) && !get_property('_eldritchHorrorEvoked').to_boolean()) {
@@ -1886,8 +1885,6 @@ void c2t_hccs_fights() {
 
 		if (c2t_hccs_levelingFamiliar(false) != $familiar[melodramedary])
 			fam = "";
-		if (my_familiar() == $familiar[left-hand man])
-			fam = ",equip unbreakable umbrella";
 
 		//backup fights will turns this off after a point, so keep turning it on
 		if (get_property('garbageShirtCharge').to_int() > 0)
@@ -2053,10 +2050,6 @@ boolean c2t_hccs_wandererFight() {
 
 	if (c2t_hccs_levelingFamiliar(false) == $familiar[melodramedary])
 		append += ",equip dromedary drinking helmet";
-	else if (my_familiar() == $familiar[left-hand man]) {
-		equip($slot[familiar],$item[unbreakable umbrella]);
-		append += ",-familiar";
-	}
 
 	set_location($location[the neverending party]);
 	maximize("mainstat,exp"+append,false);
@@ -2090,8 +2083,6 @@ familiar c2t_hccs_levelingFamiliar(boolean safeOnly) {
 				//give cook's combat bonus familiar exp to professor
 				use_familiar($familiar[pocket professor]);
 		}
-		else if (available_amount($item[unbreakable umbrella]) > 0 && have_familiar($familiar[left-hand man]))
-			out = $familiar[left-hand man];
 		else
 			out = c2t_priority($familiars[galloping grill,hovering sombrero]);
 	}
