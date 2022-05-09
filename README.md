@@ -31,11 +31,11 @@ To uninstall, run the following on the gCLI:
 
 ## User settings and disabling resources
 
-Most settings can be changed via a relay script. To start the relay script, find the drop-down menu at the top-right corner of the menu pane and select `c2t hccs`, as seen here:
+Most settings can be changed via a relay script. To start the relay script, find the drop-down menu that says `-run script-` at the top-right corner of the menu pane and select `c2t hccs`, as seen here:
 
 ![relay script location](https://github.com/C2Talon/c2t_hccs/blob/master/relay_script_location.png "relay script location")
 
-Some resources can be disabled with the same relay script.
+Resources can be disabled with the same relay script.
 
 ## IotM
 

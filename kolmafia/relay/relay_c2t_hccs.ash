@@ -72,61 +72,61 @@ void main() {
 	string [int] threshold = get_property("c2t_hccs_thresholds").split_string(",");
 
 	//header
-	writeln('<!DOCTYPE html>\n<html lang="EN">\n<head>\n<title>c2t_hccs Settings</title>');
-	//TODO CSS
-	writeln("<style>p.error {color:#f00;background-color:#000;padding:10px;font-weight:bold;} p.success {color:#00f;} th {font-weight:extra-bold;padding:5px 10px 5px 10px;} ul,li {list-style-type:none;margin:0;padding:0;} thead {background-color:#000;color:#fff;} tr:nth-child(even) {background-color:#ddd;} table {border-style:solid;border-width:1px;} input.submit {margin:12pt;padding:5px;} td {padding:0 5px 0 5px;</style>");
-	writeln("</head>\n<body>");
+	write('<!DOCTYPE html><html lang="EN"><head><title>c2t_hccs Settings</title>');
+	write("<style>p.error {color:#f00;background-color:#000;padding:10px;font-weight:bold;} p.success {color:#00f;} th {font-weight:extra-bold;padding:5px 10px 5px 10px;} ul {padding-left:0;} li {list-style-type:none;margin:0;padding:0;} thead {background-color:#000;color:#fff;} tr:nth-child(even) {background-color:#ddd;} table {border-style:solid;border-width:1px;} input.submit {margin:12pt;padding:5px;} td {padding:0 5px 0 5px;}</style>");
+	write("</head><body>");
 
+	//body
 	c2t_hccs_writeFailSuccess();
 
 	c2t_hccs_writeText("h1","c2t_hccs Settings");
 	c2t_hccs_writeText("p",'No changes will be made until the "save changes" button is used at the bottom.');
 
 	//form
-	writeln('<form action="" method="post">');
+	write('<form action="" method="post">');
 
 	//general
 	c2t_hccs_writeText("h2","General");
-	writeln(`<ul><li>Current clan: <code>{get_clan_name()}</code></li>\n<li>Current clan ID: <code>{get_clan_id()}</code></li>\n</ul>`);
-	writeln("<table>");
+	write(`<ul><li>Current clan: <code>{get_clan_name()}</code></li><li>Current clan ID: <code>{get_clan_id()}</code></li></ul>`);
+	write("<table>");
 	c2t_hccs_writeTh("setting","value","description");
 	write("<tbody>");
 	foreach name,desc in clan
 		c2t_hccs_writeInput(name,"",desc,30,30);
 	foreach name,desc in general
 		c2t_hccs_writeCheckbox(name,desc);
-	writeln("</tbody>\n</table>");
+	write("</tbody></table>");
 
 	//thresholds
 	c2t_hccs_writeText("h2","Thresholds");
 	c2t_hccs_writeText("p","These are the 10 thresholds corresponding to the minimum turns to allow each test to take. The script will stop just before doing a test if a threshold is not met after doing all the pre-test stuff.");
-	writeln("<table>");
+	write("<table>");
 	c2t_hccs_writeTh("test","turns","");
 	write("<tbody>");
 	foreach name,num in threshold
 		c2t_hccs_writeInput(thresholdName[name],num,"",1,2);
-	writeln("</tbody>\n</table>");
+	write("</tbody></table>");
 
 	//disablables
 	c2t_hccs_writeText("h2","Disableable Resources");
 	c2t_hccs_writeText("p","Check any of the following to disable that resource. Disabling a resource means to not use most things from that resource.");
-	writeln("<table>");
+	write("<table>");
 	c2t_hccs_writeTh("setting","value","description");
 	write("<tbody>");
 	foreach name,desc in disableable
 		c2t_hccs_writeCheckbox(name,desc);
-	writeln("</tbody>\n</table>");
+	write("</tbody></table>");
 
-	writeln('<input type="submit" value="save changes" class="submit" />');
+	write('<input type="submit" value="save changes" class="submit" />');
 	c2t_hccs_writeFailSuccess();
-	writeln("</form>");
+	write("</form>");
 
 	//footer
-	write("</body>\n</html>");
+	write("</body></html>");
 }
 
 void c2t_hccs_writeText(string tag,string s) {
-	writeln(`<{tag}>{s}</{tag.split_string(" ")[0]}>`);
+	write(`<{tag}>{s}</{tag.split_string(" ")[0]}>`);
 }
 
 void c2t_hccs_writeCheckbox(string s,string desc) {
@@ -135,9 +135,9 @@ void c2t_hccs_writeCheckbox(string s,string desc) {
 		check = (POST[s] == "on"?true:false);
 	else
 		check = get_property(s).to_boolean();
-	writeln(`<tr>\n<td><label for="{s}"><code>{s}</code></label></td>\n<td><input type="checkbox" name="{s}" id="{s}"{check?' checked="checked"':''} /></td>`);
+	write(`<tr><td><label for="{s}"><code>{s}</code></label></td><td><input type="checkbox" name="{s}" id="{s}"{check?' checked="checked"':''} /></td>`);
 	if (desc != "")
-		writeln(`<td>{desc}</td>`);
+		write(`<td>{desc}</td>`);
 	write("</tr>");
 }
 
@@ -147,17 +147,17 @@ void c2t_hccs_writeInput(string name,string value,string desc,int size,int max) 
 		val = POST[name];
 	else if (name.contains_text("c2t_hccs_"))
 		val = get_property(name);
-	writeln(`<tr>\n<td><label for="{name}"><code>{name}</code></label></td>\n<td><input type="text" name="{name}" id="{name}" size="{size}" maxlength="{max}" value="{val}" /></td>`);
+	write(`<tr><td><label for="{name}"><code>{name}</code></label></td><td><input type="text" name="{name}" id="{name}" size="{size}" maxlength="{max}" value="{val}" /></td>`);
 	if (desc != "")
-		writeln(`<td>{desc}</td>`);
+		write(`<td>{desc}</td>`);
 	write("</tr>");
 }
 
 void c2t_hccs_writeTh(string a, string b, string c) {
-	writeln(`<thead><tr>\n<th>{a}</th>\n<th>{b}</th>`);
+	write(`<thead><tr><th>{a}</th><th>{b}</th>`);
 	if (c != "")
-		writeln(`<th>{c}</th>`);
-	writeln("</tr></thead>");
+		write(`<th>{c}</th>`);
+	write("</tr></thead>");
 }
 
 void c2t_hccs_writeFailSuccess() {
