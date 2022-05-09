@@ -1,0 +1,168 @@
+//relay c2t hccs
+//c2t
+
+//interface for changing settings
+
+string [string] POST = form_fields();
+boolean postError = false;
+
+void c2t_hccs_writeText(string tag,string s);
+void c2t_hccs_writeCheckbox(string s,string desc);
+void c2t_hccs_writeInput(string name,string value,string desc,int size,int max);
+void c2t_hccs_writeFailSuccess();
+void c2t_hccs_writeTh(string a, string b, string c);
+
+void main() {
+	//TODO use file_to_map() with data file
+	string [string] general = {
+		"c2t_hccs_haltBeforeTest":"halts the script each time the pre-test is done and before the test is submitted; mostly for troubleshooting",
+		"c2t_hccs_printModtrace":"prints the modtrace to the CLI and log",
+		"c2t_hccs_skipFinalService":"skips the final service to stay in run"
+		};
+
+	string [string] clan = {
+		"c2t_hccs_joinClan":"clan to use for all VIP things; clan ID is preferred, but just the name also works",
+		"c2t_hccs_clanFortunes":"this is the name of the person/bot that you want to do the fortune teller with"
+		};
+
+	string [string] disableable = {
+		"c2t_hccs_disable.backupCamera":"will not use the 'back-up to the last enemy' skill",
+		"c2t_hccs_disable.briefcase":"no cranks will be used; however, banishes may still be used",
+		"c2t_hccs_disable.coldMedicineCabinet":"cold medicine cabinet will not be used",
+		"c2t_hccs_disable.combatLoversLocket":"no monsters will be summoned from combat lover's locket",
+		"c2t_hccs_disable.melodramedary":"melodramedary will not be used to try to save turns on weapon and spell tests",
+		"c2t_hccs_disable.pantogram":"no pants to try to save turns on hot, non-combat, or spell tests",
+		"c2t_hccs_disable.pillkeeper":"no pill popping from pillkeeper, free or otherwise",
+		"c2t_hccs_disable.pizzaCube":"no pizzas will be made or eaten from the pizza cube",
+		"c2t_hccs_disable.powerPlant":"power plant will not be used for the item test (or elsewhere)",
+		"c2t_hccs_disable.shorterOrderCook":"shorter-order cook will not be used to try to saves turns on the familiar test",
+		"c2t_hccs_disable.vipFloundry":"equipment will not be acquired from the clan floundry"
+		};
+
+	string [int] thresholdName = {"HP","muscle","mysticality","moxie","familiar","weapon","spell","non-combat","item","hot"};
+
+	//handle things submitted
+	if (POST.count() > 1) {
+		//validate numbers //this is the only input validation I'm bothering with for now
+		foreach i,x in thresholdName {
+			int temp = POST[x].to_int();
+			if (temp <= 0 || temp > 60) {
+				postError = true;
+				break;
+			}
+		}
+		if (!postError) {
+			string temp;
+			foreach name,desc in clan
+				set_property(name,POST[name]);
+			foreach name,desc in general
+				set_property(name,POST[name]=="on"?"true":"false");
+			foreach name,desc in disableable
+				set_property(name,POST[name]=="on"?"true":"false");
+			foreach i,name in thresholdName
+				temp += (i == 0?POST[name]:","+POST[name]);
+			set_property("c2t_hccs_thresholds",temp);
+		}
+	}
+
+	//some defaults if none are set
+	if (!property_exists("c2t_hccs_thresholds",false))
+		cli_execute("c2t_hccs_properties");
+
+	string [int] threshold = get_property("c2t_hccs_thresholds").split_string(",");
+
+	//header
+	writeln('<!DOCTYPE html>\n<html lang="EN">\n<head>\n<title>c2t_hccs Settings</title>');
+	//TODO CSS
+	writeln("<style>p.error {color:#f00;background-color:#000;padding:10px;font-weight:bold;} p.success {color:#00f;} th {font-weight:extra-bold;padding:5px 10px 5px 10px;} ul,li {list-style-type:none;margin:0;padding:0;} thead {background-color:#000;color:#fff;} tr:nth-child(even) {background-color:#ddd;} table {border-style:solid;border-width:1px;} input.submit {margin:12pt;padding:5px;} td {padding:0 5px 0 5px;</style>");
+	writeln("</head>\n<body>");
+
+	c2t_hccs_writeFailSuccess();
+
+	c2t_hccs_writeText("h1","c2t_hccs Settings");
+	c2t_hccs_writeText("p",'No changes will be made until the "save changes" button is used at the bottom.');
+
+	//form
+	writeln('<form action="" method="post">');
+
+	//general
+	c2t_hccs_writeText("h2","General");
+	writeln(`<ul><li>Current clan: <code>{get_clan_name()}</code></li>\n<li>Current clan ID: <code>{get_clan_id()}</code></li>\n</ul>`);
+	writeln("<table>");
+	c2t_hccs_writeTh("setting","value","description");
+	write("<tbody>");
+	foreach name,desc in clan
+		c2t_hccs_writeInput(name,"",desc,30,30);
+	foreach name,desc in general
+		c2t_hccs_writeCheckbox(name,desc);
+	writeln("</tbody>\n</table>");
+
+	//thresholds
+	c2t_hccs_writeText("h2","Thresholds");
+	c2t_hccs_writeText("p","These are the 10 thresholds corresponding to the minimum turns to allow each test to take. The script will stop just before doing a test if a threshold is not met after doing all the pre-test stuff.");
+	writeln("<table>");
+	c2t_hccs_writeTh("test","turns","");
+	write("<tbody>");
+	foreach name,num in threshold
+		c2t_hccs_writeInput(thresholdName[name],num,"",1,2);
+	writeln("</tbody>\n</table>");
+
+	//disablables
+	c2t_hccs_writeText("h2","Disableable Resources");
+	c2t_hccs_writeText("p","Check any of the following to disable that resource. Disabling a resource means to not use most things from that resource.");
+	writeln("<table>");
+	c2t_hccs_writeTh("setting","value","description");
+	write("<tbody>");
+	foreach name,desc in disableable
+		c2t_hccs_writeCheckbox(name,desc);
+	writeln("</tbody>\n</table>");
+
+	writeln('<input type="submit" value="save changes" class="submit" />');
+	c2t_hccs_writeFailSuccess();
+	writeln("</form>");
+
+	//footer
+	write("</body>\n</html>");
+}
+
+void c2t_hccs_writeText(string tag,string s) {
+	writeln(`<{tag}>{s}</{tag.split_string(" ")[0]}>`);
+}
+
+void c2t_hccs_writeCheckbox(string s,string desc) {
+	boolean check;
+	if (postError == true)
+		check = (POST[s] == "on"?true:false);
+	else
+		check = get_property(s).to_boolean();
+	writeln(`<tr>\n<td><label for="{s}"><code>{s}</code></label></td>\n<td><input type="checkbox" name="{s}" id="{s}"{check?' checked="checked"':''} /></td>`);
+	if (desc != "")
+		writeln(`<td>{desc}</td>`);
+	write("</tr>");
+}
+
+void c2t_hccs_writeInput(string name,string value,string desc,int size,int max) {
+	string val = value;
+	if (postError == true)
+		val = POST[name];
+	else if (name.contains_text("c2t_hccs_"))
+		val = get_property(name);
+	writeln(`<tr>\n<td><label for="{name}"><code>{name}</code></label></td>\n<td><input type="text" name="{name}" id="{name}" size="{size}" maxlength="{max}" value="{val}" /></td>`);
+	if (desc != "")
+		writeln(`<td>{desc}</td>`);
+	write("</tr>");
+}
+
+void c2t_hccs_writeTh(string a, string b, string c) {
+	writeln(`<thead><tr>\n<th>{a}</th>\n<th>{b}</th>`);
+	if (c != "")
+		writeln(`<th>{c}</th>`);
+	writeln("</tr></thead>");
+}
+
+void c2t_hccs_writeFailSuccess() {
+	if (postError)
+		c2t_hccs_writeText('p class="error"',"CHANGES NOT SAVED! Error: thresholds must be between 1 and 60");
+	else if (POST.count() > 1)
+		c2t_hccs_writeText('p class="success"',"Changes saved!");
+}
