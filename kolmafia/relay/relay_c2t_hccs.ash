@@ -22,6 +22,7 @@ void main() {
 
 	string [string] clan = {
 		"c2t_hccs_joinClan":"clan to use for all VIP things; clan ID is preferred, but just the name also works",
+		"c2t_hccs_joinElfClan":"clan to use for Elf Buff",
 		"c2t_hccs_clanFortunes":"this is the name of the person/bot that you want to do the fortune teller with"
 		};
 
