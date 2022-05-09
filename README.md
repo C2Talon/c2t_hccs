@@ -5,6 +5,7 @@ This is a fork from c2t_hccs. Ive added a couple IotM I had that werent suported
 * [Tunnel of LOV](https://kol.coldfront.net/thekolwiki/index.php/The_Tunnel_of_L.O.V.E.)
 * [Asdon Martin](https://kol.coldfront.net/thekolwiki/index.php/Asdon_Martin)
 * [Source Terminal](https://kol.coldfront.net/thekolwiki/index.php/Source_terminal)
+* [MayDay™ supply package](https://kol.coldfront.net/thekolwiki/index.php/MayDay%E2%84%A2_supply_package)
 
 Kolmafia script to handle a hardcore community service run with my set of skills and IotMs and with any class.
 
@@ -140,6 +141,7 @@ While these are not strictly required, not having enough that either save turns 
 * [Tunnel of LOV](https://kol.coldfront.net/thekolwiki/index.php/The_Tunnel_of_L.O.V.E.) &mdash; get's Elixir #3 + #6, Fam Weight Buff, LOV Earrings, LOV Chocolate, saves up to 2 turn on weapon test, 2 on spell test, 2 on Familiar test.
 * [Asdon Martin](https://kol.coldfront.net/thekolwiki/index.php/Asdon_Martin) &mdash; saves up to 6.66 turns on items test. Unsure if conflicts with moon sign change as it uses loafs of soda bread. CAUTION
 * [Source Terminal](https://kol.coldfront.net/thekolwiki/index.php/Source_terminal) &mdash; saves up to 2 turns on item test.
+* [MayDay™ supply package](https://kol.coldfront.net/thekolwiki/index.php/MayDay%E2%84%A2_supply_package) RtS Effect minor level help + hot res, if opened - support for emergency glowstick (1.7 turns on item test) + space blanket (Autosell in-case) + gaffer's tape (Buff Moxie class)
 
 ## TODO (eventually)
 
