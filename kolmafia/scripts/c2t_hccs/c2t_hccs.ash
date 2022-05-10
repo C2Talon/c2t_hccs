@@ -102,11 +102,8 @@ void main() {
 		c2t_hccs_testhandler(TEST_HP);
 
 		//best time to open guild as SC if need be, or fish for wanderers, so warn and abort if < 93% spit
-		if (c2t_hccs_melodramedary() && get_property('camelSpit').to_int() < 93 && !get_property("_c2t_hccs_earlySpitWarn").to_boolean()) {
-			set_property("_c2t_hccs_earlySpitWarn","true");
-			abort('Camel spit only at '+get_property('camelSpit')+'%');
-		}
-		//so this doesn't warn if ran after using spit for weapon test
+		if (c2t_hccs_melodramedary() && get_property('camelSpit').to_int() < 93 && !get_property("_c2t_hccs_earlySpitWarn").to_boolean())
+			print('Camel spit only at '+get_property('camelSpit')+'%',"red");
 		set_property("_c2t_hccs_earlySpitWarn","true");
 
 		c2t_hccs_testHandler(TEST_ITEM);
@@ -424,10 +421,11 @@ void c2t_hccs_exit() {
 		if (property_exists("_saved_joinClan"))
 			c2t_joinClan(get_property("_saved_joinClan").to_int());
 		c2t_hccs_printTestData();
+		if (get_property("_c2t_hccs_failSpit").to_boolean())
+			print(`Info: camel was not fully charged when it was needed; charge is at {get_property("camelSpit")}%`,"blue");
+		if (get_property("shockingLickCharges").to_int() > 0)
+			print(`Info: shocking lick charge count from batteries is {get_property("shockingLickCharges")}`,"blue");
 	}
-
-	if (get_property("shockingLickCharges").to_int() > 0)
-		print(`Info: shocking lick charge count from batteries is {get_property("shockingLickCharges")}`,"blue");
 
 	c2t_hccs_printRunTime(true);
 }
@@ -1325,8 +1323,10 @@ boolean c2t_hccs_preNoncombat() {
 }
 
 boolean c2t_hccs_preWeapon() {
-	if (c2t_hccs_melodramedary() && get_property('camelSpit').to_int() != 100 && have_effect($effect[spit upon]) == 0)
-		abort('Camel spit only at '+get_property('camelSpit')+'%.');
+	if (c2t_hccs_melodramedary() && get_property('camelSpit').to_int() != 100 && have_effect($effect[spit upon]) == 0) {
+		print('Camel spit only at '+get_property('camelSpit')+'%. Going to have to skip spit buff.',"red");
+		set_property("_c2t_hccs_failSpit","true");
+	}
 
 	//cast triple size
 	if (available_amount($item[powerful glove]) > 0 && have_effect($effect[triple-sized]) == 0 && !c2t_cast($skill[cheat code: triple size]))
