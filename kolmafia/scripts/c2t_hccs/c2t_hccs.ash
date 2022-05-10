@@ -390,14 +390,14 @@ void c2t_hccs_init() {
 	set_property('_saved_manaBurningThreshold',get_property('manaBurningThreshold'));
 	set_property('manaBurningThreshold','-0.05');
 	//custom combat script
-	if (get_property('customCombatScript') != "c2t_hccs")
+	if (get_property('customCombatScript') != "c2t_hccs" && get_property("csServicesPerformed") == "")
 		set_property('_saved_customCombatScript',get_property('customCombatScript'));
 	set_property('customCombatScript',"c2t_hccs");
 	//preadventure script for HP/MP recovery
 	set_property('_saved_betweenBattleScript',get_property("betweenBattleScript"));
 	set_property('betweenBattleScript','c2t_hccs_preAdv.ash');
 	//clan
-	if (get_clan_id() != get_property('c2t_hccs_joinClan').to_int())
+	if (get_clan_id() != get_property('c2t_hccs_joinClan').to_int() && get_property("csServicesPerformed") == "")
 		set_property('_saved_joinClan',get_clan_id());
 
 	visit_url('council.php');// Initialize council.
