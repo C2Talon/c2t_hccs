@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r26334;//umbrella support
+since r26383;//mayday support
 
 import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>
@@ -821,7 +821,12 @@ boolean c2t_hccs_allTheBuffs() {
 	c2t_hccs_getEffect($effect[feeling excited]);
 
 	c2t_hccs_getEffect($effect[the magical mojomuscular melody]);
-	
+
+	//mayday contract
+	c2t_hccs_haveUse($item[mayday&trade; supply package]);
+	//TODO reevaluate cost/benefit later
+	c2t_hccs_haveUse($item[emergency glowstick]);
+
 	//boxing daycare stat gain
 	if (get_property("daycareOpen").to_boolean() && get_property('_daycareGymScavenges').to_int() == 0) {
 		visit_url('place.php?whichplace=town_wrong&action=townwrong_boxingdaycare');
