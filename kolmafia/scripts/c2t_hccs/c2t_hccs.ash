@@ -386,16 +386,20 @@ void c2t_hccs_init() {
 	//no mana burn/every mp is sacred
 	set_property('_saved_manaBurningThreshold',get_property('manaBurningThreshold'));
 	set_property('manaBurningThreshold','-0.05');
-	//custom combat script
-	if (get_property('customCombatScript') != "c2t_hccs" && get_property("csServicesPerformed") == "")
-		set_property('_saved_customCombatScript',get_property('customCombatScript'));
-	set_property('customCombatScript',"c2t_hccs");
 	//preadventure script for HP/MP recovery
 	set_property('_saved_betweenBattleScript',get_property("betweenBattleScript"));
 	set_property('betweenBattleScript','c2t_hccs_preAdv.ash');
-	//clan
-	if (get_clan_id() != get_property('c2t_hccs_joinClan').to_int() && get_property("csServicesPerformed") == "")
-		set_property('_saved_joinClan',get_clan_id());
+
+	//only save pre-coil states of these
+	if (get_property("csServicesPerformed") == "") {
+		//clan
+		if (get_clan_id() != get_property('c2t_hccs_joinClan').to_int())
+			set_property('_saved_joinClan',get_clan_id());
+		//custom combat script
+		if (get_property('customCombatScript') != "c2t_hccs")
+			set_property('_saved_customCombatScript',get_property('customCombatScript'));
+	}
+	set_property('customCombatScript',"c2t_hccs");
 
 	visit_url('council.php');// Initialize council.
 }
@@ -423,9 +427,9 @@ void c2t_hccs_exit() {
 		c2t_hccs_printTestData();
 		if (get_property("_c2t_hccs_failSpit").to_boolean())
 			print(`Info: camel was not fully charged when it was needed; charge is at {get_property("camelSpit")}%`,"blue");
-		if (get_property("shockingLickCharges").to_int() > 0)
-			print(`Info: shocking lick charge count from batteries is {get_property("shockingLickCharges")}`,"blue");
 	}
+	if (get_property("shockingLickCharges").to_int() > 0)
+		print(`Info: shocking lick charge count from batteries is {get_property("shockingLickCharges")}`,"blue");
 
 	c2t_hccs_printRunTime(true);
 }
@@ -450,11 +454,7 @@ boolean c2t_hccs_preCoil() {
 
 	//probably should make a property handler, because this looks like it may get unwieldly
 	if (get_property('_clanFortuneConsultUses').to_int() < 3) {
-		string clan = get_property("c2t_hccs_joinClan");
-		if (clan.to_int() != 0)
-			c2t_assert(c2t_joinClan(clan.to_int()),`Could not join clan {clan}`);
-		else
-			c2t_assert(c2t_joinClan(clan),`Could not join clan {clan}`);
+		c2t_hccs_joinClan(get_property("c2t_hccs_joinClan"));
 
 		string fortunes = get_property("c2t_hccs_clanFortunes");
 
@@ -824,6 +824,8 @@ boolean c2t_hccs_allTheBuffs() {
 	c2t_hccs_haveUse($item[mayday&trade; supply package]);
 	//TODO reevaluate cost/benefit later
 	c2t_hccs_haveUse($item[emergency glowstick]);
+	//make early meat a non-issue if obtained
+	autosell(1,$item[space blanket]);
 
 	//boxing daycare stat gain
 	if (get_property("daycareOpen").to_boolean() && get_property('_daycareGymScavenges').to_int() == 0) {

@@ -29,6 +29,10 @@ boolean c2t_hccs_haveUse(skill ski);
 //n is for number of times to use
 boolean c2t_hccs_haveUse(int n,skill ski);
 
+//joinclan
+//mostly a wrapper for c2t_joinClan()
+boolean c2t_hccs_joinClan(string s);
+
 //pull 1 of an item from storage if not already have it
 //returns true in the case of pulling an item or if the item already is available
 boolean c2t_hccs_pull(item ite);
@@ -146,6 +150,15 @@ boolean c2t_hccs_haveUse(int n,skill ski) {
 	if (my_mp() < mp_cost(ski)*n)
 		c2t_hccs_restoreMp();
 	return use_skill(n,ski);
+}
+
+boolean c2t_hccs_joinClan(string s) {
+	string err = `Error: could not join clan "{s}"`;
+	if (s.to_int() != 0)
+		c2t_assert(c2t_joinClan(s.to_int()),err);
+	else
+		c2t_assert(c2t_joinClan(s),err);
+	return true;
 }
 
 boolean c2t_hccs_pull(item ite) {
