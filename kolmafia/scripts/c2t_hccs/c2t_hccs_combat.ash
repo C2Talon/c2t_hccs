@@ -12,6 +12,10 @@ import <c2t_hccs_resources.ash>
 string c2t_hccs_bowlSideways();
 string c2t_hccs_bowlSideways(string m);
 
+//handle some skills with charges
+string c2t_hccs_bbChargeSkill(string m,skill ski);
+string c2t_hccs_bbChargeSkill(skill ski);
+
 
 void main(int initround, monster foe, string page) {
 	//saber force
@@ -134,10 +138,10 @@ void main(int initround, monster foe, string page) {
 					mHead + mSteal
 					.c2t_bb(have_effect($effect[bat-adjacent form]) == 0?c2t_bb($skill[become a bat]):"")
 					.c2t_bb(have_effect($effect[cosmic ball in the air]) == 0?c2t_bb($skill[bowl straight up]):"")
-					.c2t_bb($skill[reflex hammer])
-					.c2t_bb($skill[kgb tranquilizer dart])
-					.c2t_bb($skill[snokebomb])
-					.c2t_bb($skill[feel hatred])
+					.c2t_hccs_bbChargeSkill($skill[reflex hammer])
+					.c2t_hccs_bbChargeSkill($skill[kgb tranquilizer dart])
+					.c2t_hccs_bbChargeSkill($skill[snokebomb])
+					.c2t_hccs_bbChargeSkill($skill[feel hatred])
 				);
 				return;
 
@@ -150,8 +154,8 @@ void main(int initround, monster foe, string page) {
 					.c2t_bb($skill[feel envy])
 					.c2t_bb($skill[become a wolf])
 					.c2t_bb($skill[gulp latte])
-					.c2t_bb(get_property("_chestXRayUsed").to_int() < 3 ? c2t_bb($skill[chest x-ray]) : "")
-					.c2t_bb(get_property("_shatteringPunchUsed").to_int() < 3 ? c2t_bb($skill[shattering punch]) : "")
+					.c2t_hccs_bbChargeSkill($skill[chest x-ray])
+					.c2t_hccs_bbChargeSkill($skill[shattering punch])
 					.c2t_bb($skill[gingerbread mob hit])
 					.c2t_bbSubmit();
 					return;
@@ -182,8 +186,8 @@ void main(int initround, monster foe, string page) {
 					mSteal
 					.c2t_bb($skill[feel nostalgic])
 					.c2t_bb($skill[feel envy])
-					.c2t_bb(get_property("_chestXRayUsed").to_int() < 3 ? c2t_bb($skill[chest x-ray]) : "")
-					.c2t_bb(get_property("_shatteringPunchUsed").to_int() < 3 ? c2t_bb($skill[shattering punch]) : "")
+					.c2t_hccs_bbChargeSkill($skill[chest x-ray])
+					.c2t_hccs_bbChargeSkill($skill[shattering punch])
 					.c2t_bb($skill[gingerbread mob hit])
 					.c2t_bbSubmit();
 					return;
@@ -209,7 +213,7 @@ void main(int initround, monster foe, string page) {
 					return;
 				}
 				//feel pride still thinks it can be used after max uses for some reason
-				m += get_property("_feelPrideUsed").to_int() < 3 ? c2t_bb($skill[feel pride]) : "";
+				m += c2t_hccs_bbChargeSkill($skill[feel pride]);
 
 				//free kills after NEP free fights
 				if (get_property('_neverendingPartyFreeTurns').to_int() == 10 && !get_property('_gingerbreadMobHitUsed').to_boolean()) {
@@ -219,9 +223,9 @@ void main(int initround, monster foe, string page) {
 						.c2t_hccs_bowlSideways()
 						//free kill skills
 						//won't use otoscope anywhere else, so might as well use it while doc bag equipped
-						.c2t_bb(get_property("_otoscopeUsed").to_int() < 3 ? c2t_bb($skill[otoscope]) : "")
-						.c2t_bb(get_property("_chestXRayUsed").to_int() < 3 ? c2t_bb($skill[chest x-ray]) : "")
-						.c2t_bb(get_property("_shatteringPunchUsed").to_int() < 3 ? c2t_bb($skill[shattering punch]) : "")
+						.c2t_hccs_bbChargeSkill($skill[otoscope])
+						.c2t_hccs_bbChargeSkill($skill[chest x-ray])
+						.c2t_hccs_bbChargeSkill($skill[shattering punch])
 						.c2t_bb($skill[gingerbread mob hit])
 					);
 				}
@@ -305,12 +309,12 @@ void main(int initround, monster foe, string page) {
 			case $monster[migratory pirate]:
 			case $monster[peripatetic pirate]:
 				m = mHead + mSteal;
-				m += c2t_bb($skill[reflex hammer]);
-				m += c2t_bb($skill[kgb tranquilizer dart]);
+				m += c2t_hccs_bbChargeSkill($skill[reflex hammer]);
+				m += c2t_hccs_bbChargeSkill($skill[kgb tranquilizer dart]);
 				if (get_property("_snokebombUsed").to_int() <= get_property("_feelHatredUsed").to_int())
-					m += c2t_bb($skill[snokebomb]).c2t_bb($skill[feel hatred]);
+					m += c2t_hccs_bbChargeSkill($skill[snokebomb]).c2t_hccs_bbChargeSkill($skill[feel hatred]);
 				else
-					m += c2t_bb($skill[feel hatred]).c2t_bb($skill[snokebomb]);
+					m += c2t_hccs_bbChargeSkill($skill[feel hatred]).c2t_hccs_bbChargeSkill($skill[snokebomb]);
 				m.c2t_bbSubmit();
 				//pretty sure most adv1() in the script assume it succeeds in fighting what it's supposed to, which the holiday monster is very much not the right one, so abort to rerun
 				//abort("Aborting for safety after encountering a holiday monster. Should be able to simply rerun to resume.");
@@ -332,7 +336,6 @@ string c2t_hccs_bowlSideways(string m) {
 	int backup = get_property("_backUpUses").to_int();
 	int nep = 10-get_property("_neverendingPartyFreeTurns").to_int();
 	int free = c2t_hccs_freeKillsLeft();
-
 	if (out == m)
 		return m;
 	if (get_property("csServicesPerformed") != "Coil Wire")
@@ -348,6 +351,52 @@ string c2t_hccs_bowlSideways(string m) {
 	if (nep+free > 1)
 		return out;
 	return m;
+}
+
+//stopgap for now; should add a handler to lib
+string c2t_hccs_bbChargeSkill(string m,skill ski) {
+	return m + c2t_hccs_bbChargeSkill(ski);
+}
+string c2t_hccs_bbChargeSkill(skill ski) {
+	string prop;
+	int max;
+	switch (ski) {
+		default:
+			abort(`Error: unhandled skill in c2t_hccs_bbChargeSkill: "{ski}"`);
+		case $skill[chest x-ray]:
+			prop = "_chestXRayUsed";
+			max = 3;
+			break;
+		case $skill[feel hatred]:
+			prop = "_feelHatredUsed";
+			max = 3;
+			break;
+		case $skill[feel pride]:
+			prop = "_feelPrideUsed";
+			max = 3;
+			break;
+		case $skill[kgb tranquilizer dart]:
+			prop = "_kgbTranquilizerDartUses";
+			max = 3;
+			break;
+		case $skill[otoscope]:
+			prop = "_otoscopeUsed";
+			max = 3;
+			break;
+		case $skill[reflex hammer]:
+			prop = "_reflexHammerUsed";
+			max = 3;
+			break;
+		case $skill[shattering punch]:
+			prop = "_shatteringPunchUsed";
+			max = 3;
+			break;
+		case $skill[snokebomb]:
+			prop = "_snokebombUsed";
+			max = 3;
+			break;
+	}
+	return get_property(prop).to_int() < max ? c2t_bb(ski) : "";
 }
 
 
