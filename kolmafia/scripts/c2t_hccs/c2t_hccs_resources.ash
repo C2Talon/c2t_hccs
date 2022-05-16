@@ -215,7 +215,7 @@ boolean c2t_hccs_briefcase(string arg) {
 		case "hot":
 		case "weapon":
 		case "spell":
-			cli_execute(`briefcase e {arg.to_lower_case()}`);
+			cli_execute(`Briefcase e {arg.to_lower_case()}`);
 	}
 	return true;
 }
