@@ -19,10 +19,12 @@ void c2t_hccs_preAdv() {
 	}
 	c2t_assert(have_effect($effect[beaten up]) == 0,"Couldn't get rid of beaten up");//maybe don't abort for this?
 
-	//restore hp
+	//restore HP via user settings
 	if (my_hp() < floor(my_maxhp() * hpt))
-		if (!restore_hp(floor(my_maxhp()*0.9))
-			&& !c2t_hccs_haveUse(1+(my_maxhp()-my_hp())/1000,$skill[cannelloni cocoon]))
+		restore_hp(floor(my_maxhp()*0.9));
+	//restore HP fallback
+	if (my_hp() < floor(my_maxhp() * hpt))
+		if (!c2t_hccs_haveUse(1+(my_maxhp()-my_hp())/1000,$skill[cannelloni cocoon]))
 			print("Had some trouble restoring HP?","red");
 
 	//restore mp
