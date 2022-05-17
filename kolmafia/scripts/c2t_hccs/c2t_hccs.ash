@@ -1403,7 +1403,16 @@ boolean c2t_hccs_preWeapon() {
 		else
 			c2t_hccs_levelingFamiliar(true);
 
-		adv1($location[thugnderdome],-1,"");//everything is saberable and no crazy NCs
+		//fight ungulith or not
+		boolean fallback = true;
+		if (item_amount($item[corrupted marrow]) == 0 && have_effect($effect[cowrruption]) == 0) {
+			if (c2t_hccs_combatLoversLocket($monster[ungulith]) || c2t_hccs_genie($monster[ungulith]))
+				fallback = false;
+			else
+				print("Couldn't fight ungulith to get corrupted marrow","red");
+		}
+		if (fallback)
+			adv1($location[thugnderdome],-1,"");//everything is saberable and no crazy NCs
 	}
 
 	c2t_hccs_getEffect($effect[cowrruption]);
