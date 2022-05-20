@@ -96,7 +96,7 @@ void main(int initround, monster foe, string page) {
 	string m;
 
 	//run with ghost caroler for buffs at NEP and dire warren at different times
-	if (my_familiar() == $familiar[ghost of crimbo carols]) {
+	if ($familiars[ghost of crimbo carols,exotic parrot] contains my_familiar()) {
 		m = mHead + mSteal;
 		if (foe == $monster[fluffy bunny]) {
 			m += c2t_bb($skill[become a cloud of mist]);
