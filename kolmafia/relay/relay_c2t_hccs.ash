@@ -3,6 +3,8 @@
 
 //interface for changing settings
 
+import <c2t_hccs_properties.ash>
+
 string [string] POST = form_fields();
 boolean postError = false;
 
@@ -26,8 +28,9 @@ void main() {
 		};
 
 	string [string] disableable = {
-		"c2t_hccs_disable.backupCamera":"will not use the 'back-up to the last enemy' skill",
+		"c2t_hccs_disable.backupCamera":"will not use the 'back-up to your last enemy' skill",
 		"c2t_hccs_disable.briefcase":"no cranks will be used; however, banishes may still be used",
+		"c2t_hccs_disable.cloverItem":"11-leaf clover will not be used for limerick dungeon lucky adventure",
 		"c2t_hccs_disable.coldMedicineCabinet":"cold medicine cabinet will not be used",
 		"c2t_hccs_disable.combatLoversLocket":"no monsters will be summoned from combat lover's locket",
 		"c2t_hccs_disable.melodramedary":"melodramedary will not be used to try to save turns on weapon and spell tests",
@@ -145,7 +148,7 @@ void c2t_hccs_writeInput(string name,string value,string desc,int size,int max) 
 	string val = value;
 	if (postError == true)
 		val = POST[name];
-	else if (name.contains_text("c2t_hccs_"))
+	else if (name.starts_with("c2t_hccs_"))
 		val = get_property(name);
 	write(`<tr><td><label for="{name}"><code>{name}</code></label></td><td><input type="text" name="{name}" id="{name}" size="{size}" maxlength="{max}" value="{val}" /></td>`);
 	if (desc != "")

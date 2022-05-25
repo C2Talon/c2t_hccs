@@ -50,7 +50,6 @@ boolean c2t_hccs_preCoil();
 boolean c2t_hccs_buffExp();
 boolean c2t_hccs_levelup();
 boolean c2t_hccs_allTheBuffs();
-boolean c2t_hccs_semirareItem();
 boolean c2t_hccs_lovePotion(boolean useit);
 boolean c2t_hccs_lovePotion(boolean useit,boolean dumpit);
 boolean c2t_hccs_preHp();
@@ -811,7 +810,7 @@ boolean c2t_hccs_allTheBuffs() {
 	
 	if (have_effect($effect[one very clear eye]) == 0) {
 		while (c2t_hccs_wandererFight());//do vote monster if ready before spending turn
-		if (c2t_hccs_semirareItem())
+		if (c2t_hccs_cloverItem())
 			c2t_hccs_getEffect($effect[one very clear eye]);
 	}
 
@@ -921,27 +920,6 @@ boolean c2t_hccs_allTheBuffs() {
 
 	cli_execute('mcd 10');
 
-	return true;
-}
-
-// get semirare from limerick dungeon
-boolean c2t_hccs_semirareItem() {
-	if (c2t_hccs_gardenPeppermint() && c2t_hccs_sweetSynthesis())
-		return false;
-
-	c2t_assert(my_adventures() > 0,"no adventures for limerick dungeon lucky adventure");
-	if (available_amount($item[cyclops eyedrops]) == 0 && have_effect($effect[one very clear eye]) == 0) {
-		//11-leaf clover
-		if (have_effect($effect[lucky!]) == 0) {
-			hermit(1,$item[11-leaf clover]);
-			use($item[11-leaf clover]);
-		}
-		//recover hp
-		if (my_hp() < (0.5 * my_maxhp()))
-			cli_execute('hottub');
-		cli_execute('mood apathetic');
-		adv1($location[the limerick dungeon],-1,'');
-	}
 	return true;
 }
 

@@ -18,6 +18,7 @@ import <c2t_hccs_preAdv.ash>
   -=-+-=-+-=-+-=-+-=-+-=-*/
 //d--backup camera
 //d--briefcase
+//d--clover item
 //d--cold medicine cabinet
 //d--combat lover's locket
 //d--garden peppermint
@@ -50,6 +51,11 @@ boolean c2t_hccs_briefcase();
 //passes `arg` to Ezandora's briefcase script needing only the core of what is needed, e.g. "hot", "-combat", etc., limited in scope to what is relevant to CS
 //returns true if have the briefcase
 boolean c2t_hccs_briefcase(string arg);
+
+
+//d--clover item
+//used to get the lucky adventure from limerick dungeon or not
+boolean c2t_hccs_cloverItem();
 
 
 //d--cold medicine cabinet
@@ -170,6 +176,7 @@ void c2t_hccs_vote();
   -=-+-=-+-=-+-=-+-=-+-=-*/
 //i--backup camera
 //i--briefcase
+//i--clover item
 //i--cold medicine cabinet
 //i--combat lover's locket
 //i--garden peppermint
@@ -218,6 +225,28 @@ boolean c2t_hccs_briefcase(string arg) {
 			cli_execute(`Briefcase e {arg.to_lower_case()}`);
 	}
 	return true;
+}
+
+//i--clover item
+boolean c2t_hccs_cloverItem() {
+	if (!get_property("c2t_hccs_disable.cloverItem").to_boolean())
+		return false;
+	if (available_amount($item[cyclops eyedrops]) > 0)
+		return true;
+	if (have_effect($effect[one very clear eye]) > 0)
+		return true;
+	c2t_assert(my_adventures() > 0,"no adventures for limerick dungeon lucky adventure");
+
+	//11-leaf clover
+	if (have_effect($effect[lucky!]) == 0) {
+		hermit(1,$item[11-leaf clover]);
+		use($item[11-leaf clover]);
+	}
+
+	cli_execute('mood apathetic');
+	adv1($location[the limerick dungeon],-1,'');
+
+	return item_amount($item[cyclops eyedrops]) > 0;
 }
 
 //i--cold medicine cabinet
