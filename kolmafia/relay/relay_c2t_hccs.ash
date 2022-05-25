@@ -68,10 +68,6 @@ void main() {
 		}
 	}
 
-	//some defaults if none are set
-	if (!property_exists("c2t_hccs_thresholds",false))
-		cli_execute("c2t_hccs_properties");
-
 	string [int] threshold = get_property("c2t_hccs_thresholds").split_string(",");
 
 	//header

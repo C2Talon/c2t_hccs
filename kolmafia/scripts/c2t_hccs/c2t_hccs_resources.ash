@@ -242,6 +242,7 @@ boolean c2t_hccs_cloverItem() {
 		hermit(1,$item[11-leaf clover]);
 		use($item[11-leaf clover]);
 	}
+	c2t_assert(have_effect($effect[lucky!]) > 0,"didn't get lucky effect for lucky adventure");
 
 	cli_execute('mood apathetic');
 	adv1($location[the limerick dungeon],-1,'');
