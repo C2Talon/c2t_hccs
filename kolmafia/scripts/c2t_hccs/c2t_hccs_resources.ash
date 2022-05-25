@@ -229,7 +229,7 @@ boolean c2t_hccs_briefcase(string arg) {
 
 //i--clover item
 boolean c2t_hccs_cloverItem() {
-	if (!get_property("c2t_hccs_disable.cloverItem").to_boolean())
+	if (get_property("c2t_hccs_disable.cloverItem").to_boolean())
 		return false;
 	if (available_amount($item[cyclops eyedrops]) > 0)
 		return true;
