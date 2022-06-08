@@ -156,17 +156,13 @@ boolean c2t_hccs_haveUse(int n,skill ski) {
 }
 
 boolean c2t_hccs_isCleaverNow() {
-	int num = get_property("_juneCleaverCharge").to_int();
+	int charge = get_property("_juneCleaverCharge").to_int();
+	int times = get_property("_c2t_hccs_timesCleaved").to_int();
+	int[6] set = {1,6,10,12,15,20};
 
-	foreach x in $ints[1,6,10,12,15,20] {
-		num -= x;
-		if (num == 0)
-			return true;
-		if (num < 0)
-			return false;
-	}
-
-	return (num % 30 == 0);
+	if (times < 6)
+		return set[times] == charge;
+	return charge == 30;
 }
 
 boolean c2t_hccs_joinClan(string s) {

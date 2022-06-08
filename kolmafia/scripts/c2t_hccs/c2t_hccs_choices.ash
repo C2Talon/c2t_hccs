@@ -1,8 +1,10 @@
 //c2t hccs choices
 //c2t
 
-//track last cleaver adventure done in order to not try to repeat it
-void c2t_hccs_cleaverDone() set_property("_c2t_hccs_lastCleaverDone",get_property("_juneCleaverCharge"));
+//track number of cleaver adventures since charge counter resets after each one
+void c2t_hccs_cleaverDone() {
+	set_property("_c2t_hccs_timesCleaved",get_property("_c2t_hccs_timesCleaved").to_int()+1);
+}
 
 void main (int id,string page) {
 	int testsDone = get_property("csServicesPerformed").split_string(",").count();
