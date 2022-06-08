@@ -388,6 +388,9 @@ void c2t_hccs_init() {
 	//preadventure script for HP/MP recovery
 	set_property('_saved_betweenBattleScript',get_property("betweenBattleScript"));
 	set_property('betweenBattleScript','c2t_hccs_preAdv.ash');
+	//post-adventure script
+	set_property('_saved_afterAdventureScript',get_property("afterAdventureScript"));
+	set_property('afterAdventureScript','c2t_hccs_postAdv.ash');
 
 	//only save pre-coil states of these
 	if (get_property("csServicesPerformed") == "") {
@@ -409,6 +412,7 @@ void c2t_hccs_exit() {
 	set_property('autoSatisfyWithCoinmasters',get_property('_saved_autoSatisfyWithCoinmasters'));
 	set_property('choiceAdventureScript',get_property('_saved_choiceAdventureScript'));
 	set_property('betweenBattleScript',get_property('_saved_betweenBattleScript'));
+	set_property('afterAdventureScript',get_property('_saved_afterAdventureScript'));
 
 	if (get_property('_saved_hpAutoRecovery') != "")
 		set_property('hpAutoRecovery',get_property('_saved_hpAutoRecovery'));

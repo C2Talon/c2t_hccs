@@ -9,13 +9,6 @@ void c2t_hccs_preAdv() {
 	float hpt = get_property("hpAutoRecovery").to_float();
 	int mpt = 50;
 
-	//handle june cleaver adventure
-	if (c2t_hccs_isCleaverNow()
-		&& have_equipped($item[june cleaver])
-		&& get_property("_c2t_hccs_lastCleaverDone") != get_property("_juneCleaverCharge")
-		)
-		adv1($location[noob cave]);//unless it's discovered it burns delay
-
 	//handle beaten up
 	if (have_effect($effect[beaten up]) > 0) {
 		skill temp = $skill[tongue of the walrus];
