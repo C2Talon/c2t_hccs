@@ -161,8 +161,8 @@ boolean c2t_hccs_isCleaverNow() {
 	int[6] set = {1,6,10,12,15,20};
 
 	if (times < 6)
-		return set[times] == charge;
-	return charge == 30;
+		return charge >= set[times];
+	return charge >= 30;
 }
 
 boolean c2t_hccs_joinClan(string s) {
