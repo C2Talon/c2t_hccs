@@ -29,6 +29,9 @@ boolean c2t_hccs_haveUse(skill ski);
 //n is for number of times to use
 boolean c2t_hccs_haveUse(int n,skill ski);
 
+//returns whether a cleaver adventure is now or not
+boolean c2t_hccs_isCleaverNow();
+
 //joinclan
 //mostly a wrapper for c2t_joinClan()
 boolean c2t_hccs_joinClan(string s);
@@ -150,6 +153,20 @@ boolean c2t_hccs_haveUse(int n,skill ski) {
 	if (my_mp() < mp_cost(ski)*n)
 		c2t_hccs_restoreMp();
 	return use_skill(n,ski);
+}
+
+boolean c2t_hccs_isCleaverNow() {
+	int num = get_property("_juneCleaverCharge").to_int();
+
+	foreach x in $ints[1,6,10,12,15,20] {
+		num -= x;
+		if (num == 0)
+			return true;
+		if (num < 0)
+			return false;
+	}
+
+	return (num % 30 == 0);
 }
 
 boolean c2t_hccs_joinClan(string s) {

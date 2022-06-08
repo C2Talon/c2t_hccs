@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r26383;//mayday support
+since r26481;//june cleaver
 
 import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>
