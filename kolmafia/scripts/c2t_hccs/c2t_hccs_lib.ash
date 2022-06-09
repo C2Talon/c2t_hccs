@@ -156,13 +156,7 @@ boolean c2t_hccs_haveUse(int n,skill ski) {
 }
 
 boolean c2t_hccs_isCleaverNow() {
-	int charge = get_property("_juneCleaverCharge").to_int();
-	int times = get_property("_c2t_hccs_timesCleaved").to_int();
-	int[6] set = {1,6,10,12,15,20};
-
-	if (times < 6)
-		return charge >= set[times];
-	return charge >= 30;
+	return get_property("_juneCleaverFightsLeft").to_int() <= 0;
 }
 
 boolean c2t_hccs_joinClan(string s) {

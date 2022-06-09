@@ -1,10 +1,6 @@
 //c2t hccs choices
 //c2t
 
-//track number of cleaver adventures since charge counter resets after each one
-void c2t_hccs_cleaverDone() {
-	set_property("_c2t_hccs_timesCleaved",get_property("_c2t_hccs_timesCleaved").to_int()+1);
-}
 
 void main (int id,string page) {
 	int testsDone = get_property("csServicesPerformed").split_string(",").count();
@@ -101,7 +97,6 @@ void main (int id,string page) {
 		*/
 		case 1467:
 			run_choice(3);//+5 adv
-			c2t_hccs_cleaverDone();
 			cli_execute("rest free");//not sure sequencing of these NCs
 			break;
 		/*
@@ -115,7 +110,6 @@ void main (int id,string page) {
 				run_choice(1);//mox stat
 			else
 				run_choice(2);//mus stat
-			c2t_hccs_cleaverDone();
 			break;
 		/*
 		Beware of Aligator
@@ -128,7 +122,6 @@ void main (int id,string page) {
 				run_choice(1);//20 ML
 			else
 				run_choice(2);//booze
-			c2t_hccs_cleaverDone();
 			break;
 		/*
 		Teacher's Pet
@@ -141,7 +134,6 @@ void main (int id,string page) {
 				run_choice(3);//mus stat
 			else
 				run_choice(2);//teacher's pen
-			c2t_hccs_cleaverDone();
 			break;
 		/*
 		Lost and Found
@@ -160,7 +152,6 @@ void main (int id,string page) {
 			}
 			else
 				run_choice(1);//meat potion
-			c2t_hccs_cleaverDone();
 			break;
 		/*
 		Summer Days
@@ -170,7 +161,6 @@ void main (int id,string page) {
 		*/
 		case 1472:
 			run_choice(1);//nc potion
-			c2t_hccs_cleaverDone();
 			break;
 		/*
 		Bath Time
@@ -183,7 +173,6 @@ void main (int id,string page) {
 				run_choice(1);//gob of wet hair
 			else
 				run_choice(3);//hot resist
-			c2t_hccs_cleaverDone();
 			break;
 		/*
 		Delicious Sprouts
@@ -200,7 +189,6 @@ void main (int id,string page) {
 			}
 			else
 				run_choice(2);//food
-			c2t_hccs_cleaverDone();
 			break;
 		/*
 		Hypnotic Master
@@ -213,7 +201,6 @@ void main (int id,string page) {
 				run_choice(2);//mus stat
 			else
 				run_choice(1);//mom's necklace
-			c2t_hccs_cleaverDone();
 			break;
 	}
 }

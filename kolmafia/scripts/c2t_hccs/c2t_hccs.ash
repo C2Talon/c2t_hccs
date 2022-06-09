@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r26481;//june cleaver
+since r26487;//june cleaver property changes
 
 import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>
