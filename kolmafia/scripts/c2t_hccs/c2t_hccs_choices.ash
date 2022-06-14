@@ -97,7 +97,7 @@ void main (int id,string page) {
 		*/
 		case 1467:
 			run_choice(3);//+5 adv
-			cli_execute("rest free");//not sure sequencing of these NCs
+			cli_execute("rest free");
 			break;
 		/*
 		Aunts not Ants
@@ -106,10 +106,14 @@ void main (int id,string page) {
 		3: ashamed effect
 		*/
 		case 1468:
-			if (my_primestat() == $stat[moxie])
+			if (testsDone < 2 && my_primestat() == $stat[moxie])
 				run_choice(1);//mox stat
-			else
+			else if (testsDone < 2 && my_primestat() == $stat[muscle])
 				run_choice(2);//mus stat
+			else if (available_choice_options() contains 4)
+				run_choice(4);
+			else
+				run_choice(2);
 			break;
 		/*
 		Beware of Aligator
@@ -120,6 +124,8 @@ void main (int id,string page) {
 		case 1469:
 			if (testsDone < 2)
 				run_choice(1);//20 ML
+			else if (available_choice_options() contains 4)
+				run_choice(4);
 			else
 				run_choice(2);//booze
 			break;
@@ -130,8 +136,10 @@ void main (int id,string page) {
 		3: mus stat
 		*/
 		case 1470:
-			if (testsDone < 2)
+			if (testsDone < 2 && my_primestat() == $stat[muscle])
 				run_choice(3);//mus stat
+			else if (available_choice_options() contains 4)
+				run_choice(4);
 			else
 				run_choice(2);//teacher's pen
 			break;
@@ -142,14 +150,14 @@ void main (int id,string page) {
 		3: mys stat
 		*/
 		case 1471:
-			if (testsDone < 2) {
-				if (my_primestat() == $stat[muscle]) {
-					run_choice(2);//mus stat
-					cli_execute("rest free");
-				}
-				else
-					run_choice(3);//mys stat
+			if (testsDone < 2 && my_primestat() == $stat[muscle]) {
+				run_choice(2);//mus stat
+				cli_execute("rest free");
 			}
+			else if (testsDone < 2 && my_primestat() == $stat[mysticality])
+				run_choice(3);//mys stat
+			else if (available_choice_options() contains 4)
+				run_choice(4);
 			else
 				run_choice(1);//meat potion
 			break;
@@ -169,10 +177,14 @@ void main (int id,string page) {
 		3: kinda damp effect
 		*/
 		case 1473:
-			if (get_property("csServicesPerformed").contains_text("Clean Steam Tunnels"))
-				run_choice(1);//gob of wet hair
-			else
+			if (testsDone < 2 && my_primestat() == $stat[muscle])
+				run_choice(1);//mus stat
+			else if (!get_property("csServicesPerformed").contains_text("Clean Steam Tunnels"))
 				run_choice(3);//hot resist
+			else if (available_choice_options() contains 4)
+				run_choice(4);
+			else
+				run_choice(1);//mus stat
 			break;
 		/*
 		Delicious Sprouts
@@ -181,12 +193,12 @@ void main (int id,string page) {
 		3: mus stat
 		*/
 		case 1474:
-			if (testsDone < 2) {
-				if (my_primestat() == $stat[muscle])
-					run_choice(3);
-				else
-					run_choice(1);
-			}
+			if (testsDone < 2 && my_primestat() == $stat[muscle])
+				run_choice(3);//mus stat
+			else if (testsDone < 2 && my_primestat() == $stat[mysticality])
+				run_choice(1);//mys stat
+			else if (available_choice_options() contains 4)
+				run_choice(4);
 			else
 				run_choice(2);//food
 			break;
