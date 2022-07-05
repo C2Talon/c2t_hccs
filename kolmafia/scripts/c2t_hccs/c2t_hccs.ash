@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r26487;//june cleaver property changes
+since r26534;//designer sweatpants
 
 import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>
@@ -170,7 +170,7 @@ boolean c2t_hccs_fightGodLobster() {
 
 	if (get_property('_godLobsterFights').to_int() < 3) {
 		use_familiar($familiar[god lobster]);
-		maximize("mainstat,-equip garbage shirt",false);
+		maximize("mainstat,-equip garbage shirt,6 bonus designer sweatpants",false);
 
 		// fight and get equipment
 		c2t_setChoice(1310,1);//get equipment
@@ -994,7 +994,7 @@ boolean c2t_hccs_preItem() {
 
 	//get latte ingredient from fluffy bunny and cloake item buff
 	if (have_effect($effect[feeling lost]) == 0 && (have_effect($effect[bat-adjacent form]) == 0 || !get_property('latteUnlocks').contains_text('carrot'))) {
-		maximize("mainstat,equip latte,1000 bonus lil doctor bag,1000 bonus kremlin's greatest briefcase,1000 bonus vampyric cloake",false);
+		maximize("mainstat,equip latte,1000 bonus lil doctor bag,1000 bonus kremlin's greatest briefcase,1000 bonus vampyric cloake,6 bonus designer sweatpants",false);
 		c2t_hccs_levelingFamiliar(true);
 
 		while ((have_equipped($item[vampyric cloake]) && have_effect($effect[bat-adjacent form]) == 0) || !get_property('latteUnlocks').contains_text('carrot'))
@@ -1252,7 +1252,7 @@ boolean c2t_hccs_preNoncombat() {
 		string shirt;
 		if (get_property('garbageShirtCharge') > 0)
 			shirt = ",equip garbage shirt";
-		maximize(my_primestat() + ",-familiar" + shirt,false);
+		maximize("mainstat,-familiar,6 bonus designer sweatpants" + shirt,false);
 
 		//fight and get buff
 		c2t_setChoice(1310,2); //get buff
@@ -1734,7 +1734,7 @@ void c2t_hccs_fights() {
 
 			if (get_property('lastCopyableMonster').to_monster() != $monster[novelty tropical skeleton]) {
 				//max mp to max latte gulp to fuel buffs
-				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,100 bonus lil doctor bag,100 bonus kremlin's greatest briefcase"+fam,false);
+				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,100 bonus lil doctor bag,100 bonus kremlin's greatest briefcase,6 bonus designer sweatpants"+fam,false);
 
 				c2t_cartographyHunt($location[the skeleton store],$monster[novelty tropical skeleton]);
 				run_turn();
@@ -1754,7 +1754,7 @@ void c2t_hccs_fights() {
 					cli_execute('latte refill cinnamon pumpkin vanilla');
 				//max mp to max latte gulp to fuel buffs
 				c2t_hccs_levelingFamiliar(true);
-				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,100 bonus lil doctor bag,100 bonus kremlin's greatest briefcase"+fam,false);
+				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,100 bonus lil doctor bag,100 bonus kremlin's greatest briefcase,6 bonus designer sweatpants"+fam,false);
 
 				c2t_cartographyHunt($location[the haunted pantry],$monster[possessed can of tomatoes]);
 				run_turn();
@@ -1818,7 +1818,7 @@ void c2t_hccs_fights() {
 			cli_execute('latte refill cinnamon pumpkin vanilla');
 		if (have_familiar($familiar[ghost of crimbo carols]))
 			use_familiar($familiar[ghost of crimbo carols]);
-		maximize("mainstat,equip latte,-equip i voted,",false);
+		maximize("mainstat,equip latte,-equip i voted,6 bonus designer sweatpants",false);
 
 		//going to grab runproof mascara from globster if moxie instead of having to wait post-kramco
 		if (my_primestat() == $stat[moxie]) {
@@ -1847,7 +1847,7 @@ void c2t_hccs_fights() {
 
 	//summon tentacle
 	if (have_skill($skill[evoke eldritch horror]) && !get_property('_eldritchHorrorEvoked').to_boolean()) {
-		maximize("mainstat,100exp,-equip garbage shirt"+fam,false);
+		maximize("mainstat,100exp,-equip garbage shirt,6 bonus designer sweatpants"+fam,false);
 		if (my_mp() < 80)
 			c2t_hccs_restoreMp();
 		c2t_hccs_haveUse(1,$skill[evoke eldritch horror]);
@@ -1860,7 +1860,7 @@ void c2t_hccs_fights() {
 
 	// Your Mushroom Garden
 	if ((get_campground() contains $item[packet of mushroom spores]) && get_property('_mushroomGardenFights').to_int() == 0) {
-		maximize("mainstat,-equip garbage shirt"+fam,false);
+		maximize("mainstat,-equip garbage shirt,6 bonus designer sweatpants"+fam,false);
 		adv1($location[your mushroom garden],-1,"");
 	}
 
@@ -1970,7 +1970,7 @@ void c2t_hccs_fights() {
 		//professor chain sausage goblins in NEP first thing if no backup camera
 		if (!c2t_hccs_backupCamera() && get_property('_pocketProfessorLectures').to_int() == 0) {
 			use_familiar($familiar[pocket professor]);
-			maximize("mainstat,equip garbage shirt,equip kramco,100familiar weight",false);
+			maximize("mainstat,equip garbage shirt,equip kramco,100familiar weight,6 bonus designer sweatpants",false);
 		}
 		//9+ professor copies, after getting exp buff from NC and used sauceror potions
 		else if (get_property('_pocketProfessorLectures').to_int() == 0
@@ -1982,7 +1982,7 @@ void c2t_hccs_fights() {
 			) {
 
 			use_familiar($familiar[pocket professor]);
-			maximize("mainstat,equip garbage shirt,equip kramco,100familiar weight,equip backup camera",false);
+			maximize("mainstat,equip garbage shirt,equip kramco,100familiar weight,6 bonus designer sweatpants,equip backup camera",false);
 		}
 		//fish for latte carrot ingredient with backup fights
 		else if (get_property('_pocketProfessorLectures').to_int() > 0
@@ -1996,7 +1996,7 @@ void c2t_hccs_fights() {
 			if (get_property('garbageShirtCharge').to_int() < 17)
 				garbage = ",-equip garbage shirt";
 
-			maximize("mainstat,exp,equip latte,equip backup camera"+garbage+fam,false);
+			maximize("mainstat,exp,equip latte,equip backup camera,6 bonus designer sweatpants"+garbage+fam,false);
 			adv1($location[the dire warren],-1,"");
 			continue;//don't want to fall into NEP in this state
 		}
@@ -2012,11 +2012,11 @@ void c2t_hccs_fights() {
 			if (get_property('garbageShirtCharge').to_int() < 17)
 				garbage = ",-equip garbage shirt";
 
-			maximize("mainstat,exp,equip backup camera"+kramco+garbage+fam,false);
+			maximize("mainstat,exp,equip backup camera,6 bonus designer sweatpants"+kramco+garbage+fam,false);
 		}
 		//rest of the free NEP fights
 		else
-			maximize("mainstat,exp,equip kramco"+garbage+fam+doc,false);
+			maximize("mainstat,exp,equip kramco,6 bonus designer sweatpants"+garbage+fam+doc,false);
 
 		adv1($location[the neverending party],-1,"");
 	}
@@ -2057,7 +2057,7 @@ boolean c2t_hccs_wandererFight() {
 		append += ",equip dromedary drinking helmet";
 
 	set_location($location[the neverending party]);
-	maximize("mainstat,exp"+append,false);
+	maximize("mainstat,exp,6 bonus designer sweatpants"+append,false);
 	adv1($location[the neverending party],-1,"");
 
 	//hopefully restore to previous state without outfits
