@@ -1096,10 +1096,6 @@ boolean c2t_hccs_preHotRes() {
 	c2t_hccs_getEffect($effect[elemental saucesphere]);
 	c2t_hccs_getEffect($effect[astral shell]);
 
-	//beach comb hot buff
-	if (available_amount($item[beach comb]) > 0)
-		c2t_hccs_getEffect($effect[hot-headed]);
-
 	//emotion chip
 	c2t_hccs_getEffect($effect[feeling peaceful]);
 
@@ -1116,6 +1112,13 @@ boolean c2t_hccs_preHotRes() {
 
 
 	//THINGS I DON'T USE FOR HOT TEST ANYMORE, but will fall back on if other things break
+
+	//beach comb hot buff
+	if (available_amount($item[beach comb]) > 0) {
+		c2t_hccs_getEffect($effect[hot-headed]);
+		if (c2t_hccs_thresholdMet(TEST_HOT_RES))
+			return true;
+	}
 
 	//daily candle
 	if (c2t_hccs_haveUse($item[rainbow glitter candle]) && c2t_hccs_thresholdMet(TEST_HOT_RES))
