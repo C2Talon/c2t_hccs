@@ -1,19 +1,15 @@
-# c2t_hccs
+# BO_sccs
 
-Kolmafia script to handle a hardcore community service run with my set of skills and IotMs and with any class.
+Kolmafia script to handle a softcore community service run with my set of skills and IotMs as a pastamancer. There are several (very specific) changes to the original c2t_hccs that I've implemented for my own well-being. 
 
-This is a continual work-in-progress. It is not likely to run out-of-the-box for most, but others may be able to glean things from it. To see what is needed to run smoothly without changes, see: https://cheesellc.com/kol/profile.php?u=Zdrvst
+* The script is run as the "2nd leg" of a loop, with a setup script running before it. 
+* Adds support for DNA lab
+* Adds support for Machine Elf
+* Adds support for Deck
+* Adds specific calls for pulls
+* The setup script handles 1) pre-valhalla 2) valhalla 3) pulls and some pre-run misc tasks including DNA setup, snojo, deep machine tunnels, and numberology. 
 
-## Installation / Uninstallation
-
-To install, run the following on the gCLI:
-
-`svn checkout https://github.com/c2talon/c2t_hccs/branches/master/kolmafia/`
-
-To uninstall, run the following on the gCLI:
-
-`svn delete c2t_hccs`
-
+        the rest is pulled from zdrvst's original README
 ## Usage
 
 * The main script is `c2t_hccs.ash`, and is the thing that should be run to do a community service run
