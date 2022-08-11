@@ -6,6 +6,11 @@
 import <c2t_hccs_lib.ash>
 
 void c2t_hccs_preAdv() {
+	//tiny stillsuit: equip on gelatinous cubeling if not on anything else
+	if (item_amount($item[tiny stillsuit]) > 0)
+		equip($familiar[gelatinous cubeling],$item[tiny stillsuit]);
+
+
 	float hpt = get_property("hpAutoRecovery").to_float();
 	int mpt = 50;
 

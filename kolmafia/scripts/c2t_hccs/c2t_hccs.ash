@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r26534;//designer sweatpants
+since r26622;//tiny stillsuit
 
 import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>
