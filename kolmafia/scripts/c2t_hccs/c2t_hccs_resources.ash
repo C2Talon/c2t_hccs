@@ -32,6 +32,7 @@ import <c2t_hccs_preAdv.ash>
 //d--sweet synthesis
 //d--tome clip art
 //d--tome sugar
+//d--unbreakable umbrella
 //d--vip floundry
 //d--vote
 
@@ -160,6 +161,13 @@ boolean c2t_hccs_tomeSugar();
 //returns true if item obtained
 boolean c2t_hccs_tomeSugar(item it);
 
+//d--unbreakable umbrella
+//returns true if have umbrella
+boolean c2t_hccs_unbreakableUmbrella();
+
+//returns true if all steps to change mode done
+boolean c2t_hccs_unbreakableUmbrella(string mode);
+
 
 //d--vip floundry
 //returns true if current clan has floundry
@@ -190,6 +198,7 @@ void c2t_hccs_vote();
 //i--sweet synthesis
 //i--tome clip art
 //i--tome sugar
+//i--unbreakable umbrella
 //i--vip floundry
 //i--vote
 
@@ -371,6 +380,7 @@ void c2t_hccs_pantogram(string type) {
 		//primestat,hot res,+mp,+spell,-combat
 		visit_url(`choice.php?pwd&whichchoice=1270&option=1&e=1&s1=-2,0&s2={mod}&s3=-1,0&m={temp}`,true,true);
 		cli_execute("refresh all");//mafia doesn't know the pants exist until this
+		visit_url("desc_item.php?whichitem=508365377",false,true);//attempted fix for very rare bug where all pants mods aren't recorded by mafia
 	}
 }
 
@@ -761,6 +771,38 @@ boolean c2t_hccs_tomeSugar(item it) {
 		c2t_hccs_haveUse($skill[summon sugar sheets]);
 	}
 	return retrieve_item(it);
+}
+
+//i--unbreakable umbrella
+boolean c2t_hccs_unbreakableUmbrella() {
+	return available_amount($item[unbreakable umbrella]) > 0;
+}
+boolean c2t_hccs_unbreakableUmbrella(string mode) {
+	if (!c2t_hccs_unbreakableUmbrella())
+		return false;
+	switch (mode) {
+		default:
+			return false;
+		case "ml":
+		case "item":
+		case "dr":
+		case "weapon":
+		case "spell":
+		case "nc":
+		case "broken":
+		case "forward":
+		case "bucket":
+		case "pitchfork":
+		case "twirling":
+		case "cocoon":
+	}
+	//kol won't allow umbrella mode change if it's on an inactive familiar, so retrieve it if needed
+	item ite = $item[unbreakable umbrella];
+	if (!have_equipped(ite) && item_amount(ite) == 0)
+		retrieve_item(ite);
+
+	cli_execute(`umbrella {mode}`);
+	return true;
 }
 
 //i--vip floundry

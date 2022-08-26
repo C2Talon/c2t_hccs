@@ -1040,7 +1040,7 @@ boolean c2t_hccs_preItem() {
 	c2t_hccs_getEffect($effect[steely-eyed squint]);
 
 	//unbreakable umbrella
-	cli_execute("try;umbrella item");
+	c2t_hccs_unbreakableUmbrella("item");
 
 	maximize('item,2 booze drop,-equip broken champagne bottle,-equip surprisingly capacious handbag,-equip red-hot sausage fork,switch left-hand man',false);
 	if (c2t_hccs_thresholdMet(TEST_ITEM))
@@ -1278,7 +1278,7 @@ boolean c2t_hccs_preNoncombat() {
 	use_familiar($familiar[disgeist]);
 
 	//unbreakable umbrella
-	cli_execute("try;umbrella nc");
+	c2t_hccs_unbreakableUmbrella("nc");
 
 	maximize('-100combat,familiar weight',false);
 	maximize('-100combat,familiar weight',false);
@@ -1437,7 +1437,7 @@ boolean c2t_hccs_preWeapon() {
 		c2t_hccs_pull($item[stick-knife of loathing]);
 
 	//unbreakable umbrella
-	cli_execute("try;umbrella weapon");
+	c2t_hccs_unbreakableUmbrella("weapon");
 	
 	maximize('weapon damage,switch left-hand man',false);
 	if (c2t_hccs_thresholdMet(TEST_WEAPON))
@@ -1570,7 +1570,7 @@ boolean c2t_hccs_preSpell() {
 	c2t_hccs_briefcase("spell");
 
 	//unbreakable umbrella
-	cli_execute("try;umbrella spell");
+	c2t_hccs_unbreakableUmbrella("spell");
 
 	maximize('spell damage,switch left-hand man',false);
 
