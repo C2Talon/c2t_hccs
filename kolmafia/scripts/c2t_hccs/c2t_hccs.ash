@@ -438,6 +438,9 @@ void c2t_hccs_exit() {
 }
 
 boolean c2t_hccs_preCoil() {
+	//numberology first thing to get adventures
+	c2t_hccs_useNumberology();
+
 	//get a grain of sand for pizza if muscle class
 	if (available_amount($item[beach comb]) > 0
 		&& my_primestat() == $stat[muscle]
@@ -601,7 +604,7 @@ boolean c2t_hccs_preCoil() {
 		c2t_hccs_levelingFamiliar(true);
 	}
 	//if cold medicine cabinet, grabbing a stat booze to get some adventures post-coil as I don't have numberology
-	else
+	else if (!c2t_hccs_haveNumberology())
 		c2t_hccs_coldMedicineCabinet("drink");
 	
 	// need to fetch and drink some booze pre-coil. using semi-rare via pillkeeper in sleazy back alley
@@ -771,19 +774,20 @@ boolean c2t_hccs_buffExp() {
 
 // should handle leveling up and eventually call free fights
 boolean c2t_hccs_levelup() {
-	//need adventures straight away if running CMC
-	item itew = c2t_priority($item[doc's fortifying wine],$item[doc's smartifying wine],$item[doc's limbering wine]);
-	if (itew != $item[none]) {
+	//need adventures straight away if dangerously low
+	if (my_adventures() <= 1) {
+		//CMC booze
+		item itew = c2t_priority($item[doc's fortifying wine],$item[doc's smartifying wine],$item[doc's limbering wine]);
+		if (itew == $item[none]) {
+			//eye and a twist from crimbo 2020
+			c2t_hccs_haveUse($skill[eye and a twist]);
+			if (item_amount($item[eye and a twist]) > 0)
+				itew = $item[eye and a twist];
+		}
+		c2t_assert(itew != $item[none],"couldn't get booze to get more adventures");
+
 		c2t_hccs_getEffect($effect[ode to booze]);
 		drink(1,itew);
-	}
-	//TODO alt easy food/booze to get over 0 adv
-	else if (my_adventures() == 0) {
-		c2t_hccs_haveUse($skill[eye and a twist]);
-		if (item_amount($item[eye and a twist]) > 0) {
-			c2t_hccs_getEffect($effect[ode to booze]);
-			drink(1,$item[eye and a twist]);
-		}
 	}
 	c2t_assert(my_adventures() > 0,"not going to get far with zero adventures");
 

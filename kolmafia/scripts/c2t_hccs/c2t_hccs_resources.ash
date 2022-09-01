@@ -24,6 +24,7 @@ import <c2t_hccs_preAdv.ash>
 //d--garden peppermint
 //d--genie
 //d--melodramedary
+//d--numberology
 //d--pantogram
 //d--pillkeeper
 //d--pizza cube
@@ -95,6 +96,15 @@ boolean c2t_hccs_melodramedary();
 
 //returns spit charge
 int c2t_hccs_melodramedarySpit();
+
+
+//d--numberology
+//returns true if have at least 1 level of numberology
+boolean c2t_hccs_haveNumberology();
+
+//uses numberology to get adventures
+//returns true if successful
+boolean c2t_hccs_useNumberology();
 
 
 //d--pantogram
@@ -189,6 +199,7 @@ void c2t_hccs_vote();
 //i--combat lover's locket
 //i--garden peppermint
 //i--genie
+//i--numberology
 //i--melodramedary
 //i--pantogram
 //i--pillkeeper
@@ -338,6 +349,29 @@ boolean c2t_hccs_genie(monster mon) {
 	if (get_property("lastEncounter") != mon && get_property("lastEncounter") != "Using the Force")
 		return false;
 	return true;
+}
+
+//d--numberology
+boolean c2t_hccs_haveNumberology() {
+	int max = get_property("skillLevel144").to_int();
+	return max > 0;
+}
+boolean c2t_hccs_useNumberology() {
+	if (!c2t_hccs_haveNumberology())
+		return false;
+
+	int max = min(3,get_property("skillLevel144").to_int());//max 3 uses in ronin and hardcore
+	int used = get_property("_universeCalculated").to_int();
+	int start = my_adventures();
+
+	if (used >= max)
+		return false;
+
+	//burn uses on +3 adventures each
+	for i from 1 to max-used
+		cli_execute("numberology 69");
+
+	return my_adventures() > start;
 }
 
 //i--melodramedary
