@@ -774,17 +774,21 @@ boolean c2t_hccs_buffExp() {
 
 // should handle leveling up and eventually call free fights
 boolean c2t_hccs_levelup() {
+	//CMC booze
+	item itew = c2t_priority($item[doc's fortifying wine],$item[doc's smartifying wine],$item[doc's limbering wine]);
+	if (itew != $item[none]) {
+		c2t_hccs_getEffect($effect[ode to booze]);
+		drink(1,itew);
+	}
 	//need adventures straight away if dangerously low
-	if (my_adventures() <= 1) {
-		//CMC booze
-		item itew = c2t_priority($item[doc's fortifying wine],$item[doc's smartifying wine],$item[doc's limbering wine]);
-		if (itew == $item[none]) {
-			//eye and a twist from crimbo 2020
-			c2t_hccs_haveUse($skill[eye and a twist]);
-			if (item_amount($item[eye and a twist]) > 0)
-				itew = $item[eye and a twist];
-		}
-		c2t_assert(itew != $item[none],"couldn't get booze to get more adventures");
+	else if (my_adventures() <= 1) {
+		//TODO more booze options
+		//eye and a twist from crimbo 2020
+		c2t_hccs_haveUse($skill[eye and a twist]);
+		if (item_amount($item[eye and a twist]) > 0)
+			itew = $item[eye and a twist];
+
+		c2t_assert(itew != $item[none],"could not get booze to get more adventures");
 
 		c2t_hccs_getEffect($effect[ode to booze]);
 		drink(1,itew);
