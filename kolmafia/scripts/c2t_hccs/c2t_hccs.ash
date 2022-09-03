@@ -603,8 +603,8 @@ boolean c2t_hccs_preCoil() {
 			eat(1,$item[diabolic pizza]);
 		c2t_hccs_levelingFamiliar(true);
 	}
-	//if cold medicine cabinet, grabbing a stat booze to get some adventures post-coil as I don't have numberology
-	else if (!c2t_hccs_haveNumberology())
+	//cold medicine cabinet; grabbing a stat booze to get some adventures post-coil
+	else
 		c2t_hccs_coldMedicineCabinet("drink");
 	
 	// need to fetch and drink some booze pre-coil. using semi-rare via pillkeeper in sleazy back alley

@@ -351,7 +351,7 @@ boolean c2t_hccs_genie(monster mon) {
 	return true;
 }
 
-//d--numberology
+//i--numberology
 boolean c2t_hccs_haveNumberology() {
 	int max = get_property("skillLevel144").to_int();
 	return max > 0;
