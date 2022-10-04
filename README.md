@@ -8,11 +8,19 @@ This is a continual work-in-progress. It is not likely to run out-of-the-box for
 
 To install, run the following on the gCLI:
 
-`svn checkout https://github.com/c2talon/c2t_hccs/branches/master/kolmafia/`
+`git checkout https://github.com/C2Talon/c2t_hccs.git master`
 
 To uninstall, run the following on the gCLI:
 
+`git delete C2Talon-c2t_hccs-master`
+
+## Migrating from SVN to GIT
+
+First, remove the SVN repository via the gCLI:
+
 `svn delete c2t_hccs`
+
+Then follow the ![installation section](#installation--uninstallation) above
 
 ## Usage
 
