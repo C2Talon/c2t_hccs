@@ -11,7 +11,6 @@ import <c2t_hccs_preAdv.ash>
 import <c2t_cartographyHunt.ash>
 import <c2t_lib.ash>
 import <c2t_cast.ash>
-import <canadv.ash>
 
 int START_TIME = now_to_int();
 
@@ -1736,7 +1735,7 @@ void c2t_hccs_fights() {
 				visit_url('shop.php?whichshop=meatsmith&action=talk');
 				run_choice(1);
 			}
-			if (!can_adv($location[the skeleton store],false))
+			if (!cli_execute('can_adventure the skeleton store'))
 				abort('Cannot open skeleton store!');
 			if ($location[the skeleton store].turns_spent == 0 && !$location[the skeleton store].noncombat_queue.contains_text('Skeletons In Store'))
 				adv1($location[the skeleton store],-1,'');
