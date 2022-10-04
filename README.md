@@ -20,7 +20,7 @@ First, remove the SVN repository via the gCLI:
 
 `svn delete c2t_hccs`
 
-Then follow the ![installation section](#installation--uninstallation) above
+Then follow the [installation section](#installation--uninstallation) above
 
 ## Usage
 
