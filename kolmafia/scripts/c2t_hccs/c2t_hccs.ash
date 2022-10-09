@@ -8,7 +8,6 @@ import <c2t_hccs_resources.ash>
 import <c2t_hccs_properties.ash>
 import <c2t_hccs_aux.ash>
 import <c2t_hccs_preAdv.ash>
-import <c2t_cartographyHunt.ash>
 import <c2t_lib.ash>
 import <c2t_cast.ash>
 
@@ -1751,8 +1750,7 @@ void c2t_hccs_fights() {
 				//max mp to max latte gulp to fuel buffs
 				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,100 bonus lil doctor bag,100 bonus kremlin's greatest briefcase,6 bonus designer sweatpants"+fam,false);
 
-				c2t_cartographyHunt($location[the skeleton store],$monster[novelty tropical skeleton]);
-				run_turn();
+				c2t_hccs_cartography($location[the skeleton store],$monster[novelty tropical skeleton]);
 			}
 			//get the fruits with nostalgia
 			c2t_hccs_fightGodLobster();
@@ -1771,8 +1769,7 @@ void c2t_hccs_fights() {
 				c2t_hccs_levelingFamiliar(true);
 				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,100 bonus lil doctor bag,100 bonus kremlin's greatest briefcase,6 bonus designer sweatpants"+fam,false);
 
-				c2t_cartographyHunt($location[the haunted pantry],$monster[possessed can of tomatoes]);
-				run_turn();
+				c2t_hccs_cartography($location[the haunted pantry],$monster[possessed can of tomatoes]);
 			}
 			//get the tomato with nostalgia
 			c2t_hccs_fightGodLobster();
@@ -1836,10 +1833,8 @@ void c2t_hccs_fights() {
 		maximize("mainstat,equip latte,-equip i voted,6 bonus designer sweatpants",false);
 
 		//going to grab runproof mascara from globster if moxie instead of having to wait post-kramco
-		if (my_primestat() == $stat[moxie]) {
-			c2t_cartographyHunt($location[the neverending party],$monster[party girl]);
-			run_turn();
-		}
+		if (my_primestat() == $stat[moxie])
+			c2t_hccs_cartography($location[the neverending party],$monster[party girl]);
 		else
 			adv1($location[the neverending party],-1,"");
 	}

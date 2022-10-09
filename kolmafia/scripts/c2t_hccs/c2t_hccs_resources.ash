@@ -5,7 +5,6 @@
 
 import <c2t_lib.ash>
 import <c2t_hccs_lib.ash>
-import <c2t_cartographyHunt.ash>
 import <c2t_reminisce.ash>
 import <c2t_hccs_preAdv.ash>
 
@@ -18,6 +17,7 @@ import <c2t_hccs_preAdv.ash>
   -=-+-=-+-=-+-=-+-=-+-=-*/
 //d--backup camera
 //d--briefcase
+//d--cartography
 //d--clover item
 //d--cold medicine cabinet
 //d--combat lover's locket
@@ -107,6 +107,14 @@ boolean c2t_hccs_haveNumberology();
 boolean c2t_hccs_useNumberology();
 
 
+//d--cartography
+//returns true if have the map the monsters skill
+boolean c2t_hccs_haveCartography();
+
+//returns true if monster fought
+boolean c2t_hccs_cartography(location loc,monster mon);
+
+
 //d--pantogram
 //makes pantogram pants with stats of mainstat,hot res,mp,spell,-combat
 void c2t_hccs_pantogram();
@@ -194,6 +202,7 @@ void c2t_hccs_vote();
   -=-+-=-+-=-+-=-+-=-+-=-*/
 //i--backup camera
 //i--briefcase
+//i--cartography
 //i--clover item
 //i--cold medicine cabinet
 //i--combat lover's locket
@@ -244,6 +253,37 @@ boolean c2t_hccs_briefcase(string arg) {
 		case "spell":
 			cli_execute(`Briefcase e {arg.to_lower_case()}`);
 	}
+	return true;
+}
+
+//i--cartography
+boolean c2t_hccs_haveCartography() {
+	return have_skill($skill[map the monsters]);
+}
+boolean c2t_hccs_cartography(location loc,monster mon) {
+	if (!c2t_hccs_haveCartography())
+		return false;
+
+	//use skill if needed
+	if (!get_property('mappingMonsters').to_boolean()) {
+		if (get_property('_monstersMapped').to_int() < 3)
+			use_skill(1,$skill[map the monsters]);
+		else
+			return false;
+	}
+
+	int start = turns_played();
+
+	repeat {
+		visit_url(loc.to_url(),false,true);
+		if (handling_choice() && last_choice() == 1435)
+			run_choice(1,`heyscriptswhatsupwinkwink={mon.to_int()}`);
+		run_turn();
+	} until (turns_played() > start || !get_property('mappingMonsters').to_boolean());
+
+	if (turns_played() > start)
+		abort("map the monsters: something broke and a turn was used");
+
 	return true;
 }
 
@@ -763,9 +803,7 @@ boolean c2t_hccs_sweetSynthesis(effect eff) {
 	if (it2 == $item[pile of candy] && item_amount(it2) == 0) {
 		if (!have_equipped($item[fourth of may cosplay saber]))
 			equip($item[fourth of may cosplay saber]);
-		c2t_cartographyHunt($location[south of the border],$monster[angry pi&ntilde;ata]);
-		run_turn();
-		run_choice(-1);
+		c2t_hccs_cartography($location[south of the border],$monster[angry pi&ntilde;ata]);
 	}
 
 	if (it2 == $item[none] || !retrieve_item(it1) || !retrieve_item(it2))
