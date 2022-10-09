@@ -397,9 +397,12 @@ void c2t_hccs_init() {
 		if (get_clan_id() != get_property('c2t_hccs_joinClan').to_int())
 			set_property('_saved_joinClan',get_clan_id());
 		//custom combat script
+		if (get_property('battleAction') != "custom combat script")
+			set_property('_saved_battleAction',get_property('battleAction'));
 		if (get_property('customCombatScript') != "c2t_hccs")
 			set_property('_saved_customCombatScript',get_property('customCombatScript'));
 	}
+	set_property('battleAction',"custom combat script");
 	set_property('customCombatScript',"c2t_hccs");
 
 	visit_url('council.php');// Initialize council.
@@ -422,6 +425,8 @@ void c2t_hccs_exit() {
 
 	//restore some things only when all tests are done
 	if (get_property("csServicesPerformed").split_string(",").count() == 11) {
+		if (property_exists('_saved_battleAction'))
+			set_property('battleAction',get_property('_saved_battleAction'));
 		if (property_exists('_saved_customCombatScript'))
 			set_property('customCombatScript',get_property('_saved_customCombatScript'));
 		if (property_exists("_saved_joinClan"))
