@@ -366,35 +366,25 @@ boolean c2t_hccs_thresholdMet(int test) {
 
 //sets and backup some settings on start
 void c2t_hccs_init() {
-	//buy from NPCs
-	set_property('_saved_autoSatisfyWithNPCs',get_property('autoSatisfyWithNPCs'));
-	set_property('autoSatisfyWithNPCs','true');
-	//buy from coinmasters/hermit
-	set_property('_saved_autoSatisfyWithCoinmasters',get_property('autoSatisfyWithCoinmasters'));
-	set_property('autoSatisfyWithCoinmasters','true');
-	//choice adventure script
-	set_property('_saved_choiceAdventureScript',get_property('choiceAdventureScript'));
-	set_property('choiceAdventureScript','c2t_hccs_choices.ash');
-	//hp recovery
-	set_property('_saved_recoveryScript',get_property('recoveryScript'));
-	set_property('recoveryScript','');
-	set_property('_saved_hpAutoRecoveryItems',get_property('hpAutoRecoveryItems'));
-	set_property('hpAutoRecoveryItems','cannelloni cocoon;tongue of the walrus;disco nap');
-	set_property('_saved_hpAutoRecovery',get_property('hpAutoRecovery'));
-	set_property('hpAutoRecovery','0.6');
-	set_property('_saved_hpAutoRecoveryTarget',get_property('hpAutoRecoveryTarget'));
-	set_property('hpAutoRecoveryTarget','0.9');
-	//no mana burn/every mp is sacred
-	set_property('_saved_mpAutoRecoveryItems',get_property('mpAutoRecoveryItems'));
-	set_property('mpAutoRecoveryItems','');
-	set_property('_saved_manaBurningThreshold',get_property('manaBurningThreshold'));
-	set_property('manaBurningThreshold','-0.05');
-	//preadventure script for HP/MP recovery
-	set_property('_saved_betweenBattleScript',get_property("betweenBattleScript"));
-	set_property('betweenBattleScript','c2t_hccs_preAdv.ash');
-	//post-adventure script
-	set_property('_saved_afterAdventureScript',get_property("afterAdventureScript"));
-	set_property('afterAdventureScript','c2t_hccs_postAdv.ash');
+	string [string] prefs = {
+		//buy from NPCs
+		"autoSatisfyWithNPCs":"true",
+		"autoSatisfyWithCoinmasters":"true",
+		//automation scripts
+		"choiceAdventureScript":"c2t_hccs_choices.ash",
+		"betweenBattleScript":"c2t_hccs_preAdv.ash",
+		"afterAdventureScript":"c2t_hccs_postAdv.ash",
+		"recoveryScript":"",
+		//recovery
+		"hpAutoRecoveryItems":"cannelloni cocoon;tongue of the walrus;disco nap",
+		"hpAutoRecovery":"0.6",
+		"hpAutoRecoveryTarget":"0.9",
+		"mpAutoRecoveryItems":"",
+		"manaBurningThreshold":"-0.05",
+		//combat
+		//"battleAction":"custom combat script",
+		//"customCombatScript":"c2t_hccs"
+	};
 
 	//only save pre-coil states of these
 	if (get_property("csServicesPerformed") == "") {
@@ -410,24 +400,33 @@ void c2t_hccs_init() {
 	set_property('battleAction',"custom combat script");
 	set_property('customCombatScript',"c2t_hccs");
 
+	//backup user settings and set script settings
+	foreach key,val in prefs {
+		set_property(`_saved_{key}`,get_property(key));
+		set_property(key,val);
+	}
+
 	visit_url('council.php');// Initialize council.
 }
 
 //restore settings on exit
 void c2t_hccs_exit() {
-	set_property('autoSatisfyWithNPCs',get_property('_saved_autoSatisfyWithNPCs'));
-	set_property('autoSatisfyWithCoinmasters',get_property('_saved_autoSatisfyWithCoinmasters'));
-	set_property('choiceAdventureScript',get_property('_saved_choiceAdventureScript'));
-	set_property('betweenBattleScript',get_property('_saved_betweenBattleScript'));
-	set_property('afterAdventureScript',get_property('_saved_afterAdventureScript'));
-	set_property('recoveryScript',get_property('_saved_recoveryScript'));
-
-	set_property('hpAutoRecoveryItems',get_property('_saved_hpAutoRecoveryItems'));
-	set_property('hpAutoRecovery',get_property('_saved_hpAutoRecovery'));
-	set_property('hpAutoRecoveryTarget',get_property('_saved_hpAutoRecoveryTarget'));
-
-	set_property('mpAutoRecoveryItems',get_property('_saved_mpAutoRecoveryItems'));
-	set_property('manaBurningThreshold',get_property('_saved_manaBurningThreshold'));
+	boolean [string] prefs = $strings[
+		autoSatisfyWithNPCs,
+		autoSatisfyWithCoinmasters,
+		choiceAdventureScript,
+		betweenBattleScript,
+		afterAdventureScript,
+		recoveryScript,
+		hpAutoRecoveryItems,
+		hpAutoRecovery,
+		hpAutoRecoveryTarget,
+		mpAutoRecoveryItems,
+		manaBurningThreshold
+	];
+	//restore user settings
+	foreach key in prefs
+		set_property(key,get_property(`_saved_{key}`));
 
 	//don't want CS moods running during manual intervention or when fully finished
 	cli_execute('mood apathetic');
