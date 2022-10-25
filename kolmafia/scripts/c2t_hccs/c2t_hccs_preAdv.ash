@@ -10,9 +10,8 @@ void c2t_hccs_preAdv() {
 	if (item_amount($item[tiny stillsuit]) > 0)
 		equip($familiar[gelatinous cubeling],$item[tiny stillsuit]);
 
-
-	float hpt = get_property("hpAutoRecovery").to_float();
-	int mpt = 50;
+	float hpThreshold = get_property("hpAutoRecovery").to_float();
+	int mpThreshold = 50;
 
 	//handle beaten up
 	if (have_effect($effect[beaten up]) > 0) {
@@ -21,19 +20,20 @@ void c2t_hccs_preAdv() {
 			c2t_hccs_haveUse(temp);
 		else
 			cli_execute("rest free");
+		//if all else fails
+		if (have_effect($effect[beaten up]) > 0)
+			cli_execute("hottub");
 	}
+
 	c2t_assert(have_effect($effect[beaten up]) == 0,"Couldn't get rid of beaten up");//maybe don't abort for this?
 
-	//restore HP via user settings
-	if (my_hp() < floor(my_maxhp() * hpt))
-		restore_hp(floor(my_maxhp()*0.9));
-	//restore HP fallback
-	if (my_hp() < floor(my_maxhp() * hpt))
-		if (!c2t_hccs_haveUse(1+(my_maxhp()-my_hp())/1000,$skill[cannelloni cocoon]))
+	//restore hp
+	if (my_hp() < floor(my_maxhp() * hpThreshold))
+		if (!restore_hp(0))//uses settings set at start of c2t_hccs
 			print("Had some trouble restoring HP?","red");
 
 	//restore mp
-	if (my_mp() < mpt)
+	if (my_mp() < mpThreshold)
 		if (!c2t_hccs_restoreMp())
 			print("Had some trouble restoring MP?","red");
 }

@@ -375,12 +375,18 @@ void c2t_hccs_init() {
 	//choice adventure script
 	set_property('_saved_choiceAdventureScript',get_property('choiceAdventureScript'));
 	set_property('choiceAdventureScript','c2t_hccs_choices.ash');
-	//make sure to have some user-defined hp recovery since I don't want to think about it
-	if (get_property("recoveryScript") == "" && get_property('hpAutoRecovery').to_float() <= 0.5) {
-		set_property('_saved_hpAutoRecovery',get_property('hpAutoRecovery'));
-		set_property('hpAutoRecovery','0.6');
-	}
+	//hp recovery
+	set_property('_saved_recoveryScript',get_property('recoveryScript'));
+	set_property('recoveryScript','');
+	set_property('_saved_hpAutoRecoveryItems',get_property('hpAutoRecoveryItems'));
+	set_property('hpAutoRecoveryItems','cannelloni cocoon;tongue of the walrus;disco nap');
+	set_property('_saved_hpAutoRecovery',get_property('hpAutoRecovery'));
+	set_property('hpAutoRecovery','0.6');
+	set_property('_saved_hpAutoRecoveryTarget',get_property('hpAutoRecoveryTarget'));
+	set_property('hpAutoRecoveryTarget','0.9');
 	//no mana burn/every mp is sacred
+	set_property('_saved_mpAutoRecoveryItems',get_property('mpAutoRecoveryItems'));
+	set_property('mpAutoRecoveryItems','');
 	set_property('_saved_manaBurningThreshold',get_property('manaBurningThreshold'));
 	set_property('manaBurningThreshold','-0.05');
 	//preadventure script for HP/MP recovery
@@ -414,9 +420,13 @@ void c2t_hccs_exit() {
 	set_property('choiceAdventureScript',get_property('_saved_choiceAdventureScript'));
 	set_property('betweenBattleScript',get_property('_saved_betweenBattleScript'));
 	set_property('afterAdventureScript',get_property('_saved_afterAdventureScript'));
+	set_property('recoveryScript',get_property('_saved_recoveryScript'));
 
-	if (get_property('_saved_hpAutoRecovery') != "")
-		set_property('hpAutoRecovery',get_property('_saved_hpAutoRecovery'));
+	set_property('hpAutoRecoveryItems',get_property('_saved_hpAutoRecoveryItems'));
+	set_property('hpAutoRecovery',get_property('_saved_hpAutoRecovery'));
+	set_property('hpAutoRecoveryTarget',get_property('_saved_hpAutoRecoveryTarget'));
+
+	set_property('mpAutoRecoveryItems',get_property('_saved_mpAutoRecoveryItems'));
 	set_property('manaBurningThreshold',get_property('_saved_manaBurningThreshold'));
 
 	//don't want CS moods running during manual intervention or when fully finished
@@ -1820,6 +1830,11 @@ void c2t_hccs_fights() {
 		if (have_effect($effect[boon of the war snapper]) == 0)
 			c2t_hccs_haveUse(1,$skill[spirit boon]);
 	}
+
+	//run mood with auto mp recovery using free rests
+	set_property('mpAutoRecoveryItems','free rest');
+	cli_execute('mood execute');
+	set_property('mpAutoRecoveryItems','');
 
 	//get crimbo ghost buff from dudes at NEP
 	if ((have_familiar($familiar[ghost of crimbo carols]) && have_effect($effect[holiday yoked]) == 0)
