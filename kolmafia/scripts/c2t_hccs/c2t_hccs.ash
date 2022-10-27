@@ -1087,6 +1087,8 @@ boolean c2t_hccs_preItem() {
 }
 
 boolean c2t_hccs_preHotRes() {
+	string maxstr = "100hot res,familiar weight,switch exotic parrot,switch mu";
+
 	//cloake buff and fireproof foam suit for +32 hot res total, but also weapon and spell test buffs
 	//weapon/spell buff should last 15 turns, which is enough to get through hot(1), NC(9), and weapon(1) tests to also affect the spell test
 	if ((have_effect($effect[do you crush what i crush?]) == 0 && have_familiar($familiar[ghost of crimbo carols]))
@@ -1107,8 +1109,6 @@ boolean c2t_hccs_preHotRes() {
 		run_turn();
 	}
 
-	use_familiar($familiar[exotic parrot]);
-
 	c2t_hccs_getEffect($effect[blood bond]);
 	c2t_hccs_getEffect($effect[leash of linguini]);
 	c2t_hccs_getEffect($effect[empathy]);
@@ -1124,9 +1124,9 @@ boolean c2t_hccs_preHotRes() {
 	c2t_hccs_getEffect($effect[leash of linguini]);
 	c2t_hccs_getEffect($effect[empathy]);
 
-	maximize('100hot res,familiar weight',false);
+	maximize(maxstr,false);
 	// need to run this twice because familiar weight thresholds interfere with it?
-	maximize('100hot res,familiar weight',false);
+	maximize(maxstr,false);
 	if (c2t_hccs_thresholdMet(TEST_HOT_RES))
 		return true;
 
@@ -1171,7 +1171,7 @@ boolean c2t_hccs_preHotRes() {
 
 	//briefcase
 	if (c2t_hccs_briefcase("hot")) {
-		maximize('100hot res,familiar weight',false);
+		maximize(maxstr,false);
 		if (c2t_hccs_thresholdMet(TEST_HOT_RES))
 			return true;
 	}
@@ -1237,7 +1237,23 @@ boolean c2t_hccs_preFamiliar() {
 	if (my_class() == $class[accordion thief])
 		ensure_song($effect[chorale of companionship]);
 
-	use_familiar($familiar[exotic parrot]);
+	//find highest familar weight
+	//TODO take familiar equipment or more optimal combinations into account
+	familiar highest = $familiar[none];
+	if (have_familiar($familiar[exotic parrot]) && available_amount($item[cracker]) > 0)
+		highest = $familiar[exotic parrot];
+	else if (have_effect($effect[fidoxene]) > 0)
+		highest = $familiar[none];
+	else
+		foreach fam in $familiars[]
+			if (have_familiar(fam) && familiar_weight(fam) > familiar_weight(highest))
+				highest = fam;
+
+	if (highest == $familiar[none])
+		c2t_hccs_levelingFamiliar(true);
+	else
+		use_familiar(highest);
+
 	maximize('familiar weight',false);
 	if (c2t_hccs_thresholdMet(TEST_FAMILIAR))
 		return true;
