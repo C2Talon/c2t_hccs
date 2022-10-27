@@ -108,7 +108,16 @@ void main(int initround, monster foe, string page) {
 		switch (foe) {
 			//only use 1 become the bat for item test and initial latte throw
 			case $monster[fluffy bunny]:
-				if (have_equipped($item[backup camera]) && c2t_hccs_backupCameraLeft() > 0) {
+				//item test done, so should only be hot test left for the bunny?
+				if (get_property("csServicesPerformed").contains_text("Make Margaritas")) {
+					m = mHead + mSteal;
+					m += c2t_bb($skill[become a cloud of mist]);
+					m += c2t_bb($skill[fire extinguisher: foam yourself]);
+					m.c2t_bbSubmit();
+					return;
+				}
+				//fishing for latte ingredients with backups
+				else if (have_equipped($item[backup camera]) && c2t_hccs_backupCameraLeft() > 0) {
 					c2t_bbSubmit(
 						c2t_bb($skill[back-up to your last enemy])
 						.c2t_bb("twiddle;")
