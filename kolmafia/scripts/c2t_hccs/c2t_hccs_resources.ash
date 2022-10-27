@@ -521,7 +521,8 @@ boolean c2t_hccs_pizzaCube(effect eff) {
 			return false;
 
 		case $effect[hgh-charged]:
-			use_familiar($familiar[exotic parrot]);
+			//TODO better familiar equipment handling
+			use_familiar(c2t_priority($familiars[exotic parrot,mu,cornbeefadon]));
 			retrieve_item(1,$item[hot buttered roll]);
 			it1 = c2t_priority($item[hot buttered roll],$item[hollandaise helmet],$item[helmet turtle]);
 			it2 = c2t_priority($item[gnollish autoplunger],$item[green seashell],$item[grain of sand]);
@@ -558,7 +559,8 @@ boolean c2t_hccs_pizzaCube(effect eff) {
 			break;
 
 		case $effect[infernal thirst]:
-			use_familiar($familiar[exotic parrot]);
+			//TODO better familiar equipment handling
+			use_familiar(c2t_priority($familiars[exotic parrot,mu,cornbeefadon]));
 			retrieve_item(1,$item[full meat tank]);
 			retrieve_item(1,$item[imitation whetstone]);
 
