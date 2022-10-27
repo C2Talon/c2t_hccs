@@ -1358,6 +1358,10 @@ boolean c2t_hccs_preWeapon() {
 		set_property("_c2t_hccs_failSpit","true");
 	}
 
+	//pizza cube prep since making this takes a turn without free crafts
+	if (c2t_hccs_pizzaCube())
+		retrieve_item(1,$item[ointment of the occult]);
+
 	//cast triple size
 	if (available_amount($item[powerful glove]) > 0 && have_effect($effect[triple-sized]) == 0 && !c2t_cast($skill[cheat code: triple size]))
 		abort('Triple size failed');
