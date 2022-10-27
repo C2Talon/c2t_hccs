@@ -8,6 +8,9 @@ import <c2t_lib.ash>
   declarations
   ============*/
 
+//returns number of free crafts left from passive skills only
+int c2t_hccs_freeCraftsLeft();
+
 //returns number of free kills left from among doc bag, shattering punch, and gingerbread mob hit
 int c2t_hccs_freeKillsLeft();
 
@@ -47,6 +50,15 @@ boolean c2t_hccs_restoreMp();
 /*===============
   implementations
   ===============*/
+
+int c2t_hccs_freeCraftsLeft() {
+	int out = 0;
+	if (have_skill($skill[rapid prototyping]))
+		out += 5 - get_property("_rapidPrototypingUsed").to_int();
+	if (have_skill($skill[expert corner-cutter]))
+		out += 5 - get_property("_expertCornerCutterUsed").to_int();
+	return out;
+}
 
 int c2t_hccs_freeKillsLeft() {
 	int n = 0;

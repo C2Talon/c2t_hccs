@@ -566,7 +566,8 @@ boolean c2t_hccs_pizzaCube(effect eff) {
 
 			if (item_amount($item[eldritch effluvium]) == 0
 				&& item_amount($item[eaves droppers]) == 0
-				&& (available_amount($item[cracker]) == 0 || item_amount($item[electronics kit]) == 0))
+				&& ((have_familiar($familiar[exotic parrot]) && available_amount($item[cracker]) == 0)
+					|| item_amount($item[electronics kit]) == 0))
 
 				retrieve_item(1,$item[eyedrops of the ermine]);
 
