@@ -580,7 +580,7 @@ boolean c2t_hccs_pizzaCube(effect eff) {
 		case $effect[outer wolf&trade;]:
 			choose = {$item[middle of the road&trade; brand whiskey],$item[surprisingly capacious handbag],$item[pb&j with the crusts cut off]};
 			retrieve_item(1,$item[ointment of the occult]);
-			if (item_amount($item[useless powder]) == 0) {
+			if (have_skill($skill[pulverize]) && item_amount($item[useless powder]) == 0) {
 				retrieve_item(1,$item[cool whip]);
 				cli_execute("smash 1 cool whip");
 			}

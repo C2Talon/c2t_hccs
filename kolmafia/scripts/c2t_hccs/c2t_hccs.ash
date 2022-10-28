@@ -1149,22 +1149,29 @@ boolean c2t_hccs_preHotRes() {
 		return true;
 
 	//potion for sleazy hands & hot powder
-	if (c2t_hccs_freeCraftsLeft() > 0 || (have_effect($effect[fireproof foam suit]) == 0 && have_effect($effect[misty form]) == 0)) {
-		if (have_effect($effect[flame-retardant trousers]) == 0 || have_effect($effect[sleazy hands]) == 0) {
-			//potion making not needed with retro cape
-			retrieve_item(1,$item[tenderizing hammer]);
-			cli_execute('smash * ratty knitted cap');
-			cli_execute('smash * red-hot sausage fork');
+	if (have_skill($skill[pulverize])) {
+		retrieve_item(1,$item[tenderizing hammer]);
 
+		if (have_effect($effect[flame-retardant trousers]) == 0) {
+			while (available_amount($item[hot powder]) == 0 && available_amount($item[red-hot sausage fork]) > 0)
+				cli_execute('smash 1 red-hot sausage fork');
 			if (available_amount($item[hot powder]) > 0)
 				c2t_hccs_getEffect($effect[flame-retardant trousers]);
+		}
+		if (c2t_hccs_thresholdMet(TEST_HOT_RES))
+			return true;
 
+		if (have_effect($effect[sleazy hands]) == 0
+			&& (c2t_hccs_freeCraftsLeft() > 0
+				|| (have_effect($effect[fireproof foam suit]) == 0 && have_effect($effect[misty form]) == 0)
+			)) {
+			while (available_amount($item[sleaze nuggets]) == 0 && available_amount($item[ratty knitted cap]) > 0)
+				cli_execute('smash 1 ratty knitted cap');
 			if (available_amount($item[sleaze nuggets]) > 0 || available_amount($item[lotion of sleaziness]) > 0)
 				c2t_hccs_getEffect($effect[sleazy hands]);
-
-			if (c2t_hccs_thresholdMet(TEST_HOT_RES))
-				return true;
 		}
+		if (c2t_hccs_thresholdMet(TEST_HOT_RES))
+			return true;
 	}
 
 	//pocket maze
