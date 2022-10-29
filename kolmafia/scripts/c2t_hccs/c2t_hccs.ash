@@ -1244,6 +1244,14 @@ boolean c2t_hccs_preFamiliar() {
 	familiar highest = $familiar[none];
 	if (have_familiar($familiar[exotic parrot]) && available_amount($item[cracker]) > 0)
 		highest = $familiar[exotic parrot];
+	//grab baby bugbear beanie without spending a turn
+	if (have_familiar($familiar[Baby Bugged Bugbear])) {
+		cli_execute("familiar Baby Bugged Bugbear");
+		visit_url( "arena.php" );
+		equip( $slot[familiar], $item[bugged beanie]);
+		if (familiar_weight($familiar[Baby Bugged Bugbear]) > familiar_weight(highest))
+			highest = $familiar[Baby Bugged Bugbear];
+	}
 	else if (have_effect($effect[fidoxene]) > 0)
 		highest = $familiar[none];
 	else
