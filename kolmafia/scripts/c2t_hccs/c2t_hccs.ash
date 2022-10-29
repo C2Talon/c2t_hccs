@@ -1236,7 +1236,7 @@ boolean c2t_hccs_preFamiliar() {
 	c2t_hccs_getEffect($effect[empathy]);
 
 	//AT-only buff
-	if (my_class() == $class[accordion thief])
+	if (my_class() == $class[accordion thief] && have_skill($skill[chorale of companionship]))
 		ensure_song($effect[chorale of companionship]);
 
 	//find highest familar weight
