@@ -70,6 +70,7 @@ Some of the required IotM are only required for now because they're explicitly u
 
 While these are not strictly required, not having enough that either save turns or significantly help with leveling may cause problems. The blurb after the em dash (&mdash;) is basically what the script uses the IotM for.
 
+* [panicked kernel](https://kol.coldfront.net/thekolwiki/index.php/Panicked_kernel) &mdash; saves 1 turn if you don't take astral pet sweater.  
 * [Mint Salton Pepper's Peppermint Seed Catalog](https://kol.coldfront.net/thekolwiki/index.php/Mint_Salton_Pepper%27s_Peppermint_Seed_Catalog) &mdash; used to get the synthesize item buff to save 10 turns on the item test; provides backup candies for other synthesis buffs
 * [Suspicious Package](https://kol.coldfront.net/thekolwiki/index.php/Suspicious_package) &mdash; saves 5 on hot test, 3 on combat test, 1 on weapon test, 1 on spell test; backup banishes
 * [Pocket Meteor Guide](https://kol.coldfront.net/thekolwiki/index.php/Pocket_Meteor_Guide) &mdash; with saber saves 4 turns on familiar text, 8 on weapon test, 4 on spell test
