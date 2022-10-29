@@ -1553,7 +1553,7 @@ boolean c2t_hccs_preSpell() {
 	retrieve_item(nuts<0?0:nuts,$item[obsidian nutcracker]);
 
 	//AT-only buff
-	if (my_class() == $class[accordion thief])
+	if (my_class() == $class[accordion thief] && have_skill($skill[elron's explosive etude]))
 		ensure_song($effect[elron's explosive etude]);
 
 	// cargo pocket
