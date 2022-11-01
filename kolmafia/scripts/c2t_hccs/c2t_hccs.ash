@@ -1053,7 +1053,7 @@ boolean c2t_hccs_preItem() {
 	}
 
 	//AT-only buff
-	if (my_class() == $class[accordion thief])
+	if (my_class() == $class[accordion thief] && have_skill($skill[the ballad of richie thingfinder]))
 		ensure_song($effect[the ballad of richie thingfinder]);
 
 	c2t_hccs_getEffect($effect[nearly all-natural]);//bag of grain
@@ -1243,7 +1243,7 @@ boolean c2t_hccs_preFamiliar() {
 	c2t_hccs_getEffect($effect[empathy]);
 
 	//AT-only buff
-	if (my_class() == $class[accordion thief])
+	if (my_class() == $class[accordion thief] && have_skill($skill[chorale of companionship]))
 		ensure_song($effect[chorale of companionship]);
 
 	//find highest familar weight
@@ -1560,7 +1560,7 @@ boolean c2t_hccs_preSpell() {
 	retrieve_item(nuts<0?0:nuts,$item[obsidian nutcracker]);
 
 	//AT-only buff
-	if (my_class() == $class[accordion thief])
+	if (my_class() == $class[accordion thief] && have_skill($skill[elron's explosive etude]))
 		ensure_song($effect[elron's explosive etude]);
 
 	// cargo pocket
