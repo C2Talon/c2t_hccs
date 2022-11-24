@@ -18,6 +18,9 @@ string c2t_hccs_bbChargeSkill(skill ski);
 
 
 void main(int initround, monster foe, string page) {
+	//for holiday wanderer redos, since post-adv script can change my_location()
+	location loc = my_location();
+
 	//saber force
 	if (have_effect($effect[meteor showered]) > 0 || have_effect($effect[fireproof foam suit]) > 0) {
 		c2t_bb($skill[use the force]).c2t_bbSubmit();
@@ -308,7 +311,7 @@ void main(int initround, monster foe, string page) {
 				m.c2t_bbSubmit();
 				//redo last; map the monsters is handled elsewhere since it doesn't like adv1()
 				if (!get_property('mappingMonsters').to_boolean())
-					adv1(my_location());
+					adv1(loc);
 				return;
 
 			default:
