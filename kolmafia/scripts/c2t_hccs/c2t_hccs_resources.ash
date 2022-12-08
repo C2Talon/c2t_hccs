@@ -24,6 +24,7 @@ import <c2t_hccs_preAdv.ash>
 //d--garden peppermint
 //d--genie
 //d--melodramedary
+//d--model train set
 //d--numberology
 //d--pantogram
 //d--pillkeeper
@@ -96,6 +97,14 @@ boolean c2t_hccs_melodramedary();
 
 //returns spit charge
 int c2t_hccs_melodramedarySpit();
+
+
+//d--model train set
+//returns true if have the model train set installed in workshed
+boolean c2t_hccs_haveModelTrainSet();
+
+//sets up model train set
+void c2t_hccs_modelTrainSet();
 
 
 //d--numberology
@@ -210,6 +219,7 @@ void c2t_hccs_vote();
 //i--genie
 //i--numberology
 //i--melodramedary
+//i--model train set
 //i--pantogram
 //i--pillkeeper
 //i--pizza cube
@@ -312,7 +322,7 @@ boolean c2t_hccs_cloverItem() {
 
 //i--cold medicine cabinet
 boolean c2t_hccs_coldMedicineCabinet() {
-	return (get_campground() contains $item[cold medicine cabinet])
+	return get_workshed() == $item[cold medicine cabinet]
 		&& !get_property("c2t_hccs_disable.coldMedicineCabinet").to_boolean();
 }
 boolean c2t_hccs_coldMedicineCabinet(string arg) {
@@ -425,6 +435,60 @@ int c2t_hccs_melodramedarySpit() {
 	return get_property('camelSpit').to_int();
 }
 
+//d--model train set
+boolean c2t_hccs_haveModelTrainSet() return get_workshed() == $item[model train set];
+void c2t_hccs_modelTrainSet() {
+	if (!c2t_hccs_haveModelTrainSet())
+		return;
+	/* train set part reference
+	1: meat
+	2: mp regen
+	3: all stats
+	4: hot resist, cold damage
+	5: stench resist, spooky damage
+	6: wood, joiners, or stats (orc chasm bridge stuff); never good for CS
+	7: candy
+	8: double next stop
+	9: cold resist, stench damage
+	11: spooky resist, sleaze damage
+	12: sleaze resist, hot damage
+	13: monster level
+	14: mox stats
+	15: basic booze
+	16: mys stats
+	17: mus stats
+	18: food drop buff
+	19: copy last food drop
+	20: ore
+	*/
+
+	int main,alt1,alt2;
+	switch (my_primestat()) {
+		default:abort("broke stat?");
+		case $stat[muscle]:
+			main = 17;//mus
+			alt1 = 16;//mys
+			alt2 = 14;//mox
+			break;
+		case $stat[mysticality]:
+			main = 16;
+			alt1 = 14;
+			alt2 = 17;
+			break;
+		case $stat[moxie]:
+			main = 14;
+			alt1 = 16;
+			alt2 = 17;
+	}
+
+	if (visit_url("campground.php?action=workshed",false,true).contains_text('input type="submit" class="button" value="Reconfigure your Train Set"'))
+		//meat,double,main,all stats,alt1,alt2,ML,hot resist
+		visit_url(`choice.php?pwd&whichchoice=1485&option=1&slot[0]=1&slot[1]=8&slot[2]={main}&slot[3]=3&slot[4]={alt1}&slot[5]={alt2}&slot[6]=13&slot[7]=4`,true,true);
+
+	//let mafia know we're not stuck in the choice
+	visit_url("main.php");
+}
+
 //i--pantogram
 void c2t_hccs_pantogram() c2t_hccs_pantogram("spell");
 void c2t_hccs_pantogram(string type) {
@@ -494,7 +558,7 @@ boolean c2t_hccs_pillkeeper(effect eff) {
 
 //i--pizza cube
 boolean c2t_hccs_pizzaCube() {
-	return (get_campground() contains $item[diabolic pizza cube])
+	return get_workshed() == $item[diabolic pizza cube]
 		&& !get_property("c2t_hccs_disable.pizzaCube").to_boolean();
 }
 boolean c2t_hccs_pizzaCube(effect eff) {
