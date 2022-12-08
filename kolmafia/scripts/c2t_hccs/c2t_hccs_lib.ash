@@ -53,6 +53,9 @@ boolean c2t_hccs_restoreMp();
 
 int c2t_hccs_freeCraftsLeft() {
 	int out = 0;
+	//only crafting potions, so cookbookbat fine to add here for now
+	if (have_familiar($familiar[cookbookbat]))
+		out += 5 - get_property("_cookbookbatCrafting").to_int();
 	if (have_skill($skill[rapid prototyping]))
 		out += 5 - get_property("_rapidPrototypingUsed").to_int();
 	if (have_skill($skill[expert corner-cutter]))
