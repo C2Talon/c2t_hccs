@@ -11,6 +11,7 @@ boolean postError = false;
 void c2t_hccs_writeText(string tag,string s);
 void c2t_hccs_writeCheckbox(string s,string desc);
 void c2t_hccs_writeInput(string name,string value,string desc,int size,int max);
+void c2t_hccs_writeSelect(string name,string desc,boolean [item] options);
 void c2t_hccs_writeFailSuccess();
 void c2t_hccs_writeTh(string a, string b, string c);
 
@@ -31,12 +32,10 @@ void main() {
 		"c2t_hccs_disable.backupCamera":"will not use the 'back-up to your last enemy' skill",
 		"c2t_hccs_disable.briefcase":"no cranks will be used; however, banishes may still be used",
 		"c2t_hccs_disable.cloverItem":"11-leaf clover will not be used for limerick dungeon lucky adventure",
-		"c2t_hccs_disable.coldMedicineCabinet":"cold medicine cabinet will not be used",
 		"c2t_hccs_disable.combatLoversLocket":"no monsters will be summoned from combat lover's locket",
 		"c2t_hccs_disable.melodramedary":"melodramedary will not be used to try to save turns on weapon and spell tests",
 		"c2t_hccs_disable.pantogram":"no pants to try to save turns on hot, non-combat, or spell tests",
 		"c2t_hccs_disable.pillkeeper":"no pill popping from pillkeeper, free or otherwise",
-		"c2t_hccs_disable.pizzaCube":"no pizzas will be made or eaten from the pizza cube",
 		"c2t_hccs_disable.powerPlant":"power plant will not be used for the item test (or elsewhere)",
 		"c2t_hccs_disable.shorterOrderCook":"shorter-order cook will not be used to try to saves turns on the familiar test",
 		"c2t_hccs_disable.vipFloundry":"equipment will not be acquired from the clan floundry"
@@ -65,6 +64,7 @@ void main() {
 			foreach i,name in thresholdName
 				temp += (i == 0?POST[name]:","+POST[name]);
 			set_property("c2t_hccs_thresholds",temp);
+			set_property("c2t_hccs_workshed",POST["c2t_hccs_workshed"]);
 		}
 	}
 
@@ -94,6 +94,7 @@ void main() {
 		c2t_hccs_writeInput(name,"",desc,30,30);
 	foreach name,desc in general
 		c2t_hccs_writeCheckbox(name,desc);
+	c2t_hccs_writeSelect("c2t_hccs_workshed","workshed to be installed and used",$items[none,cold medicine cabinet,diabolic pizza cube,model train set]);
 	write("</tbody></table>");
 
 	//thresholds
@@ -150,6 +151,25 @@ void c2t_hccs_writeInput(string name,string value,string desc,int size,int max) 
 	if (desc != "")
 		write(`<td>{desc}</td>`);
 	write("</tr>");
+}
+
+void c2t_hccs_writeSelect(string name,string desc,boolean [item] options) {
+	string val;
+	if (postError == true)
+		val = POST[name];
+	else if (property_exists(name))
+		val = get_property(name);
+	else
+		val = "none";
+
+	write(`<tr><td><label for="{name}"><code>{name}</code></label></td><td><select name="{name}" id="{name}">`);
+	foreach x in options {
+		write(`<option value="{x}"`);
+		if (val == x)
+			write(" selected");
+		write(`>{x}</option>`);
+	}
+	write(`</select></td><td>{desc}</td></tr>`);
 }
 
 void c2t_hccs_writeTh(string a, string b, string c) {

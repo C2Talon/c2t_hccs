@@ -143,7 +143,7 @@ boolean c2t_hccs_pillkeeper(effect eff);
 
 //d--pizza cube
 //returns whether the diabolic pizza cube is in the workshed or not
-boolean c2t_hccs_pizzaCube();
+boolean c2t_hccs_havePizzaCube();
 
 //make and eat a pre-determined diabolic pizza based on the effect desired
 //returns whether the correct effect was gained or not
@@ -321,12 +321,11 @@ boolean c2t_hccs_cloverItem() {
 }
 
 //i--cold medicine cabinet
-boolean c2t_hccs_coldMedicineCabinet() {
-	return get_workshed() == $item[cold medicine cabinet]
-		&& !get_property("c2t_hccs_disable.coldMedicineCabinet").to_boolean();
+boolean c2t_hccs_haveColdMedicineCabinet() {
+	return get_workshed() == $item[cold medicine cabinet];
 }
 boolean c2t_hccs_coldMedicineCabinet(string arg) {
-	if (!c2t_hccs_coldMedicineCabinet())
+	if (!c2t_hccs_haveColdMedicineCabinet())
 		return false;
 	//only want to get 1 thing at most from the cabinet; also to not break on re-entries
 	if (get_property("_coldMedicineConsults").to_int() > 0)
@@ -557,9 +556,8 @@ boolean c2t_hccs_pillkeeper(effect eff) {
 }
 
 //i--pizza cube
-boolean c2t_hccs_pizzaCube() {
-	return get_workshed() == $item[diabolic pizza cube]
-		&& !get_property("c2t_hccs_disable.pizzaCube").to_boolean();
+boolean c2t_hccs_havePizzaCube() {
+	return get_workshed() == $item[diabolic pizza cube];
 }
 boolean c2t_hccs_pizzaCube(effect eff) {
 	if (available_amount($item[diabolic pizza]) > 0) {
@@ -568,7 +566,7 @@ boolean c2t_hccs_pizzaCube(effect eff) {
 	}
 	if (have_effect(eff) > 0)
 		return true;
-	if (!c2t_hccs_pizzaCube())
+	if (!c2t_hccs_havePizzaCube())
 		return false;
 	if (my_fullness() + 3 > fullness_limit()) {
 		print("no organs space for a pizza","red");
@@ -669,7 +667,7 @@ boolean c2t_hccs_pizzaCube(effect eff) {
 	return have_effect(eff) > 0;
 }
 boolean c2t_hccs_pizzaCube(item it1,item it2,item it3,item it4) {
-	if (!c2t_hccs_pizzaCube())
+	if (!c2t_hccs_havePizzaCube())
 		return false;
 	if (my_fullness() + 3 > fullness_limit()) {
 		print("no organ space for a pizza","red");

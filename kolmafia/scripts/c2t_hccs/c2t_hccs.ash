@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r26992;//model train set
+since r27020;//workshed resets on ascension
 
 import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>
@@ -453,6 +453,14 @@ boolean c2t_hccs_preCoil() {
 	//numberology first thing to get adventures
 	c2t_hccs_useNumberology();
 
+	//install workshed
+	item workshed = get_property("c2t_hccs_workshed").to_item();
+	if (workshed != $item[none] && get_workshed() == $item[none]) {
+		//sanity check
+		if ($items[cold medicine cabinet,diabolic pizza cube,model train set] contains workshed)
+			use(workshed);
+	}
+
 	//get a grain of sand for pizza if muscle class
 	if (available_amount($item[beach comb]) > 0
 		&& my_primestat() == $stat[muscle]
@@ -566,7 +574,7 @@ boolean c2t_hccs_preCoil() {
 	if (my_meat() < 2500) {//don't autosell if there is some other source of meat
 		autosell(5,$item[baconstone]);
 		autosell(5,$item[hamethyst]);
-		if (c2t_hccs_pizzaCube())
+		if (c2t_hccs_havePizzaCube())
 			autosell(5,$item[porquoise]);
 		else {
 			int temp = item_amount($item[porquoise]);
@@ -589,7 +597,7 @@ boolean c2t_hccs_preCoil() {
 	c2t_hccs_breakfast();
 
 	// pre-coil pizza to get imitation whetstone for INFE pizza latter
-	if (c2t_hccs_pizzaCube() && my_fullness() == 0) {
+	if (c2t_hccs_havePizzaCube() && my_fullness() == 0) {
 		// get imitation crab
 		use_familiar($familiar[imitation crab]);
 
@@ -684,7 +692,7 @@ boolean c2t_hccs_preCoil() {
 				gogogo = 7;
 				cog = 3;
 				tank = 1;
-				if (c2t_hccs_pizzaCube() && available_amount($item[beach comb]) == 0)
+				if (c2t_hccs_havePizzaCube() && available_amount($item[beach comb]) == 0)
 					c2t_assert(retrieve_item(1,$item[gnollish autoplunger]),"gnollish autoplunger is a critical pizza ingredient without a beach comb");
 				break;
 			case $stat[mysticality]:
@@ -700,7 +708,7 @@ boolean c2t_hccs_preCoil() {
 			default:
 				abort('something broke with moon sign changing');
 		}
-		if (c2t_hccs_pizzaCube()) {
+		if (c2t_hccs_havePizzaCube()) {
 			//CSAs for later pizzas (3 for CER & HGh) //2 for CER & DIF or CER & KNI
 			c2t_assert(retrieve_item(cog,$item[cog and sprocket assembly]),"Didn't get enough cog and sprocket assembly");
 			//empty meat tank for DIF and INFE pizzas
@@ -1371,7 +1379,7 @@ boolean c2t_hccs_preWeapon() {
 	}
 
 	//pizza cube prep since making this takes a turn without free crafts
-	if (c2t_hccs_pizzaCube() && c2t_hccs_freeCraftsLeft() == 0)
+	if (c2t_hccs_havePizzaCube() && c2t_hccs_freeCraftsLeft() == 0)
 		retrieve_item(1,$item[ointment of the occult]);
 
 	//cast triple size
@@ -1972,7 +1980,7 @@ void c2t_hccs_fights() {
 			use(1,$item[gummi turtle]);
 
 		//eat CER pizza ASAP
-		if (c2t_hccs_pizzaCube()
+		if (c2t_hccs_havePizzaCube()
 			&& have_effect($effect[synthesis: collection]) == 0//skip pizza if synth item
 			&& have_effect($effect[certainty]) == 0
 			&& item_amount($item[electronics kit]) > 0
