@@ -28,7 +28,8 @@ Then follow the [installation section](#installation--uninstallation) above
 * Not likely to run out-of-the-box for most. Hoping to change this eventually
 * Able to be re-run at any point in a run, hopefully after manually correcting whatever caused it to stop
 * Will abort when a non-coil test does not meet its turn threshold after preparations for it are done, which defaults to 1 turn
-* Pre-Valhalla: put diabolic pizza cube in the workshed. Pizza cube can be optional _if_ you have most of the IotM in the lists below
+* Workshed: select diabolic pizza cube in the options for the workshed if you have it and haven't run this before, since that will give the greatest chance of success. Pizza cube can be optional _if_ you have most of the IotM in the lists below
+* Muscle classes: need to have the [prevent scurvy and sobriety](https://kol.coldfront.net/thekolwiki/index.php/Prevent_Scurvy_and_Sobriety) skill permed, otherwise stat tests may be difficult to pass. Can optionally pull an [oil of stability](https://kol.coldfront.net/thekolwiki/index.php/Oil_of_stability) if in softcore before running.
 * In Valhalla:
     - Choose any class
     - Choose the corresponding "knoll" moonsign
@@ -47,12 +48,12 @@ Resources can be disabled with the same relay script.
 
 ## IotM
 
-The script assumes several IotM are owned and will break without them. In addition, the [sweet synthesis](https://kol.coldfront.net/thekolwiki/index.php/Sweet_Synthesis) and [Summon Crimbo Candy](https://kol.coldfront.net/thekolwiki/index.php/Summon_Crimbo_Candy) skills, as well as the [Imitation Crab](https://kol.coldfront.net/thekolwiki/index.php/Imitation_Crab) familiar, are currently required.
+The script assumes several IotM are owned and will break without them. In addition, the [sweet synthesis](https://kol.coldfront.net/thekolwiki/index.php/Sweet_Synthesis) skill is very highly recommended, and the [Summon Crimbo Candy](https://kol.coldfront.net/thekolwiki/index.php/Summon_Crimbo_Candy) skill is required to fuel sweet synthesis. Also, the [Imitation Crab](https://kol.coldfront.net/thekolwiki/index.php/Imitation_Crab) familiar is required if using the pizza cube.
 
 Some of the required IotM are only required for now because they're explicitly used in the script without any checks. Some will be moved to the supported list as I get around to adding the necessary checks. I'll be working on trying to minimize the required list, but do note one will probably still need to have a critical mass of IotM for the script to run smoothly.
 
 ### Required IotM (ordered by release date)
-* [Tome of Clip Art](https://kol.coldfront.net/thekolwiki/index.php/Tome_of_Clip_Art)
+* [Tome of Clip Art](https://kol.coldfront.net/thekolwiki/index.php/Tome_of_Clip_Art) &mdash; can be somewhat possible to get around this requirement by pulling a [borrowed time](https://kol.coldfront.net/thekolwiki/index.php/Borrowed_time) prior to running
 * [Clan VIP Lounge invitation](https://kol.coldfront.net/thekolwiki/index.php/Clan_VIP_Lounge_invitation) &mdash; assumes a fully-stocked VIP lounge
 * [corked genie bottle](https://kol.coldfront.net/thekolwiki/index.php/Corked_genie_bottle)
 * [January's Garbge Tote (unopened)](https://kol.coldfront.net/thekolwiki/index.php/January%27s_Garbage_Tote_(unopened))
@@ -70,6 +71,7 @@ Some of the required IotM are only required for now because they're explicitly u
 
 While these are not strictly required, not having enough that either save turns or significantly help with leveling may cause problems. The blurb after the em dash (&mdash;) is basically what the script uses the IotM for.
 
+* [panicked kernel](https://kol.coldfront.net/thekolwiki/index.php/Panicked_kernel) &mdash; can potentially save a turn if lacking an astral pet sweater or better
 * [Mint Salton Pepper's Peppermint Seed Catalog](https://kol.coldfront.net/thekolwiki/index.php/Mint_Salton_Pepper%27s_Peppermint_Seed_Catalog) &mdash; used to get the synthesize item buff to save 10 turns on the item test; provides backup candies for other synthesis buffs
 * [Suspicious Package](https://kol.coldfront.net/thekolwiki/index.php/Suspicious_package) &mdash; saves 5 on hot test, 3 on combat test, 1 on weapon test, 1 on spell test; backup banishes
 * [Pocket Meteor Guide](https://kol.coldfront.net/thekolwiki/index.php/Pocket_Meteor_Guide) &mdash; with saber saves 4 turns on familiar text, 8 on weapon test, 4 on spell test
@@ -105,6 +107,10 @@ While these are not strictly required, not having enough that either save turns 
 * [combat lover's locket lockbox](https://kol.coldfront.net/thekolwiki/index.php/Combat_lover%27s_locket_lockbox) &mdash; up to 3 monsters to fight to save wishes and time spent on fax
 * [Undamaged Unbreakable Umbrella](https://kol.coldfront.net/thekolwiki/index.php/Undamaged_Unbreakable_Umbrella) &mdash; saves up to 1.7 turns on item test, 6 on combat test, 1 on weapon test, 0.5 on spell test
 * [MayDay&trade; contract](https://kol.coldfront.net/thekolwiki/index.php/MayDay%E2%84%A2_contract) &mdash; can save up to 1.7 turns on item test on some classes
+* [packaged June cleaver](https://kol.coldfront.net/thekolwiki/index.php/Packaged_June_cleaver) &mdash; will choose optimal choices when the cleaver adventures are encountered
+* [designer sweatpants (new old stock)](https://kol.coldfront.net/thekolwiki/index.php/Designer_sweatpants_(new_old_stock)) &mdash; script will prioritize equipping this to get the most out of it, including saving turns on the hot test
+* [unopened tiny stillsuit](https://kol.coldfront.net/thekolwiki/index.php/Unopened_tiny_stillsuit) &mdash; if this is not equipped while adventuring, it will be placed on a familiar in the terrarium to passively build up
+* [packaged model train set](https://kol.coldfront.net/thekolwiki/index.php/Packaged_model_train_set) &mdash; lots of extra stats from fights and can smooth out any meat problems
 
 ## Bugs?
 Report bugs here: https://github.com/C2Talon/c2t_hccs/issues
