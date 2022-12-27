@@ -1260,14 +1260,17 @@ boolean c2t_hccs_preFamiliar() {
 	//find highest familar weight
 	//TODO take familiar equipment or more optimal combinations into account
 	familiar highest = $familiar[none];
-	if (have_familiar($familiar[exotic parrot]) && available_amount($item[cracker]) > 0)
+	if (have_familiar($familiar[mini-trainbot]) && available_amount($item[overloaded yule battery]) > 0)
+		highest = $familiar[mini-trainbot];
+	else if (have_familiar($familiar[exotic parrot]) && available_amount($item[cracker]) > 0)
 		highest = $familiar[exotic parrot];
 	//grab baby bugbear beanie without spending a turn
 	else if (have_familiar($familiar[baby bugged bugbear])
 		&& c2t_priority($items[amulet coin,astral pet sweater,luck incense,muscle band,razor fang,shell bell,smoke ball,sugar shield]) == $item[none])
 	{
 		use_familiar($familiar[baby bugged bugbear]);
-		visit_url("arena.php",false);
+		if (available_amount($item[bugged beanie]) == 0)
+			visit_url("arena.php",false);
 		equip($slot[familiar],$item[bugged beanie]);
 		highest = $familiar[baby bugged bugbear];
 	}
