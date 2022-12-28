@@ -31,6 +31,7 @@ import <c2t_hccs_preAdv.ash>
 //d--pizza cube
 //d--power plant
 //d--shorter-order cook
+//d--source terminal
 //d--sweet synthesis
 //d--tome clip art
 //d--tome sugar
@@ -164,6 +165,23 @@ boolean c2t_hccs_powerPlant();
 boolean c2t_hccs_shorterOrderCook();
 
 
+//d--source terminal
+//returns true if have the source terminal
+boolean c2t_hccs_haveSourceTerminal();
+
+//returns true if educate skill is currently active
+boolean c2t_hccs_haveSourceTerminalSkill(skill ski);
+
+//initializes the source terminal
+//returns true if successful
+boolean c2t_hccs_sourceTerminalInit();
+
+//sets edu skill(s)
+//returns true if successful
+boolean c2t_hccs_sourceTerminalSetEdu(skill ski);
+boolean c2t_hccs_sourceTerminalSetEdu(skill ski1,skill ski2);
+
+
 //d--sweet synthesis
 //returns true if have the skill
 boolean c2t_hccs_sweetSynthesis();
@@ -225,6 +243,7 @@ void c2t_hccs_vote();
 //i--pizza cube
 //i--power plant
 //i--shorter-order cook
+//i--source terminal
 //i--sweet synthesis
 //i--tome clip art
 //i--tome sugar
@@ -717,6 +736,64 @@ boolean c2t_hccs_shorterOrderCook() {
 	return have_familiar($familiar[shorter-order cook])
 		&& !get_property("c2t_hccs_disable.shorterOrderCook").to_boolean();
 }
+
+//i--source terminal
+boolean c2t_hccs_haveSourceTerminal() {
+	return get_property("sourceTerminalEducateKnown") != "";
+}
+boolean c2t_hccs_haveSourceTerminalSkill(skill ski) {
+	if (!c2t_hccs_haveSourceTerminal())
+		return false;
+
+	string edu = `{ski.to_lower_case()}.edu`;
+
+	if (!get_property("sourceTerminalEducateKnown").contains_text(edu))
+		return false;
+
+	switch (edu) {
+		default:
+			return false;
+		case get_property("sourceTerminalEducate1"):
+		case get_property("sourceTerminalEducate2"):
+			return true;
+	}
+}
+boolean c2t_hccs_sourceTerminalInit() {
+	if (!c2t_hccs_haveSourceTerminal())
+		return false;
+
+	return c2t_hccs_sourceTerminalSetEdu($skill[portscan],$skill[extract]);
+}
+boolean c2t_hccs_sourceTerminalSetEdu(skill ski) {
+	return c2t_hccs_sourceTerminalSetEdu(ski,$skill[none]);
+}
+boolean c2t_hccs_sourceTerminalSetEdu(skill ski1,skill ski2) {
+	if (!c2t_hccs_haveSourceTerminal())
+		return false;
+
+	string edu1 = `{ski1.to_lower_case()}.edu`;
+	string edu2 = `{ski2.to_lower_case()}.edu`;
+
+	if (!get_property("sourceTerminalEducateKnown").contains_text(edu1) && ski1 != $skill[none]) {
+		print(`{edu1} is not known`,"red");
+		edu1 = "none.edu";
+	}
+	if (!get_property("sourceTerminalEducateKnown").contains_text(edu2) && ski2 != $skill[none]) {
+		print(`{edu2} is not known`,"red");
+		edu2 = "none.edu";
+	}
+
+	string [3] lazy = {edu1,edu2,edu1};
+	foreach i,x in lazy switch (x) {
+		default:
+			cli_execute(`terminal educate {x}`);
+		case get_property("sourceTerminalEducate1"):
+		case get_property("sourceTerminalEducate2"):
+		case "none.edu":
+	}
+	return true;
+}
+
 
 //i--sweet synthesis
 boolean c2t_hccs_sweetSynthesis() return have_skill($skill[sweet synthesis]);
