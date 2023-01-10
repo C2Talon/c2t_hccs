@@ -1030,15 +1030,27 @@ boolean c2t_hccs_preItem() {
 	cli_execute("shrug ur-kel");
 
 	//get latte ingredient from fluffy bunny and cloake item buff
-	if (have_effect($effect[feeling lost]) == 0 && (have_effect($effect[bat-adjacent form]) == 0 || !get_property('latteUnlocks').contains_text('carrot'))) {
+	if (have_effect($effect[feeling lost]) == 0
+		&& ((available_amount($item[vampyric cloake]) > 0
+				&& have_effect($effect[bat-adjacent form]) == 0)
+			|| (!get_property('latteUnlocks').contains_text('carrot')
+				&& !get_property("c2t_hccs_disable.latteFishing").to_boolean())))
+	{
 		maximize("mainstat,equip latte,1000 bonus lil doctor bag,1000 bonus kremlin's greatest briefcase,1000 bonus vampyric cloake,6 bonus designer sweatpants",false);
 		c2t_hccs_levelingFamiliar(true);
 
-		while ((have_equipped($item[vampyric cloake]) && have_effect($effect[bat-adjacent form]) == 0) || !get_property('latteUnlocks').contains_text('carrot'))
+		while ((have_equipped($item[vampyric cloake])
+				&& have_effect($effect[bat-adjacent form]) == 0)
+			|| (!get_property('latteUnlocks').contains_text('carrot')
+				&& !get_property("c2t_hccs_disable.latteFishing").to_boolean()))
+
 			adv1($location[the dire warren],-1,"");
 	}
 
-	if (!get_property('latteModifier').contains_text('Item Drop') && get_property('_latteBanishUsed') == 'true')
+	if (!get_property('latteModifier').contains_text('Item Drop')
+		&& get_property('latteUnlocks').contains_text('carrot')
+		&& get_property('_latteBanishUsed').to_boolean())
+
 		cli_execute('latte refill cinnamon carrot vanilla');
 
 	c2t_hccs_getEffect($effect[fat leon's phat loot lyric]);
@@ -1806,9 +1818,16 @@ void c2t_hccs_fights() {
 			fam = ",equip dromedary drinking helmet";
 		
 		// Fruits in skeleton store (Saber YR)
-		if ((available_amount($item[ointment of the occult]) == 0 && available_amount($item[grapefruit]) == 0 && have_effect($effect[mystically oiled]) == 0)
-				|| (available_amount($item[oil of expertise]) == 0 && available_amount($item[cherry]) == 0 && have_effect($effect[expert oiliness]) == 0)
-				|| (available_amount($item[philter of phorce]) == 0 && available_amount($item[lemon]) == 0 && have_effect($effect[phorcefullness]) == 0)) {
+		if ((available_amount($item[ointment of the occult]) == 0
+				&& available_amount($item[grapefruit]) == 0
+				&& have_effect($effect[mystically oiled]) == 0)
+			|| (available_amount($item[oil of expertise]) == 0
+				&& available_amount($item[cherry]) == 0
+				&& have_effect($effect[expert oiliness]) == 0)
+			|| (available_amount($item[philter of phorce]) == 0
+				&& available_amount($item[lemon]) == 0
+				&& have_effect($effect[phorcefullness]) == 0))
+		{
 			if (get_property('questM23Meatsmith') == 'unstarted') {
 				// Have to start meatsmith quest.
 				visit_url('shop.php?whichshop=meatsmith&action=talk');
@@ -1834,9 +1853,8 @@ void c2t_hccs_fights() {
 		// Tomato in pantry (NOT Saber YR) -- RUNNING AWAY to use nostalgia later
 		if (available_amount($item[tomato juice of powerful power]) == 0
 			&& available_amount($item[tomato]) == 0
-			&& have_effect($effect[tomato power]) == 0
-			) {
-
+			&& have_effect($effect[tomato power]) == 0)
+		{
 			if (get_property('lastCopyableMonster').to_monster() != $monster[possessed can of tomatoes]) {
 				if (get_property('_latteDrinkUsed').to_boolean())
 					cli_execute('latte refill cinnamon pumpkin vanilla');
@@ -1902,10 +1920,12 @@ void c2t_hccs_fights() {
 	set_property('mpAutoRecoveryItems','');
 
 	//get crimbo ghost buff from dudes at NEP
-	if ((have_familiar($familiar[ghost of crimbo carols]) && have_effect($effect[holiday yoked]) == 0)
-		|| (my_primestat() == $stat[moxie] && have_effect($effect[unrunnable face]) == 0 && item_amount($item[runproof mascara]) == 0)//to nostalgia runproof mascara
-		) {
-
+	if ((have_familiar($familiar[ghost of crimbo carols])
+			&& have_effect($effect[holiday yoked]) == 0)
+		|| (my_primestat() == $stat[moxie]
+			&& have_effect($effect[unrunnable face]) == 0
+			&& item_amount($item[runproof mascara]) == 0))//to nostalgia runproof mascara
+	{
 		if (get_property('_latteDrinkUsed').to_boolean())
 			cli_execute('latte refill cinnamon pumpkin vanilla');
 		if (have_familiar($familiar[ghost of crimbo carols]))
@@ -2068,23 +2088,29 @@ void c2t_hccs_fights() {
 			cli_execute('eat magical sausage');
 
 		//hopefully stop it before a possible break if my logic is off
-		if (c2t_hccs_backupCamera() && get_property('_pocketProfessorLectures').to_int() == 0 && c2t_hccs_backupCameraLeft() <= 1)
+		if (c2t_hccs_backupCamera()
+			&& get_property('_pocketProfessorLectures').to_int() == 0
+			&& c2t_hccs_backupCameraLeft() <= 1)
+
 			abort('Pocket professor has not been used yet, while backup camera charges left is '+c2t_hccs_backupCameraLeft());
 
 		//professor chain sausage goblins in NEP first thing if no backup camera
-		if (!c2t_hccs_backupCamera() && get_property('_pocketProfessorLectures').to_int() == 0) {
+		if (!c2t_hccs_backupCamera()
+			&& get_property('_pocketProfessorLectures').to_int() == 0)
+		{
 			use_familiar($familiar[pocket professor]);
 			maximize("mainstat,equip garbage shirt,equip kramco,100familiar weight,6 bonus designer sweatpants",false);
 		}
 		//9+ professor copies, after getting exp buff from NC and used sauceror potions
 		else if (get_property('_pocketProfessorLectures').to_int() == 0
 			&& c2t_hccs_backupCameraLeft() > 0
-			&& (have_effect($effect[spiced up]) > 0 || have_effect($effect[tomes of opportunity]) > 0 || have_effect($effect[the best hair you've ever had]) > 0)
+			&& (have_effect($effect[spiced up]) > 0
+				|| have_effect($effect[tomes of opportunity]) > 0
+				|| have_effect($effect[the best hair you've ever had]) > 0)
 			&& have_effect($effect[tomato power]) > 0
 			//target monster for professor copies. using back up camera to bootstrap
-			&& get_property('lastCopyableMonster').to_monster() == $monster[sausage goblin]
-			) {
-
+			&& get_property('lastCopyableMonster').to_monster() == $monster[sausage goblin])
+		{
 			use_familiar($familiar[pocket professor]);
 			maximize("mainstat,equip garbage shirt,equip kramco,100familiar weight,6 bonus designer sweatpants,equip backup camera",false);
 		}
@@ -2093,9 +2119,8 @@ void c2t_hccs_fights() {
 			&& !get_property('latteUnlocks').contains_text('carrot')
 			&& c2t_hccs_backupCameraLeft() > 0
 			//target monster
-			&& get_property('lastCopyableMonster').to_monster() == $monster[sausage goblin]
-			) {
-
+			&& get_property('lastCopyableMonster').to_monster() == $monster[sausage goblin])
+		{
 			//NEP monsters give twice as much base exp as sausage goblins, so keep at least as many shirt charges as fights remaining in NEP
 			if (get_property('garbageShirtCharge').to_int() < 17)
 				garbage = ",-equip garbage shirt";
@@ -2105,7 +2130,9 @@ void c2t_hccs_fights() {
 			continue;//don't want to fall into NEP in this state
 		}
 		//inital and post-latte backup fights
-		else if (c2t_hccs_backupCameraLeft() > 0 && get_property('lastCopyableMonster').to_monster() == $monster[sausage goblin]) {
+		else if (c2t_hccs_backupCameraLeft() > 0
+			&& get_property('lastCopyableMonster').to_monster() == $monster[sausage goblin])
+		{
 			//only use kramco offhand if target is sausage goblin to not mess things up
 			if (get_property('lastCopyableMonster').to_monster() == $monster[sausage goblin])
 				kramco = ",equip kramco";
