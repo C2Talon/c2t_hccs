@@ -854,7 +854,9 @@ boolean c2t_hccs_allTheBuffs() {
 	// equip mp stuff
 	maximize("mp,-equip kramco",false);
 	
-	if (have_effect($effect[one very clear eye]) == 0) {
+	if (!get_property("c2t_hccs_disable.cloverItem").to_boolean()
+		&& have_effect($effect[one very clear eye]) == 0)
+	{
 		while (c2t_hccs_wandererFight());//do vote monster if ready before spending turn
 		if (c2t_hccs_cloverItem())
 			c2t_hccs_getEffect($effect[one very clear eye]);
