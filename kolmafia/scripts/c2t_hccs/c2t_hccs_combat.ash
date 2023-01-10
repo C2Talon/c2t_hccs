@@ -22,8 +22,11 @@ void main(int initround, monster foe, string page) {
 	location loc = my_location();
 
 	//saber force
-	if (have_effect($effect[meteor showered]) > 0 || have_effect($effect[fireproof foam suit]) > 0) {
-		c2t_bb($skill[use the force]).c2t_bbSubmit();
+	if (have_effect($effect[meteor showered]) > 0
+		|| have_effect($effect[fireproof foam suit]) > 0)
+	{
+		c2t_bb($skill[use the force])
+		.c2t_bbSubmit();
 		return;
 	}
 
@@ -100,7 +103,9 @@ void main(int initround, monster foe, string page) {
 		m = mHead + mSteal.c2t_bb($skill[meteor shower]);
 
 		//camel spit for weapon test, which is directly after combat test
-		if (get_property("csServicesPerformed").contains_text("Be a Living Statue") && !get_property("csServicesPerformed").contains_text("Reduce Gazelle Population"))
+		if (get_property("csServicesPerformed").contains_text("Be a Living Statue")
+			&& !get_property("csServicesPerformed").contains_text("Reduce Gazelle Population"))
+
 			m += c2t_bb($skill[%fn, spit on me!]);
 
 		m.c2t_bbSubmit();
@@ -120,11 +125,12 @@ void main(int initround, monster foe, string page) {
 					return;
 				}
 				//fishing for latte ingredients with backups
-				else if (have_equipped($item[backup camera]) && c2t_hccs_backupCameraLeft() > 0) {
-					c2t_bbSubmit(
-						c2t_bb($skill[back-up to your last enemy])
-						.c2t_bb("twiddle;")
-					);
+				else if (have_equipped($item[backup camera])
+					&& c2t_hccs_backupCameraLeft() > 0)
+				{
+					c2t_bb($skill[back-up to your last enemy])
+					.c2t_bb("twiddle;")
+					.c2t_bbSubmit();
 					return;
 				}
 				c2t_bbSubmit(
@@ -156,27 +162,28 @@ void main(int initround, monster foe, string page) {
 					return;
 				}
 			case $monster[novelty tropical skeleton]:
-				c2t_bbSubmit(
-					mSteal
-					.c2t_bb($skill[become a wolf])
-					.c2t_bb($skill[gulp latte])
-					.c2t_bb($skill[bowl straight up])
-					.c2t_bb($skill[throw latte on opponent])
-				);
+				mSteal
+				.c2t_bb($skill[become a wolf])
+				.c2t_bb($skill[gulp latte])
+				.c2t_bb($skill[bowl straight up])
+				.c2t_bb($skill[giant growth])
+				.c2t_bb($skill[throw latte on opponent])
+				.c2t_bbSubmit();
 				return;
+
 			//faxes -- saber use is elsewhere
 			case $monster[ungulith]:
 			case $monster[factory worker (female)]:
 			case $monster[factory worker (male)]://just in case this shows up
-				c2t_bbSubmit(
-					mSteal
-					.c2t_bb($skill[meteor shower])
-				);
+				mSteal
+				.c2t_bb($skill[meteor shower])
+				.c2t_bbSubmit();
 				return;
 			case $monster[evil olive]:
 				//have to burn a free kill and nostalgia/envy if no god lobster
 				if (!have_familiar($familiar[god lobster])
-					&& get_property('lastCopyableMonster').to_monster() == $monster["plain" girl]) {
+					&& get_property('lastCopyableMonster').to_monster() == $monster["plain" girl])
+				{
 
 					mSteal
 					.c2t_bb($skill[feel nostalgic])
@@ -191,8 +198,8 @@ void main(int initround, monster foe, string page) {
 			case $monster[elf hobo]://this might though?
 			case $monster[angry pi&ntilde;ata]:
 				mSteal
-					.c2t_bb($skill[use the force])//don't care about tracking a potential stolen item, so cut it straight away
-					.c2t_bbSubmit();
+				.c2t_bb($skill[use the force])//don't care about tracking a potential stolen item, so cut it straight away
+				.c2t_bbSubmit();
 				return;
 
 			//using all free kills on neverending party monsters
@@ -202,7 +209,9 @@ void main(int initround, monster foe, string page) {
 			case $monster[party girl]:
 			case $monster["plain" girl]:
 				m = mHead + mSteal;
-				if (have_equipped($item[backup camera]) && c2t_hccs_backupCameraLeft() > 0) {
+				if (have_equipped($item[backup camera])
+					&& c2t_hccs_backupCameraLeft() > 0)
+				{
 					m += c2t_bb($skill[back-up to your last enemy]).c2t_bb("twiddle;");
 					m.c2t_bbSubmit();
 					return;
@@ -211,18 +220,19 @@ void main(int initround, monster foe, string page) {
 				m += c2t_hccs_bbChargeSkill($skill[feel pride]);
 
 				//free kills after NEP free fights
-				if (get_property('_neverendingPartyFreeTurns').to_int() == 10 && !get_property('_gingerbreadMobHitUsed').to_boolean()) {
-					c2t_bbSubmit(
-						m
-						.c2t_bb($skill[sing along])
-						.c2t_hccs_bowlSideways()
-						//free kill skills
-						//won't use otoscope anywhere else, so might as well use it while doc bag equipped
-						.c2t_hccs_bbChargeSkill($skill[otoscope])
-						.c2t_hccs_bbChargeSkill($skill[chest x-ray])
-						.c2t_hccs_bbChargeSkill($skill[shattering punch])
-						.c2t_bb($skill[gingerbread mob hit])
-					);
+				if (get_property('_neverendingPartyFreeTurns').to_int() == 10
+					&& c2t_hccs_freeKillsLeft() > 0)
+				{
+					m
+					.c2t_bb($skill[sing along])
+					.c2t_hccs_bowlSideways()
+					//free kill skills
+					//won't use otoscope anywhere else, so might as well use it while doc bag equipped
+					.c2t_hccs_bbChargeSkill($skill[otoscope])
+					.c2t_hccs_bbChargeSkill($skill[chest x-ray])
+					.c2t_hccs_bbChargeSkill($skill[shattering punch])
+					.c2t_bb($skill[gingerbread mob hit])
+					.c2t_bbSubmit();
 				}
 				//free combats at NEP
 				else
@@ -252,18 +262,17 @@ void main(int initround, monster foe, string page) {
 				if (my_primestat() == $stat[moxie]
 					&& have_effect($effect[unrunnable face]) == 0
 					&& item_amount($item[runproof mascara]) == 0
-					&& get_property('lastCopyableMonster').to_monster() == $monster[party girl]) {
-
+					&& get_property('lastCopyableMonster').to_monster() == $monster[party girl])
+				{
 					m += c2t_bb($skill[feel nostalgic]);
 					m += c2t_bb($skill[feel envy]);
 				}
 				if (get_property('lastCopyableMonster').to_monster() == $monster[novelty tropical skeleton]
-					|| get_property('lastCopyableMonster').to_monster() == $monster[possessed can of tomatoes]) {
-
+					|| get_property('lastCopyableMonster').to_monster() == $monster[possessed can of tomatoes])
+				{
 					m += c2t_bb($skill[feel nostalgic]);
 					m += c2t_bb($skill[feel envy]);
 				}
-
 				m += mBasic;
 				m.c2t_bbSubmit();
 				return;
@@ -391,5 +400,4 @@ string c2t_hccs_bbChargeSkill(skill ski) {
 	}
 	return get_property(prop).to_int() < max ? c2t_bb(ski) : "";
 }
-
 
