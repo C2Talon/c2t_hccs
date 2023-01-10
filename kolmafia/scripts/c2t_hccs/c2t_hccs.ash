@@ -826,14 +826,18 @@ boolean c2t_hccs_levelup() {
 	if (my_level() < 7)
 		abort('initial leveling broke');
 
-	//some pulls if not in hard core; moxie would have already pulled up to 2 items so far
-	if (my_primestat() == $stat[moxie] && pulls_remaining() > 3)
-		c2t_hccs_pull($item[crumpled felt fedora]);//200 mox; saves 2 for fam test
-	c2t_hccs_pull($item[great wolf's beastly trousers]);//100 mus; saves 2 for fam test
-	c2t_hccs_pull($item[staff of simmering hatred]);//125 mys; saves 4 for spell test
-	//rechecking this sometime after leveling for non-mys since 150 mys is possible
+	//some pulls if not in hard core; assumes 125 in an offstat and 200 in mainstat is achieveable
+	if (have_skill($skill[spirit of rigatoni]))
+		c2t_hccs_pull($item[staff of simmering hatred]);//125 mys; saves 4 for spell test
+	//also attempt to pull stick-knife in weapon and spell tests since having 150 offstat is possible then
 	if (my_primestat() == $stat[muscle])
 		c2t_hccs_pull($item[stick-knife of loathing]);//150 mus; saves 4 for spell test
+	if (have_familiar($familiar[mini-trainbot]))
+		c2t_hccs_pull($item[overloaded yule battery]);//should save at least 2 turns at worst, 4-ish at best
+	c2t_hccs_pull($item[great wolf's beastly trousers]);//100 mus; saves 2 for fam test
+	//moxie may have done up to 2 pulls prior to this set of pulls; want to keep a pull open for chance of stick-knife later
+	if (my_primestat() == $stat[moxie] && pulls_remaining() > 1)
+		c2t_hccs_pull($item[crumpled felt fedora]);//200 mox; saves 2 for fam test
 
 	c2t_hccs_allTheBuffs();
 
@@ -898,6 +902,7 @@ boolean c2t_hccs_allTheBuffs() {
 			c2t_hccs_getEffect($effect[pomp & circumsands]);//beach moxie
 	}
 
+	/*
 	//TODO only use bee's knees and other less-desirable buffs if below some buff threshold
 	// Cast Ode and drink bee's knees
 	// going to skip this for non-moxie to use clip art's buff of same strength
@@ -909,6 +914,7 @@ boolean c2t_hccs_allTheBuffs() {
 		//drink(1,$item[perfect dark and stormy]);
 		//cli_execute('drink perfect dark and stormy');
 	}
+	*/
 
 	//just in case
 	if (have_effect($effect[ode to booze]) > 0)

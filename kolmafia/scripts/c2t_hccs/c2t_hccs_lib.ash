@@ -184,7 +184,7 @@ boolean c2t_hccs_joinClan(string s) {
 }
 
 boolean c2t_hccs_pull(item ite) {
-	if(!can_interact() && !in_hardcore() && item_amount(ite) == 0 && available_amount(ite) == 0 && storage_amount(ite) > 0 && pulls_remaining() > 0)
+	if (pulls_remaining() > 0 && !can_interact() && !in_hardcore() && item_amount(ite) == 0 && available_amount(ite) == 0 && storage_amount(ite) > 0)
 		return take_storage(1,ite);
 	else if (available_amount(ite) > 0)
 		return true;
