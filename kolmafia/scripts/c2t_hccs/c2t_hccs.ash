@@ -902,7 +902,6 @@ boolean c2t_hccs_allTheBuffs() {
 			c2t_hccs_getEffect($effect[pomp & circumsands]);//beach moxie
 	}
 
-	/*
 	//TODO only use bee's knees and other less-desirable buffs if below some buff threshold
 	// Cast Ode and drink bee's knees
 	// going to skip this for non-moxie to use clip art's buff of same strength
@@ -914,7 +913,6 @@ boolean c2t_hccs_allTheBuffs() {
 		//drink(1,$item[perfect dark and stormy]);
 		//cli_execute('drink perfect dark and stormy');
 	}
-	*/
 
 	//just in case
 	if (have_effect($effect[ode to booze]) > 0)
