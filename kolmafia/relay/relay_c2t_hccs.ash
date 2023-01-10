@@ -38,7 +38,8 @@ void main() {
 		"c2t_hccs_disable.pillkeeper":"no pill popping from pillkeeper, free or otherwise",
 		"c2t_hccs_disable.powerPlant":"power plant will not be used for the item test (or elsewhere)",
 		"c2t_hccs_disable.shorterOrderCook":"shorter-order cook will not be used to try to saves turns on the familiar test",
-		"c2t_hccs_disable.vipFloundry":"equipment will not be acquired from the clan floundry"
+		"c2t_hccs_disable.vipFloundry":"equipment will not be acquired from the clan floundry",
+		"c2t_hccs_disable.vipBeesKnees":"will not drink a Bee's Knees as part of buffing up stats for leveling"
 		};
 
 	string [int] thresholdName = {"HP","muscle","mysticality","moxie","familiar","weapon","spell","non-combat","item","hot"};

@@ -905,7 +905,7 @@ boolean c2t_hccs_allTheBuffs() {
 	//TODO only use bee's knees and other less-desirable buffs if below some buff threshold
 	// Cast Ode and drink bee's knees
 	// going to skip this for non-moxie to use clip art's buff of same strength
-	if (my_primestat() == $stat[moxie] && have_effect($effect[on the trolley]) == 0) {
+	if (!get_property("c2t_hccs_disable.vipBeesKnees").to_boolean() && have_effect($effect[on the trolley]) == 0) {
 		c2t_assert(my_meat() >= 500,"Need 500 meat for speakeasy booze");
 		c2t_hccs_getEffect($effect[ode to booze]);
 		cli_execute("drink 1 bee's knees");
