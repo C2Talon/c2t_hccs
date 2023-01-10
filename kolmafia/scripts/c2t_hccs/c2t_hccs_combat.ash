@@ -141,7 +141,9 @@ void main(int initround, monster foe, string page) {
 			//nostalgia other monster to get drops from these
 			case $monster[possessed can of tomatoes]:
 				//if no god lobster, burn a free kill to get both monsters' drops with nostalgia/envy here
-				if (get_property('lastCopyableMonster').to_monster() == $monster[novelty tropical skeleton]) {
+				if (!have_familiar($familiar[god lobster])
+					&& get_property('lastCopyableMonster').to_monster() == $monster[novelty tropical skeleton])
+				{
 					mSteal
 					.c2t_bb($skill[feel nostalgic])
 					.c2t_bb($skill[feel envy])
