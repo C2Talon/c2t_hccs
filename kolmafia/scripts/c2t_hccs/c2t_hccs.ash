@@ -834,7 +834,9 @@ boolean c2t_hccs_levelup() {
 		c2t_hccs_pull($item[stick-knife of loathing]);//150 mus; saves 4 for spell test
 	if (have_familiar($familiar[mini-trainbot]))
 		c2t_hccs_pull($item[overloaded yule battery]);//should save at least 2 turns at worst, 4-ish at best
-	c2t_hccs_pull($item[great wolf's beastly trousers]);//100 mus; saves 2 for fam test
+	//familiar pants
+	if (!c2t_hccs_pull($item[repaid diaper]))
+		c2t_hccs_pull($item[great wolf's beastly trousers]);//100 mus; saves 2 for fam test
 	//moxie may have done up to 2 pulls prior to this set of pulls; want to keep a pull open for chance of stick-knife later
 	if (my_primestat() == $stat[moxie] && pulls_remaining() > 1)
 		c2t_hccs_pull($item[crumpled felt fedora]);//200 mox; saves 2 for fam test
