@@ -52,7 +52,7 @@ The script assumes several IotM are owned and will break without them. In additi
 
 Some of the required IotM are only required for now because they're explicitly used in the script without any checks. Some will be moved to the supported list as I get around to adding the necessary checks. I'll be working on trying to minimize the required list, but do note one will probably still need to have a critical mass of IotM for the script to run smoothly.
 
-### Required IotM (ordered by release date)
+### Required IotM ([ordered by release date](https://kol.coldfront.net/thekolwiki/index.php/Mr._Store))
 * [Tome of Clip Art](https://kol.coldfront.net/thekolwiki/index.php/Tome_of_Clip_Art) &mdash; can be somewhat possible to get around this requirement by pulling a [borrowed time](https://kol.coldfront.net/thekolwiki/index.php/Borrowed_time) prior to running
 * [Clan VIP Lounge invitation](https://kol.coldfront.net/thekolwiki/index.php/Clan_VIP_Lounge_invitation) &mdash; assumes a fully-stocked VIP lounge
 * [corked genie bottle](https://kol.coldfront.net/thekolwiki/index.php/Corked_genie_bottle)
@@ -67,7 +67,7 @@ Some of the required IotM are only required for now because they're explicitly u
 * [Comprehensive Cartographic Compendium](https://kol.coldfront.net/thekolwiki/index.php/Comprehensive_Cartographic_Compendium)
 * [emotion chip](https://kol.coldfront.net/thekolwiki/index.php/Emotion_chip)
 
-### Supported IotM (ordered by release date)
+### Supported IotM ([ordered by release date](https://kol.coldfront.net/thekolwiki/index.php/Mr._Store))
 
 While these are not strictly required, not having enough that either save turns or significantly help with leveling may cause problems. The blurb after the em dash (&mdash;) is basically what the script uses the IotM for.
 
@@ -110,6 +110,7 @@ While these are not strictly required, not having enough that either save turns 
 * [packaged June cleaver](https://kol.coldfront.net/thekolwiki/index.php/Packaged_June_cleaver) &mdash; will choose optimal choices when the cleaver adventures are encountered
 * [designer sweatpants (new old stock)](https://kol.coldfront.net/thekolwiki/index.php/Designer_sweatpants_(new_old_stock)) &mdash; script will prioritize equipping this to get the most out of it, including saving turns on the hot test
 * [unopened tiny stillsuit](https://kol.coldfront.net/thekolwiki/index.php/Unopened_tiny_stillsuit) &mdash; if this is not equipped while adventuring, it will be placed on a familiar in the terrarium to passively build up
+* [packaged Jurassic Parka](https://kol.coldfront.net/thekolwiki/index.php/Packaged_Jurassic_Parka) &mdash; helps get NEP experience buff right away and gives 1 free kill
 * [packaged model train set](https://kol.coldfront.net/thekolwiki/index.php/Packaged_model_train_set) &mdash; lots of extra stats from fights and can smooth out any meat problems
 
 ## Bugs?

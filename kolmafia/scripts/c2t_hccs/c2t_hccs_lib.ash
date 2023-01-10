@@ -71,6 +71,8 @@ int c2t_hccs_freeKillsLeft() {
 		n += 3 - get_property("_shatteringPunchUsed").to_int();
 	if (have_skill($skill[gingerbread mob hit]) && !get_property("_gingerbreadMobHitUsed").to_boolean())
 		n++;
+	if (available_amount($item[jurassic parka]) > 0 && have_effect($effect[everything looks yellow]) == 0)
+		n++;
 	return n;
 }
 

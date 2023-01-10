@@ -167,6 +167,7 @@ void main(int initround, monster foe, string page) {
 				.c2t_bb($skill[gulp latte])
 				.c2t_bb($skill[bowl straight up])
 				.c2t_bb($skill[giant growth])
+				.c2t_bb(get_property("_spikolodonSpikeUses").to_int() == 0?c2t_bb($skill[launch spikolodon spikes]):"")
 				.c2t_bb($skill[throw latte on opponent])
 				.c2t_bbSubmit();
 				return;
@@ -232,6 +233,7 @@ void main(int initround, monster foe, string page) {
 					.c2t_hccs_bbChargeSkill($skill[chest x-ray])
 					.c2t_hccs_bbChargeSkill($skill[shattering punch])
 					.c2t_bb($skill[gingerbread mob hit])
+					.c2t_bb($skill[spit jurassic acid])
 					.c2t_bbSubmit();
 				}
 				//free combats at NEP
