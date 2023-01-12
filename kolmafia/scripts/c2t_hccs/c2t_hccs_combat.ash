@@ -153,7 +153,6 @@ void main(int initround, monster foe, string page) {
 					mSteal
 					.c2t_bb($skill[feel nostalgic])
 					.c2t_bb($skill[feel envy])
-					.c2t_bb($skill[become a wolf])
 					.c2t_bb($skill[gulp latte])
 					.c2t_hccs_bbChargeSkill($skill[chest x-ray])
 					.c2t_hccs_bbChargeSkill($skill[shattering punch])
@@ -163,7 +162,7 @@ void main(int initround, monster foe, string page) {
 				}
 			case $monster[novelty tropical skeleton]:
 				mSteal
-				.c2t_bb($skill[become a wolf])
+				.c2t_bb(get_property("_vampyreCloakeFormUses").to_int() == 0?c2t_bb($skill[become a wolf]):"")
 				.c2t_bb($skill[gulp latte])
 				.c2t_bb($skill[bowl straight up])
 				.c2t_bb($skill[giant growth])
@@ -185,7 +184,6 @@ void main(int initround, monster foe, string page) {
 				if (!have_familiar($familiar[god lobster])
 					&& get_property('lastCopyableMonster').to_monster() == $monster["plain" girl])
 				{
-
 					mSteal
 					.c2t_bb($skill[feel nostalgic])
 					.c2t_bb($skill[feel envy])
@@ -243,12 +241,20 @@ void main(int initround, monster foe, string page) {
 				return;
 
 			//most basic of combats
+			//mushroom garden
 			case $monster[piranha plant]:
+			//voters
 			case $monster[government bureaucrat]:
 			case $monster[terrible mutant]:
 			case $monster[angry ghost]:
 			case $monster[annoyed snake]:
 			case $monster[slime blob]:
+			//speakeasy
+			case $monster[gangster's moll]:
+			case $monster[gator-human hybrid]:
+			case $monster[goblin flapper]:
+			case $monster[traveling hobo]:
+			case $monster[undercover prohibition agent]:
 				c2t_bbSubmit(mHead + mSteal + mBasic);
 				return;
 
@@ -260,17 +266,14 @@ void main(int initround, monster foe, string page) {
 			//nostalgia goes here
 			case $monster[god lobster]:
 				m = mHead;
-				//grabbing moxie buff item
-				if (my_primestat() == $stat[moxie]
-					&& have_effect($effect[unrunnable face]) == 0
-					&& item_amount($item[runproof mascara]) == 0
-					&& get_property('lastCopyableMonster').to_monster() == $monster[party girl])
-				{
-					m += c2t_bb($skill[feel nostalgic]);
-					m += c2t_bb($skill[feel envy]);
-				}
-				if (get_property('lastCopyableMonster').to_monster() == $monster[novelty tropical skeleton]
-					|| get_property('lastCopyableMonster').to_monster() == $monster[possessed can of tomatoes])
+				//nostalgia/envy for drops
+				if (get_property("csServicesPerformed") == "Coil Wire"//so this doesn't try to fire in non-combat test
+					&& (get_property('lastCopyableMonster').to_monster() == $monster[novelty tropical skeleton]
+						|| get_property('lastCopyableMonster').to_monster() == $monster[possessed can of tomatoes]
+						|| (get_property('lastCopyableMonster').to_monster() == $monster[party girl]
+							&& my_primestat() == $stat[moxie]
+							&& have_effect($effect[unrunnable face]) == 0
+							&& item_amount($item[runproof mascara]) == 0)))
 				{
 					m += c2t_bb($skill[feel nostalgic]);
 					m += c2t_bb($skill[feel envy]);
