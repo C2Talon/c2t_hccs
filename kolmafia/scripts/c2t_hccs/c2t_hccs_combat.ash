@@ -268,17 +268,17 @@ void main(int initround, monster foe, string page) {
 			case $monster[angry ghost]:
 			case $monster[annoyed snake]:
 			case $monster[slime blob]:
+				c2t_bbSubmit(mHead + mSteal + mBasic);
+				return;
+
+			//portscan
+			case $monster[government agent]:
 			//speakeasy
 			case $monster[gangster's moll]:
 			case $monster[gator-human hybrid]:
 			case $monster[goblin flapper]:
 			case $monster[traveling hobo]:
 			case $monster[undercover prohibition agent]:
-				c2t_bbSubmit(mHead + mSteal + mBasic);
-				return;
-
-			//portscan
-			case $monster[government agent]:
 				m = mHead + mSteal + mBasicTop;
 				m += c2t_hccs_portscan();
 				m += mBasicBot;
