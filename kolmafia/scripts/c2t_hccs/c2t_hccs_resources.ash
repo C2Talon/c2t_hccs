@@ -762,7 +762,7 @@ boolean c2t_hccs_sourceTerminalInit() {
 	if (!c2t_hccs_haveSourceTerminal())
 		return false;
 
-	return c2t_hccs_sourceTerminalSetEdu($skill[portscan],$skill[extract]);
+	return c2t_hccs_sourceTerminalSetEdu($skill[portscan]);
 }
 boolean c2t_hccs_sourceTerminalSetEdu(skill ski) {
 	return c2t_hccs_sourceTerminalSetEdu(ski,$skill[none]);

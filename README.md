@@ -73,6 +73,7 @@ While these are not strictly required, not having enough that either save turns 
 
 * [panicked kernel](https://kol.coldfront.net/thekolwiki/index.php/Panicked_kernel) &mdash; can potentially save a turn if lacking an astral pet sweater or better
 * [Mint Salton Pepper's Peppermint Seed Catalog](https://kol.coldfront.net/thekolwiki/index.php/Mint_Salton_Pepper%27s_Peppermint_Seed_Catalog) &mdash; used to get the synthesize item buff to save 10 turns on the item test; provides backup candies for other synthesis buffs
+* [Source terminal](https://kol.coldfront.net/thekolwiki/index.php/Source_terminal) &mdash; saves 2 turns on item test; turns speakeasy fights into scaling fights
 * [Suspicious Package](https://kol.coldfront.net/thekolwiki/index.php/Suspicious_package) &mdash; saves 5 on hot test, 3 on combat test, 1 on weapon test, 1 on spell test; backup banishes
 * [Pocket Meteor Guide](https://kol.coldfront.net/thekolwiki/index.php/Pocket_Meteor_Guide) &mdash; with saber saves 4 turns on familiar text, 8 on weapon test, 4 on spell test
 * [pantogram](https://kol.coldfront.net/thekolwiki/index.php/Pantogram) &mdash; saves 2 turns on hot test, 3 on combat test, 0.4 on spell test
@@ -115,7 +116,7 @@ While these are not strictly required, not having enough that either save turns 
 * [packaged model train set](https://kol.coldfront.net/thekolwiki/index.php/Packaged_model_train_set) &mdash; lots of extra stats from fights and can smooth out any meat problems
 
 ## Bugs?
-Report bugs in the [issue tracker](/issues).
+Report bugs in the [issue tracker](./issues).
 
 ## TODO (eventually)
 
