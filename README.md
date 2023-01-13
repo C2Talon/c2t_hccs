@@ -116,7 +116,7 @@ While these are not strictly required, not having enough that either save turns 
 * [packaged model train set](https://kol.coldfront.net/thekolwiki/index.php/Packaged_model_train_set) &mdash; lots of extra stats from fights and can smooth out any meat problems
 
 ## Bugs?
-Report bugs in the [issue tracker](./issues).
+Report bugs in the [issue tracker](https://github.com/C2Talon/c2t_hccs/issues).
 
 ## TODO (eventually)
 
