@@ -448,7 +448,8 @@ string c2t_hccs_portscan() {
 	string out;
 	if (get_property("ownsSpeakeasy").to_boolean()
 		&& get_property("_speakeasyFreeFights").to_int() < 2
-		&& !get_property("relayCounters").contains_text("portscan.edu"))
+		&& !get_property("relayCounters").contains_text("portscan.edu")
+		&& !get_property("c2t_hccs_disable.portscan").to_boolean())
 
 		out = c2t_bb($skill[portscan]);
 
