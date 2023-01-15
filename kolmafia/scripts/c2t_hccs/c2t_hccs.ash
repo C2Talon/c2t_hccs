@@ -2020,7 +2020,11 @@ void c2t_hccs_fights() {
 				maximize("mainstat,exp,-equip garbage shirt,-equip kramco,-equip i voted,6 bonus designer sweatpants"+fam,false);
 			else
 				maximize("mainstat,100exp,-equip garbage shirt,-equip kramco,-equip i voted,6000 bonus designer sweatpants"+fam,false);
+			string temp = get_property("_speakeasyFreeFights");
 			adv1($location[an unusually quiet barroom brawl]);
+			//mafia doesn't always increment this properly
+			if (temp == get_property("_speakeasyFreeFights"))
+				set_property("_speakeasyFreeFights",temp.to_int()+1);
 		}
 		if (my_turncount() > start)
 			abort("a turn was used in the speakeasy; tracking may have broke");

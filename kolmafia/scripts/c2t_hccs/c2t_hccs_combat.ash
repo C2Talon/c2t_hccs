@@ -41,8 +41,8 @@ void main(int initround, monster foe, string page) {
 	string mBasicTop =
 		c2t_bb($skill[curse of weaksauce])
 		.c2t_bb($skill[disarming thrust])
-		.c2t_bb($skill[detect weakness])
 		.c2t_bb($skill[micrometeorite])
+		.c2t_bb($skill[detect weakness])
 		.c2t_hccs_bowlSideways();
 
 	//bottom of basic macro, where all the damaging stuff is
