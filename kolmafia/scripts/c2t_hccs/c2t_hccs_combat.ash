@@ -287,6 +287,16 @@ void main(int initround, monster foe, string page) {
 		case $monster[government agent]:
 			if (my_location() != $location[an unusually quiet barroom brawl])
 				abort("Portscan logic failed. Either banish or free kill the government agent, then run the script again. Also, report this.");
+			mHead
+			.c2t_bb($skill[disarming thrust])
+			.c2t_bb($skill[micrometeorite])
+			.c2t_bb($skill[curse of weaksauce])
+			.c2t_bb($skill[detect weakness])
+			.c2t_hccs_portscan()
+			.c2t_bb(mBasicBot)
+			.c2t_bbSubmit();
+			return;
+
 		//speakeasy
 		case $monster[gangster's moll]:
 		case $monster[gator-human hybrid]:
