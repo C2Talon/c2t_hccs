@@ -1083,10 +1083,15 @@ boolean c2t_hccs_preItem() {
 				adv1($location[the dire warren]);
 			}
 		}
-		use_familiar(fam);
 		if (start < my_turncount())
 			abort("a turn was used while latte fishing in the item test prep");
 	}
+
+	//don't want to be running an item or booze fairy for the test
+	if (numeric_modifier(my_familiar(),"Item Drop",c2t_famWeight(),$item[none]) > 0
+		|| numeric_modifier(my_familiar(),"Booze Drop",c2t_famWeight(),$item[none]) > 0)
+
+		use_familiar(c2t_priority($familiars[left-hand man,hovering sombrero,blood-faced volleyball,leprechaun,mosquito]));
 
 	if (!get_property('latteModifier').contains_text('Item Drop')
 		&& get_property('latteUnlocks').contains_text('carrot')
