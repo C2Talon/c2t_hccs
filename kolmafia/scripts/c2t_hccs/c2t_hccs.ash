@@ -1045,14 +1045,47 @@ boolean c2t_hccs_preItem() {
 				&& !get_property("c2t_hccs_disable.latteFishing").to_boolean())))
 	{
 		maximize("mainstat,equip latte,1000 bonus lil doctor bag,1000 bonus kremlin's greatest briefcase,1000 bonus vampyric cloake,6 bonus designer sweatpants",false);
-		c2t_hccs_levelingFamiliar(true);
+		familiar fam = c2t_hccs_levelingFamiliar(true);
 
-		while ((have_equipped($item[vampyric cloake])
-				&& have_effect($effect[bat-adjacent form]) == 0)
-			|| (!get_property('latteUnlocks').contains_text('carrot')
-				&& !get_property("c2t_hccs_disable.latteFishing").to_boolean()))
-
-			adv1($location[the dire warren],-1,"");
+		int start = my_turncount();
+		//get buffs with combat skills
+		if (c2t_hccs_banishesLeft() > 0
+			&& ((have_equipped($item[vampyric cloake])
+					&& have_effect($effect[bat-adjacent form]) == 0)
+				|| (get_property("hasCosmicBowlingBall").to_boolean()
+					&& get_property("cosmicBowlingBallReturnCombats").to_int() <= 1
+					&& have_effect($effect[cosmic ball in the air]) == 0)))
+		{
+			adv1($location[the dire warren]);
+		}
+		//fish for latte ingredient
+		while (c2t_hccs_banishesLeft() > 0
+			&& !get_property('latteUnlocks').contains_text('carrot')
+			&& !get_property("c2t_hccs_disable.latteFishing").to_boolean()
+			&& start == my_turncount())
+		{
+			//bowling ball could return mid-fishing
+			if (get_property("hasCosmicBowlingBall").to_boolean()
+				&& get_property("cosmicBowlingBallReturnCombats").to_int() <= 1
+				&& have_effect($effect[cosmic ball in the air]) == 0)
+			{
+				use_familiar(fam);
+				adv1($location[the dire warren]);
+			}
+			//fish with runaways
+			else if (have_familiar($familiar[pair of stomping boots])) {
+				use_familiar($familiar[pair of stomping boots]);
+				adv1($location[the dire warren],-1,"runaway;abort;");
+			}
+			//fish with banishes
+			else {
+				use_familiar(fam);//just in case
+				adv1($location[the dire warren]);
+			}
+		}
+		use_familiar(fam);
+		if (start < my_turncount())
+			abort("a turn was used while latte fishing in the item test prep");
 	}
 
 	if (!get_property('latteModifier').contains_text('Item Drop')

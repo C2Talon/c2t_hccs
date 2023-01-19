@@ -8,6 +8,9 @@ import <c2t_lib.ash>
   declarations
   ============*/
 
+//returns number of banishes left
+int c2t_hccs_banishesLeft();
+
 //returns number of free crafts left from passive skills only
 int c2t_hccs_freeCraftsLeft();
 
@@ -47,6 +50,20 @@ boolean c2t_hccs_pull(item ite);
 /*===============
   implementations
   ===============*/
+
+int c2t_hccs_banishesLeft() {
+	int out = 0;
+	//only concerned with a few banishes
+	if (have_skill($skill[feel hatred]))
+		out += 3 - get_property("_feelHatredUsed").to_int();
+	if (have_skill($skill[snokebomb]))
+		out += 3 - get_property("_snokebombUsed").to_int();
+	if (available_amount($item[lil' doctor&trade; bag]) > 0)
+		out += 3 - get_property("_reflexHammerUsed").to_int();
+	if (available_amount($item[kremlin's greatest briefcase]) > 0)
+		out += 3 - get_property("_kgbTranquilizerDartUses").to_int();
+	return out;
+}
 
 int c2t_hccs_freeCraftsLeft() {
 	int out = 0;
