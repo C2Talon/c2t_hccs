@@ -407,6 +407,12 @@ boolean c2t_hccs_genie(effect eff) {
 	return have_effect(eff) > 0;
 }
 boolean c2t_hccs_genie(monster mon) {
+	//locket wished-for monsters
+	if (!(get_locket_monsters() contains mon)
+		&& item_amount($item[combat lover's locket]) > 0)
+	{
+		equip($slot[acc3],$item[combat lover's locket]);
+	}
 	c2t_hccs_preAdv();
 	if (!c2t_wishFight(mon))
 		return false;
