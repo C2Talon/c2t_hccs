@@ -29,6 +29,7 @@ import <c2t_hccs_preAdv.ash>
 //d--pantogram
 //d--pillkeeper
 //d--pizza cube
+//d--pocket professor
 //d--power plant
 //d--shorter-order cook
 //d--source terminal
@@ -42,7 +43,7 @@ import <c2t_hccs_preAdv.ash>
 
 //d--backup camera
 //returns true if have backup camera
-boolean c2t_hccs_backupCamera();
+boolean c2t_hccs_haveBackupCamera();
 
 //returns number of uses left
 int c2t_hccs_backupCameraLeft();
@@ -155,6 +156,14 @@ boolean c2t_hccs_pizzaCube(effect eff);
 boolean c2t_hccs_pizzaCube(item it1,item it2,item it3,item it4);
 
 
+//d--pocket professor
+//returns whether professor is useable
+boolean c2t_hccs_havePocketProfessor();
+
+//returns number of lectures used
+int c2t_hccs_pocketProfessorLectures();
+
+
 //d--power plant
 //returns whether power plant is available or not & harvests if it is
 boolean c2t_hccs_powerPlant();
@@ -241,6 +250,7 @@ void c2t_hccs_vote();
 //i--pantogram
 //i--pillkeeper
 //i--pizza cube
+//i--pocket professor
 //i--power plant
 //i--shorter-order cook
 //i--source terminal
@@ -253,12 +263,12 @@ void c2t_hccs_vote();
 
 
 //i--backup camera
-boolean c2t_hccs_backupCamera() {
+boolean c2t_hccs_haveBackupCamera() {
 	return available_amount($item[backup camera]) > 0
 		&& !get_property("c2t_hccs_disable.backupCamera").to_boolean();
 }
 int c2t_hccs_backupCameraLeft() {
-	if (!c2t_hccs_backupCamera())
+	if (!c2t_hccs_haveBackupCamera())
 		return 0;
 	return 11-get_property('_backUpUses').to_int();
 }
@@ -719,6 +729,13 @@ boolean c2t_hccs_pizzaCube(item it1,item it2,item it3,item it4) {
 	eat($item[diabolic pizza]);
 	return true;
 }
+
+//i--pocket professor
+boolean c2t_hccs_havePocketProfessor() {
+	return have_familiar($familiar[pocket professor])
+		&& !get_property("c2t_hccs_disable.pocketProfessor").to_boolean();
+}
+int c2t_hccs_pocketProfessorLectures() return get_property("_pocketProfessorLectures").to_int();
 
 //i--power plant
 boolean c2t_hccs_powerPlant() {

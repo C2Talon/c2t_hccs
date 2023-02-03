@@ -2049,7 +2049,7 @@ void c2t_hccs_fights() {
 	//setup for NEP and backup fights
 	string doc,garbage,kramco;
 
-	if (c2t_hccs_backupCamera()
+	if (c2t_hccs_haveBackupCamera()
 		&& get_property('backupCameraMode') != 'ml')
 
 		cli_execute('backupcamera ml');
@@ -2182,22 +2182,25 @@ void c2t_hccs_fights() {
 
 		// -- setup and combat itself --
 		//hopefully stop it before a possible break if my logic is off
-		if (c2t_hccs_backupCamera()
-			&& get_property('_pocketProfessorLectures').to_int() == 0
+		if (c2t_hccs_haveBackupCamera()
+			&& c2t_hccs_havePocketProfessor()
+			&& c2t_hccs_pocketProfessorLectures() == 0
 			&& c2t_hccs_backupCameraLeft() <= 1)
 		{
 			abort('Pocket professor has not been used yet, while backup camera charges left is '+c2t_hccs_backupCameraLeft());
 		}
 		//professor chain sausage goblins in NEP first thing if no backup camera
-		if (!c2t_hccs_backupCamera()
-			&& get_property('_pocketProfessorLectures').to_int() == 0)
+		if (!c2t_hccs_haveBackupCamera()
+			&& c2t_hccs_havePocketProfessor()
+			&& c2t_hccs_pocketProfessorLectures() == 0)
 		{
 			use_familiar($familiar[pocket professor]);
 			maximize("mainstat,equip garbage shirt,equip kramco,100familiar weight,6 bonus designer sweatpants",false);
 			restore_hp(my_maxhp());
 		}
 		//9+ professor copies, after getting exp buff from NC and used sauceror potions
-		else if (get_property('_pocketProfessorLectures').to_int() == 0
+		else if (c2t_hccs_havePocketProfessor()
+			&& c2t_hccs_pocketProfessorLectures() == 0
 			&& c2t_hccs_backupCameraLeft() > 0
 			&& (have_effect($effect[spiced up]) > 0
 				|| have_effect($effect[tomes of opportunity]) > 0
@@ -2211,7 +2214,12 @@ void c2t_hccs_fights() {
 			restore_hp(my_maxhp());
 		}
 		//fish for latte carrot ingredient with backup fights
-		else if (get_property('_pocketProfessorLectures').to_int() > 0
+		else if ((have_effect($effect[spiced up]) > 0
+				|| have_effect($effect[tomes of opportunity]) > 0
+				|| have_effect($effect[the best hair you've ever had]) > 0)
+			&& (!c2t_hccs_havePocketProfessor()
+				|| (c2t_hccs_havePocketProfessor()
+					&& c2t_hccs_pocketProfessorLectures() > 0))
 			&& !get_property('latteUnlocks').contains_text('carrot')
 			&& c2t_hccs_backupCameraLeft() > 0
 			//target monster
@@ -2307,15 +2315,15 @@ familiar c2t_hccs_levelingFamiliar(boolean safeOnly) {
 			&& item_amount($item[short stack of pancakes]) == 0) {
 
 			out = $familiar[shorter-order cook];
-			if (my_familiar() != out)
-				//give cook's combat bonus familiar exp to professor
+			//give cook's combat bonus familiar exp to professor
+			if (my_familiar() != out && have_familiar($familiar[pocket professor]))
 				use_familiar($familiar[pocket professor]);
 		}
 		else
-			out = c2t_priority($familiars[galloping grill,hovering sombrero]);
+			out = c2t_priority($familiars[hovering sombrero,blood-faced volleyball]);
 	}
 	else
-		out = $familiar[hovering sombrero];
+		out = c2t_priority($familiars[hovering sombrero,blood-faced volleyball]);
 
 	use_familiar(out);
 	return out;
