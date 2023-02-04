@@ -1120,6 +1120,10 @@ boolean c2t_hccs_preItem() {
 	if (my_class() == $class[accordion thief] && have_skill($skill[the ballad of richie thingfinder]))
 		ensure_song($effect[the ballad of richie thingfinder]);
 
+	//autumn-aton potion
+	if (have_effect($effect[crunching leaves]) == 0)
+		c2t_hccs_haveUse($item[autumn leaf]);
+
 	c2t_hccs_getEffect($effect[nearly all-natural]);//bag of grain
 	c2t_hccs_getEffect($effect[steely-eyed squint]);
 

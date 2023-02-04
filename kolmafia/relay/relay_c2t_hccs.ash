@@ -29,6 +29,7 @@ void main() {
 		};
 
 	string [string] disableable = {
+		"c2t_hccs_disable.autumnatonItem":"will skip getting the 25% item drop potion with autumn-aton",
 		"c2t_hccs_disable.backupCamera":"will not use the 'back-up to your last enemy' skill",
 		"c2t_hccs_disable.briefcase":"no cranks will be used; however, banishes may still be used",
 		"c2t_hccs_disable.cloverItem":"11-leaf clover will not be used for limerick dungeon lucky adventure",

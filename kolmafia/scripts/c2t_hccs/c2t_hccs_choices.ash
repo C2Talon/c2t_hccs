@@ -4,6 +4,9 @@
 
 void main (int id,string page) {
 	int testsDone = get_property("csServicesPerformed").split_string(",").count();
+	location loc;
+	string str = "";
+	int num = 0;
 
 	switch (id) {
 		default:
@@ -213,6 +216,44 @@ void main (int id,string page) {
 				run_choice(2);//mus stat
 			else
 				run_choice(1);//mom's necklace
+			break;
+
+		//autumn-aton
+		case 1483:
+			//upgrade
+			if (available_choice_options() contains 1) {
+				print(`Autumn-aton: {available_choice_options()[1]}`);
+				run_choice(1);
+			}
+
+			//find where to go based on upgrade priority
+			str = get_property("autumnatonUpgrades");
+			if (!get_property("c2t_hccs_disable.autumnatonItem").to_boolean()
+				&& !str.contains_text("base_blackhat"))//item potion
+			{
+				loc = $location[the sleazy back alley];
+			}
+			else if (!str.contains_text("rightleg1"))//-11 turns
+				loc = $location[the neverending party];
+			else if (!str.contains_text("leftleg1"))//-11 turns
+				loc = $location[noob cave];
+			else if (!str.contains_text("leftarm1"))//+1 item from zone
+				loc = $location[the haunted pantry];
+			else//no easy/good upgrade areas open
+				loc = $location[thugnderdome];
+
+			foreach i,x in get_autumnaton_locations() if (x == loc) {
+				num = x.id;
+				break;
+			}
+			if (num == 0) {
+				print("Autumn-aton: couldn't go where it wanted");
+				run_choice(3);
+			}
+			else if (!run_choice(2,`heythereprogrammer={num}`).contains_text("Good luck, little buddy!")) {
+				run_choice(3);
+				print("Autumn-aton: failed to go to a place that was available","red");
+			}
 			break;
 	}
 }
