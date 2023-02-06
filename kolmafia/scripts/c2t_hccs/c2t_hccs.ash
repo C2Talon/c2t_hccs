@@ -305,6 +305,15 @@ void c2t_hccs_testData(string testType,int testNum,int turnsTaken,int turnsExpec
 //print results of tests
 void c2t_hccs_printTestData() {
 	string [int] d;
+	string pulls = get_property("_roninStoragePulls");
+
+	print("");
+	if (pulls != "") {
+		print("Pulls used this run:");
+		foreach i,x in split_string(pulls,",")
+			print(x.to_item());
+		print("");
+	}
 	print("Summary of tests:");
 	foreach i,x in split_string(get_property("_c2t_hccs_testData"),";") {
 		d = split_string(x,",");
