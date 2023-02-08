@@ -123,7 +123,7 @@ void main() {
 
 void c2t_hccs_printRunTime(boolean f) {
 	int t = now_to_int() - START_TIME;
-	print(`c2t_hccs {f?"took":"has taken"} {t/60000} minute(s) {(t%60000)/1000.0} second(s) to execute{f?"":" so far"}.`,"blue");
+	print(`c2t_hccs {f?"took":"has taken"} {c2t_hccs_plural(t/60000,"minute","minutes")} {(t%60000)/1000.0} seconds to execute{f?"":" so far"}.`,"blue");
 }
 
 void c2t_hccs_mod2log(string str) {
@@ -203,7 +203,7 @@ void c2t_hccs_testHandler(int test) {
 	int turns,before,expected;
 	boolean met = false;
 
-	//wanderer fight(s) before prepping stuff
+	//wanderer fights before prepping stuff
 	while (my_turncount() >= 60 && c2t_hccs_wandererFight());
 
 	//combat familiars will slaughter everything; so make sure they're inactive at the start of test sections, since not every combat bothers with familiar checks
@@ -269,15 +269,15 @@ void c2t_hccs_testHandler(int test) {
 	expected = turns = c2t_hccs_testTurns(test);
 	if (turns < 1) {
 		if (test > 4) //ignore over-capping stat tests
-			print(`Notice: over-capping the {type} test by {1-turns} {1-turns==1?"turn":"turns"} worth of resources.`,'blue');
+			print(`Notice: over-capping the {type} test by {c2t_hccs_plural(1-turns,"turn","turns")} worth of resources.`,'blue');
 		turns = 1;
 	}
 
 	if (!met)
-		abort(`Pre-{TEST_NAME[test]} ({type}) test fail. Currently only can complete the test in {turns} {turns==1?"turn":"turns"}.`);
+		abort(`Pre-{TEST_NAME[test]} ({type}) test fail. Currently only can complete the test in {c2t_hccs_plural(turns,"turn","turns")}.`);
 
 	if (test != TEST_COIL_WIRE)
-		print(`Test {test}: {TEST_NAME[test]} ({type}) is at or below the threshold at {turns} {turns==1?"turn":"turns"}. Running the task...`);
+		print(`Test {test}: {TEST_NAME[test]} ({type}) is at or below the threshold at {c2t_hccs_plural(turns,"turn","turns")}. Running the task...`);
 	else
 		print("Running the coiling wire task for 60 turns...");
 
@@ -317,7 +317,7 @@ void c2t_hccs_printTestData() {
 	print("Summary of tests:");
 	foreach i,x in split_string(get_property("_c2t_hccs_testData"),";") {
 		d = split_string(x,",");
-		print(`{d[0]} test took {d[2]} turn(s){to_int(d[1]) > 4 && to_int(d[3]) < 1?"; it's being overcapped by "+(1-to_int(d[3]))+" turn(s) of resources":""}`);
+		print(`{d[0]} test took {c2t_hccs_plural(d[2].to_int(),"turn","turns")}{to_int(d[1]) > 4 && to_int(d[3]) < 1?"; it's being overcapped by "+c2t_hccs_plural(1-to_int(d[3]),"turn","turns")+" of resources":""}`);
 	}
 	print(`{my_daycount()}/{turns_played()} turns as {my_class()}`);
 	print(`Organ use: {my_fullness()}/{my_inebriety()}/{my_spleen_use()}`);
@@ -2275,7 +2275,7 @@ void c2t_hccs_fights() {
 boolean c2t_hccs_wandererFight() {
 	//don't want to be doing wanderer whilst feeling lost
 	if (have_effect($effect[feeling lost]) > 0) {
-		print("Currently feeling lost, so skipping wanderer(s).","blue");
+		print("Currently feeling lost, so skipping wanderers.","blue");
 		return false;
 	}
 
