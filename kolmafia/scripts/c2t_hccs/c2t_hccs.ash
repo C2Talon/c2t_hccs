@@ -490,6 +490,13 @@ boolean c2t_hccs_preCoil() {
 	//source terminal
 	c2t_hccs_sourceTerminalInit();
 
+	//SIT
+	if (available_amount($item[s.i.t. course completion certificate]) > 0
+		&& !get_property("_sitCourseCompleted").to_boolean())
+	{
+		use($item[s.i.t. course completion certificate]);
+	}
+
 	//probably should make a property handler, because this looks like it may get unwieldly
 	if (get_property('_clanFortuneConsultUses').to_int() < 3) {
 		c2t_hccs_joinClan(get_property("c2t_hccs_joinClan"));

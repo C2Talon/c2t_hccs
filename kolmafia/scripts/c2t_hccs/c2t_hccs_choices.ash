@@ -255,5 +255,10 @@ void main (int id,string page) {
 				print("Autumn-aton: failed to go to a place that was available","red");
 			}
 			break;
+
+		//SIT
+		case 1494:
+			run_choice(2);
+			break;
 	}
 }
