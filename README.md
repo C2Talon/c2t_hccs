@@ -75,8 +75,8 @@ While these are not strictly required, not having enough that either save turns 
 * [Suspicious Package](https://kol.coldfront.net/thekolwiki/index.php/Suspicious_package) &mdash; saves 5 on hot test, 3 on combat test, 1 on weapon test, 1 on spell test; backup banishes
 * [Pocket Meteor Guide](https://kol.coldfront.net/thekolwiki/index.php/Pocket_Meteor_Guide) &mdash; with saber saves 4 turns on familiar text, 8 on weapon test, 4 on spell test
 * [pantogram](https://kol.coldfront.net/thekolwiki/index.php/Pantogram) &mdash; saves 2 turns on hot test, 3 on combat test, 0.4 on spell test
-* [January's Garbage Tote (unopened)](https://kol.coldfront.net/thekolwiki/index.php/January%27s_Garbage_Tote_(unopened)) &mdash; _doubles_ stat gain from combats
 * [locked mumming trunk](https://kol.coldfront.net/thekolwiki/index.php/Locked_mumming_trunk) &mdash; 2-4 stats from combat
+* [January's Garbage Tote (unopened)](https://kol.coldfront.net/thekolwiki/index.php/January%27s_Garbage_Tote_(unopened)) &mdash; _doubles_ stat gain from combats
 * [FantasyRealm membership packet](https://kol.coldfront.net/thekolwiki/index.php/FantasyRealm_membership_packet) &mdash; get a hat with +15 mainstat
 * [God Lobster Egg](https://kol.coldfront.net/thekolwiki/index.php/God_Lobster_Egg) &mdash; 3 mid-tier scaling fights & nostalgia pi&ntilde;ata
 * [Songboom&trade; BoomBox Box](https://kol.coldfront.net/thekolwiki/index.php/SongBoom%E2%84%A2_BoomBox_Box) &mdash; extra meat from fights
