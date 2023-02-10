@@ -1398,8 +1398,11 @@ boolean c2t_hccs_preNoncombat() {
 		
 		//garbage shirt should be exhausted already, but check anyway
 		string shirt;
-		if (get_property('garbageShirtCharge') > 0)
+		if (c2t_hccs_haveGarbageTote()
+			&& get_property('garbageShirtCharge') > 0)
+		{
 			shirt = ",equip garbage shirt";
+		}
 		maximize("mainstat,-familiar,6 bonus designer sweatpants" + shirt,false);
 
 		//fight and get buff
@@ -2110,8 +2113,11 @@ void c2t_hccs_fights() {
 			garbage = ",-shirt";//commandeering garbage for parka for now
 		}
 		//backup fights will turns this off after a point, so keep turning it on
-		else if (get_property('garbageShirtCharge').to_int() > 0)
+		else if (c2t_hccs_haveGarbageTote()
+			&& get_property('garbageShirtCharge').to_int() > 0)
+		{
 			garbage = ",equip garbage shirt";
+		}
 		else
 			garbage = "";
 
@@ -2207,8 +2213,10 @@ void c2t_hccs_fights() {
 			&& c2t_hccs_havePocketProfessor()
 			&& c2t_hccs_pocketProfessorLectures() == 0)
 		{
+			if (c2t_hccs_haveGarbageTote())
+				garbage = ",equip garbage shirt";
 			use_familiar($familiar[pocket professor]);
-			maximize("mainstat,equip garbage shirt,equip kramco,100familiar weight,6 bonus designer sweatpants",false);
+			maximize("mainstat,equip kramco,100familiar weight,6 bonus designer sweatpants"+garbage,false);
 			restore_hp(my_maxhp());
 		}
 		//9+ professor copies, after getting exp buff from NC and used sauceror potions
@@ -2222,8 +2230,10 @@ void c2t_hccs_fights() {
 			//target monster for professor copies. using back up camera to bootstrap
 			&& get_property('lastCopyableMonster').to_monster() == $monster[sausage goblin])
 		{
+			if (c2t_hccs_haveGarbageTote())
+				garbage = ",equip garbage shirt";
 			use_familiar($familiar[pocket professor]);
-			maximize("mainstat,equip garbage shirt,equip kramco,100familiar weight,6 bonus designer sweatpants,equip backup camera",false);
+			maximize("mainstat,equip kramco,100familiar weight,6 bonus designer sweatpants,equip backup camera",false);
 			restore_hp(my_maxhp());
 		}
 		//fish for latte carrot ingredient with backup fights
@@ -2239,9 +2249,11 @@ void c2t_hccs_fights() {
 			&& get_property('lastCopyableMonster').to_monster() == $monster[sausage goblin])
 		{
 			//NEP monsters give twice as much base exp as sausage goblins, so keep at least as many shirt charges as fights remaining in NEP
-			if (get_property('garbageShirtCharge').to_int() < 17)
+			if (c2t_hccs_haveGarbageTote()
+				&& get_property('garbageShirtCharge').to_int() < 10+c2t_hccs_freeKillsLeft())
+			{
 				garbage = ",-equip garbage shirt";
-
+			}
 			maximize("mainstat,exp,equip latte,equip backup camera,6 bonus designer sweatpants"+garbage+fam,false);
 			adv1($location[the dire warren],-1,"");
 			continue;//don't want to fall into NEP in this state
@@ -2257,9 +2269,11 @@ void c2t_hccs_fights() {
 				kramco = "";
 
 			//NEP monsters give twice as much base exp as sausage goblins, so keep at least as many shirt charges as fights remaining in NEP
-			if (get_property('garbageShirtCharge').to_int() < 17)
+			if (c2t_hccs_haveGarbageTote()
+				&& get_property('garbageShirtCharge').to_int() < 10+c2t_hccs_freeKillsLeft())
+			{
 				garbage = ",-equip garbage shirt";
-
+			}
 			maximize("mainstat,exp,equip backup camera,6 bonus designer sweatpants"+kramco+garbage+fam,false);
 		}
 		//rest of the free NEP fights

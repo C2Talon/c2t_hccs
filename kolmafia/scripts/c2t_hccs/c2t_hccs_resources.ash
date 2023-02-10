@@ -21,6 +21,7 @@ import <c2t_hccs_preAdv.ash>
 //d--clover item
 //d--cold medicine cabinet
 //d--combat lover's locket
+//d--garbage tote
 //d--garden peppermint
 //d--genie
 //d--melodramedary
@@ -78,6 +79,11 @@ boolean c2t_hccs_combatLoversLocket();
 //fight `mon` from locket
 //returns `true` if `mon` was fought
 boolean c2t_hccs_combatLoversLocket(monster mon);
+
+
+//d--garbage tote
+//returns whether have the garbage or not
+boolean c2t_hccs_haveGarbageTote();
 
 
 //d--garden peppermint
@@ -242,6 +248,7 @@ void c2t_hccs_vote();
 //i--clover item
 //i--cold medicine cabinet
 //i--combat lover's locket
+//i--garbage tote
 //i--garden peppermint
 //i--genie
 //i--numberology
@@ -555,6 +562,9 @@ void c2t_hccs_pantogram(string type) {
 		visit_url("desc_item.php?whichitem=508365377",false,true);//attempted fix for very rare bug where all pants mods aren't recorded by mafia
 	}
 }
+
+//i--garbage tote
+boolean c2t_hccs_haveGarbageTote() return available_amount($item[january's garbage tote]) > 0;
 
 //i--garden peppermint
 boolean c2t_hccs_gardenPeppermint() return get_campground() contains $item[peppermint pip packet];
