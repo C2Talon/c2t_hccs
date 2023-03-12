@@ -24,10 +24,6 @@ void main (int id,string page) {
 					break;
 				case "dj":
 				case "trash":
-					if (get_property("kingLiberated").to_boolean()) {
-						run_choice(1);
-						break;
-					}
 				case "partiers":
 				case "woots":
 				default:
