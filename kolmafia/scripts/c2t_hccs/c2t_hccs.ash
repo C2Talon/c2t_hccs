@@ -165,33 +165,29 @@ void c2t_hccs_breakfast() {
 boolean c2t_hccs_fightGodLobster() {
 	if (!have_familiar($familiar[god lobster]))
 		return false;
+	if (get_property('_godLobsterFights').to_int() >= 3)
+		return false;
 
-	if (get_property('_godLobsterFights').to_int() < 3) {
-		use_familiar($familiar[god lobster]);
-		maximize("mainstat,-equip garbage shirt,6 bonus designer sweatpants",false);
+	use_familiar($familiar[god lobster]);
+	maximize("mainstat,-equip garbage shirt,6 bonus designer sweatpants",false);
 
-		// fight and get equipment
-		c2t_setChoice(1310,1);//get equipment
+	// fight and get equipment
+	item temp = c2t_priority($items[god lobster's ring,god lobster's scepter,astral pet sweater]);
+	if (temp != $item[none])
+		equip($slot[familiar],temp);
 
-		item temp = c2t_priority($item[god lobster's ring],$item[god lobster's scepter],$item[astral pet sweater]);
-		if (temp != $item[none])
-			equip($slot[familiar],temp);
+	//combat & choice
+	c2t_hccs_preAdv();
+	visit_url('main.php?fightgodlobster=1');
+	run_turn();
+	if (choice_follows_fight())
+		run_choice(-1);
 
-		//combat & choice
-		c2t_hccs_preAdv();
-		visit_url('main.php?fightgodlobster=1');
-		run_turn();
-		if (choice_follows_fight())
-			run_choice(-1);
-		c2t_setChoice(1310,0);//unset
+	//should have gotten runproof mascara as moxie from globster
+	if (my_primestat() == $stat[moxie])
+		c2t_hccs_getEffect($effect[unrunnable face]);
 
-		//should have gotten runproof mascara as moxie from globster
-		if (my_primestat() == $stat[moxie])
-			c2t_hccs_getEffect($effect[unrunnable face]);
-
-		return true;
-	}
-	return false;
+	return true;
 }
 
 void c2t_hccs_testHandler(int test) {
@@ -1413,13 +1409,11 @@ boolean c2t_hccs_preNoncombat() {
 		maximize("mainstat,-familiar,6 bonus designer sweatpants" + shirt,false);
 
 		//fight and get buff
-		c2t_setChoice(1310,2); //get buff
 		c2t_hccs_preAdv();
 		visit_url('main.php?fightgodlobster=1');
 		run_turn();
 		if (choice_follows_fight())
-			run_choice(2);
-		c2t_setChoice(1310,0); //unset
+			run_choice(-1);
 	}
 
 	//emotion chip feel lonely
