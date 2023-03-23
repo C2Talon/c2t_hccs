@@ -32,6 +32,7 @@ void main() {
 		"c2t_hccs_disable.autumnatonItem":"will skip getting the 25% item drop potion with autumn-aton",
 		"c2t_hccs_disable.backupCamera":"will not use the 'back-up to your last enemy' skill",
 		"c2t_hccs_disable.briefcase":"no cranks will be used; however, banishes may still be used",
+		"c2t_hccs_disable.closedCircuitPayPhone":"will not do anything involving shadow rifts",
 		"c2t_hccs_disable.cloverItem":"11-leaf clover will not be used for limerick dungeon lucky adventure",
 		"c2t_hccs_disable.combatLoversLocket":"no monsters will be summoned from combat lover's locket",
 		"c2t_hccs_disable.latteFishing":"will not use extra banishes to fish for item drop enhancement for latte",

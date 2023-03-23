@@ -1,6 +1,8 @@
 //c2t hccs choices
 //c2t
 
+import <c2t_lib.ash>
+
 
 void main (int id,string page) {
 	int testsDone = get_property("csServicesPerformed").split_string(",").count();
@@ -254,6 +256,61 @@ void main (int id,string page) {
 
 		//SIT
 		case 1494:
+			run_choice(2);
+			break;
+
+		//calling rufus
+		//1:entity
+		//2:artifact
+		//3:items
+		//6:leave
+		case 1497:
+			if (get_property("_shadowAffinityToday").to_boolean()) {
+				print("Tried to start another Rufus quest","red");
+				run_choice(6);
+			}
+			else if (get_property("rufusDesiredEntity").contains_text("shadow orrery")) {
+				if (c2t_priority($familiars[shorter-order cook,mu]) != $familiar[none])
+					run_choice(1);
+				else
+					run_choice(2);
+			}
+			else
+				run_choice(1);
+			break;
+
+		//calling rufus back
+		case 1498:
+			if (available_choice_options() contains 1)
+				run_choice(1);
+			else {
+				run_choice(6);
+				print("Tried to turn in Rufus quest, but it wasn't done?","red");
+			}
+			break;
+
+		//labyrinth of shadows
+		case 1499:
+			str = get_property("rufusQuestTarget");
+			if (str == "" || get_property("questRufus") == "step1")
+				str = "Shadow's Chill";
+			if (get_property("questRufus") == "step1")
+				print("The last Rufus quest can be turned in already, so can't find another artifact","red");
+
+			for tries from 1 to 11 {
+				for i from 2 to 4 if (available_choice_options(true)[i].contains_text(str))
+					run_choice(i);
+				if (!handling_choice())
+					break;
+				run_choice(1);
+			}
+			break;
+
+		//like a loded stone
+		//1:forge
+		//2:shadow waters buff
+		//3:items
+		case 1500:
 			run_choice(2);
 			break;
 	}

@@ -18,6 +18,7 @@ import <c2t_hccs_preAdv.ash>
 //d--backup camera
 //d--briefcase
 //d--cartography
+//d--closed-circuit pay phone
 //d--clover item
 //d--cold medicine cabinet
 //d--combat lover's locket
@@ -57,6 +58,11 @@ boolean c2t_hccs_briefcase();
 //passes `arg` to Ezandora's briefcase script needing only the core of what is needed, e.g. "hot", "-combat", etc., limited in scope to what is relevant to CS
 //returns true if have the briefcase
 boolean c2t_hccs_briefcase(string arg);
+
+
+//d--closed-circuit pay phone
+//returns `true` if have the IotM and not disabled
+boolean c2t_hccs_haveClosedCircuitPayPhone();
 
 
 //d--clover item
@@ -245,6 +251,7 @@ void c2t_hccs_vote();
 //i--backup camera
 //i--briefcase
 //i--cartography
+//i--closed-circuit pay phone
 //i--clover item
 //i--cold medicine cabinet
 //i--combat lover's locket
@@ -331,6 +338,12 @@ boolean c2t_hccs_cartography(location loc,monster mon) {
 		abort("map the monsters: something broke and a turn was used");
 
 	return true;
+}
+
+//i--closed-circuit pay phone
+boolean c2t_hccs_haveClosedCircuitPayPhone() {
+	return item_amount($item[closed-circuit pay phone]) > 0
+		&& !get_property("c2t_hccs_disable.closedCircuitPayPhone").to_boolean();
 }
 
 //i--clover item

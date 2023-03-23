@@ -75,6 +75,7 @@ void c2t_hccs_breakfast();
 void c2t_hccs_printTestData();
 void c2t_hccs_testData(string testType,int testNum,int turnsTaken,int turnsExpected);
 familiar c2t_hccs_levelingFamiliar(boolean safeOnly);
+void c2t_hccs_shadowRiftFights();
 
 
 void main() {
@@ -169,7 +170,7 @@ boolean c2t_hccs_fightGodLobster() {
 		return false;
 
 	use_familiar($familiar[god lobster]);
-	maximize("mainstat,-equip garbage shirt,6 bonus designer sweatpants",false);
+	maximize("mainstat,-equip garbage shirt,100 bonus designer sweatpants",false);
 
 	// fight and get equipment
 	item temp = c2t_priority($items[god lobster's ring,god lobster's scepter,astral pet sweater]);
@@ -990,7 +991,7 @@ boolean c2t_hccs_lovePotion(boolean useit,boolean dumpit) {
 	if (!have_skill($skill[love mixology]))
 		return false;
 
-	item love_potion = $item[love potion #0];
+	item love_potion = $item[love potion #xyz];
 	effect love_effect = $effect[tainted love potion];
 	
 	if (have_effect(love_effect) == 0) {
@@ -1050,7 +1051,7 @@ boolean c2t_hccs_preItem() {
 			|| (!get_property('latteUnlocks').contains_text('carrot')
 				&& !get_property("c2t_hccs_disable.latteFishing").to_boolean())))
 	{
-		maximize("mainstat,equip latte,1000 bonus lil doctor bag,1000 bonus kremlin's greatest briefcase,1000 bonus vampyric cloake,6 bonus designer sweatpants",false);
+		maximize("mainstat,equip latte,1000 bonus lil doctor bag,1000 bonus kremlin's greatest briefcase,1000 bonus vampyric cloake,100 bonus designer sweatpants",false);
 		familiar fam = c2t_hccs_levelingFamiliar(true);
 
 		int start = my_turncount();
@@ -1155,6 +1156,15 @@ boolean c2t_hccs_preItem() {
 
 	if (retrieve_item(1,$item[oversized sparkler])) {
 		maximize(maxstr,false);
+		if (c2t_hccs_thresholdMet(TEST_ITEM))
+			return true;
+	}
+
+	if (item_amount($item[rufus's shadow lodestone]) > 0
+		&& have_effect($effect[shadow waters]) == 0
+		&& have_effect($effect[feeling lost]) == 0)
+	{
+		adv1($location[shadow rift]);
 		if (c2t_hccs_thresholdMet(TEST_ITEM))
 			return true;
 	}
@@ -1406,7 +1416,7 @@ boolean c2t_hccs_preNoncombat() {
 		{
 			shirt = ",equip garbage shirt";
 		}
-		maximize("mainstat,-familiar,6 bonus designer sweatpants" + shirt,false);
+		maximize("mainstat,-familiar,100 bonus designer sweatpants" + shirt,false);
 
 		//fight and get buff
 		c2t_hccs_preAdv();
@@ -1896,7 +1906,7 @@ void c2t_hccs_fights() {
 
 			if (get_property('lastCopyableMonster').to_monster() != $monster[novelty tropical skeleton]) {
 				//max mp to max latte gulp to fuel buffs
-				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,100 bonus lil doctor bag,100 bonus kremlin's greatest briefcase,6 bonus designer sweatpants,100 bonus jurassic parka"+fam,false);
+				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,100 bonus lil doctor bag,100 bonus kremlin's greatest briefcase,100 bonus designer sweatpants,100 bonus jurassic parka"+fam,false);
 				if (have_equipped($item[jurassic parka]))
 					cli_execute("parka spikes");
 				c2t_hccs_cartography($location[the skeleton store],$monster[novelty tropical skeleton]);
@@ -1923,7 +1933,7 @@ void c2t_hccs_fights() {
 					cli_execute('latte refill cinnamon pumpkin vanilla');
 				//max mp to max latte gulp to fuel buffs
 				c2t_hccs_levelingFamiliar(true);
-				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,100 bonus lil doctor bag,100 bonus kremlin's greatest briefcase,6 bonus designer sweatpants"+fam,false);
+				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,100 bonus lil doctor bag,100 bonus kremlin's greatest briefcase,100 bonus designer sweatpants"+fam,false);
 
 				c2t_hccs_cartography($location[the haunted pantry],$monster[possessed can of tomatoes]);
 			}
@@ -1993,7 +2003,7 @@ void c2t_hccs_fights() {
 			cli_execute('latte refill cinnamon pumpkin vanilla');
 		if (have_familiar($familiar[ghost of crimbo carols]))
 			use_familiar($familiar[ghost of crimbo carols]);
-		maximize("mainstat,equip latte,-equip i voted,6 bonus designer sweatpants",false);
+		maximize("mainstat,equip latte,-equip i voted,100 bonus designer sweatpants",false);
 
 		//going to grab runproof mascara from globster if moxie instead of having to wait post-kramco
 		if (my_primestat() == $stat[moxie])
@@ -2027,7 +2037,7 @@ void c2t_hccs_fights() {
 	if (have_skill($skill[evoke eldritch horror])
 		&& !get_property('_eldritchHorrorEvoked').to_boolean())
 	{
-		maximize("mainstat,100exp,-equip garbage shirt,6000 bonus designer sweatpants"+fam,false);
+		maximize("mainstat,100exp,-equip garbage shirt,10000 bonus designer sweatpants"+fam,false);
 		restore_mp(80);//need enough mp to cast summon and for combat
 		c2t_hccs_haveUse(1,$skill[evoke eldritch horror]);
 		run_combat();
@@ -2040,9 +2050,9 @@ void c2t_hccs_fights() {
 		int start = my_turncount();
 		while (get_property("_speakeasyFreeFights").to_int() < 3 && start == my_turncount()) {
 			if (get_property("_sourceTerminalPortscanUses").to_int() > 0)
-				maximize("mainstat,exp,-equip garbage shirt,-equip kramco,-equip i voted,6 bonus designer sweatpants"+fam,false);
+				maximize("mainstat,exp,-equip garbage shirt,-equip kramco,-equip i voted,100 bonus designer sweatpants"+fam,false);
 			else
-				maximize("mainstat,100exp,-equip garbage shirt,-equip kramco,-equip i voted,6000 bonus designer sweatpants"+fam,false);
+				maximize("mainstat,100exp,-equip garbage shirt,-equip kramco,-equip i voted,10000 bonus designer sweatpants"+fam,false);
 			string temp = get_property("_speakeasyFreeFights");
 			adv1($location[an unusually quiet barroom brawl]);
 			//mafia doesn't always increment this properly
@@ -2053,11 +2063,14 @@ void c2t_hccs_fights() {
 			abort("a turn was used in the speakeasy; tracking may have broke");
 	}
 
+	//closed-circuit pay phone
+	c2t_hccs_shadowRiftFights();
+
 	// Your Mushroom Garden
 	if ((get_campground() contains $item[packet of mushroom spores])
 		&& get_property('_mushroomGardenFights').to_int() == 0)
 	{
-		maximize("mainstat,-equip garbage shirt,-equip kramco,-equip i voted,6 bonus designer sweatpants"+fam,false);
+		maximize("mainstat,-equip garbage shirt,-equip kramco,-equip i voted,100 bonus designer sweatpants"+fam,false);
 		adv1($location[your mushroom garden],-1,"");
 	}
 
@@ -2217,7 +2230,7 @@ void c2t_hccs_fights() {
 			if (c2t_hccs_haveGarbageTote())
 				garbage = ",equip garbage shirt";
 			use_familiar($familiar[pocket professor]);
-			maximize("mainstat,equip kramco,100familiar weight,6 bonus designer sweatpants"+garbage,false);
+			maximize("mainstat,equip kramco,100familiar weight,100 bonus designer sweatpants"+garbage,false);
 			restore_hp(my_maxhp());
 		}
 		//9+ professor copies, after getting exp buff from NC and used sauceror potions
@@ -2234,7 +2247,7 @@ void c2t_hccs_fights() {
 			if (c2t_hccs_haveGarbageTote())
 				garbage = ",equip garbage shirt";
 			use_familiar($familiar[pocket professor]);
-			maximize("mainstat,equip kramco,100familiar weight,6 bonus designer sweatpants,equip backup camera",false);
+			maximize("mainstat,equip kramco,100familiar weight,100 bonus designer sweatpants,equip backup camera",false);
 			restore_hp(my_maxhp());
 		}
 		//fish for latte carrot ingredient with backup fights
@@ -2255,7 +2268,7 @@ void c2t_hccs_fights() {
 			{
 				garbage = ",-equip garbage shirt";
 			}
-			maximize("mainstat,exp,equip latte,equip backup camera,6 bonus designer sweatpants"+garbage+fam,false);
+			maximize("mainstat,exp,equip latte,equip backup camera,100 bonus designer sweatpants"+garbage+fam,false);
 			adv1($location[the dire warren],-1,"");
 			continue;//don't want to fall into NEP in this state
 		}
@@ -2275,11 +2288,11 @@ void c2t_hccs_fights() {
 			{
 				garbage = ",-equip garbage shirt";
 			}
-			maximize("mainstat,exp,equip backup camera,6 bonus designer sweatpants"+kramco+garbage+fam,false);
+			maximize("mainstat,exp,equip backup camera,100 bonus designer sweatpants"+kramco+garbage+fam,false);
 		}
 		//rest of the free NEP fights
 		else
-			maximize("mainstat,exp,equip kramco,6 bonus designer sweatpants"+garbage+fam+doc,false);
+			maximize("mainstat,exp,equip kramco,100 bonus designer sweatpants"+garbage+fam+doc,false);
 
 		adv1($location[the neverending party],-1,"");
 	}
@@ -2316,7 +2329,7 @@ boolean c2t_hccs_wandererFight() {
 		append += ",equip dromedary drinking helmet";
 
 	set_location($location[the neverending party]);
-	maximize("mainstat,exp,6 bonus designer sweatpants"+append,false);
+	maximize("mainstat,exp,100 bonus designer sweatpants"+append,false);
 	adv1($location[the neverending party],-1,"");
 
 	//hopefully restore to previous state without outfits
@@ -2325,6 +2338,69 @@ boolean c2t_hccs_wandererFight() {
 	equip($slot[familiar],nowEquip);
 
 	return true;
+}
+
+void c2t_hccs_shadowRiftFights() {
+	if (!c2t_hccs_haveClosedCircuitPayPhone())
+		return;
+
+	if (!get_property("_shadowAffinityToday").to_boolean()
+		|| get_property("questRufus") == "step1")
+	{
+		use($item[closed-circuit pay phone]);
+	}
+
+	if (get_property("questRufus") == "unstarted")
+		return;
+
+	int start = my_turncount();
+	string fam = "";
+
+	if (c2t_hccs_levelingFamiliar(false) == $familiar[melodramedary]
+		&& available_amount($item[dromedary drinking helmet]) > 0)
+	{
+		fam = ",equip dromedary drinking helmet";
+	}
+
+	string maxStr = "mainstat,100exp,-equip garbage shirt,-equip kramco,-equip i voted,100 bonus jurassic parka,10000 bonus designer sweatpants"+fam;
+
+	//shadow affinity fights
+	while (have_effect($effect[shadow affinity]) > 0 && my_turncount() == start) {
+		maximize(maxStr,false);
+		adv1($location[shadow rift (the right side of the tracks)]);
+	}
+
+	if (my_turncount() > start)
+		abort("lost a turn fighting in the shadow rift; check state");
+
+	//entity or artifact
+	if (get_property("encountersUntilSRChoice") == "0") {
+		if (get_property("rufusQuestType") == "entity") {
+			boolean fullhp = false;
+			switch (get_property("rufusQuestTarget").to_monster()) {
+				case $monster[shadow orrery]:
+					use_familiar(c2t_priority($familiars[shorter-order cook,mu]));
+					maxStr = "1000elemental damage,0.01mainstat,-equip garbage shirt,-equip kramco,-equip i voted,100 bonus jurassic parka,100 bonus designer sweatpants,10familiar weight";
+					break;
+				case $monster[shadow scythe]:
+				case $monster[shadow spire]:
+					fullhp = true;
+					break;
+			}
+			maximize(maxStr,false);
+			if (fullhp)
+				restore_hp(to_int(my_maxhp()*0.95));
+		}
+		adv1($location[shadow rift]);
+	}
+
+	if (my_turncount() > start)
+		abort("lost a turn fighting in the shadow rift; check state");
+
+	if (get_property("questRufus") == "step1")
+		use($item[closed-circuit pay phone]);
+	else
+		print("failed to finish Rufus quest?","red");
 }
 
 //switches to leveling familiar and returns which it is
