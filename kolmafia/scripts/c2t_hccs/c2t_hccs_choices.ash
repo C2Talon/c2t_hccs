@@ -270,8 +270,11 @@ void main (int id,string page) {
 				run_choice(6);
 			}
 			else if (get_property("rufusDesiredEntity").contains_text("shadow orrery")) {
-				if (c2t_priority($familiars[shorter-order cook,mu]) != $familiar[none])
+				if (c2t_priority($familiars[shorter-order cook,mu]) != $familiar[none]
+					&& have_skill($skill[northern explosion]))
+				{
 					run_choice(1);
+				}
 				else
 					run_choice(2);
 			}

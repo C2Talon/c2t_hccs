@@ -2377,10 +2377,12 @@ void c2t_hccs_shadowRiftFights() {
 	if (get_property("encountersUntilSRChoice") == "0") {
 		if (get_property("rufusQuestType") == "entity") {
 			boolean fullhp = false;
+			boolean moremp = false;
 			switch (get_property("rufusQuestTarget").to_monster()) {
 				case $monster[shadow orrery]:
 					use_familiar(c2t_priority($familiars[shorter-order cook,mu]));
-					maxStr = "1000elemental damage,0.01mainstat,-equip garbage shirt,-equip kramco,-equip i voted,100 bonus jurassic parka,100 bonus designer sweatpants,10familiar weight";
+					maxStr = "melee,1000elemental damage,0.01mainstat,-equip garbage shirt,-equip kramco,-equip i voted,100 bonus jurassic parka,100 bonus designer sweatpants,10familiar weight";
+					moremp = true;
 					break;
 				case $monster[shadow scythe]:
 				case $monster[shadow spire]:
@@ -2388,6 +2390,8 @@ void c2t_hccs_shadowRiftFights() {
 					break;
 			}
 			maximize(maxStr,false);
+			if (moremp)
+				restore_mp(100);
 			if (fullhp)
 				restore_hp(to_int(my_maxhp()*0.95));
 		}

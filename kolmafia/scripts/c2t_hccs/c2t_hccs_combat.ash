@@ -505,6 +505,7 @@ void c2t_hccs_shadowRiftCombat(monster foe) {
 		case $monster[shadow orrery]:
 			c2t_bb($skill[curse of weaksauce])
 			.c2t_bb($skill[sing along])
+			.c2t_bb(5,$skill[northern explosion])
 			.c2t_bbWhile("!pastround 20","attack;")
 			.c2t_bb("abort;")
 			.c2t_bbSubmit();
