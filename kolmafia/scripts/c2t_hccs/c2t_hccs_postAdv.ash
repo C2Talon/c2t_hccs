@@ -9,7 +9,7 @@ void main() {
 		&& have_equipped($item[june cleaver])
 		&& !get_property("relayCounters").contains_text("portscan.edu"))
 	{
-		adv1($location[noob cave]);
+		c2t_hccs_freeAdv($location[noob cave]);
 	}
 	if (available_amount($item[autumn-aton]) > 0)
 		use($item[autumn-aton]);

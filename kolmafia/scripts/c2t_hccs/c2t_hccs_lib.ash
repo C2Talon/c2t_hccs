@@ -11,6 +11,12 @@ import <c2t_lib.ash>
 //returns number of banishes left
 int c2t_hccs_banishesLeft();
 
+//wrapper for adv1() to double check that adventures are free
+//aborts if turn is used
+//returns true if turn not used
+boolean c2t_hccs_freeAdv(location loc);
+boolean c2t_hccs_freeAdv(location loc,int num,string str);
+
 //returns number of free crafts left from passive skills only
 int c2t_hccs_freeCraftsLeft();
 
@@ -67,6 +73,17 @@ int c2t_hccs_banishesLeft() {
 	if (available_amount($item[kremlin's greatest briefcase]) > 0)
 		out += 3 - get_property("_kgbTranquilizerDartUses").to_int();
 	return out;
+}
+
+boolean c2t_hccs_freeAdv(location loc) {
+	return c2t_hccs_freeAdv(loc,-1,"");
+}
+boolean c2t_hccs_freeAdv(location loc,int num,string str) {
+	int start = my_turncount();
+	adv1(loc,num,str);
+	if (my_turncount() > start)
+		abort(`turn used: {loc}`);
+	return true;
 }
 
 int c2t_hccs_freeCraftsLeft() {
