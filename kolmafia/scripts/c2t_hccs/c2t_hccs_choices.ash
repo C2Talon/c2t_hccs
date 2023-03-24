@@ -1,8 +1,6 @@
 //c2t hccs choices
 //c2t
 
-import <c2t_lib.ash>
-
 
 void main (int id,string page) {
 	int testsDone = get_property("csServicesPerformed").split_string(",").count();
@@ -270,11 +268,8 @@ void main (int id,string page) {
 				run_choice(6);
 			}
 			else if (get_property("rufusDesiredEntity").contains_text("shadow orrery")) {
-				if (c2t_priority($familiars[shorter-order cook,mu]) != $familiar[none]
-					&& have_skill($skill[northern explosion]))
-				{
+				if (have_skill($skill[northern explosion]))
 					run_choice(1);
-				}
 				else
 					run_choice(2);
 			}

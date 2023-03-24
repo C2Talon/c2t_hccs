@@ -76,6 +76,7 @@ void c2t_hccs_printTestData();
 void c2t_hccs_testData(string testType,int testNum,int turnsTaken,int turnsExpected);
 familiar c2t_hccs_levelingFamiliar(boolean safeOnly);
 void c2t_hccs_shadowRiftFights();
+void c2t_hccs_shadowRiftBoss();
 
 
 void main() {
@@ -2287,6 +2288,8 @@ void c2t_hccs_fights() {
 		adv1($location[the neverending party],-1,"");
 	}
 
+	c2t_hccs_shadowRiftBoss();
+
 	cli_execute('mood apathetic');
 }
 
@@ -2345,52 +2348,101 @@ void c2t_hccs_shadowRiftFights() {
 
 	int start = my_turncount();
 	string fam = "";
-
 	if (c2t_hccs_levelingFamiliar(false) == $familiar[melodramedary]
 		&& available_amount($item[dromedary drinking helmet]) > 0)
 	{
 		fam = ",equip dromedary drinking helmet";
 	}
-
 	string maxStr = "mainstat,100exp,-equip garbage shirt,-equip kramco,-equip i voted,100 bonus jurassic parka,10000 bonus designer sweatpants"+fam;
 
 	//shadow affinity fights
-	while (have_effect($effect[shadow affinity]) > 0 && my_turncount() == start) {
+	while (have_effect($effect[shadow affinity]) > 0
+		&& my_turncount() == start)
+	{
 		maximize(maxStr,false);
 		adv1($location[shadow rift (the right side of the tracks)]);
 	}
+	set_location($location[none]);
 
 	if (my_turncount() > start)
 		abort("lost a turn fighting in the shadow rift; check state");
 
-	//entity or artifact
-	if (get_property("encountersUntilSRChoice") == "0") {
-		if (get_property("rufusQuestType") == "entity") {
-			boolean fullhp = false;
-			boolean moremp = false;
-			switch (get_property("rufusQuestTarget").to_monster()) {
-				case $monster[shadow orrery]:
-					use_familiar(c2t_priority($familiars[shorter-order cook,mu]));
-					maxStr = "melee,1000elemental damage,0.01mainstat,-equip garbage shirt,-equip kramco,-equip i voted,100 bonus jurassic parka,100 bonus designer sweatpants,10familiar weight";
-					moremp = true;
-					break;
-				case $monster[shadow scythe]:
-				case $monster[shadow spire]:
-					fullhp = true;
-					break;
-			}
-			maximize(maxStr,false);
-			if (moremp)
-				restore_mp(100);
-			if (fullhp)
-				restore_hp(to_int(my_maxhp()*0.95));
-		}
+	//handle artifact quest
+	if (get_property("encountersUntilSRChoice") == "0"
+		&& get_property("rufusQuestType") == "artifact")
+	{
 		adv1($location[shadow rift]);
+		set_location($location[none]);
 	}
 
 	if (my_turncount() > start)
 		abort("lost a turn fighting in the shadow rift; check state");
 
+	//turn in quest if done
+	if (get_property("questRufus") == "step1")
+		use($item[closed-circuit pay phone]);
+	else if (get_property("rufusQuestType") != "entity")
+		print("failed to finish Rufus quest?","red");
+}
+
+void c2t_hccs_shadowRiftBoss() {
+	if (!c2t_hccs_haveClosedCircuitPayPhone())
+		return;
+
+	//turn in finished quest
+	if (get_property("questRufus") == "step1") {
+		use($item[closed-circuit pay phone]);
+		return;
+	}
+
+	//make sure NC is next
+	if (get_property("encountersUntilSRChoice") != "0")
+		return;
+
+	//handle non-boss NC just in case
+	switch (get_property("rufusQuestType")) {
+		default:
+			return;
+		case "artifact":
+			adv1($location[shadow rift]);
+			set_location($location[none]);
+			use($item[closed-circuit pay phone]);
+			return;
+		case "entity":
+	}
+
+	string fam = "";
+	if (c2t_hccs_levelingFamiliar(false) == $familiar[melodramedary]
+		&& available_amount($item[dromedary drinking helmet]) > 0)
+	{
+		fam = ",equip dromedary drinking helmet";
+	}
+	string maxStr = "mainstat,exp,-equip garbage shirt,-equip kramco,-equip i voted,100 bonus jurassic parka,100 bonus designer sweatpants"+fam;
+
+	//bosses
+	int start = my_turncount();
+	boolean fullhp = false;
+	switch (get_property("rufusQuestTarget").to_monster()) {
+		case $monster[shadow orrery]:
+			maxStr = "melee,"+maxStr;
+			break;
+		case $monster[shadow scythe]:
+		case $monster[shadow spire]:
+			fullhp = true;
+			break;
+	}
+
+	maximize(maxStr,false);
+	if (fullhp)
+		restore_hp(to_int(my_maxhp()*0.95));
+	restore_mp(100);
+	adv1($location[shadow rift]);
+	set_location($location[none]);
+
+	if (my_turncount() > start)
+		abort("lost a turn fighting in the shadow rift; check state");
+
+	//turn in quest if done
 	if (get_property("questRufus") == "step1")
 		use($item[closed-circuit pay phone]);
 	else
