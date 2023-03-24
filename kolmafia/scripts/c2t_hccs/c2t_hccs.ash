@@ -1094,6 +1094,9 @@ boolean c2t_hccs_preItem() {
 			abort("a turn was used while latte fishing in the item test prep");
 	}
 
+	//no location modifiers
+	set_location($location[none]);
+
 	//don't want to be running an item or booze fairy for the test
 	if (numeric_modifier(my_familiar(),"Item Drop",c2t_famWeight(),$item[none]) > 0
 		|| numeric_modifier(my_familiar(),"Booze Drop",c2t_famWeight(),$item[none]) > 0)
@@ -1119,15 +1122,8 @@ boolean c2t_hccs_preItem() {
 		c2t_hccs_genie($effect[infernal thirst]);
 
 	//spice ghost
-	if (have_skill($skill[bind spice ghost])) {
-		if (my_class() == $class[pastamancer]
-			&& my_thrall() != $thrall[spice ghost])
-		{
-			c2t_hccs_haveUse($skill[bind spice ghost]);
-		}
-		else
-			c2t_hccs_getEffect($effect[spice haze]);
-	}
+	if (my_class() != $class[pastamancer])
+		c2t_hccs_getEffect($effect[spice haze]);
 
 	//AT-only buff
 	if (my_class() == $class[accordion thief] && have_skill($skill[the ballad of richie thingfinder]))
@@ -1165,6 +1161,7 @@ boolean c2t_hccs_preItem() {
 		&& have_effect($effect[feeling lost]) == 0)
 	{
 		adv1($location[shadow rift]);
+		set_location($location[none]);
 		if (c2t_hccs_thresholdMet(TEST_ITEM))
 			return true;
 	}
@@ -1970,13 +1967,6 @@ void c2t_hccs_fights() {
 		cli_execute('mood hccs-mys');
 	else if (my_primestat() == $stat[moxie])
 		cli_execute('mood hccs-mox');
-
-	//spice ghost
-	if (my_class() == $class[pastamancer]
-		&& my_thrall() != $thrall[spice ghost])
-	{
-		c2t_hccs_haveUse($skill[bind spice ghost]);
-	}
 
 	//turtle tamer blessing
 	if (my_class() == $class[turtle tamer]) {
