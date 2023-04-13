@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r27020;//workshed resets on ascension
+since r27323;//monkey paw
 
 import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>
@@ -759,8 +759,11 @@ boolean c2t_hccs_buffExp() {
 
 	if (my_primestat() == $stat[muscle]) {
 		//exp buff via pizza or wish
-		if (!c2t_hccs_pizzaCube($effect[hgh-charged]))
+		if (!c2t_hccs_pizzaCube($effect[hgh-charged])
+			&& !c2t_hccs_monkeyPaw($effect[hgh-charged]))
+		{
 			c2t_hccs_genie($effect[hgh-charged]);
+		}
 
 		// mus exp synthesis
 		if (!c2t_hccs_sweetSynthesis($effect[synthesis: movement]))
@@ -773,8 +776,11 @@ boolean c2t_hccs_buffExp() {
 	}
 	else if (my_primestat() == $stat[mysticality]) {
 		//exp buff via pizza or wish
-		if (!c2t_hccs_pizzaCube($effect[different way of seeing things]))
+		if (!c2t_hccs_pizzaCube($effect[different way of seeing things])
+			&& !c2t_hccs_monkeyPaw($effect[different way of seeing things]))
+		{
 			c2t_hccs_genie($effect[different way of seeing things]);
+		}
 		
 		// mys exp synthesis
 		if (!c2t_hccs_sweetSynthesis($effect[synthesis: learning]))
@@ -790,8 +796,11 @@ boolean c2t_hccs_buffExp() {
 	}
 	else if (my_primestat() == $stat[moxie]) {
 		//stat buff via pizza cube or exp buff via wish
-		if (!c2t_hccs_pizzaCube($effect[knightlife]))
+		if (!c2t_hccs_pizzaCube($effect[knightlife])
+			&& !c2t_hccs_monkeyPaw($effect[thou shant not sing]))
+		{
 			c2t_hccs_genie($effect[thou shant not sing]);
+		}
 
 		// mox exp synthesis
 		// hardcore will be dropped if candies not aligned properly
@@ -1111,12 +1120,18 @@ boolean c2t_hccs_preItem() {
 	c2t_hccs_getEffect($effect[the spirit of taking]);
 
 	// might move back to levelup part
-	if (have_effect($effect[synthesis: collection]) == 0)//skip pizza if synth item
-		c2t_hccs_pizzaCube($effect[certainty]);
+	if (have_effect($effect[synthesis: collection]) == 0//skip pizza if synth item
+		&& !c2t_hccs_pizzaCube($effect[certainty]))
+	{
+		c2t_hccs_monkeyPaw($effect[certainty]);
+	}
 
 	// might move back to level up part
-	if (!c2t_hccs_pizzaCube($effect[infernal thirst]))
+	if (!c2t_hccs_pizzaCube($effect[infernal thirst])
+		&& !c2t_hccs_monkeyPaw($effect[infernal thirst]))
+	{
 		c2t_hccs_genie($effect[infernal thirst]);
+	}
 
 	//spice ghost
 	if (my_class() != $class[pastamancer])
@@ -1281,8 +1296,12 @@ boolean c2t_hccs_preHotRes() {
 		return true;
 
 	//pocket wish
-	if (c2t_hccs_genie($effect[fireproof lips]) && c2t_hccs_thresholdMet(TEST_HOT_RES))
+	if ((c2t_hccs_monkeyPaw($effect[fireproof lips])
+			|| c2t_hccs_genie($effect[fireproof lips]))
+		&& c2t_hccs_thresholdMet(TEST_HOT_RES))
+	{
 		return true;
+	}
 
 	//speakeasy drink
 	if (have_effect($effect[feeling no pain]) == 0) {
@@ -1463,8 +1482,11 @@ boolean c2t_hccs_preNoncombat() {
 	}
 
 	//disquiet riot wish potential if 2 or more wishes remain and not close to min turn
-	if (c2t_hccs_testTurns(TEST_NONCOMBAT) >= 9)//TODO better cost/benefit
+	if (c2t_hccs_testTurns(TEST_NONCOMBAT) >= 9//TODO better cost/benefit
+		&& !c2t_hccs_monkeyPaw($effect[disquiet riot]))
+	{
 		c2t_hccs_genie($effect[disquiet riot]);
+	}
 
 	return c2t_hccs_thresholdMet(TEST_NONCOMBAT);
 }

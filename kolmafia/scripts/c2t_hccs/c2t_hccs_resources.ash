@@ -27,6 +27,7 @@ import <c2t_hccs_preAdv.ash>
 //d--genie
 //d--melodramedary
 //d--model train set
+//d--monkey paw
 //d--numberology
 //d--pantogram
 //d--pillkeeper
@@ -119,6 +120,11 @@ boolean c2t_hccs_haveModelTrainSet();
 
 //sets up model train set
 void c2t_hccs_modelTrainSet();
+
+
+//d--monkey paw
+//gets effect from monkey paw if not already have;returns true if have effect after
+boolean c2t_hccs_monkeyPaw(effect eff);
 
 
 //d--numberology
@@ -261,6 +267,7 @@ void c2t_hccs_vote();
 //i--numberology
 //i--melodramedary
 //i--model train set
+//i--monkey paw
 //i--pantogram
 //i--pillkeeper
 //i--pizza cube
@@ -541,6 +548,20 @@ void c2t_hccs_modelTrainSet() {
 
 	//let mafia know we're not stuck in the choice
 	visit_url("main.php");
+}
+
+//i--monkey paw
+boolean c2t_hccs_monkeyPaw(effect eff) {
+	if (have_effect(eff) > 0)
+		return true;
+	if (available_amount($item[cursed monkey's paw]) == 0)
+		return false;
+	if (get_property("_monkeyPawWishesUsed").to_int() >= 5)
+		return false;
+
+	cli_execute(`monkeypaw effect {eff.name}`);
+
+	return have_effect(eff) > 0;
 }
 
 //i--pantogram
