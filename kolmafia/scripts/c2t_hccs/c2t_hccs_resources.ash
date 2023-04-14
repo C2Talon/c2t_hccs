@@ -559,9 +559,7 @@ boolean c2t_hccs_monkeyPaw(effect eff) {
 	if (get_property("_monkeyPawWishesUsed").to_int() >= 5)
 		return false;
 
-	cli_execute(`monkeypaw effect {eff.name}`);
-
-	return have_effect(eff) > 0;
+	return monkey_paw(eff) && have_effect(eff) > 0;
 }
 
 //i--pantogram
