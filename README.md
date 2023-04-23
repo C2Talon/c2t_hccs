@@ -55,7 +55,7 @@ Some of the required IotM are only required for now because they're explicitly u
 ### Required IotM ([ordered by release date](https://kol.coldfront.net/thekolwiki/index.php/Mr._Store))
 * [Tome of Clip Art](https://kol.coldfront.net/thekolwiki/index.php/Tome_of_Clip_Art) &mdash; can be somewhat possible to get around this requirement by pulling a [borrowed time](https://kol.coldfront.net/thekolwiki/index.php/Borrowed_time) prior to running
 * [Clan VIP Lounge invitation](https://kol.coldfront.net/thekolwiki/index.php/Clan_VIP_Lounge_invitation) &mdash; assumes a fully-stocked VIP lounge
-* [corked genie bottle](https://kol.coldfront.net/thekolwiki/index.php/Corked_genie_bottle)
+* [corked genie bottle](https://kol.coldfront.net/thekolwiki/index.php/Corked_genie_bottle) &mdash; [cursed monkey glove](http://kol.coldfront.net/thekolwiki/index.php/cursed%20monkey%20glove) and [combat lover's locket lockbox](https://kol.coldfront.net/thekolwiki/index.php/Combat_lover%27s_locket_lockbox) (with ([Hobelf (WC)](https://kol.coldfront.net/thekolwiki/index.php/Hobelf_%28WC%29), [ungulith](https://kol.coldfront.net/thekolwiki/index.php/Ungulith), [factory worker (female)](https://kol.coldfront.net/thekolwiki/index.php/Factory_worker_%28female%29), &amp; [evil olive](https://kol.coldfront.net/thekolwiki/index.php/Evil_Olive)) can replace this
 * [Neverending Party invitation envelope](https://kol.coldfront.net/thekolwiki/index.php/Neverending_Party_invitation_envelope)
 * [Latte lovers club card](https://kol.coldfront.net/thekolwiki/index.php/Latte_lovers_club_card)
 * [Kramco Industries packing carton](https://kol.coldfront.net/thekolwiki/index.php/Kramco_Industries_packing_carton)
@@ -115,6 +115,8 @@ While these are not strictly required, not having enough that either save turns 
 * [boxed autumn-aton](https://kol.coldfront.net/thekolwiki/index.php/Boxed_autumn-aton) &mdash; saves 1.67 turns on item test; will get useful upgrades to prepare for aftercore
 * [deed to Oliver's Place](https://kol.coldfront.net/thekolwiki/index.php/Deed_to_Oliver%27s_Place) &mdash; 3 non-scaling free fights
 * [packaged model train set](https://kol.coldfront.net/thekolwiki/index.php/Packaged_model_train_set) &mdash; lots of extra stats from fights and can smooth out any meat problems
+* [closed-circuit phone system](http://kol.coldfront.net/thekolwiki/index.php/closed-circuit%20phone%20system) &mdash; 11 or 12 extra free fights; can save 3.3 turns on item test
+* [cursed monkey glove](http://kol.coldfront.net/thekolwiki/index.php/cursed%20monkey%20glove) &mdash; will get effects from this before using genie wishes
 
 ## Bugs?
 Report bugs in the [issue tracker](https://github.com/C2Talon/c2t_hccs/issues).
