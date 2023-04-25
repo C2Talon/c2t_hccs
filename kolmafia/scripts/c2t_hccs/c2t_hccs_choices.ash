@@ -1,6 +1,7 @@
 //c2t hccs choices
 //c2t
 
+import <c2t_hccs_lib.ash>
 
 void main (int id,string page) {
 	int testsDone = get_property("csServicesPerformed").split_string(",").count();
@@ -248,7 +249,7 @@ void main (int id,string page) {
 			}
 			else if (!run_choice(2,`heythereprogrammer={num}`).contains_text("Good luck, little buddy!")) {
 				run_choice(3);
-				print("Autumn-aton: failed to go to a place that was available","red");
+				c2t_hccs_printWarn("Autumn-aton: failed to go to a place that was available");
 			}
 			break;
 
@@ -264,7 +265,7 @@ void main (int id,string page) {
 		//6:leave
 		case 1497:
 			if (get_property("_shadowAffinityToday").to_boolean()) {
-				print("Tried to start another Rufus quest","red");
+				c2t_hccs_printWarn("Tried to start another Rufus quest");
 				run_choice(6);
 			}
 			else if (get_property("rufusDesiredEntity").contains_text("shadow orrery")) {
@@ -283,7 +284,7 @@ void main (int id,string page) {
 				run_choice(1);
 			else {
 				run_choice(6);
-				print("Tried to turn in Rufus quest, but it wasn't done?","red");
+				c2t_hccs_printWarn("Tried to turn in Rufus quest, but it wasn't done?");
 			}
 			break;
 
@@ -293,7 +294,7 @@ void main (int id,string page) {
 			if (str == "" || get_property("questRufus") == "step1")
 				str = "Shadow's Chill";
 			if (get_property("questRufus") == "step1")
-				print("The last Rufus quest can be turned in already, so can't find another artifact","red");
+				c2t_hccs_printWarn("The last Rufus quest can be turned in already, so can't find another artifact");
 
 			for tries from 1 to 11 {
 				for i from 2 to 4 if (available_choice_options(true)[i].contains_text(str))

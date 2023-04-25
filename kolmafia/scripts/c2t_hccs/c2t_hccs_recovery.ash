@@ -64,7 +64,7 @@ boolean c2t_hccs_restoreMp(int amount) {
 	else if (retrieve_item($item[magical sausage]))
 		eat($item[magical sausage]);
 	else
-		print("Unable to recover MP with magical sausages or free rests","red");
+		c2t_hccs_printWarn("Unable to recover MP with magical sausages or free rests");
 
 	//not going to necessarily reach target, but shouldn't matter as this isn't for general use
 	return my_mp() > start;

@@ -88,7 +88,7 @@ void main() {
 		c2t_hccs_testHandler(TEST_COIL_WIRE);
 
 		//TODO maybe reorder stat tests based on hardest to achieve for a given class or mainstat
-		print('Checking test ' + TEST_MOX + ': ' + TEST_NAME[TEST_MOX],'blue');
+		c2t_hccs_printInfo('Checking test ' + TEST_MOX + ': ' + TEST_NAME[TEST_MOX]);
 		if (!get_property('csServicesPerformed').contains_text(TEST_NAME[TEST_MOX])) {
 			c2t_hccs_levelup();
 			c2t_hccs_lovePotion(true);
@@ -102,7 +102,7 @@ void main() {
 
 		//best time to open guild as SC if need be, or fish for wanderers, so warn and abort if < 93% spit
 		if (c2t_hccs_melodramedary() && get_property('camelSpit').to_int() < 93 && !get_property("_c2t_hccs_earlySpitWarn").to_boolean())
-			print('Camel spit only at '+get_property('camelSpit')+'%',"red");
+			c2t_hccs_printWarn('Camel spit only at '+get_property('camelSpit')+'%');
 		set_property("_c2t_hccs_earlySpitWarn","true");
 
 		c2t_hccs_testHandler(TEST_ITEM);
@@ -116,7 +116,7 @@ void main() {
 		if (!get_property('c2t_hccs_skipFinalService').to_boolean())
 			c2t_hccs_doTest(30);
 		
-		print('Should be done with the Community Service run','blue');
+		c2t_hccs_printInfo('Should be done with the Community Service run');
 	}
 	finally
 		c2t_hccs_exit();
@@ -125,7 +125,7 @@ void main() {
 
 void c2t_hccs_printRunTime(boolean f) {
 	int t = now_to_int() - START_TIME;
-	print(`c2t_hccs {f?"took":"has taken"} {c2t_hccs_plural(t/60000,"minute","minutes")} {(t%60000)/1000.0} seconds to execute{f?"":" so far"}.`,"blue");
+	c2t_hccs_printInfo(`c2t_hccs {f?"took":"has taken"} {c2t_hccs_plural(t/60000,"minute","minutes")} {(t%60000)/1000.0} seconds to execute{f?"":" so far"}.`);
 }
 
 void c2t_hccs_mod2log(string str) {
@@ -193,7 +193,7 @@ boolean c2t_hccs_fightGodLobster() {
 }
 
 void c2t_hccs_testHandler(int test) {
-	print('Checking test ' + test + ': ' + TEST_NAME[test],'blue');
+	c2t_hccs_printInfo('Checking test ' + test + ': ' + TEST_NAME[test]);
 	if (get_property('csServicesPerformed').contains_text(TEST_NAME[test]))
 		return;
 
@@ -207,7 +207,7 @@ void c2t_hccs_testHandler(int test) {
 	//combat familiars will slaughter everything; so make sure they're inactive at the start of test sections, since not every combat bothers with familiar checks
 	c2t_hccs_levelingFamiliar(true);
 
-	print('Running pre-'+TEST_NAME[test]+' stuff...','blue');
+	c2t_hccs_printInfo('Running pre-'+TEST_NAME[test]+' stuff...');
 	switch (test) {
 		case TEST_HP:
 			met = c2t_hccs_preHp();
@@ -267,7 +267,7 @@ void c2t_hccs_testHandler(int test) {
 	expected = turns = c2t_hccs_testTurns(test);
 	if (turns < 1) {
 		if (test > 4) //ignore over-capping stat tests
-			print(`Notice: over-capping the {type} test by {c2t_hccs_plural(1-turns,"turn","turns")} worth of resources.`,'blue');
+			c2t_hccs_printInfo(`Notice: over-capping the {type} test by {c2t_hccs_plural(1-turns,"turn","turns")} worth of resources.`);
 		turns = 1;
 	}
 
@@ -365,7 +365,7 @@ boolean c2t_hccs_thresholdMet(int test) {
 	if (count(arr) == 10 && arr[test-1].to_int() > 0 && arr[test-1].to_int() <= 60)
 		return (c2t_hccs_testTurns(test) <= arr[test-1].to_int());
 	else {
-		print("Warning: the c2t_hccs_thresholds property is broken for this test; defaulting to a 1-turn threshold.","red");
+		c2t_hccs_printWarn("Warning: the c2t_hccs_thresholds property is broken for this test; defaulting to a 1-turn threshold.");
 		return (c2t_hccs_testTurns(test) <= 1);
 	}
 }
@@ -448,10 +448,10 @@ void c2t_hccs_exit() {
 			c2t_joinClan(get_property("_saved_joinClan").to_int());
 		c2t_hccs_printTestData();
 		if (get_property("_c2t_hccs_failSpit").to_boolean())
-			print(`Info: camel was not fully charged when it was needed; charge is at {get_property("camelSpit")}%`,"blue");
+			c2t_hccs_printInfo(`Info: camel was not fully charged when it was needed; charge is at {get_property("camelSpit")}%`);
 	}
 	if (get_property("shockingLickCharges").to_int() > 0)
-		print(`Info: shocking lick charge count from batteries is {get_property("shockingLickCharges")}`,"blue");
+		c2t_hccs_printInfo(`Info: shocking lick charge count from batteries is {get_property("shockingLickCharges")}`);
 
 	c2t_hccs_printRunTime(true);
 }
@@ -474,7 +474,7 @@ boolean c2t_hccs_preCoil() {
 		&& available_amount($item[grain of sand]) == 0
 		&& available_amount($item[gnollish autoplunger]) == 0
 		) {
-		print("Getting grain of sand from the beach","blue");
+		c2t_hccs_printInfo("Getting grain of sand from the beach");
 		while (get_property('_freeBeachWalksUsed').to_int() < 5 && available_amount($item[grain of sand]) == 0)
 			//arbitrary location
 			cli_execute('beach wander 8;beach comb 8 8');
@@ -505,7 +505,7 @@ boolean c2t_hccs_preCoil() {
 			while (get_property('_clanFortuneConsultUses').to_int() < 3)
 				cli_execute(`fortune {fortunes};wait 5`);
 		else
-			print(`{fortunes} is not online; skipping fortunes`,"red");
+			c2t_hccs_printWarn(`{fortunes} is not online; skipping fortunes`);
 	}
 
 	//fax
@@ -529,7 +529,7 @@ boolean c2t_hccs_preCoil() {
 	//fish hatchet
 	if (c2t_hccs_vipFloundry())
 		if (!get_property('_floundryItemCreated').to_boolean() && !retrieve_item(1,$item[fish hatchet]))
-			print('Failed to get a fish hatchet',"red");
+			c2t_hccs_printWarn('Failed to get a fish hatchet');
 
 	//cod piece steps
 	/*if (!retrieve_item(1,$item[fish hatchet])) {
@@ -767,7 +767,7 @@ boolean c2t_hccs_buffExp() {
 
 		// mus exp synthesis
 		if (!c2t_hccs_sweetSynthesis($effect[synthesis: movement]))
-			print('Failed to synthesize exp buff','red');
+			c2t_hccs_printWarn('Failed to synthesize exp buff');
 
 		if (numeric_modifier('muscle experience percent') < 89.999) {
 			abort('Insufficient +exp%');
@@ -784,7 +784,7 @@ boolean c2t_hccs_buffExp() {
 		
 		// mys exp synthesis
 		if (!c2t_hccs_sweetSynthesis($effect[synthesis: learning]))
-			print('Failed to synthesize exp buff','red');
+			c2t_hccs_printWarn('Failed to synthesize exp buff');
 
 		//face
 		c2t_hccs_getEffect($effect[inscrutable gaze]);
@@ -805,7 +805,7 @@ boolean c2t_hccs_buffExp() {
 		// mox exp synthesis
 		// hardcore will be dropped if candies not aligned properly
 		if (!c2t_hccs_sweetSynthesis($effect[synthesis: style]))
-			print('Failed to synthesize exp buff','red');
+			c2t_hccs_printWarn('Failed to synthesize exp buff');
 
 		if (numeric_modifier('moxie experience percent') < 89.999) {
 			abort('Insufficient +exp%');
@@ -874,7 +874,7 @@ boolean c2t_hccs_allTheBuffs() {
 	if (current_mcd() >= 10)
 		return true;
 
-	print('Getting pre-fight buffs','blue');
+	c2t_hccs_printInfo('Getting pre-fight buffs');
 	// equip mp stuff
 	maximize("mp,-equip kramco",false);
 	
@@ -963,15 +963,15 @@ boolean c2t_hccs_allTheBuffs() {
 	//synthesis
 	if (my_primestat() == $stat[muscle]) {
 		if (!c2t_hccs_sweetSynthesis($effect[synthesis: strong]))
-			print("Failed to synthesize stat buff","red");
+			c2t_hccs_printWarn("Failed to synthesize stat buff");
 	}
 	else if (my_primestat() == $stat[mysticality]) {
 		if (!c2t_hccs_sweetSynthesis($effect[synthesis: smart]))
-			print("Failed to synthesize stat buff","red");
+			c2t_hccs_printWarn("Failed to synthesize stat buff");
 	}
 	else if (my_primestat() == $stat[moxie]) {
 		if (!c2t_hccs_sweetSynthesis($effect[synthesis: cool]))
-			print("Failed to synthesize stat buff","red");
+			c2t_hccs_printWarn("Failed to synthesize stat buff");
 	}
 
 	//third tome use //no longer using bee's knees for stat boost on non-moxie, but still need same strength buff?
@@ -1031,7 +1031,7 @@ boolean c2t_hccs_lovePotion(boolean useit,boolean dumpit) {
 				return true;
 			}
 			else {
-				print('not using trash love potion','blue');
+				c2t_hccs_printInfo('not using trash love potion');
 				return false;
 			}
 		}
@@ -1040,7 +1040,7 @@ boolean c2t_hccs_lovePotion(boolean useit,boolean dumpit) {
 			return true;
 		}
 		else {
-			print('love potion should be good; holding onto it','blue');
+			c2t_hccs_printInfo('love potion should be good; holding onto it');
 			return false;
 		}
 	}
@@ -1460,9 +1460,9 @@ boolean c2t_hccs_preNoncombat() {
 	//replacing glob buff with this
 	//mafia doesn't seem to support retrieve_item() by itself for this yet, so visit_url() to the rescue:
 	if (!retrieve_item(1,$item[porkpie-mounted popper])) {
-		print("Buying limited-quantity items from the fireworks shop seems to still be broken. Feel free to add to the report at the following link saying that the bug is still a thing, but only if your clan actually has a fireworks shop:","red");//having a fully-stocked clan VIP lounge is technically a requirement for this script, so just covering my bases here
+		c2t_hccs_printWarn("Buying limited-quantity items from the fireworks shop seems to still be broken. Feel free to add to the report at the following link saying that the bug is still a thing, but only if your clan actually has a fireworks shop:");//having a fully-stocked clan VIP lounge is technically a requirement for this script, so just covering my bases here
 		print_html('<a href="https://kolmafia.us/threads/sometimes-unable-to-buy-limited-items-from-underground-fireworks-shop.27277/">https://kolmafia.us/threads/sometimes-unable-to-buy-limited-items-from-underground-fireworks-shop.27277/</a>');
-		print("For now, just going to do it manually:","red");
+		c2t_hccs_printWarn("For now, just going to do it manually:");
 		visit_url("clan_viplounge.php?action=fwshop&whichfloor=2",false,true);
 		//visit_url("shop.php?whichshop=fwshop",false,true);
 		visit_url("shop.php?whichshop=fwshop&action=buyitem&quantity=1&whichrow=1249&pwd",true,true);
@@ -1493,7 +1493,7 @@ boolean c2t_hccs_preNoncombat() {
 
 boolean c2t_hccs_preWeapon() {
 	if (c2t_hccs_melodramedary() && get_property('camelSpit').to_int() != 100 && have_effect($effect[spit upon]) == 0) {
-		print('Camel spit only at '+get_property('camelSpit')+'%. Going to have to skip spit buff.',"red");
+		c2t_hccs_printWarn('Camel spit only at '+get_property('camelSpit')+'%. Going to have to skip spit buff.');
 		set_property("_c2t_hccs_failSpit","true");
 	}
 
@@ -1579,7 +1579,7 @@ boolean c2t_hccs_preWeapon() {
 			if (c2t_hccs_combatLoversLocket($monster[ungulith]) || c2t_hccs_genie($monster[ungulith]))
 				fallback = false;
 			else
-				print("Couldn't fight ungulith to get corrupted marrow","red");
+				c2t_hccs_printWarn("Couldn't fight ungulith to get corrupted marrow");
 		}
 		if (fallback)
 			c2t_hccs_freeAdv($location[thugnderdome],-1,"");//everything is saberable and no crazy NCs
@@ -1625,7 +1625,7 @@ boolean c2t_hccs_preWeapon() {
 	if (c2t_hccs_testTurns(TEST_WEAPON) > 3)//TODO ? cost/benifit?
 		c2t_hccs_pizzaCube($effect[outer wolf&trade;]);
 	if (have_effect($effect[outer wolf&trade;]) == 0)
-		print("OU pizza skipped","blue");
+		c2t_hccs_printInfo("OU pizza skipped");
 	if (c2t_hccs_thresholdMet(TEST_WEAPON))
 		return true;
 
@@ -1739,7 +1739,7 @@ boolean c2t_hccs_preSpell() {
 			c2t_hccs_pull(x);
 		}
 		if (pulls_remaining() > 0)
-			print(`Still had {pulls_remaining()} pulls remaining for the last test`,"red");
+			c2t_hccs_printWarn(`Still had {pulls_remaining()} pulls remaining for the last test`);
 	}
 
 	//briefcase //TODO count spell-damage-providing accessories and values before deciding to use the briefcase
@@ -2094,7 +2094,7 @@ void c2t_hccs_fights() {
 		cli_execute('backupcamera ml');
 
 	if (!get_property('_gingerbreadMobHitUsed').to_boolean())
-		print("Running backup camera and Neverending Party fights","blue");
+		c2t_hccs_printInfo("Running backup camera and Neverending Party fights");
 
 	set_location($location[the neverending party]);
 
@@ -2104,10 +2104,10 @@ void c2t_hccs_fights() {
 		|| c2t_hccs_freeKillsLeft() > 0)
 	{
 		if (my_turncount() > start) {
-			print("a turn was used in the neverending party loop","red");
-			print("aborting in case mafia tracking broke somewhere or some unforseen thing happened","red");
-			print("if ALL the stat tests can be completed in 1 turn right now, it may be better to do those manually then rerun this","red");
-			print("this may be safe to run again, but probably best to not if turns keep being used here","red");
+			c2t_hccs_printWarn("a turn was used in the neverending party loop");
+			c2t_hccs_printWarn("aborting in case mafia tracking broke somewhere or some unforseen thing happened");
+			c2t_hccs_printWarn("if ALL the stat tests can be completed in 1 turn right now, it may be better to do those manually then rerun this");
+			c2t_hccs_printWarn("this may be safe to run again, but probably best to not if turns keep being used here");
 			abort("be sure to report if this problem persists");
 		}
 
@@ -2314,7 +2314,7 @@ void c2t_hccs_fights() {
 boolean c2t_hccs_wandererFight() {
 	//don't want to be doing wanderer whilst feeling lost
 	if (have_effect($effect[feeling lost]) > 0) {
-		print("Currently feeling lost, so skipping wanderers.","blue");
+		c2t_hccs_printInfo("Currently feeling lost, so skipping wanderers.");
 		return false;
 	}
 
@@ -2330,7 +2330,7 @@ boolean c2t_hccs_wandererFight() {
 	if (turns_played() == 0)
 		c2t_hccs_getEffect($effect[feeling excited]);
 
-	print("Running wanderer fight","blue");
+	c2t_hccs_printInfo("Running wanderer fight");
 	//saving last maximizer string and familiar stuff; outfits generally break here
 	string[int] maxstr = split_string(get_property("maximizerMRUList"),";");
 	familiar nowFam = my_familiar();
@@ -2392,7 +2392,7 @@ void c2t_hccs_shadowRiftFights() {
 	if (get_property("questRufus") == "step1")
 		use($item[closed-circuit pay phone]);
 	else if (get_property("rufusQuestType") != "entity")
-		print("failed to finish Rufus quest?","red");
+		c2t_hccs_printWarn("failed to finish Rufus quest?");
 }
 
 void c2t_hccs_shadowRiftBoss() {
@@ -2452,7 +2452,7 @@ void c2t_hccs_shadowRiftBoss() {
 	if (get_property("questRufus") == "step1")
 		use($item[closed-circuit pay phone]);
 	else
-		print("failed to finish Rufus quest?","red");
+		c2t_hccs_printWarn("failed to finish Rufus quest?");
 }
 
 //switches to leveling familiar and returns which it is

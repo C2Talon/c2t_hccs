@@ -11,6 +11,10 @@ import <c2t_lib.ash>
 //returns number of banishes left
 int c2t_hccs_banishesLeft();
 
+//input is either `info` or `warn`
+//returns color to print based on input and whether user is in dark mode or not
+string c2t_hccs_color(string str);
+
 //wrapper for adv1() to double check that adventures are free
 //aborts if turn is used
 //returns true if turn not used
@@ -52,6 +56,10 @@ boolean c2t_hccs_joinClan(string s);
 string c2t_hccs_plural(int number,string singular,string plural,boolean includeNumber);
 string c2t_hccs_plural(int number,string singular,string plural);
 
+//wrapper for print() to print message in correct color
+void c2t_hccs_printInfo(string str);
+void c2t_hccs_printWarn(string str);
+
 //pull 1 of an item from storage if not already have it
 //returns true in the case of pulling an item or if the item already is available
 boolean c2t_hccs_pull(item ite);
@@ -73,6 +81,21 @@ int c2t_hccs_banishesLeft() {
 	if (available_amount($item[kremlin's greatest briefcase]) > 0)
 		out += 3 - get_property("_kgbTranquilizerDartUses").to_int();
 	return out;
+}
+
+string c2t_hccs_color(string str) {
+	switch (str) {
+		default:
+			return '';
+		case 'err':
+		case 'error':
+		case 'warn':
+			return 'red';
+		case 'info':
+			if (is_dark_mode())
+				return 'teal';
+			return 'blue';
+	}
 }
 
 boolean c2t_hccs_freeAdv(location loc) {
@@ -128,7 +151,7 @@ boolean c2t_hccs_getEffect(effect eff) {
 				break;
 			}
 	if (cmd.starts_with("cargo ")) {
-		print(`aborted an attempt to use cargo shorts for {eff}`,"red");
+		c2t_hccs_printWarn(`aborted an attempt to use cargo shorts for {eff}`);
 		return false;
 	}
 
@@ -139,7 +162,7 @@ boolean c2t_hccs_getEffect(effect eff) {
 		ski = tmp.to_skill();
 
 		if (!c2t_hccs_haveUse(ski)) {
-			print(`Info: don't have the skill "{ski}" to get the "{eff}" effect`);
+			c2t_hccs_printInfo(`Info: don't have the skill "{ski}" to get the "{eff}" effect`);
 			return false;
 		}
 	}
@@ -157,7 +180,7 @@ boolean c2t_hccs_getEffect(effect eff) {
 		ite = tmp.to_item();
 
 		if (!retrieve_item(ite)) {
-			print(`Info: "{ite}" not retrieved to get "{eff}"`);
+			c2t_hccs_printInfo(`Info: "{ite}" not retrieved to get "{eff}"`);
 			return false;
 		}
 		use(ite);
@@ -169,7 +192,7 @@ boolean c2t_hccs_getEffect(effect eff) {
 }
 
 void c2t_hccs_getFax(monster mon) {
-	print(`getting fax of {mon}`,"blue");
+	c2t_hccs_printInfo(`getting fax of {mon}`);
 	cli_execute("chat");
 	for i from 1 to 3 {
 		if (mon == $monster[factory worker (female)]) {
@@ -225,6 +248,13 @@ string c2t_hccs_plural(int number,string singular,string plural) {
 }
 string c2t_hccs_plural(int number,string singular,string plural,boolean includeNumber) {
 	return `{includeNumber ? number + " " : ""}{number == 1 ? singular : plural}`;
+}
+
+void c2t_hccs_printInfo(string str) {
+	print(str,c2t_hccs_color('info'));
+}
+void c2t_hccs_printWarn(string str) {
+	print(str,c2t_hccs_color('warn'));
 }
 
 boolean c2t_hccs_pull(item ite) {

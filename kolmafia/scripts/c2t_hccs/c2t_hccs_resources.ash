@@ -638,7 +638,7 @@ boolean c2t_hccs_havePizzaCube() {
 }
 boolean c2t_hccs_pizzaCube(effect eff) {
 	if (available_amount($item[diabolic pizza]) > 0) {
-		print("pizza found while trying to make one, so eating it","red");
+		c2t_hccs_printWarn("pizza found while trying to make one, so eating it");
 		eat($item[diabolic pizza]);
 	}
 	if (have_effect(eff) > 0)
@@ -646,7 +646,7 @@ boolean c2t_hccs_pizzaCube(effect eff) {
 	if (!c2t_hccs_havePizzaCube())
 		return false;
 	if (my_fullness() + 3 > fullness_limit()) {
-		print("no organs space for a pizza","red");
+		c2t_hccs_printWarn("no organs space for a pizza");
 		return false;
 	}
 
@@ -747,16 +747,16 @@ boolean c2t_hccs_pizzaCube(item it1,item it2,item it3,item it4) {
 	if (!c2t_hccs_havePizzaCube())
 		return false;
 	if (my_fullness() + 3 > fullness_limit()) {
-		print("no organ space for a pizza","red");
+		c2t_hccs_printWarn("no organ space for a pizza");
 		return false;
 	}
 	if (available_amount($item[diabolic pizza]) > 0) {
-		print("pizza found while trying to make one, so eating that instead","red");
+		c2t_hccs_printWarn("pizza found while trying to make one, so eating that instead");
 		eat($item[diabolic pizza]);
 		return true;
 	}
 	if (available_amount(it1) == 0 || available_amount(it2) == 0 || available_amount(it3) == 0 || available_amount(it4) == 0) {
-		print("missing ingredients for pizza","red");
+		c2t_hccs_printWarn("missing ingredients for pizza");
 		return false;
 	}
 
@@ -840,11 +840,11 @@ boolean c2t_hccs_sourceTerminalSetEdu(skill ski1,skill ski2) {
 	string edu2 = `{ski2.to_lower_case()}.edu`;
 
 	if (!get_property("sourceTerminalEducateKnown").contains_text(edu1) && ski1 != $skill[none]) {
-		print(`{edu1} is not known`,"red");
+		c2t_hccs_printWarn(`{edu1} is not known`);
 		edu1 = "none.edu";
 	}
 	if (!get_property("sourceTerminalEducateKnown").contains_text(edu2) && ski2 != $skill[none]) {
-		print(`{edu2} is not known`,"red");
+		c2t_hccs_printWarn(`{edu2} is not known`);
 		edu2 = "none.edu";
 	}
 
@@ -886,7 +886,7 @@ boolean c2t_hccs_sweetSynthesis(effect eff) {
 		case $effect[synthesis: learning]://mys exp
 			if (sweet_synthesis(eff))
 				return true;
-			print(`Note: {eff} failed. Going to fight a hobelf and try again.`);
+			c2t_hccs_printInfo(`Note: {eff} failed. Going to fight a hobelf and try again.`);
 			if (!have_equipped($item[fourth of may cosplay saber]))
 				equip($item[fourth of may cosplay saber]);
 			if (!c2t_hccs_combatLoversLocket($monster[elf hobo]))
@@ -928,7 +928,7 @@ boolean c2t_hccs_sweetSynthesis(effect eff) {
 					break;
 			}
 			//have to waste a wish & saber use on olives as moxie, so can't recover candy failure with those like other classes
-			print("Didn't get the right candies for buffs, so dropping hardcore.","blue");
+			c2t_hccs_printInfo("Didn't get the right candies for buffs, so dropping hardcore.");
 			if (in_hardcore())
 				c2t_dropHardcore();
 			//TODO maybe make pull selection smarter
@@ -1162,7 +1162,7 @@ void c2t_hccs_vote() {
 			break;
 	}
 
-	print("Voting for "+(radi==1?mon1:mon2)+", "+get_property('_voteLocal'+(che1+1))+", "+get_property('_voteLocal'+(che2+1)),"blue");
+	c2t_hccs_printInfo("Voting for "+(radi==1?mon1:mon2)+", "+get_property('_voteLocal'+(che1+1))+", "+get_property('_voteLocal'+(che2+1)));
 	buf = visit_url('choice.php?pwd&option=1&whichchoice=1331&g='+radi+'&local[]='+che1+'&local[]='+che2,true,false);
 
 	if (available_amount($item[&quot;i voted!&quot; sticker]) == 0)
