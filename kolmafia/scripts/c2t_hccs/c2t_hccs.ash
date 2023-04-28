@@ -1307,7 +1307,7 @@ boolean c2t_hccs_preHotRes() {
 	if (have_effect($effect[feeling no pain]) == 0) {
 		c2t_assert(my_meat() >= 500,'Not enough meat. Please autosell stuff.');
 		ensure_ode(2);
-		cli_execute('drink 1 Ish Kabibble');
+		cli_execute('drink 1 ish kabibble');
 	}
 
 	return c2t_hccs_thresholdMet(TEST_HOT_RES);
@@ -1516,12 +1516,14 @@ boolean c2t_hccs_preWeapon() {
 		c2t_hccs_freeAdv($location[the dire warren],-1,"");
 	}*/
 
-	if (have_effect($effect[in a lather]) == 0) {
+	if (!get_property("c2t_hccs_disable.vipSockdollager").to_boolean()
+		&& have_effect($effect[in a lather]) == 0)
+	{
 		if (my_inebriety() > inebriety_limit() - 2)
 			abort('Something went wrong. We are too drunk.');
 		c2t_assert(my_meat() >= 500,"Need 500 meat for speakeasy booze");
 		ensure_ode(2);
-		cli_execute('drink Sockdollager');
+		cli_execute('drink sockdollager');
 	}
 
 	if (available_amount($item[twinkly nuggets]) > 0)
@@ -2169,7 +2171,8 @@ void c2t_hccs_fights() {
 			c2t_hccs_pizzaCube($effect[certainty]);
 
 		//drink hot socks ASAP
-		if (have_effect($effect[1701]) == 0//1701 is the desired version of $effet[hip to the jive]
+		if (!get_property("c2t_hccs_disable.vipHotSocks").to_boolean()
+			&& have_effect($effect[1701]) == 0//1701 is the desired version of $effet[hip to the jive]
 			&& my_meat() > 5000)
 		{
 			cli_execute('shrug stevedave');
