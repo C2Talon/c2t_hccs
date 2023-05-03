@@ -985,7 +985,7 @@ boolean c2t_hccs_allTheBuffs() {
 	c2t_hccs_levelingFamiliar(true);
 
 	//telescope
-	if (get_property("telescopeUpgrades").to_int() > 0)
+	if (get_property("telescopeUpgrades").to_int() > 0 && get_property("telescopeLookedHigh").to_boolean() != true)
 		cli_execute('telescope high');
 
 	cli_execute('mcd 10');
