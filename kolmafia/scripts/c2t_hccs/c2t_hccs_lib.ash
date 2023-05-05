@@ -15,6 +15,10 @@ int c2t_hccs_banishesLeft();
 //returns color to print based on input and whether user is in dark mode or not
 string c2t_hccs_color(string str);
 
+//uses a skill from an equipment that needs to be equipped to use
+boolean c2t_hccs_equipCast(item ite,skill ski);
+boolean c2t_hccs_equipCast(skill ski,item ite);
+
 //wrapper for adv1() to double check that adventures are free
 //aborts if turn is used
 //returns true if turn not used
@@ -96,6 +100,35 @@ string c2t_hccs_color(string str) {
 				return 'teal';
 			return 'blue';
 	}
+}
+
+boolean c2t_hccs_equipCast(skill ski,item ite) {
+	return c2t_hccs_equipCast(ite,ski);
+}
+boolean c2t_hccs_equipCast(item ite,skill ski) {
+	//adapated from c2t_cast
+	item last = $item[none];
+	slot slo = ite.to_slot();
+	boolean out = false;
+
+	if (slo == $slot[none]) {
+		c2t_hccs_printWarn(`c2t_hccs_equipCast: "{ite}" is not something that can be equipped`);
+		return false;
+	}
+
+	//swap in item
+	if (!have_equipped(ite)) {
+		last = equipped_item(slo);
+		equip(slo,ite);
+	}
+
+	out = use_skill(1,ski);
+
+	//reequip previous item
+	if (last != $item[none])
+		equip(slo,ite);
+
+	return out;
 }
 
 boolean c2t_hccs_freeAdv(location loc) {

@@ -18,6 +18,7 @@ import <c2t_hccs_preAdv.ash>
 //d--backup camera
 //d--briefcase
 //d--cartography
+//d--cincho de mayo
 //d--closed-circuit pay phone
 //d--clover item
 //d--cold medicine cabinet
@@ -59,6 +60,25 @@ boolean c2t_hccs_briefcase();
 //passes `arg` to Ezandora's briefcase script needing only the core of what is needed, e.g. "hot", "-combat", etc., limited in scope to what is relevant to CS
 //returns true if have the briefcase
 boolean c2t_hccs_briefcase(string arg);
+
+
+//d--cartography
+//returns true if have the map the monsters skill
+boolean c2t_hccs_haveCartography();
+
+//returns true if monster fought
+boolean c2t_hccs_cartography(location loc,monster mon);
+
+
+//d--cincho de mayo
+//returns true if cincho de mayo exists and not disabled
+boolean c2t_hccs_haveCinchoDeMayo();
+
+//uses cincho de mayo skill
+boolean c2t_hccs_cinchoDeMayo(skill ski);
+
+//gets cincho de mayo effect
+boolean c2t_hccs_cinchoDeMayo(effect eff);
 
 
 //d--closed-circuit pay phone
@@ -134,14 +154,6 @@ boolean c2t_hccs_haveNumberology();
 //uses numberology to get adventures
 //returns true if successful
 boolean c2t_hccs_useNumberology();
-
-
-//d--cartography
-//returns true if have the map the monsters skill
-boolean c2t_hccs_haveCartography();
-
-//returns true if monster fought
-boolean c2t_hccs_cartography(location loc,monster mon);
 
 
 //d--pantogram
@@ -257,6 +269,7 @@ void c2t_hccs_vote();
 //i--backup camera
 //i--briefcase
 //i--cartography
+//i--cincho de mayo
 //i--closed-circuit pay phone
 //i--clover item
 //i--cold medicine cabinet
@@ -345,6 +358,58 @@ boolean c2t_hccs_cartography(location loc,monster mon) {
 		abort("map the monsters: something broke and a turn was used");
 
 	return true;
+}
+
+//i--cincho de mayo
+boolean c2t_hccs_haveCinchoDeMayo() {
+	return available_amount($item[cincho de mayo]) > 0;
+}
+boolean c2t_hccs_cinchoDeMayo(skill ski) {
+	if (!c2t_hccs_haveCinchoDeMayo())
+		return false;
+
+	string propNc = "_c2t_hccs_ncForceActive";
+	string propCinch = "_cinchUsed";
+	string start = get_property(propCinch);
+	boolean ncForce = false;
+
+	switch (ski) {
+		default:
+			c2t_hccs_printWarn(`c2t_hccs_cinchoDeMayo() unsupported skill: {ski}`);
+			return false;
+		case $skill[cincho: fiesta exit]:
+			if (get_property(propNc).to_boolean())
+				return true;
+			ncForce = true;
+			break;
+		case $skill[cincho: party soundtrack]:
+			if (have_effect($effect[party soundtrack]) > 0)
+				return true;
+			break;
+		case $skill[cincho: dispense salt and lime]:
+	}
+
+	c2t_hccs_equipCast($item[cincho de mayo],ski);
+
+	if (start != get_property(propCinch)) {
+		if (ncForce)
+			set_property(propNc,true);
+		return true;
+	}
+	abort("Cincho broke. Again.");
+	return false;
+}
+boolean c2t_hccs_cinchoDeMayo(effect eff) {
+	if (have_effect(eff) > 0)
+		return true;
+	if (!c2t_hccs_haveCinchoDeMayo())
+		return false;
+	if (eff != $effect[party soundtrack])
+		return false;
+
+	c2t_hccs_equipCast($item[cincho de mayo],$skill[cincho: party soundtrack]);
+
+	return have_effect(eff) > 0;
 }
 
 //i--closed-circuit pay phone

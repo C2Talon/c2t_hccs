@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r27323;//monkey paw
+since r27339;//cincho de mayo
 
 import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>
@@ -1924,18 +1924,26 @@ void c2t_hccs_fights() {
 
 			if (get_property('lastCopyableMonster').to_monster() != $monster[novelty tropical skeleton]) {
 				//max mp to max latte gulp to fuel buffs
-				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,100 bonus lil doctor bag,100 bonus kremlin's greatest briefcase,100 bonus designer sweatpants,100 bonus jurassic parka"+fam,false);
-				if (have_equipped($item[jurassic parka]))
+				string temp = ",100 bonus jurassic parka";
+				if (c2t_hccs_haveCinchoDeMayo())
+					temp = "";
+				maximize("mp,-equip garbage shirt,equip latte,100 bonus vampyric cloake,100 bonus lil doctor bag,100 bonus kremlin's greatest briefcase,100 bonus designer sweatpants"+temp+fam,false);
+				if (have_equipped($item[jurassic parka])
+					&& !c2t_hccs_haveCinchoDeMayo())
+				{
 					cli_execute("parka spikes");
+				}
 				c2t_hccs_cartography($location[the skeleton store],$monster[novelty tropical skeleton]);
 			}
-			//get NEP exp buff with parka
-			if (get_property("_spikolodonSpikeUses").to_int() == 1
-				&& have_effect($effect[spiced up]) == 0
+			//get NEP exp buff with parka or cincho
+			if (have_effect($effect[spiced up]) == 0
 				&& have_effect($effect[tomes of opportunity]) == 0
-				&& have_effect($effect[the best hair you've ever had]) == 0)
-
+				&& have_effect($effect[the best hair you've ever had]) == 0
+				&& (get_property("_spikolodonSpikeUses").to_int() == 1
+					|| c2t_hccs_cinchoDeMayo($skill[cincho: fiesta exit])))
+			{
 				c2t_hccs_freeAdv($location[the neverending party]);
+			}
 
 			//get the fruits with nostalgia
 			c2t_hccs_fightGodLobster();
