@@ -854,7 +854,10 @@ boolean c2t_hccs_levelup() {
 	//also attempt to pull stick-knife in weapon and spell tests since having 150 offstat is possible then
 	if (my_primestat() == $stat[muscle])
 		c2t_hccs_pull($item[stick-knife of loathing]);//150 mus; saves 4 for spell test
-	if (have_familiar($familiar[mini-trainbot]))
+	//chameleon NEW CODE
+	if (have_familiar($familiar[comma chameleon]))
+		c2t_hccs_pull($item[homemade robot gear]);//should save at least 15 turns? END NEW CODE
+	else if (have_familiar($familiar[mini-trainbot]))
 		c2t_hccs_pull($item[overloaded yule battery]);//should save at least 2 turns at worst, 4-ish at best
 	//familiar pants
 	if (!c2t_hccs_pull($item[repaid diaper]))
@@ -1355,7 +1358,16 @@ boolean c2t_hccs_preFamiliar() {
 	//find highest familar weight
 	//TODO take familiar equipment or more optimal combinations into account
 	familiar highest = $familiar[none];
-	if (have_familiar($familiar[mini-trainbot])
+	//comma chameleon NEW CODE
+	if (have_familiar($familiar[comma chameleon])
+		&& have_familiar($familiar[homemade robot]))
+	{
+		use_familiar($familiar[comma chameleon]);
+		visit_url('inv_equip.php?pwd&action=equip&whichitem=6102');
+		highest = $familiar[comma chameleon];
+	}
+	//comma chameleon END NEW CODE
+	else if (have_familiar($familiar[mini-trainbot])
 		&& available_amount($item[overloaded yule battery]) == 0
 		&& c2t_hccs_tomeClipArt($item[box of familiar jacks]))
 	{
