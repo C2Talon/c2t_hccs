@@ -1354,8 +1354,15 @@ boolean c2t_hccs_preFamiliar() {
 
 	//find highest familar weight
 	//TODO take familiar equipment or more optimal combinations into account
-	familiar highest = $familiar[none];
-	if (have_familiar($familiar[mini-trainbot])
+	familiar highest = $familiar[none];cli_execute("refresh familiar");
+	if (have_familiar($familiar[Comma Chameleon]) && have_familiar($familiar[homemade robot]) && c2t_hccs_tomeClipArt($item[box of familiar jacks]) && (get_property("homemadeRobotUpgrades").to_int() >= 9)) {
+		use_familiar($familiar[homemade robot]);
+		use(1,$item[box of familiar jacks]);
+		use_familiar($familiar[Comma chameleon]);
+		cli_execute("/equip familiar homemade robot gear");
+		cli_execute("refresh familiar");
+		highest = $familiar[Comma Chameleon];
+	} else if (have_familiar($familiar[mini-trainbot])
 		&& available_amount($item[overloaded yule battery]) == 0
 		&& c2t_hccs_tomeClipArt($item[box of familiar jacks]))
 	{
