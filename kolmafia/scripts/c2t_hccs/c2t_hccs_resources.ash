@@ -473,7 +473,7 @@ boolean c2t_hccs_coldMedicineCabinet(string arg) {
 	run_choice(3);
 
 	//go back to full MP equipment
-	maximize("mp,-equip kramco sausage-o-matic&trade;,-equip i voted",false);
+	maximize(`mp,-equip {c2t_hccs_pilcrow($item[kramco sausage-o-matic&trade;])},-equip {c2t_hccs_pilcrow($item[&quot;i voted!&quot; sticker])}`,false);
 	return true;
 }
 
