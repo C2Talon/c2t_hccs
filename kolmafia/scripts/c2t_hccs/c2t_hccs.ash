@@ -2334,7 +2334,7 @@ boolean c2t_hccs_wandererFight() {
 		append += `,equip {c2t_hccs_pilcrow($item[&quot;i voted!&quot; sticker])}`;
 	//kramco should not be done here when only the coil wire test is done, otherwise the professor chain will fail
 	else if (c2t_isSausageGoblinNow() && get_property('csServicesPerformed') != TEST_NAME[TEST_COIL_WIRE])
-		append += ",equip {c2t_hccs_pilcrow($item[kramco sausage-o-matickramco sausage-o-matic&trade;trade;])}";
+		append += `,equip {c2t_hccs_pilcrow($item[kramco sausage-o-matic&trade;])}`;
 	else
 		return false;
 
