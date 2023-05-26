@@ -56,9 +56,6 @@ boolean c2t_hccs_isCleaverNow();
 //mostly a wrapper for c2t_joinClan()
 boolean c2t_hccs_joinClan(string s);
 
-//returns the pilcrow-ized version of an item for use in maximizer strings
-string c2t_hccs_pilcrow(item ite);
-
 //returns the singular or plural form of a word based on number
 string c2t_hccs_plural(int number,string singular,string plural,boolean includeNumber);
 string c2t_hccs_plural(int number,string singular,string plural);
@@ -277,10 +274,6 @@ boolean c2t_hccs_joinClan(string s) {
 	else
 		c2t_assert(c2t_joinClan(s),err);
 	return true;
-}
-
-string c2t_hccs_pilcrow(item ite) {
-	return `\u00b6{ite.to_int()}`;
 }
 
 string c2t_hccs_plural(int number,string singular,string plural) {
