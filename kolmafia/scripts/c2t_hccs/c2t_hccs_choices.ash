@@ -71,7 +71,10 @@ void main (int id,string page) {
 		//2: saber copy
 		//3: saber yr
 		case 1387:
-			run_choice(3);
+			if (available_choice_options() contains 3)
+				run_choice(3);
+			else
+				run_choice(1);
 			break;
 
 		//Granted a Boon / God Lobster
