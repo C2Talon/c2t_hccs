@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r27339;//cincho de mayo
+since r27374;//native nc force prop
 
 import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>
@@ -1939,7 +1939,7 @@ void c2t_hccs_fights() {
 			if (have_effect($effect[spiced up]) == 0
 				&& have_effect($effect[tomes of opportunity]) == 0
 				&& have_effect($effect[the best hair you've ever had]) == 0
-				&& (get_property("_spikolodonSpikeUses").to_int() == 1
+				&& (get_property("noncombatForcerActive").to_boolean()
 					|| c2t_hccs_cinchoDeMayo($skill[cincho: fiesta exit])))
 			{
 				c2t_hccs_freeAdv($location[the neverending party]);
