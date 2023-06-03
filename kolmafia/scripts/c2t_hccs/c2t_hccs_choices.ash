@@ -40,7 +40,6 @@ void main (int id,string page) {
 		//4: Investigate the basement
 		//5: Pick a fight
 		case 1324:
-			set_property("_c2t_hccs_ncForceActive",false);
 			//going for stat exp buff initially, then combats afterward
 			if (my_primestat() == $stat[muscle] && have_effect($effect[spiced up]) == 0) {
 				run_choice(2);
@@ -71,7 +70,10 @@ void main (int id,string page) {
 		//2: saber copy
 		//3: saber yr
 		case 1387:
-			run_choice(3);
+			if (available_choice_options() contains 3)
+				run_choice(3);
+			else
+				run_choice(1);
 			break;
 
 		//Granted a Boon / God Lobster

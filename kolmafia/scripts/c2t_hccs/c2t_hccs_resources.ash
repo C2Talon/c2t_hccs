@@ -368,10 +368,9 @@ boolean c2t_hccs_cinchoDeMayo(skill ski) {
 	if (!c2t_hccs_haveCinchoDeMayo())
 		return false;
 
-	string propNc = "_c2t_hccs_ncForceActive";
+	string propNc = "noncombatForcerActive";
 	string propCinch = "_cinchUsed";
 	string start = get_property(propCinch);
-	boolean ncForce = false;
 
 	switch (ski) {
 		default:
@@ -380,7 +379,6 @@ boolean c2t_hccs_cinchoDeMayo(skill ski) {
 		case $skill[cincho: fiesta exit]:
 			if (get_property(propNc).to_boolean())
 				return true;
-			ncForce = true;
 			break;
 		case $skill[cincho: party soundtrack]:
 			if (have_effect($effect[party soundtrack]) > 0)
@@ -391,12 +389,8 @@ boolean c2t_hccs_cinchoDeMayo(skill ski) {
 
 	c2t_hccs_equipCast($item[cincho de mayo],ski);
 
-	if (start != get_property(propCinch)) {
-		if (ncForce)
-			set_property(propNc,true);
+	if (start != get_property(propCinch))
 		return true;
-	}
-	abort("Cincho broke. Again.");
 	return false;
 }
 boolean c2t_hccs_cinchoDeMayo(effect eff) {
@@ -473,7 +467,7 @@ boolean c2t_hccs_coldMedicineCabinet(string arg) {
 	run_choice(3);
 
 	//go back to full MP equipment
-	maximize("mp,-equip kramco,-equip i voted",false);
+	maximize(`mp,-equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])},-equip {c2t_pilcrow($item[&quot;i voted!&quot; sticker])}`,false);
 	return true;
 }
 
