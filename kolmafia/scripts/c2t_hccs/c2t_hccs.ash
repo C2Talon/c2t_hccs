@@ -746,7 +746,7 @@ boolean c2t_hccs_buffExp() {
 	if (have_effect($effect[that's just cloud-talk, man]) == 0)
 		visit_url('place.php?whichplace=campaway&action=campaway_sky');
 	if (have_effect($effect[that's just cloud-talk, man]) == 0)
-		abort('Getaway camp buff failure');
+		c2t_hccs_printWarn('Getaway camp buff failure');
 
 	
 	// shower exp buff
@@ -909,7 +909,7 @@ boolean c2t_hccs_allTheBuffs() {
 	if (item_amount($item[bastille battalion control rig]).to_boolean() && get_property('_bastilleGames').to_int() == 0)
 		cli_execute('bastille mainstat brutalist');
 
-	// getaway camp buff //probably causes infinite loop without getaway camp
+	//getaway camp buff
 	if (get_property('_campAwaySmileBuffs').to_int() == 0)
 		visit_url('place.php?whichplace=campaway&action=campaway_sky');
 	
