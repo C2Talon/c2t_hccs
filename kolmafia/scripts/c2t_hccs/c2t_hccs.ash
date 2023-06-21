@@ -2387,6 +2387,7 @@ void c2t_hccs_shadowRiftFights() {
 	while (have_effect($effect[shadow affinity]) > 0)
 	{
 		maximize(maxStr,false);
+		restore_mp(100);
 		c2t_hccs_freeAdv($location[shadow rift (the right side of the tracks)]);
 	}
 	set_location($location[none]);

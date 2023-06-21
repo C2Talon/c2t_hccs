@@ -487,7 +487,7 @@ void c2t_hccs_shadowRiftCombat(monster foe) {
 				.c2t_bbIf("sauceror",c2t_bb($skill[curse of weaksauce]))
 				.c2t_bb($skill[stuffed mortar shell])
 				.c2t_bb($skill[sing along])
-				.c2t_bb(2,$skill[saucegeyser])
+				.c2t_bb(5,$skill[saucegeyser])
 				.c2t_bb("abort;")
 				.c2t_bbSubmit();
 			break;
@@ -498,7 +498,7 @@ void c2t_hccs_shadowRiftCombat(monster foe) {
 			c2t_bbIf("sauceror",c2t_bb($skill[curse of weaksauce]))
 			.c2t_bb($skill[stuffed mortar shell])
 			.c2t_bb($skill[sing along])
-			.c2t_bb(2,$skill[saucegeyser])
+			.c2t_bb(5,$skill[saucegeyser])
 			.c2t_bb("abort;")
 			.c2t_bbSubmit();
 			break;
@@ -515,7 +515,7 @@ void c2t_hccs_shadowRiftCombat(monster foe) {
 		case $monster[shadow scythe]:
 		case $monster[shadow spire]:
 			c2t_bbIf("sauceror",c2t_bb($skill[curse of weaksauce]))
-			.c2t_bb(2,$skill[saucegeyser])
+			.c2t_bb(5,$skill[saucegeyser])
 			.c2t_bb("abort;")
 			.c2t_bbSubmit();
 			break;
