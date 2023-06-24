@@ -77,10 +77,12 @@ void c2t_hccs_testData(string testType,int testNum,int turnsTaken,int turnsExpec
 familiar c2t_hccs_levelingFamiliar(boolean safeOnly);
 void c2t_hccs_shadowRiftFights();
 void c2t_hccs_shadowRiftBoss();
+void c2t_hccs_freeRestCheck();
 
 
 void main() {
 	c2t_assert(my_path() == "Community Service","Not in Community Service. Aborting.");
+	c2t_hccs_freeRestCheck();
 
 	try {
 		c2t_hccs_init();
@@ -368,6 +370,44 @@ boolean c2t_hccs_thresholdMet(int test) {
 		c2t_hccs_printWarn("Warning: the c2t_hccs_thresholds property is broken for this test; defaulting to a 1-turn threshold.");
 		return (c2t_hccs_testTurns(test) <= 1);
 	}
+}
+
+
+void c2t_hccs_freeRestCheck() {
+	//common enough issue to warrant
+	string chateau = "chateauAvailable";
+	string getaway = "getawayCampsiteUnlocked";
+	string wChateau = "restUsingChateau";
+	string wGetaway = "restUsingCampAwayTent";
+	string warnRest = "_c2t_hccs_warnRest";
+
+	if (get_property(getaway).to_boolean()
+		|| get_property(chateau).to_boolean()
+		|| get_property(warnRest).to_boolean())
+	{
+		return;
+	}
+
+	c2t_hccs_printInfo("Free rest option not found. Trying to find one...");
+	visit_url("place.php?whichplace=campaway",false);
+	visit_url("place.php?whichplace=chateau",false);
+
+	if (get_property(chateau).to_boolean())
+		set_property(wChateau,true);
+	else if (get_property(getaway).to_boolean())
+		set_property(wGetaway,true);
+
+	if (!get_property(getaway).to_boolean()
+		&& !get_property(chateau).to_boolean())
+	{
+		set_property(warnRest,true);
+		c2t_hccs_printWarn("Warning: Couldn't find a good free rest option.");
+		c2t_hccs_printWarn("The script can be run again and will bypass this check.");
+		c2t_hccs_printWarn("However, the script will have a lot of trouble with MP without good free rests.");
+		abort("No good free rest source");
+	}
+	else
+		c2t_hccs_printInfo("Free rest option found and set");
 }
 
 
