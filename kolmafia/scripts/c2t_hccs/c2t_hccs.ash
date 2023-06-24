@@ -396,18 +396,15 @@ void c2t_hccs_freeRestCheck() {
 		set_property(wChateau,true);
 	else if (get_property(getaway).to_boolean())
 		set_property(wGetaway,true);
-
-	if (!get_property(getaway).to_boolean()
-		&& !get_property(chateau).to_boolean())
-	{
+	else {
 		set_property(warnRest,true);
 		c2t_hccs_printWarn("Warning: Couldn't find a good free rest option.");
 		c2t_hccs_printWarn("The script can be run again and will bypass this check.");
 		c2t_hccs_printWarn("However, the script will have a lot of trouble with MP without good free rests.");
 		abort("No good free rest source");
 	}
-	else
-		c2t_hccs_printInfo("Free rest option found and set");
+
+	c2t_hccs_printInfo("Free rest option found and set");
 }
 
 
