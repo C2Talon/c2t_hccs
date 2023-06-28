@@ -485,8 +485,14 @@ void c2t_hccs_shadowRiftCombat(monster foe) {
 			if (have_effect($effect[shadow affinity]) > 0)
 				c2t_bb("pickpocket;")
 				.c2t_bbIf("sauceror",c2t_bb($skill[curse of weaksauce]))
-				.c2t_bb($skill[stuffed mortar shell])
-				.c2t_bb($skill[sing along])
+				.c2t_bbIf(`!hasskill {$skill[silent treatment].id}`,
+					c2t_bb($skill[stuffed mortar shell])
+					.c2t_bb($skill[sing along]))
+				.c2t_bbIf(`hasskill {$skill[silent treatment].id}`,
+					c2t_bb(`skill {$skill[silent treatment].id};`)
+					.c2t_bb($skill[stuffed mortar shell])
+					.c2t_bb($skill[sing along])
+					.c2t_bb("attack;attack;"))
 				.c2t_bb(5,$skill[saucegeyser])
 				.c2t_bb("abort;")
 				.c2t_bbSubmit();
