@@ -1,4 +1,4 @@
 https://github.com/C2Talon/c2t_lib.git master
 https://github.com/C2Talon/c2t_kol_scripts.git master
-https://github.com/midgleyc/Bastille/branches/Release/
-https://github.com/Ezandora/Briefcase/branches/Release/
+https://github.com/midgleyc/Bastille.git Release
+https://github.com/Ezandora/Briefcase.git Release
