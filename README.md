@@ -61,7 +61,7 @@ Some of the required IotM are only required for now because they're explicitly u
 * [Kramco Industries packing carton](https://kol.coldfront.net/thekolwiki/index.php/Kramco_Industries_packing_carton)
 * [Fourth of May Cosplay Saber kit](https://kol.coldfront.net/thekolwiki/index.php/Fourth_of_May_Cosplay_Saber_Kit)
 * [rune-strewn spoon cocoon](https://kol.coldfront.net/thekolwiki/index.php/Rune-strewn_spoon_cocoon)
-* [Distant Woods Getaway Brochure](https://kol.coldfront.net/thekolwiki/index.php/Distant_Woods_Getaway_Brochure)
+* [Distant Woods Getaway Brochure](https://kol.coldfront.net/thekolwiki/index.php/Distant_Woods_Getaway_Brochure) or ([Chateau Mantegna room key](https://kol.coldfront.net/thekolwiki/index.php/Chateau_Mantegna_room_key) &mdash; note: chateau support is limited only to resting there
 * [Comprehensive Cartographic Compendium](https://kol.coldfront.net/thekolwiki/index.php/Comprehensive_Cartographic_Compendium)
 * [emotion chip](https://kol.coldfront.net/thekolwiki/index.php/Emotion_chip)
 
