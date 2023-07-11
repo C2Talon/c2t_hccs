@@ -2510,22 +2510,22 @@ familiar c2t_hccs_levelingFamiliar(boolean safeOnly) {
 
 	if (c2t_hccs_melodramedary()
 		&& c2t_hccs_melodramedarySpit() < 100
-		&& !get_property("csServicesPerformed").contains_text(TEST_NAME[TEST_WEAPON])) {
-
+		&& !get_property("csServicesPerformed").contains_text(TEST_NAME[TEST_WEAPON]))
+	{
 		out = $familiar[melodramedary];
 	}
 	else if (!safeOnly) {
 		if (c2t_hccs_shorterOrderCook()
 			&& !get_property("csServicesPerformed").contains_text(TEST_NAME[TEST_FAMILIAR])
-			&& item_amount($item[short stack of pancakes]) == 0) {
-
+			&& item_amount($item[short stack of pancakes]) == 0)
+		{
 			out = $familiar[shorter-order cook];
 			//give cook's combat bonus familiar exp to professor
 			if (my_familiar() != out && have_familiar($familiar[pocket professor]))
 				use_familiar($familiar[pocket professor]);
 		}
 		else
-			out = c2t_priority($familiars[hovering sombrero,blood-faced volleyball]);
+			out = c2t_priority($familiars[patriotic eagle,galloping grill,hovering sombrero,blood-faced volleyball]);
 	}
 	else
 		out = c2t_priority($familiars[hovering sombrero,blood-faced volleyball]);
