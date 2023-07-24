@@ -62,10 +62,13 @@ void main(int initround, monster foe, string page) {
 		.c2t_bbIf("pastamancer",
 			c2t_bb($skill[stuffed mortar shell])
 			.c2t_bb($skill[sing along])
+			.c2t_bb($skill[saucegeyser])
+			.c2t_bb($skill[saucegeyser])
 		)
 		.c2t_bbIf("sauceror",
 			c2t_bb($skill[stuffed mortar shell])
 			.c2t_bb($skill[sing along])
+			.c2t_bb($skill[saucegeyser])
 			.c2t_bb($skill[saucegeyser])
 		);
 
@@ -85,11 +88,14 @@ void main(int initround, monster foe, string page) {
 			c2t_bb($skill[lecture on relativity])
 			.c2t_bb($skill[stuffed mortar shell])
 			.c2t_bb($skill[sing along])
+			.c2t_bb($skill[saucegeyser])
+			.c2t_bb($skill[saucegeyser])
 		)
 		.c2t_bbIf("sauceror",
 			c2t_bb($skill[curse of weaksauce])
 			.c2t_bb($skill[sing along])
 			.c2t_bb($skill[lecture on relativity])
+			.c2t_bb($skill[saucegeyser])
 			.c2t_bb($skill[saucegeyser])
 			.c2t_bb($skill[saucegeyser])
 		);
