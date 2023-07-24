@@ -414,6 +414,7 @@ void c2t_hccs_init() {
 		//buy from NPCs
 		"autoSatisfyWithNPCs":"true",
 		"autoSatisfyWithCoinmasters":"true",
+		"requireBoxServants":"false",
 		//automation scripts
 		"choiceAdventureScript":"c2t_hccs_choices.ash",
 		"betweenBattleScript":"c2t_hccs_preAdv.ash",
@@ -458,6 +459,7 @@ void c2t_hccs_exit() {
 	boolean [string] prefs = $strings[
 		autoSatisfyWithNPCs,
 		autoSatisfyWithCoinmasters,
+		requireBoxServants,
 		choiceAdventureScript,
 		betweenBattleScript,
 		afterAdventureScript,
