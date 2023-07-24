@@ -62,14 +62,12 @@ void main(int initround, monster foe, string page) {
 		.c2t_bbIf("pastamancer",
 			c2t_bb($skill[stuffed mortar shell])
 			.c2t_bb($skill[sing along])
-			.c2t_bb($skill[saucegeyser])
-			.c2t_bb($skill[saucegeyser])
+			.c2t_bb(2,$skill[saucegeyser])
 		)
 		.c2t_bbIf("sauceror",
 			c2t_bb($skill[stuffed mortar shell])
 			.c2t_bb($skill[sing along])
-			.c2t_bb($skill[saucegeyser])
-			.c2t_bb($skill[saucegeyser])
+			.c2t_bb(2,$skill[saucegeyser])
 		);
 
 	//basic macro/what to run when nothing special needs be done
@@ -88,16 +86,13 @@ void main(int initround, monster foe, string page) {
 			c2t_bb($skill[lecture on relativity])
 			.c2t_bb($skill[stuffed mortar shell])
 			.c2t_bb($skill[sing along])
-			.c2t_bb($skill[saucegeyser])
-			.c2t_bb($skill[saucegeyser])
+			.c2t_bb(2,$skill[saucegeyser])
 		)
 		.c2t_bbIf("sauceror",
 			c2t_bb($skill[curse of weaksauce])
 			.c2t_bb($skill[sing along])
 			.c2t_bb($skill[lecture on relativity])
-			.c2t_bb($skill[saucegeyser])
-			.c2t_bb($skill[saucegeyser])
-			.c2t_bb($skill[saucegeyser])
+			.c2t_bb(3,$skill[saucegeyser])
 		);
 
 	//macro to build
