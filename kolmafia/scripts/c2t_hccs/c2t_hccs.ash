@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r27374;//native nc force prop
+since r27507;//august scepter
 
 import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>
@@ -1719,14 +1719,45 @@ boolean c2t_hccs_preSpell() {
 	if (my_basestat($stat[muscle]) >= 150)
 		c2t_hccs_pull($item[stick-knife of loathing]);
 
-	//get up to 2 obsidian nutcracker
-	int nuts = 2;
-	foreach x in $items[stick-knife of loathing,staff of simmering hatred]//,Abracandalabra]
-		if (available_amount(x) > 0)
+	//get up to 2 obsidian nutcrackers & burn pulls
+	{
+		int nuts = 2;
+		int offs = 0;
+		int lhm = have_familiar($familiar[left-hand man]).to_int();
+		//weapons
+		foreach x in $items[stick-knife of loathing,staff of simmering hatred]
+			if (available_amount(x) > 0)
+				nuts--;
+		//offhands
+		foreach x in $items[abracandalabra,astral statuette,august scepter,cold stone of hatred]
+			if (available_amount(x) > 0)
+				offs++;
+		//burn remaining pulls
+		if (!in_hardcore() && pulls_remaining() > 0) {
+			boolean nothad = available_amount($item[cold stone of hatred]) == 0;
+			//lazy way for now
+			boolean [item] derp;
+			if (lhm + (nuts > 0 ? 1 : 0) > offs)
+				derp = $items[cold stone of hatred,fuzzy slippers of hatred,lens of hatred,witch's bra];
+			else
+				derp = $items[fuzzy slippers of hatred,lens of hatred,witch's bra];
+
+			foreach x in derp {
+				if (pulls_remaining() == 0)
+					break;
+				c2t_hccs_pull(x);
+			}
+			if (nothad && available_amount($item[cold stone of hatred]) > 0)
+				offs++;
+			if (pulls_remaining() > 0)
+				c2t_hccs_printWarn(`Still had {pulls_remaining()} pulls remaining for the last test`);
+		}
+		if (offs > lhm)
 			nuts--;
-	if (!have_familiar($familiar[left-hand man]) && available_amount($item[abracandalabra]) > 0)
-		nuts--;
-	retrieve_item(nuts<0?0:nuts,$item[obsidian nutcracker]);
+		//get the nutcrackers
+		if (nuts > 0)
+			retrieve_item(nuts,$item[obsidian nutcracker]);
+	}
 
 	//AT-only buff
 	if (my_class() == $class[accordion thief] && have_skill($skill[elron's explosive etude]))
@@ -1763,24 +1794,6 @@ boolean c2t_hccs_preSpell() {
 			c2t_hccs_getEffect($effect[aa-charged]);
 			c2t_hccs_getEffect($effect[aaa-charged]);
 		}
-	}
-
-	//need to figure out pulls
-	if (!in_hardcore() && pulls_remaining() > 0) {
-		//lazy way for now
-		boolean [item] derp;
-		if (available_amount($item[astral statuette]) == 0)
-			derp = $items[cold stone of hatred,fuzzy slippers of hatred,lens of hatred,witch's bra];
-		else
-			derp = $items[fuzzy slippers of hatred,lens of hatred,witch's bra];
-
-		foreach x in derp {
-			if (pulls_remaining() == 0)
-				break;
-			c2t_hccs_pull(x);
-		}
-		if (pulls_remaining() > 0)
-			c2t_hccs_printWarn(`Still had {pulls_remaining()} pulls remaining for the last test`);
 	}
 
 	//briefcase //TODO count spell-damage-providing accessories and values before deciding to use the briefcase
