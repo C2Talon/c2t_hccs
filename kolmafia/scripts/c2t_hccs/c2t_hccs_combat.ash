@@ -20,9 +20,6 @@ string c2t_hccs_bbChargeSkill(skill ski);
 string c2t_hccs_portscan();
 string c2t_hccs_portscan(string m);
 
-//shadow rift combat
-void c2t_hccs_shadowRiftCombat(monster foe);
-
 
 void main(int initround, monster foe, string page) {
 	//for holiday wanderer redos, since post-adv script can change my_location()
@@ -34,11 +31,6 @@ void main(int initround, monster foe, string page) {
 	{
 		c2t_bb($skill[use the force])
 		.c2t_bbSubmit();
-		return;
-	}
-
-	if (my_location().zone == $location[shadow rift].zone) {
-		c2t_hccs_shadowRiftCombat(foe);
 		return;
 	}
 
@@ -307,6 +299,65 @@ void main(int initround, monster foe, string page) {
 			.c2t_bbSubmit();
 			return;
 
+		//shadow rift
+		case $monster[shadow bat]:
+		case $monster[shadow cow]:
+		case $monster[shadow devil]:
+		case $monster[shadow guy]:
+		case $monster[shadow hexagon]:
+		case $monster[shadow orb]:
+		case $monster[shadow prism]:
+		case $monster[shadow stalk]:
+		case $monster[shadow slab]:
+		case $monster[shadow snake]:
+		case $monster[shadow spider]:
+		case $monster[shadow tree]:
+			if (have_effect($effect[shadow affinity]) == 0)
+				abort("Error: entered non-free combat in shadow rift without shadow affinity");
+			mSteal
+			.c2t_bbIf("sauceror",c2t_bb($skill[curse of weaksauce]))
+			.c2t_bbIf(`!hasskill {$skill[silent treatment].id}`,
+				c2t_bb($skill[stuffed mortar shell])
+				.c2t_bb($skill[sing along]))
+			.c2t_bbIf(`hasskill {$skill[silent treatment].id}`,
+				c2t_bb(`skill {$skill[silent treatment].id};`)
+				.c2t_bb($skill[stuffed mortar shell])
+				.c2t_bb($skill[sing along])
+				.c2t_bb("attack;attack;"))
+			.c2t_bb(5,$skill[saucegeyser])
+			.c2t_bb("abort;")
+			.c2t_bbSubmit();
+			return;
+
+		//shadow rift bosses
+		case $monster[shadow cauldron]:
+		case $monster[shadow matrix]:
+		case $monster[shadow tongue]:
+			c2t_bbIf("sauceror",c2t_bb($skill[curse of weaksauce]))
+			.c2t_bb($skill[stuffed mortar shell])
+			.c2t_bb($skill[sing along])
+			.c2t_bb(5,$skill[saucegeyser])
+			.c2t_bb("abort;")
+			.c2t_bbSubmit();
+			return;
+
+		case $monster[shadow orrery]:
+			c2t_bb($skill[curse of weaksauce])
+			.c2t_bb($skill[sing along])
+			.c2t_bb(5,$skill[northern explosion])
+			.c2t_bbWhile("!pastround 20","attack;")
+			.c2t_bb("abort;")
+			.c2t_bbSubmit();
+			return;
+
+		case $monster[shadow scythe]:
+		case $monster[shadow spire]:
+			c2t_bbIf("sauceror",c2t_bb($skill[curse of weaksauce]))
+			.c2t_bb(5,$skill[saucegeyser])
+			.c2t_bb("abort;")
+			.c2t_bbSubmit();
+			return;
+
 		//speakeasy
 		case $monster[gangster's moll]:
 		case $monster[gator-human hybrid]:
@@ -477,55 +528,5 @@ string c2t_hccs_portscan() {
 }
 string c2t_hccs_portscan(string m) {
 	return m + c2t_hccs_portscan();
-}
-
-//closed-circuit pay phone / shadow rift
-void c2t_hccs_shadowRiftCombat(monster foe) {
-	switch (foe) {
-		default:
-			if (have_effect($effect[shadow affinity]) > 0)
-				c2t_bb("pickpocket;")
-				.c2t_bbIf("sauceror",c2t_bb($skill[curse of weaksauce]))
-				.c2t_bbIf(`!hasskill {$skill[silent treatment].id}`,
-					c2t_bb($skill[stuffed mortar shell])
-					.c2t_bb($skill[sing along]))
-				.c2t_bbIf(`hasskill {$skill[silent treatment].id}`,
-					c2t_bb(`skill {$skill[silent treatment].id};`)
-					.c2t_bb($skill[stuffed mortar shell])
-					.c2t_bb($skill[sing along])
-					.c2t_bb("attack;attack;"))
-				.c2t_bb(5,$skill[saucegeyser])
-				.c2t_bb("abort;")
-				.c2t_bbSubmit();
-			break;
-
-		case $monster[shadow cauldron]:
-		case $monster[shadow matrix]:
-		case $monster[shadow tongue]:
-			c2t_bbIf("sauceror",c2t_bb($skill[curse of weaksauce]))
-			.c2t_bb($skill[stuffed mortar shell])
-			.c2t_bb($skill[sing along])
-			.c2t_bb(5,$skill[saucegeyser])
-			.c2t_bb("abort;")
-			.c2t_bbSubmit();
-			break;
-
-		case $monster[shadow orrery]:
-			c2t_bb($skill[curse of weaksauce])
-			.c2t_bb($skill[sing along])
-			.c2t_bb(5,$skill[northern explosion])
-			.c2t_bbWhile("!pastround 20","attack;")
-			.c2t_bb("abort;")
-			.c2t_bbSubmit();
-			break;
-
-		case $monster[shadow scythe]:
-		case $monster[shadow spire]:
-			c2t_bbIf("sauceror",c2t_bb($skill[curse of weaksauce]))
-			.c2t_bb(5,$skill[saucegeyser])
-			.c2t_bb("abort;")
-			.c2t_bbSubmit();
-			break;
-	}
 }
 
