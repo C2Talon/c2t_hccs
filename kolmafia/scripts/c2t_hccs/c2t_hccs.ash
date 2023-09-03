@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r27507;//august scepter
+since r27573;//book of facts/circadiun rhythms
 
 import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>
