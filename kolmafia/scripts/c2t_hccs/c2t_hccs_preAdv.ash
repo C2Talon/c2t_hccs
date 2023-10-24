@@ -8,6 +8,13 @@ void c2t_hccs_preAdv() {
 	if (item_amount($item[tiny stillsuit]) > 0)
 		equip($familiar[gelatinous cubeling],$item[tiny stillsuit]);
 
+	//should led candle drop //TODO stats for non-capped fights?
+	if (available_amount($item[led candle]) > 0
+		&& get_property("ledCandleMode") != "ultraviolet")
+	{
+		cli_execute("jillcandle meat");
+	}
+
 	restore_hp(0);
 	restore_mp(50);
 }

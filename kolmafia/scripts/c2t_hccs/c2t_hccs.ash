@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r27573;//book of facts/circadiun rhythms
+since r27637;//jill-of-all-trades
 
 import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>
@@ -2540,7 +2540,7 @@ familiar c2t_hccs_levelingFamiliar(boolean safeOnly) {
 				use_familiar($familiar[pocket professor]);
 		}
 		else
-			out = c2t_priority($familiars[patriotic eagle,galloping grill,hovering sombrero,blood-faced volleyball]);
+			out = c2t_priority($familiars[jill-of-all-trades,patriotic eagle,galloping grill,hovering sombrero,blood-faced volleyball]);
 	}
 	else
 		out = c2t_priority($familiars[hovering sombrero,blood-faced volleyball]);
