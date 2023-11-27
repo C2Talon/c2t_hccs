@@ -10,7 +10,7 @@ void c2t_hccs_preAdv() {
 
 	//should led candle drop //TODO stats for non-capped fights?
 	if (available_amount($item[led candle]) > 0
-		&& get_property("ledCandleMode") != "ultraviolet")
+		&& get_property("ledCandleMode") == "")
 	{
 		cli_execute("jillcandle meat");
 	}
