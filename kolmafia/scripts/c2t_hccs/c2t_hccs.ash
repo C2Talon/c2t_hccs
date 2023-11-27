@@ -1111,7 +1111,7 @@ boolean c2t_hccs_preItem() {
 					&& get_property("cosmicBowlingBallReturnCombats").to_int() <= 1
 					&& have_effect($effect[cosmic ball in the air]) == 0)))
 		{
-			c2t_hccs_freeAdv($location[the dire warren]);
+			c2t_freeAdv($location[the dire warren]);
 		}
 		//fish for latte ingredient
 		while (c2t_hccs_banishesLeft() > 0
@@ -1124,17 +1124,17 @@ boolean c2t_hccs_preItem() {
 				&& have_effect($effect[cosmic ball in the air]) == 0)
 			{
 				use_familiar(fam);
-				c2t_hccs_freeAdv($location[the dire warren]);
+				c2t_freeAdv($location[the dire warren]);
 			}
 			//fish with runaways
 			else if (have_familiar($familiar[pair of stomping boots])) {
 				use_familiar($familiar[pair of stomping boots]);
-				c2t_hccs_freeAdv($location[the dire warren],-1,"runaway;abort;");
+				c2t_freeAdv($location[the dire warren],-1,"runaway;abort;");
 			}
 			//fish with banishes
 			else {
 				use_familiar(fam);//just in case
-				c2t_hccs_freeAdv($location[the dire warren]);
+				c2t_freeAdv($location[the dire warren]);
 			}
 		}
 	}
@@ -1211,7 +1211,7 @@ boolean c2t_hccs_preItem() {
 		&& have_effect($effect[shadow waters]) == 0
 		&& have_effect($effect[feeling lost]) == 0)
 	{
-		c2t_hccs_freeAdv($location[shadow rift]);
+		c2t_freeAdv($location[shadow rift]);
 		set_location($location[none]);
 		if (c2t_hccs_thresholdMet(TEST_ITEM))
 			return true;
@@ -1246,7 +1246,7 @@ boolean c2t_hccs_preHotRes() {
 			equip($slot[off-hand],$item[industrial fire extinguisher]);
 		use_familiar(c2t_priority($familiars[ghost of crimbo carols,exotic parrot]));
 
-		c2t_hccs_freeAdv($location[the dire warren],-1,"");
+		c2t_freeAdv($location[the dire warren],-1,"");
 		run_turn();
 	}
 
@@ -1552,7 +1552,7 @@ boolean c2t_hccs_preWeapon() {
 		if (my_mp() < 30)
 			cli_execute('rest free');
 		use_familiar($familiar[ghost of crimbo carols]);
-		c2t_hccs_freeAdv($location[the dire warren],-1,"");
+		c2t_freeAdv($location[the dire warren],-1,"");
 	}*/
 
 	if (!get_property("c2t_hccs_disable.vipSockdollager").to_boolean()
@@ -1623,7 +1623,7 @@ boolean c2t_hccs_preWeapon() {
 				c2t_hccs_printWarn("Couldn't fight ungulith to get corrupted marrow");
 		}
 		if (fallback)
-			c2t_hccs_freeAdv($location[thugnderdome],-1,"");//everything is saberable and no crazy NCs
+			c2t_freeAdv($location[thugnderdome],-1,"");//everything is saberable and no crazy NCs
 	}
 
 	c2t_hccs_getEffect($effect[cowrruption]);
@@ -1772,7 +1772,7 @@ boolean c2t_hccs_preSpell() {
 	if (have_skill($skill[meteor lore]) && have_effect($effect[meteor showered]) == 0 && get_property('_saberForceUses').to_int() < 5) {
 		c2t_hccs_levelingFamiliar(true);
 		maximize(`mainstat,equip {c2t_pilcrow($item[fourth of may cosplay saber])}`,false);
-		c2t_hccs_freeAdv($location[thugnderdome],-1,"");//everything is saberable and no crazy NCs
+		c2t_freeAdv($location[thugnderdome],-1,"");//everything is saberable and no crazy NCs
 	}
 
 	if (have_skill($skill[deep dark visions]) && have_effect($effect[visions of the deep dark deeps]) == 0) {
@@ -1969,7 +1969,7 @@ void c2t_hccs_fights() {
 			if ($location[the skeleton store].turns_spent == 0
 				&& !$location[the skeleton store].noncombat_queue.contains_text('Skeletons In Store'))
 
-				c2t_hccs_freeAdv($location[the skeleton store],-1,'');
+				c2t_freeAdv($location[the skeleton store],-1,'');
 
 			if (!$location[the skeleton store].noncombat_queue.contains_text('Skeletons In Store'))
 				abort('Something went wrong at skeleton store.');
@@ -1994,7 +1994,7 @@ void c2t_hccs_fights() {
 				&& (get_property("noncombatForcerActive").to_boolean()
 					|| c2t_hccs_cinchoDeMayo($skill[cincho: fiesta exit])))
 			{
-				c2t_hccs_freeAdv($location[the neverending party]);
+				c2t_freeAdv($location[the neverending party]);
 			}
 
 			//get the fruits with nostalgia
@@ -2080,7 +2080,7 @@ void c2t_hccs_fights() {
 		if (my_primestat() == $stat[moxie])
 			c2t_hccs_cartography($location[the neverending party],$monster[party girl]);
 		else
-			c2t_hccs_freeAdv($location[the neverending party],-1,"");
+			c2t_freeAdv($location[the neverending party],-1,"");
 	}
 
 	//nostalgia for moxie stuff and run down remaining glob fights
@@ -2142,7 +2142,7 @@ void c2t_hccs_fights() {
 		&& get_property('_mushroomGardenFights').to_int() == 0)
 	{
 		maximize(`mainstat,-equip {c2t_pilcrow($item[makeshift garbage shirt])},-equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])},-equip {c2t_pilcrow($item[&quot;i voted!&quot; sticker])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+fam,false);
-		c2t_hccs_freeAdv($location[your mushroom garden],-1,"");
+		c2t_freeAdv($location[your mushroom garden],-1,"");
 	}
 
 	c2t_hccs_wandererFight();//shouldn't do kramco
@@ -2341,7 +2341,7 @@ void c2t_hccs_fights() {
 				garbage = `,-equip {c2t_pilcrow($item[makeshift garbage shirt])}`;
 			}
 			maximize(`mainstat,exp,equip {c2t_pilcrow($item[latte lovers member's mug])},equip {c2t_pilcrow($item[backup camera])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+garbage+fam,false);
-			c2t_hccs_freeAdv($location[the dire warren],-1,"");
+			c2t_freeAdv($location[the dire warren],-1,"");
 			continue;//don't want to fall into NEP in this state
 		}
 		//inital and post-latte backup fights
@@ -2366,7 +2366,7 @@ void c2t_hccs_fights() {
 		else
 			maximize(`mainstat,exp,equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+garbage+fam+doc,false);
 
-		c2t_hccs_freeAdv($location[the neverending party],-1,"");
+		c2t_freeAdv($location[the neverending party],-1,"");
 	}
 
 	c2t_hccs_shadowRiftBoss();
@@ -2404,7 +2404,7 @@ boolean c2t_hccs_wandererFight() {
 
 	set_location($location[the neverending party]);
 	maximize(`mainstat,exp,100 bonus {c2t_pilcrow($item[designer sweatpants])}`+append,false);
-	c2t_hccs_freeAdv($location[the neverending party],-1,"");
+	c2t_freeAdv($location[the neverending party],-1,"");
 
 	//hopefully restore to previous state without outfits
 	use_familiar(nowFam);
@@ -2440,7 +2440,7 @@ void c2t_hccs_shadowRiftFights() {
 	{
 		maximize(maxStr,false);
 		restore_mp(100);
-		c2t_hccs_freeAdv($location[shadow rift (the right side of the tracks)]);
+		c2t_freeAdv($location[shadow rift (the right side of the tracks)]);
 	}
 	set_location($location[none]);
 
@@ -2448,7 +2448,7 @@ void c2t_hccs_shadowRiftFights() {
 	if (get_property("encountersUntilSRChoice") == "0"
 		&& get_property("rufusQuestType") == "artifact")
 	{
-		c2t_hccs_freeAdv($location[shadow rift]);
+		c2t_freeAdv($location[shadow rift]);
 		set_location($location[none]);
 	}
 
@@ -2478,7 +2478,7 @@ void c2t_hccs_shadowRiftBoss() {
 		default:
 			return;
 		case "artifact":
-			c2t_hccs_freeAdv($location[shadow rift]);
+			c2t_freeAdv($location[shadow rift]);
 			set_location($location[none]);
 			use($item[closed-circuit pay phone]);
 			return;
@@ -2509,7 +2509,7 @@ void c2t_hccs_shadowRiftBoss() {
 	if (fullhp)
 		restore_hp(to_int(my_maxhp()*0.95));
 	restore_mp(100);
-	c2t_hccs_freeAdv($location[shadow rift]);
+	c2t_freeAdv($location[shadow rift]);
 	set_location($location[none]);
 
 	//turn in quest if done

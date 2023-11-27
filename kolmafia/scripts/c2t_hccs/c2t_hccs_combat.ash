@@ -439,7 +439,7 @@ void main(int initround, monster foe, string page) {
 			m.c2t_bbSubmit();
 			//redo last; map the monsters is handled elsewhere since it doesn't like adv1()
 			if (!get_property('mappingMonsters').to_boolean())
-				c2t_hccs_freeAdv(loc);
+				c2t_freeAdv(loc);
 			return;
 
 		//this shouldn't happen

@@ -387,7 +387,7 @@ boolean c2t_hccs_cinchoDeMayo(skill ski) {
 		case $skill[cincho: dispense salt and lime]:
 	}
 
-	c2t_hccs_equipCast($item[cincho de mayo],ski);
+	c2t_equipCast($item[cincho de mayo],ski);
 
 	if (start != get_property(propCinch))
 		return true;
@@ -401,7 +401,7 @@ boolean c2t_hccs_cinchoDeMayo(effect eff) {
 	if (eff != $effect[party soundtrack])
 		return false;
 
-	c2t_hccs_equipCast($item[cincho de mayo],$skill[cincho: party soundtrack]);
+	c2t_equipCast($item[cincho de mayo],$skill[cincho: party soundtrack]);
 
 	return have_effect(eff) > 0;
 }
