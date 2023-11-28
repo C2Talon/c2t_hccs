@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r27637;//jill-of-all-trades
+since r27667;//rakes exist
 
 import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>
@@ -505,6 +505,13 @@ boolean c2t_hccs_preCoil() {
 		//sanity check
 		if ($items[cold medicine cabinet,diabolic pizza cube,model train set] contains workshed)
 			use(workshed);
+	}
+
+	//get rakes
+	if (get_campground() contains $item[a guide to burning leaves]
+		&& available_amount($item[rake]) == 0)
+	{
+		visit_url("campground.php?preaction=leaves",false);
 	}
 
 	//get a grain of sand for pizza if muscle class
