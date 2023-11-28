@@ -1095,7 +1095,7 @@ boolean c2t_hccs_lovePotion(boolean useit,boolean dumpit) {
 }
 
 boolean c2t_hccs_preItem() {
-	string maxstr = `item,2 booze drop,-equip {c2t_pilcrow($item[broken champagne bottle])},-equip {c2t_pilcrow($item[surprisingly capacious handbag])},-equip {c2t_pilcrow($item[red-hot sausage fork])},switch disembodied hand,switch left-hand man`;
+	string maxstr = `item,2 booze drop,-equip {c2t_pilcrow($item[broken champagne bottle])},-equip {c2t_pilcrow($item[surprisingly capacious handbag])},-equip {c2t_pilcrow($item[red-hot sausage fork])},-equip {c2t_pilcrow($item[miniature crystal ball])},switch disembodied hand,switch left-hand man`;
 
 	//shrug off an AT buff
 	cli_execute("shrug ur-kel");
