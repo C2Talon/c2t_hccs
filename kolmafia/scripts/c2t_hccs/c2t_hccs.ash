@@ -515,15 +515,19 @@ boolean c2t_hccs_preCoil() {
 	}
 
 	//get a grain of sand for pizza if muscle class
-	if (available_amount($item[beach comb]) > 0
+	if (c2t_hccs_havePizzaCube()
+		&& available_amount($item[beach comb]) > 0
 		&& my_primestat() == $stat[muscle]
 		&& available_amount($item[grain of sand]) == 0
-		&& available_amount($item[gnollish autoplunger]) == 0
-		) {
+		&& available_amount($item[gnollish autoplunger]) == 0)
+	{
 		c2t_hccs_printInfo("Getting grain of sand from the beach");
-		while (get_property('_freeBeachWalksUsed').to_int() < 5 && available_amount($item[grain of sand]) == 0)
+		while (get_property('_freeBeachWalksUsed').to_int() < 5
+			&& available_amount($item[grain of sand]) == 0)
+		{
 			//arbitrary location
 			cli_execute('beach wander 8;beach comb 8 8');
+		}
 		cli_execute('beach exit');
 		c2t_assert(available_amount($item[grain of sand]) > 0,"Did not obtain a grain of sand for pizza on muscle class.");
 	}
