@@ -269,6 +269,14 @@ void main(int initround, monster foe, string page) {
 				.c2t_bb($skill[spit jurassic acid])
 				.c2t_bbSubmit();
 			}
+			else if (c2t_hccs_asdonKillLeft()
+				&& get_fuel() >= 100)
+			{
+				m
+				.c2t_bb($skill[sing along])
+				.c2t_hccs_bbLimited($skill[asdon martin: missile launcher])
+				.c2t_bbSubmit();
+			}
 			//free combats at NEP
 			else
 				c2t_bbSubmit(m + mBasic);

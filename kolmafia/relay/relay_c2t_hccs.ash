@@ -102,7 +102,7 @@ void main() {
 		c2t_hccs_writeInput(name,"",desc,30,30);
 	foreach name,desc in general
 		c2t_hccs_writeCheckbox(name,desc);
-	c2t_hccs_writeSelect("c2t_hccs_workshed","workshed to be installed and used",$items[none,cold medicine cabinet,diabolic pizza cube,model train set]);
+	c2t_hccs_writeSelect("c2t_hccs_workshed","workshed to be installed and used",$items[none,asdon martin keyfob,cold medicine cabinet,diabolic pizza cube,model train set]);
 	write("</tbody></table>");
 
 	//thresholds

@@ -501,10 +501,10 @@ boolean c2t_hccs_preCoil() {
 
 	//install workshed
 	item workshed = get_property("c2t_hccs_workshed").to_item();
-	if (workshed != $item[none] && get_workshed() == $item[none]) {
-		//sanity check
-		if ($items[cold medicine cabinet,diabolic pizza cube,model train set] contains workshed)
-			use(workshed);
+	if (workshed != $item[none]
+		&& get_workshed() == $item[none])
+	{
+		use(workshed);
 	}
 
 	//get rakes
@@ -1099,7 +1099,7 @@ boolean c2t_hccs_lovePotion(boolean useit,boolean dumpit) {
 }
 
 boolean c2t_hccs_preItem() {
-	string maxstr = `item,2 booze drop,-equip {c2t_pilcrow($item[broken champagne bottle])},-equip {c2t_pilcrow($item[surprisingly capacious handbag])},-equip {c2t_pilcrow($item[red-hot sausage fork])},-equip {c2t_pilcrow($item[miniature crystal ball])},switch disembodied hand,switch left-hand man`;
+	string maxstr = `-tie,item,2 booze drop,-equip {c2t_pilcrow($item[broken champagne bottle])},-equip {c2t_pilcrow($item[surprisingly capacious handbag])},-equip {c2t_pilcrow($item[red-hot sausage fork])},-equip {c2t_pilcrow($item[miniature crystal ball])},switch disembodied hand,switch left-hand man`;
 
 	//shrug off an AT buff
 	cli_execute("shrug ur-kel");
@@ -1156,27 +1156,21 @@ boolean c2t_hccs_preItem() {
 	//don't want to be running an item or booze fairy for the test
 	if (numeric_modifier(my_familiar(),"Item Drop",c2t_famWeight(),$item[none]) > 0
 		|| numeric_modifier(my_familiar(),"Booze Drop",c2t_famWeight(),$item[none]) > 0)
-
-		use_familiar(c2t_priority($familiars[left-hand man,hovering sombrero,blood-faced volleyball,leprechaun,mosquito]));
-
+	{
+		use_familiar(c2t_priority($familiars[left-hand man,disembodied hand,hovering sombrero,blood-faced volleyball,leprechaun,mosquito]));
+	}
 	if (!get_property('latteModifier').contains_text('Item Drop')
 		&& get_property('latteUnlocks').contains_text('carrot')
 		&& get_property('_latteBanishUsed').to_boolean())
-
-		cli_execute('latte refill cinnamon carrot vanilla');
-
-	c2t_hccs_getEffect($effect[fat leon's phat loot lyric]);
-	c2t_hccs_getEffect($effect[singer's faithful ocelot]);
-	c2t_hccs_getEffect($effect[the spirit of taking]);
-
-	// might move back to levelup part
-	if (have_effect($effect[synthesis: collection]) == 0//skip pizza if synth item
-		&& !c2t_hccs_pizzaCube($effect[certainty]))
 	{
-		c2t_hccs_monkeyPaw($effect[certainty]);
+		cli_execute('latte refill cinnamon carrot vanilla');
 	}
 
-	// might move back to level up part
+	//pizza cube certainty
+	if (have_effect($effect[synthesis: collection]) == 0)//skip pizza if synth item
+		c2t_hccs_pizzaCube($effect[certainty]);
+
+	//infernal thirst by any means
 	if (!c2t_hccs_pizzaCube($effect[infernal thirst])
 		&& !c2t_hccs_monkeyPaw($effect[infernal thirst]))
 	{
@@ -1187,16 +1181,14 @@ boolean c2t_hccs_preItem() {
 	if (my_class() != $class[pastamancer])
 		c2t_hccs_getEffect($effect[spice haze]);
 
-	//AT-only buff
-	if (my_class() == $class[accordion thief] && have_skill($skill[the ballad of richie thingfinder]))
-		ensure_song($effect[the ballad of richie thingfinder]);
-
-	//autumn-aton potion
-	if (have_effect($effect[crunching leaves]) == 0)
-		c2t_hccs_haveUse($item[autumn leaf]);
-
-	c2t_hccs_getEffect($effect[nearly all-natural]);//bag of grain
-	c2t_hccs_getEffect($effect[steely-eyed squint]);
+	c2t_hccs_getEffect($effects[
+		fat leon's phat loot lyric,
+		singer's faithful ocelot,
+		the spirit of taking,
+		nearly all-natural,//bag of grain
+		crunching leaves,//autumn-aton
+		steely-eyed squint
+		]);
 
 	//unbreakable umbrella
 	c2t_hccs_unbreakableUmbrella("item");
@@ -1207,15 +1199,39 @@ boolean c2t_hccs_preItem() {
 
 	//THINGS I DON'T ALWAYS WANT TO USE FOR ITEM TEST
 
-	//if familiar test is ever less than 19 turns, feel lost will need to be completely removed or the test order changed
-	if (c2t_hccs_getEffect($effect[feeling lost])
-		&& c2t_hccs_thresholdMet(TEST_ITEM))
-		return true;
-
+	//fireworks shop
 	if (retrieve_item(1,$item[oversized sparkler])) {
 		maximize(maxstr,false);
 		if (c2t_hccs_thresholdMet(TEST_ITEM))
 			return true;
+	}
+
+	//asdon
+	if (c2t_hccs_asdon($effect[driving observantly])
+		&& c2t_hccs_thresholdMet(TEST_ITEM))
+	{
+		return true;
+	}
+
+	//AT-only buff
+	if (my_class() == $class[accordion thief] && have_skill($skill[the ballad of richie thingfinder])) {
+		ensure_song($effect[the ballad of richie thingfinder]);
+		if (c2t_hccs_thresholdMet(TEST_ITEM))
+			return true;
+	}
+
+	//if familiar test is ever less than 19 turns, feel lost will need to be completely removed or the test order changed
+	if (c2t_hccs_getEffect($effect[feeling lost])
+		&& c2t_hccs_thresholdMet(TEST_ITEM))
+	{
+		return true;
+	}
+
+	//non-pizza certainty
+	if (c2t_hccs_monkeyPaw($effect[certainty])
+		&& c2t_hccs_thresholdMet(TEST_ITEM))
+	{
+		return true;
 	}
 
 	if (item_amount($item[rufus's shadow lodestone]) > 0
@@ -1231,7 +1247,9 @@ boolean c2t_hccs_preItem() {
 	if (c2t_hccs_haveSourceTerminal()
 		&& c2t_hccs_getEffect($effect[items.enh])
 		&& c2t_hccs_thresholdMet(TEST_ITEM))
+	{
 		return true;
+	}
 
 	//power plant; last to save batteries if not needed
 	if (c2t_hccs_powerPlant())
@@ -1241,15 +1259,18 @@ boolean c2t_hccs_preItem() {
 }
 
 boolean c2t_hccs_preHotRes() {
-	string maxstr = "100hot res,familiar weight,switch exotic parrot,switch mu,switch disembodied hand,switch left-hand man";
+	string maxstr = "-tie,100hot res,familiar weight,switch exotic parrot,switch mu,switch disembodied hand,switch left-hand man";
 
 	//cloake buff and fireproof foam suit for +32 hot res total, but also weapon and spell test buffs
 	//weapon/spell buff should last 15 turns, which is enough to get through hot(1), NC(9), and weapon(1) tests to also affect the spell test
-	if ((have_effect($effect[do you crush what i crush?]) == 0 && have_familiar($familiar[ghost of crimbo carols]))
-		|| (have_effect($effect[fireproof foam suit]) == 0 && available_amount($item[industrial fire extinguisher]) > 0 && have_skill($skill[double-fisted skull smashing]))
-		|| (have_effect($effect[misty form]) == 0 && available_amount($item[vampyric cloake]) > 0)
-		) {
-
+	if ((have_effect($effect[do you crush what i crush?]) == 0
+			&& have_familiar($familiar[ghost of crimbo carols]))
+		|| (have_effect($effect[fireproof foam suit]) == 0
+			&& available_amount($item[industrial fire extinguisher]) > 0
+			&& have_skill($skill[double-fisted skull smashing]))
+		|| (have_effect($effect[misty form]) == 0
+			&& available_amount($item[vampyric cloake]) > 0))
+	{
 		if (available_amount($item[vampyric cloake]) > 0)
 			equip($item[vampyric cloake]);
 		equip($slot[weapon],$item[fourth of may cosplay saber]);
@@ -1261,23 +1282,20 @@ boolean c2t_hccs_preHotRes() {
 		run_turn();
 	}
 
-	c2t_hccs_getEffect($effect[blood bond]);
-	c2t_hccs_getEffect($effect[leash of linguini]);
-	c2t_hccs_getEffect($effect[empathy]);
+	c2t_hccs_getEffect($effects[
+		//fam weight skills
+		blood bond,
+		empathy,
+		leash of linguini,
+		//ele res skills
+		elemental saucesphere,
+		astral shell,
+		//emotion chip
+		feeling peaceful
+		]);
 
-	c2t_hccs_getEffect($effect[elemental saucesphere]);
-	c2t_hccs_getEffect($effect[astral shell]);
-
-	//emotion chip
-	c2t_hccs_getEffect($effect[feeling peaceful]);
-
-	//familiar weight
-	c2t_hccs_getEffect($effect[blood bond]);
-	c2t_hccs_getEffect($effect[leash of linguini]);
-	c2t_hccs_getEffect($effect[empathy]);
-
-	maximize(maxstr,false);
 	// need to run this twice because familiar weight thresholds interfere with it?
+	maximize(maxstr,false);
 	maximize(maxstr,false);
 	if (c2t_hccs_thresholdMet(TEST_HOT_RES))
 		return true;
@@ -1293,20 +1311,29 @@ boolean c2t_hccs_preHotRes() {
 	}
 
 	//daily candle
-	if (c2t_hccs_haveUse($item[rainbow glitter candle]) && c2t_hccs_thresholdMet(TEST_HOT_RES))
+	if (c2t_hccs_haveUse($item[rainbow glitter candle])
+		&& c2t_hccs_thresholdMet(TEST_HOT_RES))
+	{
 		return true;
+	}
 
 	//magenta seashell
-	if (c2t_hccs_getEffect($effect[too cool for (fish) school]) && c2t_hccs_thresholdMet(TEST_HOT_RES))
+	if (c2t_hccs_getEffect($effect[too cool for (fish) school])
+		&& c2t_hccs_thresholdMet(TEST_HOT_RES))
+	{
 		return true;
+	}
 
 	//potion for sleazy hands & hot powder
 	if (have_skill($skill[pulverize])) {
 		retrieve_item(1,$item[tenderizing hammer]);
 
 		if (have_effect($effect[flame-retardant trousers]) == 0) {
-			while (available_amount($item[hot powder]) == 0 && available_amount($item[red-hot sausage fork]) > 0)
+			while (available_amount($item[hot powder]) == 0
+				&& available_amount($item[red-hot sausage fork]) > 0)
+			{
 				cli_execute('smash 1 red-hot sausage fork');
+			}
 			if (available_amount($item[hot powder]) > 0)
 				c2t_hccs_getEffect($effect[flame-retardant trousers]);
 		}
@@ -1315,20 +1342,37 @@ boolean c2t_hccs_preHotRes() {
 
 		if (have_effect($effect[sleazy hands]) == 0
 			&& (c2t_hccs_freeCraftsLeft() > 0
-				|| (have_effect($effect[fireproof foam suit]) == 0 && have_effect($effect[misty form]) == 0)
-			)) {
-			while (available_amount($item[sleaze nuggets]) == 0 && available_amount($item[ratty knitted cap]) > 0)
+				|| (have_effect($effect[fireproof foam suit]) == 0
+					&& have_effect($effect[misty form]) == 0)))
+		{
+			while (available_amount($item[sleaze nuggets]) == 0
+				&& available_amount($item[ratty knitted cap]) > 0)
+			{
 				cli_execute('smash 1 ratty knitted cap');
-			if (available_amount($item[sleaze nuggets]) > 0 || available_amount($item[lotion of sleaziness]) > 0)
+			}
+			if (available_amount($item[sleaze nuggets]) > 0
+				|| available_amount($item[lotion of sleaziness]) > 0)
+			{
 				c2t_hccs_getEffect($effect[sleazy hands]);
+			}
 		}
 		if (c2t_hccs_thresholdMet(TEST_HOT_RES))
 			return true;
 	}
 
 	//pocket maze
-	if (c2t_hccs_getEffect($effect[amazing]) && c2t_hccs_thresholdMet(TEST_HOT_RES))
+	if (c2t_hccs_getEffect($effect[amazing])
+		&& c2t_hccs_thresholdMet(TEST_HOT_RES))
+	{
 		return true;
+	}
+
+	//asdon
+	if (c2t_hccs_asdon($effect[driving safely])
+		&& c2t_hccs_thresholdMet(TEST_HOT_RES))
+	{
+		return true;
+	}
 
 	//briefcase
 	if (c2t_hccs_briefcase("hot")) {
@@ -1338,12 +1382,18 @@ boolean c2t_hccs_preHotRes() {
 	}
 
 	//synthesis: hot
-	if (c2t_hccs_sweetSynthesis($effect[synthesis: hot]) && c2t_hccs_thresholdMet(TEST_HOT_RES))
+	if (c2t_hccs_sweetSynthesis($effect[synthesis: hot])
+		&& c2t_hccs_thresholdMet(TEST_HOT_RES))
+	{
 		return true;
+	}
 
 	//pillkeeper
-	if (c2t_hccs_pillkeeper($effect[rainbowolin]) && c2t_hccs_thresholdMet(TEST_HOT_RES))
+	if (c2t_hccs_pillkeeper($effect[rainbowolin])
+		&& c2t_hccs_thresholdMet(TEST_HOT_RES))
+	{
 		return true;
+	}
 
 	//pocket wish
 	if ((c2t_hccs_monkeyPaw($effect[fireproof lips])
@@ -1451,23 +1501,13 @@ boolean c2t_hccs_preFamiliar() {
 
 
 boolean c2t_hccs_preNoncombat() {
-	restore_hp(31);//need to have the hp before casting blood skills
-	c2t_hccs_getEffect($effect[blood bond]);
-	c2t_hccs_getEffect($effect[leash of linguini]);
-	c2t_hccs_getEffect($effect[empathy]);
+	string maxstr = '-tie,-100combat,familiar weight';
 
-	// Pool buff. Should fall through to weapon damage.
-	//not going to use this here, as it doesn't do to the noncombat rate in the moment anyway
-	//c2t_hccs_getEffect($effect[billiards belligerence]);
-
-	c2t_hccs_getEffect($effect[the sonata of sneakiness]);
-	c2t_hccs_getEffect($effect[smooth movements]);
-	if (available_amount($item[powerful glove]) > 0 && have_effect($effect[invisible avatar]) == 0 && !c2t_cast($skill[cheat code: invisible avatar]))
-		abort('Invisible avatar failed');
-
-	c2t_hccs_getEffect($effect[silent running]);
-
-	if (have_familiar($familiar[god lobster]) && have_effect($effect[silence of the god lobster]) == 0 && get_property('_godLobsterFights').to_int() < 3) {
+	//globster
+	if (have_familiar($familiar[god lobster])
+		&& have_effect($effect[silence of the god lobster]) == 0
+		&& get_property('_godLobsterFights').to_int() < 3)
+	{
 		cli_execute('mood apathetic');
 		use_familiar($familiar[god lobster]);
 		equip($item[god lobster's ring]);
@@ -1489,21 +1529,30 @@ boolean c2t_hccs_preNoncombat() {
 			run_choice(-1);
 	}
 
-	//emotion chip feel lonely
-	c2t_hccs_getEffect($effect[feeling lonely]);
-	
-	// Rewards // use these after globster fight, just in case of losing
-	c2t_hccs_getEffect($effect[throwing some shade]);
-	c2t_hccs_getEffect($effect[a rose by any other material]);
-
-
-	use_familiar($familiar[disgeist]);
+	c2t_hccs_getEffect($effects[
+		//fam weight skills
+		blood bond,
+		empathy,
+		leash of linguini,
+		//skills
+		the sonata of sneakiness,
+		smooth movements,
+		//clan
+		//billiards belligerence,//fam weight;probably not needed/useful for most
+		silent running,
+		//emotion chip
+		feeling lonely,
+		//rewards with a 1-turn duration
+		throwing some shade,
+		a rose by any other material,
+		]);
 
 	//unbreakable umbrella
 	c2t_hccs_unbreakableUmbrella("nc");
 
-	maximize('-100combat,familiar weight',false);
-	maximize('-100combat,familiar weight',false);
+	use_familiar($familiar[disgeist]);
+	maximize(maxstr,false);
+	maximize(maxstr,false);
 	if (c2t_hccs_thresholdMet(TEST_NONCOMBAT))
 		return true;
 
@@ -1520,13 +1569,29 @@ boolean c2t_hccs_preNoncombat() {
 	//double-checking, and what will be used when mafia finally supports it:
 	retrieve_item(1,$item[porkpie-mounted popper]);
 
-	maximize('-100combat,familiar weight',false);
+	maximize(maxstr,false);
 	if (c2t_hccs_thresholdMet(TEST_NONCOMBAT))
 		return true;
 
+	//asdon
+	if (c2t_hccs_asdon($effect[driving stealthily])
+		&& c2t_hccs_thresholdMet(TEST_NONCOMBAT))
+	{
+		return true;
+	}
+
+	//powerful glove
+	if (available_amount($item[powerful glove]) > 0
+		&& have_effect($effect[invisible avatar]) == 0
+		&& c2t_cast($skill[cheat code: invisible avatar])
+		&& c2t_hccs_thresholdMet(TEST_NONCOMBAT))
+	{
+		return true;
+	}
+
 	//briefcase
 	if (c2t_hccs_briefcase("-combat")) {
-		maximize('-100combat,familiar weight',false);
+		maximize(maxstr,false);
 		if (c2t_hccs_thresholdMet(TEST_NONCOMBAT))
 			return true;
 	}
@@ -1838,7 +1903,7 @@ boolean c2t_hccs_preHp() {
 
 	//mus buffs //basically copy/paste from mus test sans bravado
 	//TODO AT songs
-	foreach x in $effects[
+	c2t_hccs_getEffect($effects[
 		//skills
 		quiet determination,
 		big,
@@ -1850,8 +1915,7 @@ boolean c2t_hccs_preHp() {
 		go get 'em\, tiger!,
 		//skill skills from IotM
 		feeling excited
-		]
-		c2t_hccs_getEffect(x);
+		]);
 
 	return c2t_hccs_thresholdMet(TEST_HP);
 }
@@ -1866,7 +1930,7 @@ boolean c2t_hccs_preMus() {
 		return true;
 
 	//TODO AT songs
-	foreach x in $effects[
+	c2t_hccs_getEffect($effects[
 		//skills
 		quiet determination,
 		big,
@@ -1879,8 +1943,7 @@ boolean c2t_hccs_preMus() {
 		go get 'em\, tiger!,
 		//skill skills from IotM
 		feeling excited
-		]
-		c2t_hccs_getEffect(x);
+		]);
 
 	return c2t_hccs_thresholdMet(TEST_MUS);
 }
@@ -1894,7 +1957,7 @@ boolean c2t_hccs_preMys() {
 		return true;
 
 	//TODO AT songs
-	foreach x in $effects[
+	c2t_hccs_getEffect($effects[
 		//skills
 		quiet judgement,
 		big,
@@ -1906,8 +1969,7 @@ boolean c2t_hccs_preMys() {
 		glittering eyelashes,
 		//skill skills from IotM
 		feeling excited
-		]
-		c2t_hccs_getEffect(x);
+		]);
 
 	return c2t_hccs_thresholdMet(TEST_MYS);
 }
@@ -1926,7 +1988,7 @@ boolean c2t_hccs_preMox() {
 	if (!c2t_hccs_getEffect($effect[quiet desperation]))
 		c2t_hccs_getEffect($effect[disco smirk]);
 	//other
-	foreach x in $effects[
+	c2t_hccs_getEffect($effects[
 		//skills
 		big,
 		song of bravado,
@@ -1938,8 +2000,7 @@ boolean c2t_hccs_preMox() {
 		unrunnable face,
 		//skill skills from IotM
 		feeling excited
-		]
-		c2t_hccs_getEffect(x);
+		]);
 
 	return c2t_hccs_thresholdMet(TEST_MOX);
 }
@@ -2174,7 +2235,8 @@ void c2t_hccs_fights() {
 	int start = my_turncount();
 	//NEP loop //neverending party and backup camera fights
 	while (get_property("_neverendingPartyFreeTurns").to_int() < 10
-		|| c2t_hccs_freeKillsLeft() > 0)
+		|| c2t_hccs_freeKillsLeft() > 0
+		|| c2t_hccs_asdonKillLeft())
 	{
 		if (my_turncount() > start) {
 			c2t_hccs_printWarn("a turn was used in the neverending party loop");
@@ -2189,9 +2251,9 @@ void c2t_hccs_fights() {
 		if (available_amount($item[lil' doctor&trade; bag]) > 0
 			&& get_property('_neverendingPartyFreeTurns').to_int() == 10
 			&& get_property('_chestXRayUsed').to_int() < 3)
-
+		{
 			doc = `,equip {c2t_pilcrow($item[lil' doctor&trade; bag])}`;
-
+		}
 		else
 			doc = "";
 
@@ -2222,15 +2284,16 @@ void c2t_hccs_fights() {
 		if (my_primestat() == $stat[moxie]
 			&& have_effect($effect[unrunnable face]) == 0
 			&& item_amount($item[runproof mascara]) > 0)
-
+		{
 			use(1,$item[runproof mascara]);
+		}
 
 		//turtle tamer turtle
 		if (my_class() == $class[turtle tamer]
-			&& have_effect($effect[gummi-grin]) == 0
-			&& item_amount($item[gummi turtle]) > 0)
-
-			use(1,$item[gummi turtle]);
+			&& have_effect($effect[gummi-grin]) == 0)
+		{
+			c2t_hccs_haveUse($item[gummi turtle]);
+		}
 
 		//eat CER pizza ASAP
 		if (c2t_hccs_havePizzaCube()
@@ -2238,12 +2301,13 @@ void c2t_hccs_fights() {
 			&& have_effect($effect[certainty]) == 0
 			&& item_amount($item[electronics kit]) > 0
 			&& item_amount($item[middle of the road&trade; brand whiskey]) > 0)
-
+		{
 			c2t_hccs_pizzaCube($effect[certainty]);
+		}
 
 		//drink hot socks ASAP
 		if (!get_property("c2t_hccs_disable.vipHotSocks").to_boolean()
-			&& have_effect($effect[1701]) == 0//1701 is the desired version of $effet[hip to the jive]
+			&& have_effect($effect[[1701]hip to the jive]) == 0
 			&& my_meat() > 5000)
 		{
 			cli_execute('shrug stevedave');
@@ -2376,6 +2440,16 @@ void c2t_hccs_fights() {
 		//rest of the free NEP fights
 		else
 			maximize(`mainstat,exp,equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+garbage+fam+doc,false);
+
+		//asdon as the final final free kill
+		if (get_property("_neverendingPartyFreeTurns").to_int() == 10
+			&& c2t_hccs_freeKillsLeft() == 0
+			&& c2t_hccs_asdonKillLeft()
+			&& !c2t_hccs_asdonFill(100))
+		{
+			c2t_hccs_printInfo("couldn't fuel up asdon martin fully for its free kill");
+			break;
+		}
 
 		c2t_freeAdv($location[the neverending party],-1,"");
 	}

@@ -15,6 +15,7 @@ import <c2t_hccs_preAdv.ash>
 /*-=-+-=-+-=-+-=-+-=-+-=-
   function declarations
   -=-+-=-+-=-+-=-+-=-+-=-*/
+//d--asdon
 //d--backup camera
 //d--briefcase
 //d--cartography
@@ -43,6 +44,22 @@ import <c2t_hccs_preAdv.ash>
 //d--unbreakable umbrella
 //d--vip floundry
 //d--vote
+
+
+//d--asdon
+//returns true if asdon in workshed
+boolean c2t_hccs_haveAsdon();
+
+//get asdon effect
+//returns true if have effect at end
+boolean c2t_hccs_asdon(effect eff);
+
+//get asdon fuel to target
+//returns true on success
+boolean c2t_hccs_asdonFill(int target);
+
+//returns true if asdon's free kill is left
+boolean c2t_hccs_asdonKillLeft();
 
 
 //d--backup camera
@@ -266,6 +283,7 @@ void c2t_hccs_vote();
 /*-=-+-=-+-=-+-=-+-=-+-=-
   function implementations
   -=-+-=-+-=-+-=-+-=-+-=-*/
+//i--asdon
 //i--backup camera
 //i--briefcase
 //i--cartography
@@ -295,6 +313,101 @@ void c2t_hccs_vote();
 //i--vip floundry
 //i--vote
 
+
+//i--asdon
+boolean c2t_hccs_haveAsdon() return get_workshed() == $item[asdon martin keyfob];
+boolean c2t_hccs_asdon(effect eff) {
+	if (have_effect(eff) > 0)
+		return true;
+
+	if (!c2t_hccs_haveAsdon())
+		return false;
+
+	if (!($effects[
+		driving obnoxiously,
+		driving stealthily,
+		driving wastefully,
+		driving safely,
+		driving recklessly,
+		driving intimidatingly,
+		driving quickly,
+		driving observantly,
+		driving waterproofly
+		] contains eff))
+	{
+		return false;
+	}
+
+	if (!c2t_hccs_asdonFill(37)) {
+		c2t_hccs_printWarn(`couldn't get enough fuel for {eff}`);
+		return false;
+	}
+
+	cli_execute(`{eff.default}`);
+
+	return have_effect(eff) > 0;
+}
+boolean c2t_hccs_asdonFill(int target) {
+	if (!c2t_hccs_haveAsdon())
+		return false;
+
+	if (get_fuel() >= target)
+		return true;
+
+	//preemptively trade speakeasy chits for booze
+	if (item_amount($item[drink chit]) > 0)
+		buy($coinmaster[fancy dan the cocktail man],min(5,item_amount($item[drink chit])),$item[velvet veil]);
+
+	//probably safer to use an allow list than to maintain a blocklist against all available; i.e. don't want to burn something someone might depend on like legendary pizzas or things I haven't thought of
+	boolean [item] fuel = $items[
+		//mayday
+		20-lb can of rice and beans,
+		bar of freeze-dried water,
+		carrot cake precipice bar,
+		cool mint precipice bar,
+		expired mre,
+		//portscan
+		government cheese,
+		//nep
+		middle of the road&trade; brand whiskey,
+		pb&j with the crusts cut off,
+		//sit
+		shot of wasp venom,
+		//super good fruit,
+		//speakeasy
+		swamp haunch,
+		velvet veil,
+		//shadow rift
+		shadow bread,
+		//shadow sausage,
+		];
+
+	//try each of the allowed items
+	foreach x in fuel while (item_amount(x) > 0) {
+		cli_execute(`asdonmartin fuel 1 {x}`);
+		if (get_fuel() >= target)
+			return true;
+	}
+
+	//fallback on soda bread
+	int start;
+	repeat {
+		start = get_fuel();
+		if (item_amount($item[wad of dough]) == 0) {
+			retrieve_item(1,$item[all-purpose flower]);
+			use($item[all-purpose flower]);
+		}
+		cli_execute(`try;asdonmartin fuel 1 loaf of soda bread`);
+	} until (get_fuel() >= target
+		|| get_fuel() == start);
+
+	return get_fuel() >= target;
+}
+boolean c2t_hccs_asdonKillLeft() {
+	if (!c2t_hccs_haveAsdon())
+		return false;
+	return !get_property("_missileLauncherUsed").to_boolean();
+}
 
 //i--backup camera
 boolean c2t_hccs_haveBackupCamera() {

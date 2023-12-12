@@ -25,6 +25,9 @@ int c2t_hccs_freeKillsLeft();
 //returns true if effect obtained
 boolean c2t_hccs_getEffect(effect eff);
 
+//get multiple effects
+void c2t_hccs_getEffect(boolean [effect] effs);
+
 //get fax of mon
 void c2t_hccs_getFax(monster mon);
 
@@ -144,6 +147,10 @@ boolean c2t_hccs_getEffect(effect eff) {
 			tmp += i == 2?spl[i]:` {spl[i]}`;
 		ski = tmp.to_skill();
 
+		//need hp to cast blood skills
+		if ($skills[blood bond,blood bubble,blood frenzy] contains ski)
+			restore_hp(31);
+
 		if (!c2t_hccs_haveUse(ski)) {
 			c2t_hccs_printInfo(`Info: don't have the skill "{ski}" to get the "{eff}" effect`);
 			return false;
@@ -172,6 +179,10 @@ boolean c2t_hccs_getEffect(effect eff) {
 		cli_execute(cmd);
 
 	return have_effect(eff).to_boolean();
+}
+
+void c2t_hccs_getEffect(boolean [effect] effs) {
+	foreach x in effs c2t_hccs_getEffect(x);
 }
 
 void c2t_hccs_getFax(monster mon) {
