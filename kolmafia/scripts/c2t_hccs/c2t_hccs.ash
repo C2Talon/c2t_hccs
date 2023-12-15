@@ -326,6 +326,7 @@ void c2t_hccs_printTestData() {
 //precursor to facilitate using only as many resources as needed and not more
 int c2t_hccs_testTurns(int test) {
 	int num;
+	float offset;
 	switch (test) {
 		default:
 			abort('Something broke with checking turns on test '+test);
@@ -341,7 +342,15 @@ int c2t_hccs_testTurns(int test) {
 			return (60 - floor((numeric_modifier('familiar weight')+familiar_weight(my_familiar()))/5));
 		case TEST_WEAPON:
 			num = (have_effect($effect[bow-legged swagger]) > 0?25:50);
-			return (60 - floor(numeric_modifier('weapon damage') / num + 0.001) - floor(numeric_modifier('weapon damage percent') / num + 0.001));
+			offset = get_power(equipped_item($slot[weapon]));
+			offset += weapon_type(equipped_item($slot[offhand])) != $stat[none]
+				? get_power(equipped_item($slot[offhand]))
+				: 0;
+			offset += weapon_type(equipped_item($slot[familiar])) != $stat[none]
+				? get_power(equipped_item($slot[familiar]))
+				: 0;
+			offset *= 0.15;
+			return (60 - floor((numeric_modifier('weapon damage') - offset) / num + 0.001) - floor(numeric_modifier('weapon damage percent') / num + 0.001));
 		case TEST_SPELL:
 			return (60 - floor(numeric_modifier('spell damage') / 50 + 0.001) - floor(numeric_modifier('spell damage percent') / 50 + 0.001));
 		case TEST_NONCOMBAT:
