@@ -315,7 +315,7 @@ void c2t_hccs_vote();
 
 
 //i--asdon
-boolean c2t_hccs_haveAsdon() return get_workshed() == $item[asdon martin keyfob];
+boolean c2t_hccs_haveAsdon() return get_workshed() == $item[asdon martin keyfob (on ring)];
 boolean c2t_hccs_asdon(effect eff) {
 	if (have_effect(eff) > 0)
 		return true;

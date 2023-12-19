@@ -343,8 +343,8 @@ int c2t_hccs_testTurns(int test) {
 		case TEST_WEAPON:
 			num = (have_effect($effect[bow-legged swagger]) > 0?25:50);
 			offset = get_power(equipped_item($slot[weapon]));
-			offset += weapon_type(equipped_item($slot[offhand])) != $stat[none]
-				? get_power(equipped_item($slot[offhand]))
+			offset += weapon_type(equipped_item($slot[off-hand])) != $stat[none]
+				? get_power(equipped_item($slot[off-hand]))
 				: 0;
 			offset += weapon_type(equipped_item($slot[familiar])) != $stat[none]
 				? get_power(equipped_item($slot[familiar]))
