@@ -20,6 +20,9 @@ string c2t_hccs_portscan(string m);
 string c2t_hccs_bbLimited(skill ski);
 string c2t_hccs_bbLimited(string m,skill ski);
 
+//map of holiday wanderers
+boolean[monster] c2t_hccs_holidayWanderers();
+
 
 void main(int initround, monster foe, string page) {
 	//for holiday wanderer redos, since post-adv script can change my_location()
@@ -110,7 +113,9 @@ void main(int initround, monster foe, string page) {
 		return;
 	}
 	//saber random thing at this location for meteor shower buff -- saber happens elsewhere
-	else if (my_location() == $location[thugnderdome]) {
+	else if (my_location() == $location[thugnderdome]
+		&& !(c2t_hccs_holidayWanderers() contains foe))
+	{
 		m = mHead + mSteal.c2t_bb($skill[meteor shower]);
 
 		//camel spit for weapon test, which is directly after combat test
@@ -456,6 +461,8 @@ void main(int initround, monster foe, string page) {
 	}
 }
 
+
+
 string c2t_hccs_bowlSideways() return c2t_hccs_bowlSideways("");
 string c2t_hccs_bowlSideways(string m) {
 	string out = m+c2t_bb($skill[bowl sideways]);
@@ -501,5 +508,21 @@ string c2t_hccs_portscan() {
 }
 string c2t_hccs_portscan(string m) {
 	return m + c2t_hccs_portscan();
+}
+
+boolean[monster] c2t_hccs_holidayWanderers() {
+	return $monsters[
+		candied yam golem,
+		malevolent tofurkey,
+		possessed can of cranberry sauce,
+		stuffing golem,
+		novia cad&aacute;ver,
+		novio cad&aacute;ver,
+		padre cad&aacute;ver,
+		persona inocente cad&aacute;ver,
+		ambulatory pirate,
+		migratory pirate,
+		peripatetic pirate,
+		];
 }
 
