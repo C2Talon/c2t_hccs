@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r27667;//rakes exist
+since r27846;//darts
 
 import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>

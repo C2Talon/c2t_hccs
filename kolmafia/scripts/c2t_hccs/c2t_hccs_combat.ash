@@ -52,15 +52,18 @@ void main(int initround, monster foe, string page) {
 	string mBasicBot =
 		c2t_bbIf("sealclubber || turtletamer || discobandit || accordionthief",
 			c2t_bb($skill[sing along])
+			.c2t_bb($skill[darts: throw at %part1])
 			.c2t_bbWhile("!pastround 20",c2t_bb("attack;"))
 		)
 		.c2t_bbIf("pastamancer",
-			c2t_bb($skill[stuffed mortar shell])
+			c2t_bb($skill[darts: throw at %part1])
+			.c2t_bb($skill[stuffed mortar shell])
 			.c2t_bb($skill[sing along])
 			.c2t_bb(2,$skill[saucegeyser])
 		)
 		.c2t_bbIf("sauceror",
-			c2t_bb($skill[stuffed mortar shell])
+			c2t_bb($skill[darts: throw at %part1])
+			.c2t_bb($skill[stuffed mortar shell])
 			.c2t_bb($skill[sing along])
 			.c2t_bb(2,$skill[saucegeyser])
 		);
@@ -75,10 +78,12 @@ void main(int initround, monster foe, string page) {
 			c2t_bbIf("discobandit || accordionthief",c2t_bb($skill[saucy salve]))
 			.c2t_bb($skill[sing along])
 			.c2t_bb($skill[lecture on relativity])
+			.c2t_bb($skill[darts: throw at %part1])
 			.c2t_bbWhile("!pastround 20",c2t_bb("attack;"))
 		)
 		.c2t_bbIf("pastamancer",
 			c2t_bb($skill[lecture on relativity])
+			.c2t_bb($skill[darts: throw at %part1])
 			.c2t_bb($skill[stuffed mortar shell])
 			.c2t_bb($skill[sing along])
 			.c2t_bb(2,$skill[saucegeyser])
@@ -87,6 +92,7 @@ void main(int initround, monster foe, string page) {
 			c2t_bb($skill[curse of weaksauce])
 			.c2t_bb($skill[sing along])
 			.c2t_bb($skill[lecture on relativity])
+			.c2t_bb($skill[darts: throw at %part1])
 			.c2t_bb(3,$skill[saucegeyser])
 		);
 
@@ -266,6 +272,7 @@ void main(int initround, monster foe, string page) {
 				.c2t_bb($skill[sing along])
 				.c2t_hccs_bowlSideways()
 				//free kill skills
+				.c2t_bb($skill[darts: aim for the bullseye])
 				//won't use otoscope anywhere else, so might as well use it while doc bag equipped
 				.c2t_hccs_bbLimited($skill[otoscope])
 				.c2t_hccs_bbLimited($skill[chest x-ray])
@@ -332,6 +339,7 @@ void main(int initround, monster foe, string page) {
 			mSteal
 			.c2t_bbIf("sauceror",c2t_bb($skill[curse of weaksauce]))
 			.c2t_hccs_bbLimited($skill[recall facts: %phylum circadian rhythms])
+			.c2t_bb($skill[darts: throw at %part1])
 			.c2t_bbIf(`!hasskill {$skill[silent treatment].id}`,
 				c2t_bb($skill[stuffed mortar shell])
 				.c2t_bb($skill[sing along]))
@@ -414,6 +422,7 @@ void main(int initround, monster foe, string page) {
 			c2t_bbSubmit(
 				mHead + mSteal + mBasicTop
 				.c2t_bb($skill[sing along])
+				.c2t_bb($skill[darts: throw at %part1])
 				.c2t_bbIf("sealclubber || turtletamer || discobandit || accordionthief",
 					c2t_bbWhile("!pastround 20","attack;")
 				)
@@ -424,7 +433,9 @@ void main(int initround, monster foe, string page) {
 			return;
 
 		case $monster[sssshhsssblllrrggghsssssggggrrgglsssshhssslblgl]:
-			c2t_bbSubmit("attack;repeat;");
+			c2t_bb($skill[darts: throw at %part1])
+			.c2t_bb("attack;repeat;")
+			.c2t_bbSubmit();
 			return;
 
 		//free run from holiday monsters
