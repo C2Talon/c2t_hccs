@@ -273,6 +273,7 @@ void main(int initround, monster foe, string page) {
 				.c2t_hccs_bowlSideways()
 				//free kill skills
 				.c2t_bb($skill[darts: aim for the bullseye])
+				.c2t_bb($skill[darts: throw at %part1])
 				//won't use otoscope anywhere else, so might as well use it while doc bag equipped
 				.c2t_hccs_bbLimited($skill[otoscope])
 				.c2t_hccs_bbLimited($skill[chest x-ray])

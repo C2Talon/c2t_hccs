@@ -2229,7 +2229,7 @@ void c2t_hccs_fights() {
 	c2t_hccs_wandererFight();//shouldn't do kramco
 
 	//setup for NEP and backup fights
-	string doc,garbage,kramco;
+	string doc,garbage,kramco,darts;
 
 	if (c2t_hccs_haveBackupCamera()
 		&& get_property('backupCameraMode') != 'ml')
@@ -2256,6 +2256,16 @@ void c2t_hccs_fights() {
 		}
 
 		// -- combat logic --
+		//darts free kill attempts
+		if (available_amount($item[everfull dart holster]) > 0
+			&& get_property('_neverendingPartyFreeTurns').to_int() == 10
+			&& have_effect($effect[everything looks red]) == 0)
+		{
+			darts = `,1000 bonus {c2t_pilcrow($item[everfull dart holster])}`;
+		}
+		else
+			darts = "";
+
 		//use doc bag kills first after free fights
 		if (available_amount($item[lil' doctor&trade; bag]) > 0
 			&& get_property('_neverendingPartyFreeTurns').to_int() == 10
@@ -2448,7 +2458,7 @@ void c2t_hccs_fights() {
 		}
 		//rest of the free NEP fights
 		else
-			maximize(`mainstat,exp,equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+garbage+fam+doc,false);
+			maximize(`mainstat,exp,equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+garbage+fam+doc+darts,false);
 
 		//asdon as the final final free kill
 		if (get_property("_neverendingPartyFreeTurns").to_int() == 10
