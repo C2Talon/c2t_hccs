@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r27846;//darts
+since r27865;//darts functions
 
 import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>
