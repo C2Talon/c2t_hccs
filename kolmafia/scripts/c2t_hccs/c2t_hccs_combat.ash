@@ -23,6 +23,10 @@ string c2t_hccs_bbLimited(string m,skill ski);
 //map of holiday wanderers
 boolean[monster] c2t_hccs_holidayWanderers();
 
+//darts logic
+string c2t_hccs_bbDarts();
+string c2t_hccs_bbDarts(string m);
+
 
 void main(int initround, monster foe, string page) {
 	//for holiday wanderer redos, since post-adv script can change my_location()
@@ -52,17 +56,17 @@ void main(int initround, monster foe, string page) {
 	string mBasicBot =
 		c2t_bbIf("sealclubber || turtletamer || discobandit || accordionthief",
 			c2t_bb($skill[sing along])
-			.c2t_bb($skill[darts: throw at %part1])
+			.c2t_hccs_bbDarts()
 			.c2t_bbWhile("!pastround 20",c2t_bb("attack;"))
 		)
 		.c2t_bbIf("pastamancer",
-			c2t_bb($skill[darts: throw at %part1])
+			c2t_hccs_bbDarts()
 			.c2t_bb($skill[stuffed mortar shell])
 			.c2t_bb($skill[sing along])
 			.c2t_bb(2,$skill[saucegeyser])
 		)
 		.c2t_bbIf("sauceror",
-			c2t_bb($skill[darts: throw at %part1])
+			c2t_hccs_bbDarts()
 			.c2t_bb($skill[stuffed mortar shell])
 			.c2t_bb($skill[sing along])
 			.c2t_bb(2,$skill[saucegeyser])
@@ -78,12 +82,12 @@ void main(int initround, monster foe, string page) {
 			c2t_bbIf("discobandit || accordionthief",c2t_bb($skill[saucy salve]))
 			.c2t_bb($skill[sing along])
 			.c2t_bb($skill[lecture on relativity])
-			.c2t_bb($skill[darts: throw at %part1])
+			.c2t_hccs_bbDarts()
 			.c2t_bbWhile("!pastround 20",c2t_bb("attack;"))
 		)
 		.c2t_bbIf("pastamancer",
 			c2t_bb($skill[lecture on relativity])
-			.c2t_bb($skill[darts: throw at %part1])
+			.c2t_hccs_bbDarts()
 			.c2t_bb($skill[stuffed mortar shell])
 			.c2t_bb($skill[sing along])
 			.c2t_bb(2,$skill[saucegeyser])
@@ -92,7 +96,7 @@ void main(int initround, monster foe, string page) {
 			c2t_bb($skill[curse of weaksauce])
 			.c2t_bb($skill[sing along])
 			.c2t_bb($skill[lecture on relativity])
-			.c2t_bb($skill[darts: throw at %part1])
+			.c2t_hccs_bbDarts()
 			.c2t_bb(3,$skill[saucegeyser])
 		);
 
@@ -273,7 +277,7 @@ void main(int initround, monster foe, string page) {
 				.c2t_hccs_bowlSideways()
 				//free kill skills
 				.c2t_bb($skill[darts: aim for the bullseye])
-				.c2t_bb($skill[darts: throw at %part1])
+				.c2t_hccs_bbDarts()
 				//won't use otoscope anywhere else, so might as well use it while doc bag equipped
 				.c2t_hccs_bbLimited($skill[otoscope])
 				.c2t_hccs_bbLimited($skill[chest x-ray])
@@ -340,7 +344,7 @@ void main(int initround, monster foe, string page) {
 			mSteal
 			.c2t_bbIf("sauceror",c2t_bb($skill[curse of weaksauce]))
 			.c2t_hccs_bbLimited($skill[recall facts: %phylum circadian rhythms])
-			.c2t_bb($skill[darts: throw at %part1])
+			.c2t_hccs_bbDarts()
 			.c2t_bbIf(`!hasskill {$skill[silent treatment].id}`,
 				c2t_bb($skill[stuffed mortar shell])
 				.c2t_bb($skill[sing along]))
@@ -423,7 +427,7 @@ void main(int initround, monster foe, string page) {
 			c2t_bbSubmit(
 				mHead + mSteal + mBasicTop
 				.c2t_bb($skill[sing along])
-				.c2t_bb($skill[darts: throw at %part1])
+				.c2t_hccs_bbDarts()
 				.c2t_bbIf("sealclubber || turtletamer || discobandit || accordionthief",
 					c2t_bbWhile("!pastround 20","attack;")
 				)
@@ -434,7 +438,7 @@ void main(int initround, monster foe, string page) {
 			return;
 
 		case $monster[sssshhsssblllrrggghsssssggggrrgglsssshhssslblgl]:
-			c2t_bb($skill[darts: throw at %part1])
+			c2t_hccs_bbDarts()
 			.c2t_bb("attack;repeat;")
 			.c2t_bbSubmit();
 			return;
@@ -536,5 +540,43 @@ boolean[monster] c2t_hccs_holidayWanderers() {
 		migratory pirate,
 		peripatetic pirate,
 		];
+}
+
+string c2t_hccs_bbDarts() {
+	boolean[string] moxie = $strings[arm,wheel,eye];
+	boolean[string] muscle = $strings[face,handle,wing,tentacle,mouth,fin,ear];
+	boolean[string] mysticality = $strings[stem,tail,beak,trunk,legs,shell,nothing,wall,body];
+	boolean[string] fallback = $strings[torso,pseudopod,branch,foot,...wing?,door,thorax,slime,butt];
+	boolean[string] aim;
+	skill[string] board = dart_parts_to_skills();
+	skill ski = $skill[darts: throw at %part1];
+	boolean done = false;
+
+	switch (my_primestat()) {
+		case $stat[moxie]:
+			aim = moxie;
+			break;
+		case $stat[muscle]:
+			aim = muscle;
+			break;
+		case $stat[mysticality]:
+			aim = mysticality;
+			break;
+	}
+
+	foreach part in aim if (board contains part) {
+		ski = board[part];
+		done = true;
+		break;
+	}
+	if (!done) foreach part in fallback if (board contains part) {
+		ski = board[part];
+		break;
+	}
+
+	return c2t_bb(ski);
+}
+string c2t_hccs_bbDarts(string m) {
+	return m + c2t_hccs_bbDarts();
 }
 
