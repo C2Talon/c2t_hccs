@@ -118,6 +118,8 @@ While these are not strictly required, not having enough that either save turns 
 * [packaged model train set](https://kol.coldfront.net/thekolwiki/index.php/Packaged_model_train_set) &mdash; lots of extra stats from fights and can smooth out any meat problems
 * [closed-circuit phone system](http://kol.coldfront.net/thekolwiki/index.php/closed-circuit%20phone%20system) &mdash; 11 or 12 extra free fights; can save 3.3 turns on item test
 * [cursed monkey glove](http://kol.coldfront.net/thekolwiki/index.php/cursed%20monkey%20glove) &mdash; will get effects from this before using genie wishes
+* [book of facts](https://kol.coldfront.net/thekolwiki/index.php/Book_of_facts) &mdash; Recall Facts: Circadian Rhythms used to get more rollover adventures
+* [packaged Everfull Dart Holster](https://kol.coldfront.net/thekolwiki/index.php/Packaged_Everfull_Dart_Holster) &mdash; tries to use its free kill whilst leveling; throws darts to level it up if it is equipped otherwise
 
 ## Bugs?
 Report bugs in the [issue tracker](https://github.com/C2Talon/c2t_hccs/issues).

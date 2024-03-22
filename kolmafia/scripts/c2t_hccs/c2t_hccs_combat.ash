@@ -550,7 +550,6 @@ string c2t_hccs_bbDarts() {
 	boolean[string] aim;
 	skill[string] board = dart_parts_to_skills();
 	skill ski = $skill[darts: throw at %part1];
-	boolean done = false;
 
 	switch (my_primestat()) {
 		case $stat[moxie]:
@@ -564,15 +563,11 @@ string c2t_hccs_bbDarts() {
 			break;
 	}
 
-	foreach part in aim if (board contains part) {
-		ski = board[part];
-		done = true;
-		break;
-	}
-	if (!done) foreach part in fallback if (board contains part) {
-		ski = board[part];
-		break;
-	}
+	foreach part in aim if (board contains part)
+		return c2t_bb(board[part]);
+
+	foreach part in fallback if (board contains part)
+		return c2t_bb(board[part]);
 
 	return c2t_bb(ski);
 }
