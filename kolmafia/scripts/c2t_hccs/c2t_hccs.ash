@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r27865;//darts functions
+since r27881;//apriling band helmet
 
 import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>
@@ -515,6 +515,9 @@ boolean c2t_hccs_preCoil() {
 	{
 		use(workshed);
 	}
+
+	//initial apriling band helmet intrinsic
+	c2t_hccs_aprilingBandHelmet($effect[apriling band celebration bop]);
 
 	//get rakes
 	if (get_campground() contains $item[a guide to burning leaves]
@@ -1564,6 +1567,13 @@ boolean c2t_hccs_preNoncombat() {
 	maximize(maxstr,false);
 	if (c2t_hccs_thresholdMet(TEST_NONCOMBAT))
 		return true;
+
+	//apriling band helmet
+	if (c2t_hccs_aprilingBandHelmet($effect[apriling band patrol beat])
+		&& c2t_hccs_thresholdmet(TEST_NONCOMBAT))
+	{
+		return true;
+	}
 
 	//replacing glob buff with this
 	//mafia doesn't seem to support retrieve_item() by itself for this yet, so visit_url() to the rescue:
