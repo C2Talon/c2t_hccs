@@ -81,7 +81,7 @@ void c2t_hccs_freeRestCheck();
 
 
 void main() {
-	c2t_assert(my_path() == "Community Service","Not in Community Service. Aborting.");
+	c2t_assert(my_path() == $path[community service],"Not in Community Service. Aborting.");
 	c2t_hccs_freeRestCheck();
 
 	try {
@@ -113,15 +113,16 @@ void main() {
 		c2t_hccs_testHandler(TEST_NONCOMBAT);
 		c2t_hccs_testHandler(TEST_WEAPON);
 		c2t_hccs_testHandler(TEST_SPELL);
-
-		//final service here
-		if (!get_property('c2t_hccs_skipFinalService').to_boolean())
-			c2t_hccs_doTest(30);
-		
-		c2t_hccs_printInfo('Should be done with the Community Service run');
 	}
 	finally
 		c2t_hccs_exit();
+
+	//final service after cleanup
+	if (get_property("csServicesPerformed").split_string(",").count() == 11
+		&& !get_property('c2t_hccs_skipFinalService').to_boolean())
+	{
+		c2t_hccs_doTest(30);
+	}
 }
 
 
