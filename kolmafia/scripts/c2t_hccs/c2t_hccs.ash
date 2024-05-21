@@ -10,6 +10,7 @@ import <c2t_hccs_aux.ash>
 import <c2t_hccs_preAdv.ash>
 import <c2t_lib.ash>
 import <c2t_cast.ash>
+import <c2t_apriling.ash>
 
 int START_TIME = now_to_int();
 
@@ -518,7 +519,7 @@ boolean c2t_hccs_preCoil() {
 	}
 
 	//initial apriling band helmet intrinsic
-	c2t_hccs_aprilingBandHelmet($effect[apriling band celebration bop]);
+	c2t_apriling($effect[apriling band celebration bop]);
 
 	//get rakes
 	if (get_campground() contains $item[a guide to burning leaves]
@@ -1570,7 +1571,7 @@ boolean c2t_hccs_preNoncombat() {
 		return true;
 
 	//apriling band helmet
-	if (c2t_hccs_aprilingBandHelmet($effect[apriling band patrol beat])
+	if (c2t_apriling($effect[apriling band patrol beat])
 		&& c2t_hccs_thresholdmet(TEST_NONCOMBAT))
 	{
 		return true;

@@ -15,7 +15,6 @@ import <c2t_hccs_preAdv.ash>
 /*-=-+-=-+-=-+-=-+-=-+-=-
   function declarations
   -=-+-=-+-=-+-=-+-=-+-=-*/
-//d--apriling band helmet
 //d--asdon
 //d--backup camera
 //d--briefcase
@@ -46,20 +45,6 @@ import <c2t_hccs_preAdv.ash>
 //d--vip floundry
 //d--vote
 
-//d--apriling band helmet
-//returns true if have apriling
-boolean c2t_hccs_haveAprilingBandHelmet();
-
-//gets effect from apriling
-//returns true if have effect at end
-boolean c2t_hccs_aprilingBandHelmet(effect eff);
-
-//gets item from apriling
-//returns true if have item at end
-boolean c2t_hccs_aprilingBandHelmet(item ite);
-
-//play instrument from apriling
-void c2t_hccs_aprilingBandHelmetPlay(item ite);
 
 //d--asdon
 //returns true if asdon in workshed
@@ -298,7 +283,6 @@ void c2t_hccs_vote();
 /*-=-+-=-+-=-+-=-+-=-+-=-
   function implementations
   -=-+-=-+-=-+-=-+-=-+-=-*/
-//i--apriling band helmet
 //i--asdon
 //i--backup camera
 //i--briefcase
@@ -329,70 +313,6 @@ void c2t_hccs_vote();
 //i--vip floundry
 //i--vote
 
-//i--apriling band helmet
-boolean c2t_hccs_haveAprilingBandHelmet() {
-	return available_amount($item[apriling band helmet]) > 0;
-}
-boolean c2t_hccs_aprilingBandHelmet(effect eff) {
-	if (have_effect(eff) > 0)
-		return true;
-	if (!c2t_hccs_haveAprilingBandHelmet())
-		return false;
-	if (!($effects[
-		apriling band patrol beat,
-		apriling band battle cadence,
-		apriling band celebration bop
-		] contains eff))
-	{
-		return false;
-	}
-
-	int go = eff.id - $effect[apriling band patrol beat].id + 1;
-
-	visit_url(`inventory.php?pwd={my_hash()}&action=apriling`,false,true);
-	run_choice(go);
-	run_choice(9);
-
-	return have_effect(eff) > 0;
-}
-boolean c2t_hccs_aprilingBandHelmet(item ite) {
-	if (available_amount(ite) > 0)
-		return true;
-	if (!c2t_hccs_haveAprilingBandHelmet())
-		return false;
-	if (!($items[
-		apriling band saxophone,
-		apriling band quad tom,
-		apriling band tuba,
-		apriling band staff,
-		apriling band piccolo
-		] contains ite))
-	{
-		return false;
-	}
-
-	int go = ite.id - $item[apriling band saxophone].id + 4;
-	visit_url(`inventory.php?pwd={my_hash()}&action=apriling`,false,true);
-	run_choice(go);
-	run_choice(9);
-
-	return available_amount(ite) > 0;
-}
-void c2t_hccs_aprilingBandHelmetPlay(item ite) {
-	if (available_amount(ite) == 0)
-		return;
-	if (!($items[
-		apriling band saxophone,
-		apriling band quad tom,
-		apriling band tuba,
-		apriling band staff,
-		apriling band piccolo
-		] contains ite))
-	{
-		return;
-	}
-	visit_url(`inventory.php?pwd={my_hash()}&iid={ite.id}&action=aprilplay`,false,true);
-}
 
 //i--asdon
 boolean c2t_hccs_haveAsdon() return get_workshed() == $item[asdon martin keyfob (on ring)];
