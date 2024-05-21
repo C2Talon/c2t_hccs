@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r27881;//apriling band helmet
+since r27930;//mayam resonance
 
 import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>
@@ -11,6 +11,7 @@ import <c2t_hccs_preAdv.ash>
 import <c2t_lib.ash>
 import <c2t_cast.ash>
 import <c2t_apriling.ash>
+import <c2t_mayam.ash>
 
 int START_TIME = now_to_int();
 
@@ -890,6 +891,7 @@ boolean c2t_hccs_levelup() {
 		drink(1,itew);
 	}
 	//need adventures straight away if dangerously low
+	else if (my_adventures() <= 1 && c2t_mayam($item[yam battery]));//intentional semicolon
 	else if (my_adventures() <= 1) {
 		//TODO more booze options
 		//eye and a twist from crimbo 2020
