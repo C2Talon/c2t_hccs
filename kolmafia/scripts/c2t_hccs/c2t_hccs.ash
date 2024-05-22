@@ -891,8 +891,9 @@ boolean c2t_hccs_levelup() {
 		drink(1,itew);
 	}
 	//need adventures straight away if dangerously low
-	else if (my_adventures() <= 1 && c2t_mayam($item[yam battery]));//intentional semicolon
-	else if (my_adventures() <= 1) {
+	else if (my_adventures() <= 1
+		&& !c2t_mayam($item[yam battery]))
+	{
 		//TODO more booze options
 		//eye and a twist from crimbo 2020
 		c2t_hccs_haveUse($skill[eye and a twist]);
