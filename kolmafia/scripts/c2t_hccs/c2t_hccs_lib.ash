@@ -2,7 +2,9 @@
 //c2t
 
 
+import <c2t_hccs_constants.ash>
 import <c2t_lib.ash>
+
 
 /*============
   declarations
@@ -60,6 +62,25 @@ void c2t_hccs_printWarn(string str);
 //pull 1 of an item from storage if not already have it
 //returns true in the case of pulling an item or if the item already is available
 boolean c2t_hccs_pull(item ite);
+
+//stores given test data to a property
+void c2t_hccs_testData(string testType,int testNum,int turnsTaken,int turnsExpected);
+
+//formats and prints stored test data and run summary
+void c2t_hccs_printTestData();
+
+//returns true if given test's threshold is met, omitting threshold uses data from c2t_hccs_thresholds property
+boolean c2t_hccs_thresholdMet(int test,int threshold);
+boolean c2t_hccs_thresholdMet(int test);
+
+//returns an estimate of how many turns a given test will take in the moment
+int c2t_hccs_testTurns(int test);
+
+//returns true if a given test is done
+boolean c2t_hccs_testDone(int test);
+
+//visits council and does given test
+void c2t_hccs_doTest(int test);
 
 
 /*===============
@@ -257,5 +278,114 @@ boolean c2t_hccs_pull(item ite) {
 	else if (available_amount(ite) > 0)
 		return true;
 	return false;
+}
+
+void c2t_hccs_testData(string testType,int testNum,int turnsTaken,int turnsExpected) {
+	if (testNum == TEST_COIL_WIRE)
+		return;
+
+	set_property("_c2t_hccs_testData",get_property("_c2t_hccs_testData")+(get_property("_c2t_hccs_testData") == ""?"":";")+`{testType},{testNum},{turnsTaken},{turnsExpected}`);
+}
+
+void c2t_hccs_printTestData() {
+	string [int] d;
+	string pulls = get_property("_roninStoragePulls");
+
+	print("");
+	if (pulls != "") {
+		print("Pulls used this run:");
+		foreach i,x in split_string(pulls,",")
+			print(x.to_item());
+		print("");
+	}
+	print("Summary of tests:");
+	foreach i,x in split_string(get_property("_c2t_hccs_testData"),";") {
+		d = split_string(x,",");
+		print(`{d[0]} test took {c2t_hccs_plural(d[2].to_int(),"turn","turns")}{to_int(d[1]) > 4 && to_int(d[3]) < 1?"; it's being overcapped by "+c2t_hccs_plural(1-to_int(d[3]),"turn","turns")+" of resources":""}`);
+	}
+	print(`{my_daycount()}/{turns_played()} turns as {my_class()}`);
+	print(`Organ use: {my_fullness()}/{my_inebriety()}/{my_spleen_use()}`);
+}
+
+boolean c2t_hccs_thresholdMet(int test,int threshold) {
+	if (test == TEST_COIL_WIRE || test == TEST_FINAL)
+		return true;
+	return c2t_hccs_testTurns(test) <= threshold;
+}
+boolean c2t_hccs_thresholdMet(int test) {
+	string [int] arr = split_string(get_property('c2t_hccs_thresholds'),",");
+
+	if (count(arr) == 10 && arr[test-1].to_int() > 0 && arr[test-1].to_int() <= 60)
+		return c2t_hccs_thresholdMet(test,arr[test-1].to_int());
+	else {
+		c2t_hccs_printWarn("Warning: the c2t_hccs_thresholds property is broken for this test; defaulting to a 1-turn threshold.");
+		return c2t_hccs_thresholdMet(test,1);
+	}
+}
+
+int c2t_hccs_testTurns(int test) {
+	int num;
+	float offset;
+	switch (test) {
+		default:
+			abort('Something broke with checking turns on test '+test);
+		case TEST_HP:
+			return (60 - (my_maxhp() - my_buffedstat($stat[muscle]) + 3)/30);
+		case TEST_MUS:
+			return (60 - (my_buffedstat($stat[muscle]) - my_basestat($stat[muscle]))/30);
+		case TEST_MYS:
+			return (60 - (my_buffedstat($stat[mysticality]) - my_basestat($stat[mysticality]))/30);
+		case TEST_MOX:
+			return (60 - (my_buffedstat($stat[moxie]) - my_basestat($stat[moxie]))/30);
+		case TEST_FAMILIAR:
+			return (60 - floor((numeric_modifier('familiar weight')+familiar_weight(my_familiar()))/5));
+		case TEST_WEAPON:
+			num = (have_effect($effect[bow-legged swagger]) > 0?25:50);
+			offset = get_power(equipped_item($slot[weapon]));
+			offset += weapon_type(equipped_item($slot[off-hand])) != $stat[none]
+				? get_power(equipped_item($slot[off-hand]))
+				: 0;
+			offset += weapon_type(equipped_item($slot[familiar])) != $stat[none]
+				? get_power(equipped_item($slot[familiar]))
+				: 0;
+			offset *= 0.15;
+			return (60 - floor((numeric_modifier('weapon damage') - offset) / num + 0.001) - floor(numeric_modifier('weapon damage percent') / num + 0.001));
+		case TEST_SPELL:
+			return (60 - floor(numeric_modifier('spell damage') / 50 + 0.001) - floor(numeric_modifier('spell damage percent') / 50 + 0.001));
+		case TEST_NONCOMBAT:
+			num = -round(numeric_modifier('combat rate'));
+			return (60 - (num > 25?(num-25)*3+15:num/5*3));
+		case TEST_ITEM:
+			return (60 - floor(numeric_modifier('Booze Drop') / 15 + 0.001) - floor(numeric_modifier('Item Drop') / 30 + 0.001));
+		case TEST_HOT_RES:
+			return (60 - floor(numeric_modifier('hot resistance')));
+		case TEST_COIL_WIRE:
+			return 60;
+		case TEST_FINAL://final service in case that gets checked
+			return 0;
+	}
+}
+
+boolean c2t_hccs_testDone(int test) {
+	print(`Checking test {test}...`);
+	if (test == TEST_FINAL
+		&& !get_property('kingLiberated').to_boolean()
+		&& get_property("csServicesPerformed").split_string(",").count() == 11)
+	{
+		return false;//to do the 'test' and to set kingLiberated
+	}
+	else if (get_property('kingLiberated').to_boolean())
+		return true;
+	return get_property('csServicesPerformed').contains_text(TEST_NAME[test]);
+}
+
+void c2t_hccs_doTest(int test) {
+	if (!c2t_hccs_testDone(test)) {
+		visit_url('council.php');
+		visit_url('choice.php?pwd&whichchoice=1089&option='+test,true,true);
+		c2t_assert(c2t_hccs_testDone(test),`Failed to do test {test}. Out of turns?`);
+	}
+	else
+		print(`Test {test} already done.`);
 }
 

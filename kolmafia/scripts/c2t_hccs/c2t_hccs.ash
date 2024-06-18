@@ -3,9 +3,10 @@
 
 since r27930;//mayam resonance
 
+import <c2t_hccs_constants.ash>
+import <c2t_hccs_properties.ash>
 import <c2t_hccs_lib.ash>
 import <c2t_hccs_resources.ash>
-import <c2t_hccs_properties.ash>
 import <c2t_hccs_aux.ash>
 import <c2t_hccs_preAdv.ash>
 import <c2t_lib.ash>
@@ -14,34 +15,6 @@ import <c2t_apriling.ash>
 import <c2t_mayam.ash>
 
 int START_TIME = now_to_int();
-
-
-//wtb enum
-int TEST_HP = 1;
-int TEST_MUS = 2;
-int TEST_MYS = 3;
-int TEST_MOX = 4;
-int TEST_FAMILIAR = 5;
-int TEST_WEAPON = 6;
-int TEST_SPELL = 7;
-int TEST_NONCOMBAT = 8;
-int TEST_ITEM = 9;
-int TEST_HOT_RES = 10;
-int TEST_COIL_WIRE = 11;
-
-
-string[12] TEST_NAME;
-TEST_NAME[TEST_COIL_WIRE] = "Coil Wire";
-TEST_NAME[TEST_HP] = "Donate Blood";
-TEST_NAME[TEST_MUS] = "Feed The Children";
-TEST_NAME[TEST_MYS] = "Build Playground Mazes";
-TEST_NAME[TEST_MOX] = "Feed Conspirators";
-TEST_NAME[TEST_ITEM] = "Make Margaritas";
-TEST_NAME[TEST_HOT_RES] = "Clean Steam Tunnels";
-TEST_NAME[TEST_FAMILIAR] = "Breed More Collies";
-TEST_NAME[TEST_NONCOMBAT] = "Be a Living Statue";
-TEST_NAME[TEST_WEAPON] = "Reduce Gazelle Population";
-TEST_NAME[TEST_SPELL] = "Make Sausage";
 
 
 void c2t_hccs_init();
@@ -63,19 +36,13 @@ boolean c2t_hccs_preNoncombat();
 boolean c2t_hccs_preSpell();
 boolean c2t_hccs_preWeapon();
 void c2t_hccs_testHandler(int test);
-boolean c2t_hccs_testDone(int test);
-void c2t_hccs_doTest(int test);
 void c2t_hccs_fights();
 boolean c2t_hccs_wandererFight();
-int c2t_hccs_testTurns(int test);
-boolean c2t_hccs_thresholdMet(int test);
 void c2t_hccs_mod2log(string str);
 void c2t_hccs_printRunTime(boolean final);
 void c2t_hccs_printRunTime() c2t_hccs_printRunTime(false);
 boolean c2t_hccs_fightGodLobster();
 void c2t_hccs_breakfast();
-void c2t_hccs_printTestData();
-void c2t_hccs_testData(string testType,int testNum,int turnsTaken,int turnsExpected);
 familiar c2t_hccs_levelingFamiliar(boolean safeOnly);
 void c2t_hccs_shadowRiftFights();
 void c2t_hccs_shadowRiftBoss();
@@ -123,7 +90,7 @@ void main() {
 	if (get_property("csServicesPerformed").split_string(",").count() == 11
 		&& !get_property('c2t_hccs_skipFinalService').to_boolean())
 	{
-		c2t_hccs_doTest(30);
+		c2t_hccs_doTest(TEST_FINAL);
 	}
 }
 
@@ -137,7 +104,6 @@ void c2t_hccs_mod2log(string str) {
 	if (get_property("c2t_hccs_printModtrace").to_boolean())
 		logprint(cli_execute_output(str));
 }
-
 
 //limited breakfast to only what might be used
 void c2t_hccs_breakfast() {
@@ -165,9 +131,6 @@ void c2t_hccs_breakfast() {
 	if (c2t_hccs_gardenPeppermint())
 		cli_execute("garden pick");
 }
-
-
-
 
 boolean c2t_hccs_fightGodLobster() {
 	if (!have_familiar($familiar[god lobster]))
@@ -296,95 +259,6 @@ void c2t_hccs_testHandler(int test) {
 	c2t_hccs_printRunTime();
 }
 
-
-//store results of tests
-void c2t_hccs_testData(string testType,int testNum,int turnsTaken,int turnsExpected) {
-	if (testNum == TEST_COIL_WIRE)
-		return;
-
-	set_property("_c2t_hccs_testData",get_property("_c2t_hccs_testData")+(get_property("_c2t_hccs_testData") == ""?"":";")+`{testType},{testNum},{turnsTaken},{turnsExpected}`);
-}
-
-//print results of tests
-void c2t_hccs_printTestData() {
-	string [int] d;
-	string pulls = get_property("_roninStoragePulls");
-
-	print("");
-	if (pulls != "") {
-		print("Pulls used this run:");
-		foreach i,x in split_string(pulls,",")
-			print(x.to_item());
-		print("");
-	}
-	print("Summary of tests:");
-	foreach i,x in split_string(get_property("_c2t_hccs_testData"),";") {
-		d = split_string(x,",");
-		print(`{d[0]} test took {c2t_hccs_plural(d[2].to_int(),"turn","turns")}{to_int(d[1]) > 4 && to_int(d[3]) < 1?"; it's being overcapped by "+c2t_hccs_plural(1-to_int(d[3]),"turn","turns")+" of resources":""}`);
-	}
-	print(`{my_daycount()}/{turns_played()} turns as {my_class()}`);
-	print(`Organ use: {my_fullness()}/{my_inebriety()}/{my_spleen_use()}`);
-}
-
-//precursor to facilitate using only as many resources as needed and not more
-int c2t_hccs_testTurns(int test) {
-	int num;
-	float offset;
-	switch (test) {
-		default:
-			abort('Something broke with checking turns on test '+test);
-		case TEST_HP:
-			return (60 - (my_maxhp() - my_buffedstat($stat[muscle]) + 3)/30);
-		case TEST_MUS:
-			return (60 - (my_buffedstat($stat[muscle]) - my_basestat($stat[muscle]))/30);
-		case TEST_MYS:
-			return (60 - (my_buffedstat($stat[mysticality]) - my_basestat($stat[mysticality]))/30);
-		case TEST_MOX:
-			return (60 - (my_buffedstat($stat[moxie]) - my_basestat($stat[moxie]))/30);
-		case TEST_FAMILIAR:
-			return (60 - floor((numeric_modifier('familiar weight')+familiar_weight(my_familiar()))/5));
-		case TEST_WEAPON:
-			num = (have_effect($effect[bow-legged swagger]) > 0?25:50);
-			offset = get_power(equipped_item($slot[weapon]));
-			offset += weapon_type(equipped_item($slot[off-hand])) != $stat[none]
-				? get_power(equipped_item($slot[off-hand]))
-				: 0;
-			offset += weapon_type(equipped_item($slot[familiar])) != $stat[none]
-				? get_power(equipped_item($slot[familiar]))
-				: 0;
-			offset *= 0.15;
-			return (60 - floor((numeric_modifier('weapon damage') - offset) / num + 0.001) - floor(numeric_modifier('weapon damage percent') / num + 0.001));
-		case TEST_SPELL:
-			return (60 - floor(numeric_modifier('spell damage') / 50 + 0.001) - floor(numeric_modifier('spell damage percent') / 50 + 0.001));
-		case TEST_NONCOMBAT:
-			num = -round(numeric_modifier('combat rate'));
-			return (60 - (num > 25?(num-25)*3+15:num/5*3));
-		case TEST_ITEM:
-			return (60 - floor(numeric_modifier('Booze Drop') / 15 + 0.001) - floor(numeric_modifier('Item Drop') / 30 + 0.001));
-		case TEST_HOT_RES:
-			return (60 - floor(numeric_modifier('hot resistance')));
-		case TEST_COIL_WIRE:
-			return 60;
-		case 30://final service in case that gets checked
-			return 0;
-	}
-}
-
-boolean c2t_hccs_thresholdMet(int test) {
-	if (test == TEST_COIL_WIRE || test == 30)
-		return true;
-
-	string [int] arr = split_string(get_property('c2t_hccs_thresholds'),",");
-
-	if (count(arr) == 10 && arr[test-1].to_int() > 0 && arr[test-1].to_int() <= 60)
-		return (c2t_hccs_testTurns(test) <= arr[test-1].to_int());
-	else {
-		c2t_hccs_printWarn("Warning: the c2t_hccs_thresholds property is broken for this test; defaulting to a 1-turn threshold.");
-		return (c2t_hccs_testTurns(test) <= 1);
-	}
-}
-
-
 void c2t_hccs_freeRestCheck() {
 	//common enough issue to warrant
 	string chateau = "chateauAvailable";
@@ -418,7 +292,6 @@ void c2t_hccs_freeRestCheck() {
 
 	c2t_hccs_printInfo("Free rest option found and set");
 }
-
 
 //sets and backup some settings on start
 void c2t_hccs_init() {
@@ -1516,7 +1389,6 @@ boolean c2t_hccs_preFamiliar() {
 	return c2t_hccs_thresholdMet(TEST_FAMILIAR);
 }
 
-
 boolean c2t_hccs_preNoncombat() {
 	string maxstr = '-tie,-100combat,familiar weight';
 
@@ -1906,7 +1778,6 @@ boolean c2t_hccs_preSpell() {
 
 	return c2t_hccs_thresholdMet(TEST_SPELL);
 }
-
 
 // stat tests are super lazy for now
 // TODO need to figure out a way to not overdo buffs, as some buffers may be needed for pizzas
@@ -2667,25 +2538,4 @@ familiar c2t_hccs_levelingFamiliar(boolean safeOnly) {
 	use_familiar(out);
 	return out;
 }
-
-// will fail if haiku dungeon stuff spills outside of itself, so probably avoid that or make sure to do combats elsewhere just before a test
-boolean c2t_hccs_testDone(int test) {
-	print(`Checking test {test}...`);
-	if (test == 30 && !get_property('kingLiberated').to_boolean() && get_property("csServicesPerformed").split_string(",").count() == 11)
-		return false;//to do the 'test' and to set kingLiberated
-	else if (get_property('kingLiberated').to_boolean())
-		return true;
-	return get_property('csServicesPerformed').contains_text(TEST_NAME[test]);
-}
-
-void c2t_hccs_doTest(int test) {
-	if (!c2t_hccs_testDone(test)) {
-		visit_url('council.php');
-		visit_url('choice.php?pwd&whichchoice=1089&option='+test,true,true);
-		c2t_assert(c2t_hccs_testDone(test),`Failed to do test {test}. Out of turns?`);
-	}
-	else
-		print(`Test {test} already done.`);
-}
-
 
