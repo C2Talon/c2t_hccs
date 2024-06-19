@@ -354,42 +354,7 @@ boolean c2t_hccs_asdonFill(int target) {
 	if (get_fuel() >= target)
 		return true;
 
-	//preemptively trade speakeasy chits for booze
-	if (item_amount($item[drink chit]) > 0)
-		buy($coinmaster[fancy dan the cocktail man],min(5,item_amount($item[drink chit])),$item[velvet veil]);
-
-	//probably safer to use an allow list than to maintain a blocklist against all available; i.e. don't want to burn something someone might depend on like legendary pizzas or things I haven't thought of
-	boolean [item] fuel = $items[
-		//mayday
-		20-lb can of rice and beans,
-		bar of freeze-dried water,
-		carrot cake precipice bar,
-		cool mint precipice bar,
-		expired mre,
-		//portscan
-		government cheese,
-		//nep
-		middle of the road&trade; brand whiskey,
-		pb&j with the crusts cut off,
-		//sit
-		shot of wasp venom,
-		//super good fruit,
-		//speakeasy
-		swamp haunch,
-		velvet veil,
-		//shadow rift
-		shadow bread,
-		//shadow sausage,
-		];
-
-	//try each of the allowed items
-	foreach x in fuel while (item_amount(x) > 0) {
-		cli_execute(`asdonmartin fuel 1 {x}`);
-		if (get_fuel() >= target)
-			return true;
-	}
-
-	//fallback on soda bread
+	//soda bread
 	int start;
 	repeat {
 		start = get_fuel();
