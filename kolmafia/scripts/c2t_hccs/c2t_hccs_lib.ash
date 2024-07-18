@@ -298,11 +298,15 @@ void c2t_hccs_printTestData() {
 			print(x.to_item());
 		print("");
 	}
-	print("Summary of tests:");
-	foreach i,x in split_string(get_property("_c2t_hccs_testData"),";") {
-		d = split_string(x,",");
-		print(`{d[0]} test took {c2t_hccs_plural(d[2].to_int(),"turn","turns")}{to_int(d[1]) > 4 && to_int(d[3]) < 1?"; it's being overcapped by "+c2t_hccs_plural(1-to_int(d[3]),"turn","turns")+" of resources":""}`);
+	if (get_property("_c2t_hccs_testData") != "") {
+		print("Summary of tests:");
+		foreach i,x in split_string(get_property("_c2t_hccs_testData"),";") {
+			d = split_string(x,",");
+			print(`{d[0]} test took {c2t_hccs_plural(d[2].to_int(),"turn","turns")}{to_int(d[1]) > 4 && to_int(d[3]) < 1?"; it's being overcapped by "+c2t_hccs_plural(1-to_int(d[3]),"turn","turns")+" of resources":""}`);
+		}
 	}
+	else
+		print("Summary of tests not found","red");
 	print(`{my_daycount()}/{turns_played()} turns as {my_class()}`);
 	print(`Organ use: {my_fullness()}/{my_inebriety()}/{my_spleen_use()}`);
 }
