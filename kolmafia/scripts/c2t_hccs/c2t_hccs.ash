@@ -47,6 +47,8 @@ familiar c2t_hccs_levelingFamiliar(boolean safeOnly);
 void c2t_hccs_shadowRiftFights();
 void c2t_hccs_shadowRiftBoss();
 void c2t_hccs_freeRestCheck();
+boolean c2t_hccs_unlockGuildMoxie();
+boolean c2t_hccs_unlockDistantWoods();
 
 
 void main() {
@@ -630,6 +632,10 @@ boolean c2t_hccs_preCoil() {
 	
 	// beach access
 	c2t_assert(retrieve_item(1,$item[bitchin' meatcar]),"Couldn't get a bitchin' meatcar");
+
+	// moxie guild unlock
+	if (c2t_hccs_unlockGuildMoxie())
+		c2t_hccs_unlockDistantWoods();
 
 	// tune moon sign
 	if (!get_property('moonTuned').to_boolean()) {
@@ -2081,6 +2087,19 @@ void c2t_hccs_fights() {
 		run_combat();
 	}
 
+	//science tent tentacle
+	if (get_property("lastGuildStoreOpen").to_int() == my_ascensions()
+		&& get_property("questG02Whitecastle") == "started"
+		&& !get_property('_eldritchTentacleFought').to_boolean())
+	{
+		maximize(`mainstat,100exp,-equip {c2t_pilcrow($item[makeshift garbage shirt])},10000 bonus {c2t_pilcrow($item[designer sweatpants])}`+fam,false);
+		c2t_hccs_preAdv();
+		visit_url("place.php?whichplace=forestvillage&action=fv_scientist",false);
+		foreach i,x in available_choice_options() if (x.contains_text("fight that tentacle"))
+			run_choice(i);
+		run_combat();
+	}
+
 	//speakeasy / oliver's place
 	if (get_property("ownsSpeakeasy").to_boolean()
 		&& get_property("_speakeasyFreeFights").to_int() < 3)
@@ -2537,5 +2556,43 @@ familiar c2t_hccs_levelingFamiliar(boolean safeOnly) {
 
 	use_familiar(out);
 	return out;
+}
+
+boolean c2t_hccs_unlockGuildMoxie() {
+	if (my_primestat() != $stat[moxie])
+		return false;
+	if (available_amount($item[tearaway pants]) == 0)
+		return false;
+	if (get_property("lastGuildStoreOpen").to_int() == my_ascensions())
+		return true;
+
+	c2t_hccs_printInfo("unlocking guild");
+
+	item oldPants = equipped_item($slot[pants]);
+
+	equip($item[tearaway pants]);
+	visit_url("guild.php?place=challenge",false);
+	//equip(oldPants);
+
+	return get_property("lastGuildStoreOpen").to_int() == my_ascensions();
+}
+
+boolean c2t_hccs_unlockDistantWoods() {
+	if (get_property("questG02Whitecastle") != "started") {
+		c2t_hccs_printInfo("unlocking Distant Woods");
+		try {
+			while (get_property("questG02Whitecastle") != "started") {
+				visit_url("guild.php?place=paco",false);
+				run_turn();
+			}
+		}
+		finally {//really, really don't want to skip this and being lazy about it as it's not tracked otherwise
+			visit_url("place.php?whichplace=forestvillage&action=fv_scientist",false);
+			foreach i,x in available_choice_options() if (x.contains_text("Great!"))
+				run_choice(i);
+		}
+	}
+
+	return true;
 }
 

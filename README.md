@@ -133,6 +133,7 @@ While these are not strictly required, not having enough that either save turns 
     * [packaged Everfull Dart Holster](https://kol.coldfront.net/thekolwiki/index.php/Packaged_Everfull_Dart_Holster) &mdash; tries to use its free kill whilst leveling; throws darts to level it up if it is equipped otherwise
     * [boxed Apriling band helmet](https://kol.coldfront.net/thekolwiki/index.php/Boxed_Apriling_band_helmet) &mdash; uses the intrinsics to help with item and non-combat tests
     * [boxed Mayam Calendar](https://kol.coldfront.net/thekolwiki/index.php/Boxed_Mayam_Calendar) &mdash; gets adventures post-coil if low
+    * [untorn tearaway pants package](https://kol.coldfront.net/thekolwiki/index.php/Untorn_tearaway_pants_package) &mdash; if moxie, used to unlock guild, unlock distant woods, and fight tentacle in science tent
 
 ## Bugs?
 Report bugs in the [issue tracker](https://github.com/C2Talon/c2t_hccs/issues).

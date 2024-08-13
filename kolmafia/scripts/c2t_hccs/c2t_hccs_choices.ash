@@ -15,6 +15,11 @@ void main (int id,string page) {
 		default:
 			return;
 
+		//Another Errand I Mean Quest
+		case 930:
+			run_choice(1);
+			break;
+
 		//NEP start
 		// 1: take quest
 		// 2: decline quest
