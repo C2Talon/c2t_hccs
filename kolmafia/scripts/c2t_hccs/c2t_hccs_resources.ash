@@ -17,6 +17,7 @@ import <c2t_hccs_preAdv.ash>
   -=-+-=-+-=-+-=-+-=-+-=-*/
 //d--asdon
 //d--backup camera
+//d--bat wings
 //d--briefcase
 //d--cartography
 //d--cincho de mayo
@@ -68,6 +69,14 @@ boolean c2t_hccs_haveBackupCamera();
 
 //returns number of uses left
 int c2t_hccs_backupCameraLeft();
+
+
+//d--bat wings
+//returns true if have bat wings
+boolean c2t_hccs_haveBatWings();
+
+//returns true if bat wings skill "rest upside down" was used
+boolean c2t_hccs_batWingsRestore();
 
 
 //d--briefcase
@@ -285,6 +294,7 @@ void c2t_hccs_vote();
   -=-+-=-+-=-+-=-+-=-+-=-*/
 //i--asdon
 //i--backup camera
+//i--bat wings
 //i--briefcase
 //i--cartography
 //i--cincho de mayo
@@ -385,6 +395,17 @@ int c2t_hccs_backupCameraLeft() {
 	return 11-get_property('_backUpUses').to_int();
 }
 
+//i--bat wings
+boolean c2t_hccs_haveBatWings() {
+	return available_amount($item[bat wings]) > 0;
+}
+boolean c2t_hccs_batWingsRestore() {
+	if (!c2t_hccs_haveBatWings())
+		return false;
+	if ($skill[rest upside down].dailylimit == 0)
+		return false;
+	return c2t_equipCast($item[bat wings],$skill[rest upside down]);
+}
 
 //i--briefcase
 boolean c2t_hccs_briefcase() {
@@ -526,7 +547,7 @@ boolean c2t_hccs_coldMedicineCabinet(string arg) {
 	if (arg.to_lower_case() != "drink")
 		return false;
 
-	maximize("100mainstat,mp",false);
+	maximize(`-tie,100mainstat,mp`,false);
 	item itew;
 	buffer bufw = visit_url("campground.php?action=workshed");
 	switch (my_primestat()) {
@@ -545,7 +566,7 @@ boolean c2t_hccs_coldMedicineCabinet(string arg) {
 	run_choice(3);
 
 	//go back to full MP equipment
-	maximize(`mp,-equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])},-equip {c2t_pilcrow($item[&quot;i voted!&quot; sticker])}`,false);
+	maximize(`-tie,-equip {c2t_pilcrow($item[bat wings])},mp,-equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])},-equip {c2t_pilcrow($item[&quot;i voted!&quot; sticker])}`,false);
 	return true;
 }
 

@@ -134,6 +134,7 @@ While these are not strictly required, not having enough that either save turns 
     * [boxed Apriling band helmet](https://kol.coldfront.net/thekolwiki/index.php/Boxed_Apriling_band_helmet) &mdash; uses the intrinsics to help with item and non-combat tests
     * [boxed Mayam Calendar](https://kol.coldfront.net/thekolwiki/index.php/Boxed_Mayam_Calendar) &mdash; gets adventures post-coil if low
     * [untorn tearaway pants package](https://kol.coldfront.net/thekolwiki/index.php/Untorn_tearaway_pants_package) &mdash; if moxie, used to unlock guild, unlock distant woods, and fight tentacle in science tent
+    * [boxed bat wings](https://kol.coldfront.net/thekolwiki/index.php/Boxed_bat_wings) &mdash; MP recovery
 
 ## Bugs?
 Report bugs in the [issue tracker](https://github.com/C2Talon/c2t_hccs/issues).

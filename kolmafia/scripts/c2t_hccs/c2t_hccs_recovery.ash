@@ -4,6 +4,7 @@
 //recovery script for c2t_hccs
 
 import <c2t_hccs_lib.ash>
+import <c2t_hccs_resources.ash>
 
 boolean c2t_hccs_restoreHp(int amount);
 boolean c2t_hccs_restoreHp() return c2t_hccs_restoreHp(0);
@@ -24,9 +25,9 @@ boolean c2t_hccs_restoreHp(int amount) {
 
 	//handle beaten up
 	if (have_effect($effect[beaten up]) > 0) {
-		skill temp = $skill[tongue of the walrus];
-		if (have_skill(temp) && my_mp() >= mp_cost(temp))
-			c2t_hccs_haveUse(temp);
+		skill tongue = $skill[tongue of the walrus];
+		if (have_skill(tongue) && my_mp() >= mp_cost(tongue))
+			c2t_hccs_haveUse(tongue);
 		else
 			cli_execute("rest free");
 		//if all else fails
@@ -56,8 +57,10 @@ boolean c2t_hccs_restoreMp(int amount) {
 	if (start >= target)
 		return true;
 
+	//bat wings recovery takes priority over all
+	if (c2t_hccs_batWingsRestore());
 	//only do 1 of rest free or eat magic sausage
-	if ((my_maxmp() > 500 || target - start > 100) && retrieve_item($item[magical sausage]))
+	else if ((my_maxmp() > 500 || target - start > 100) && retrieve_item($item[magical sausage]))
 		eat($item[magical sausage]);
 	else if (total - used > 0)
 		cli_execute("rest free");

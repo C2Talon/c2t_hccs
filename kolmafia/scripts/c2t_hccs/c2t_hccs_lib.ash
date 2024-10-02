@@ -306,7 +306,7 @@ void c2t_hccs_printTestData() {
 		}
 	}
 	else
-		print("Summary of tests not found","red");
+		print("Summary of tests is empty","red");
 	print(`{my_daycount()}/{turns_played()} turns as {my_class()}`);
 	print(`Organ use: {my_fullness()}/{my_inebriety()}/{my_spleen_use()}`);
 }
