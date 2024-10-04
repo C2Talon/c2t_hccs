@@ -58,16 +58,17 @@ boolean c2t_hccs_restoreMp(int amount) {
 		return true;
 
 	//bat wings recovery takes priority over all
-	if (c2t_hccs_batWingsRestore());
-	//only do 1 of rest free or eat magic sausage
-	else if ((my_maxmp() > 500 || target - start > 100) && retrieve_item($item[magical sausage]))
-		eat($item[magical sausage]);
-	else if (total - used > 0)
-		cli_execute("rest free");
-	else if (retrieve_item($item[magical sausage]))
-		eat($item[magical sausage]);
-	else
-		c2t_hccs_printWarn("Unable to recover MP with magical sausages or free rests");
+	if (!c2t_hccs_batWingsRestore()) {
+		//only do 1 of rest free or eat magic sausage
+		if ((my_maxmp() > 500 || target - start > 100) && retrieve_item($item[magical sausage]))
+			eat($item[magical sausage]);
+		else if (total - used > 0)
+			cli_execute("rest free");
+		else if (retrieve_item($item[magical sausage]))
+			eat($item[magical sausage]);
+		else
+			c2t_hccs_printWarn("Unable to recover MP with magical sausages or free rests");
+	}
 
 	//not going to necessarily reach target, but shouldn't matter as this isn't for general use
 	return my_mp() > start;
