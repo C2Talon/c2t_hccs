@@ -1286,6 +1286,8 @@ boolean c2t_hccs_vipPhotoBooth(effect eff) {
 
 	run_choice(eff.id-2928);
 
+	run_choice(6);//exit choice since mafia doesn't know it can be walked away from yet
+
 	return have_effect(eff) > 0;
 }
 boolean c2t_hccs_vipPhotoBooth(item ite) {
@@ -1323,6 +1325,8 @@ boolean c2t_hccs_vipPhotoBooth(item ite) {
 		return false;
 
 	run_choice(list[ite]);
+
+	run_choice(6);//exit choice since mafia doesn't know it can be walked away from yet
 
 	return available_amount(ite) > 0;
 }
