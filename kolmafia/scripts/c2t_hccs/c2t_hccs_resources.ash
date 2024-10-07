@@ -44,6 +44,7 @@ import <c2t_hccs_preAdv.ash>
 //d--tome sugar
 //d--unbreakable umbrella
 //d--vip floundry
+//d--vip photo booth
 //d--vote
 
 
@@ -284,6 +285,19 @@ boolean c2t_hccs_unbreakableUmbrella(string mode);
 boolean c2t_hccs_vipFloundry();
 
 
+//d--vip photo booth
+//returns true if get effect from photo booth
+boolean c2t_hccs_vipPhotoBooth(effect eff);
+
+//returns true if get item from photo booth
+boolean c2t_hccs_vipPhotoBooth(item ite);
+
+//returns true if get effect based on stat
+//omitting stat defaults to main stat
+boolean c2t_hccs_vipPhotoBoothEffect(stat sta);
+boolean c2t_hccs_vipPhotoBoothEffect();
+
+
 //d--vote
 //votes in voting booth
 void c2t_hccs_vote();
@@ -321,6 +335,7 @@ void c2t_hccs_vote();
 //i--tome sugar
 //i--unbreakable umbrella
 //i--vip floundry
+//i--vip photo booth
 //i--vote
 
 
@@ -1246,6 +1261,90 @@ boolean c2t_hccs_unbreakableUmbrella(string mode) {
 boolean c2t_hccs_vipFloundry() {
 	return (get_clan_lounge() contains $item[clan floundry])
 		&& !get_property("c2t_hccs_disable.vipFloundry").to_boolean();
+}
+
+//i--photo booth
+boolean c2t_hccs_vipPhotoBooth(effect eff) {
+	if (have_effect(eff) > 0)
+		return true;
+
+	if (!($effects[wild and westy!,towering muscles,spaced out] contains eff))
+		return false;
+
+	//don't navigate from start if don't have to
+	if (!c2t_inChoice(1534)) {
+		if (!c2t_inChoice(1533)) {
+			visit_url("clan_viplounge.php?action=photobooth",false,true);
+			if (!c2t_inChoice(1533))
+				return false;
+		}
+		run_choice(1);
+	}
+
+	if (!c2t_inChoice(1534))
+		return false;
+
+	run_choice(eff.id-2928);
+
+	return have_effect(eff) > 0;
+}
+boolean c2t_hccs_vipPhotoBooth(item ite) {
+	if (available_amount(ite) > 0)
+		return true;
+
+	int[item] list = {
+		$item[photo booth supply list]:1,
+		$item[fake arrow-through-the-head]:2,
+		$item[fake huge beard]:3,
+		$item[astronaut helmet]:4,
+		$item[cheap plastic pipe]:5,
+		$item[oversized monocle on a stick]:6,
+		$item[giant bow tie]:7,
+		$item[feather boa]:8,
+		$item[sheriff badge]:9,
+		$item[sheriff pistol]:10,
+		$item[sheriff moustache]:11,
+	};
+
+	if (list[ite] == 0)
+		return false;
+
+	//don't navigate from start if don't have to
+	if (!c2t_inChoice(1535)) {
+		if (!c2t_inChoice(1533)) {
+			visit_url("clan_viplounge.php?action=photobooth",false,true);
+			if (!c2t_inChoice(1533))
+				return false;
+		}
+		run_choice(2);
+	}
+
+	if (!c2t_inChoice(1535))
+		return false;
+
+	run_choice(list[ite]);
+
+	return available_amount(ite) > 0;
+}
+boolean c2t_hccs_vipPhotoBoothEffect(stat sta) {
+	effect eff;
+	switch (sta) {
+		default:
+			abort(`c2t_hccs_vipPhotoBoothEffect(stat): "{sta}" is bad stat`);
+		case $stat[muscle]:
+			eff = $effect[towering muscles];
+			break;
+		case $stat[mysticality]:
+			eff = $effect[spaced out];
+			break;
+		case $stat[moxie]:
+			eff = $effect[wild and westy!];
+			break;
+	}
+	return c2t_hccs_vipPhotoBooth(eff);
+}
+boolean c2t_hccs_vipPhotoBoothEffect() {
+	return c2t_hccs_vipPhotoBoothEffect(my_primestat());
 }
 
 //i--vote

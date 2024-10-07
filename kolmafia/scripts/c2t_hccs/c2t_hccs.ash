@@ -394,6 +394,19 @@ boolean c2t_hccs_preCoil() {
 		use(workshed);
 	}
 
+	//vip photo booth item for leveling
+	switch (my_primestat()) {
+		case $stat[muscle]:
+			c2t_hccs_vipPhotoBooth($item[fake huge beard]);
+			break;
+		case $stat[mysticality]:
+			c2t_hccs_vipPhotoBooth($item[oversized monocle on a stick]);
+			break;
+		case $stat[moxie]:
+			c2t_hccs_vipPhotoBooth($item[fake arrow-through-the-head]);
+			break;
+	}
+
 	//initial apriling band helmet intrinsic
 	c2t_apriling($effect[apriling band celebration bop]);
 
@@ -832,6 +845,10 @@ boolean c2t_hccs_allTheBuffs() {
 			c2t_hccs_getEffect($effect[one very clear eye]);
 	}
 
+	//vip photo booth buff
+	if (my_primestat() != $stat[muscle])//muscle effect has +combat
+		c2t_hccs_vipPhotoBoothEffect();
+
 	//emotion chip stat buff
 	c2t_hccs_getEffect($effect[feeling excited]);
 
@@ -1094,6 +1111,13 @@ boolean c2t_hccs_preItem() {
 		return true;
 
 	//THINGS I DON'T ALWAYS WANT TO USE FOR ITEM TEST
+
+	//vip photo booth
+	if (c2t_hccs_vipPhotoBooth($item[oversized monocle on a stick])) {
+		maximize(maxstr,false);
+		if (c2t_hccs_thresholdMet(TEST_ITEM))
+			return true;
+	}
 
 	//fireworks shop
 	if (retrieve_item(1,$item[oversized sparkler])) {
@@ -1459,18 +1483,28 @@ boolean c2t_hccs_preNoncombat() {
 		return true;
 	}
 
-	//replacing glob buff with this
-	//mafia doesn't seem to support retrieve_item() by itself for this yet, so visit_url() to the rescue:
-	if (!retrieve_item(1,$item[porkpie-mounted popper])) {
-		c2t_hccs_printWarn("Buying limited-quantity items from the fireworks shop seems to still be broken. Feel free to add to the report at the following link saying that the bug is still a thing, but only if your clan actually has a fireworks shop:");//having a fully-stocked clan VIP lounge is technically a requirement for this script, so just covering my bases here
-		print_html('<a href="https://kolmafia.us/threads/sometimes-unable-to-buy-limited-items-from-underground-fireworks-shop.27277/">https://kolmafia.us/threads/sometimes-unable-to-buy-limited-items-from-underground-fireworks-shop.27277/</a>');
-		c2t_hccs_printWarn("For now, just going to do it manually:");
-		visit_url("clan_viplounge.php?action=fwshop&whichfloor=2",false,true);
-		//visit_url("shop.php?whichshop=fwshop",false,true);
-		visit_url("shop.php?whichshop=fwshop&action=buyitem&quantity=1&whichrow=1249&pwd",true,true);
+	//vip photo booth effect
+	if (c2t_hccs_vipPhotoBooth($effect[wild and westy!])
+		&& c2t_hccs_thresholdmet(TEST_NONCOMBAT))
+	{
+		return true;
 	}
-	//double-checking, and what will be used when mafia finally supports it:
-	retrieve_item(1,$item[porkpie-mounted popper]);
+
+	//vip hats
+	if (!c2t_hccs_vipPhotoBooth($item[fake arrow-through-the-head])) {
+		//replacing glob buff with this
+		//mafia doesn't seem to support retrieve_item() by itself for this yet, so visit_url() to the rescue:
+		if (!retrieve_item(1,$item[porkpie-mounted popper])) {
+			c2t_hccs_printWarn("Buying limited-quantity items from the fireworks shop seems to still be broken. Feel free to add to the report at the following link saying that the bug is still a thing, but only if your clan actually has a fireworks shop:");//having a fully-stocked clan VIP lounge is technically a requirement for this script, so just covering my bases here
+			print_html('<a href="https://kolmafia.us/threads/sometimes-unable-to-buy-limited-items-from-underground-fireworks-shop.27277/">https://kolmafia.us/threads/sometimes-unable-to-buy-limited-items-from-underground-fireworks-shop.27277/</a>');
+			c2t_hccs_printWarn("For now, just going to do it manually:");
+			visit_url("clan_viplounge.php?action=fwshop&whichfloor=2",false,true);
+			//visit_url("shop.php?whichshop=fwshop",false,true);
+			visit_url("shop.php?whichshop=fwshop&action=buyitem&quantity=1&whichrow=1249&pwd",true,true);
+		}
+		//double-checking, and what will be used when mafia finally supports it:
+		retrieve_item(1,$item[porkpie-mounted popper]);
+	}
 
 	maximize(maxstr,false);
 	if (c2t_hccs_thresholdMet(TEST_NONCOMBAT))
