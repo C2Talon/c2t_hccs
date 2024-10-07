@@ -562,7 +562,7 @@ boolean c2t_hccs_coldMedicineCabinet(string arg) {
 	if (arg.to_lower_case() != "drink")
 		return false;
 
-	maximize(`-tie,100mainstat,mp`,false);
+	maximize("-tie,100mainstat,mp",false);
 	item itew;
 	buffer bufw = visit_url("campground.php?action=workshed");
 	switch (my_primestat()) {
@@ -581,7 +581,7 @@ boolean c2t_hccs_coldMedicineCabinet(string arg) {
 	run_choice(3);
 
 	//go back to full MP equipment
-	maximize(`-tie,-equip {c2t_pilcrow($item[bat wings])},mp,-equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])},-equip {c2t_pilcrow($item[&quot;i voted!&quot; sticker])}`,false);
+	maximize(`-tie,mp,-equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])},-equip {c2t_pilcrow($item[&quot;i voted!&quot; sticker])}`,false);
 	return true;
 }
 

@@ -1024,7 +1024,7 @@ boolean c2t_hccs_preItem() {
 			|| (!get_property('latteUnlocks').contains_text('carrot')
 				&& !get_property("c2t_hccs_disable.latteFishing").to_boolean())))
 	{
-		maximize(`-tie,-equip {c2t_pilcrow($item[bat wings])},mainstat,equip {c2t_pilcrow($item[latte lovers member's mug])},1000 bonus {c2t_pilcrow($item[lil' doctor&trade; bag])},1000 bonus {c2t_pilcrow($item[kremlin's greatest briefcase])},1000 bonus {c2t_pilcrow($item[vampyric cloake])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`,false);
+		maximize(`-tie,mainstat,equip {c2t_pilcrow($item[latte lovers member's mug])},1000 bonus {c2t_pilcrow($item[lil' doctor&trade; bag])},1000 bonus {c2t_pilcrow($item[kremlin's greatest briefcase])},1000 bonus {c2t_pilcrow($item[vampyric cloake])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`,false);
 		familiar fam = c2t_hccs_levelingFamiliar(true);
 
 		//get buffs with combat skills
@@ -1788,7 +1788,7 @@ boolean c2t_hccs_preSpell() {
 	// meteor lore // moxie can't do this, as it wastes a saber on evil olive -- moxie should be able to do this now with nostalgia earlier?
 	if (have_skill($skill[meteor lore]) && have_effect($effect[meteor showered]) == 0 && get_property('_saberForceUses').to_int() < 5) {
 		c2t_hccs_levelingFamiliar(true);
-		maximize(`-tie,-equip {c2t_pilcrow($item[bat wings])},mainstat,equip {c2t_pilcrow($item[fourth of may cosplay saber])}`,false);
+		maximize(`-tie,mainstat,equip {c2t_pilcrow($item[fourth of may cosplay saber])}`,false);
 		c2t_freeAdv($location[thugnderdome],-1,"");//everything is saberable and no crazy NCs
 	}
 
@@ -1991,7 +1991,7 @@ void c2t_hccs_fights() {
 				string temp = `,100 bonus {c2t_pilcrow($item[jurassic parka])}`;
 				if (c2t_hccs_haveCinchoDeMayo())
 					temp = "";
-				maximize(`-tie,-equip {c2t_pilcrow($item[bat wings])},mp,-equip {c2t_pilcrow($item[makeshift garbage shirt])},equip {c2t_pilcrow($item[latte lovers member's mug])},100 bonus {c2t_pilcrow($item[vampyric cloake])},100 bonus {c2t_pilcrow($item[lil' doctor&trade; bag])},100 bonus {c2t_pilcrow($item[kremlin's greatest briefcase])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+temp+fam,false);
+				maximize(`-tie,mp,-equip {c2t_pilcrow($item[makeshift garbage shirt])},equip {c2t_pilcrow($item[latte lovers member's mug])},100 bonus {c2t_pilcrow($item[vampyric cloake])},100 bonus {c2t_pilcrow($item[lil' doctor&trade; bag])},100 bonus {c2t_pilcrow($item[kremlin's greatest briefcase])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+temp+fam,false);
 				if (have_equipped($item[jurassic parka])
 					&& !c2t_hccs_haveCinchoDeMayo())
 				{
@@ -2023,7 +2023,7 @@ void c2t_hccs_fights() {
 					cli_execute('latte refill cinnamon pumpkin vanilla');
 				//max mp to max latte gulp to fuel buffs
 				c2t_hccs_levelingFamiliar(true);
-				maximize(`-tie,-equip {c2t_pilcrow($item[bat wings])},mp,-equip {c2t_pilcrow($item[makeshift garbage shirt])},equip {c2t_pilcrow($item[latte lovers member's mug])},100 bonus {c2t_pilcrow($item[vampyric cloake])},100 bonus {c2t_pilcrow($item[lil' doctor&trade; bag])},100 bonus {c2t_pilcrow($item[kremlin's greatest briefcase])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+fam,false);
+				maximize(`-tie,mp,-equip {c2t_pilcrow($item[makeshift garbage shirt])},equip {c2t_pilcrow($item[latte lovers member's mug])},100 bonus {c2t_pilcrow($item[vampyric cloake])},100 bonus {c2t_pilcrow($item[lil' doctor&trade; bag])},100 bonus {c2t_pilcrow($item[kremlin's greatest briefcase])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+fam,false);
 
 				c2t_hccs_cartography($location[the haunted pantry],$monster[possessed can of tomatoes]);
 			}
@@ -2086,7 +2086,7 @@ void c2t_hccs_fights() {
 			cli_execute('latte refill cinnamon pumpkin vanilla');
 		if (have_familiar($familiar[ghost of crimbo carols]))
 			use_familiar($familiar[ghost of crimbo carols]);
-		maximize(`-tie,-equip {c2t_pilcrow($item[bat wings])},mainstat,equip {c2t_pilcrow($item[latte lovers member's mug])},-equip {c2t_pilcrow($item[&quot;i voted!&quot; sticker])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`,false);
+		maximize(`-tie,mainstat,equip {c2t_pilcrow($item[latte lovers member's mug])},-equip {c2t_pilcrow($item[&quot;i voted!&quot; sticker])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`,false);
 
 		//going to grab runproof mascara from globster if moxie instead of having to wait post-kramco
 		if (my_primestat() == $stat[moxie])
@@ -2146,9 +2146,9 @@ void c2t_hccs_fights() {
 		int start = my_turncount();
 		while (get_property("_speakeasyFreeFights").to_int() < 3 && start == my_turncount()) {
 			if (get_property("_sourceTerminalPortscanUses").to_int() > 0)
-				maximize(`-tie,-equip {c2t_pilcrow($item[bat wings])},mainstat,exp,-equip {c2t_pilcrow($item[makeshift garbage shirt])},-equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])},-equip {c2t_pilcrow($item[&quot;i voted!&quot; sticker])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+fam,false);
+				maximize(`-tie,mainstat,exp,-equip {c2t_pilcrow($item[makeshift garbage shirt])},-equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])},-equip {c2t_pilcrow($item[&quot;i voted!&quot; sticker])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+fam,false);
 			else
-				maximize(`-tie,-equip {c2t_pilcrow($item[bat wings])},mainstat,100exp,-equip {c2t_pilcrow($item[makeshift garbage shirt])},-equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])},-equip {c2t_pilcrow($item[&quot;i voted!&quot; sticker])},10000 bonus {c2t_pilcrow($item[designer sweatpants])}`+fam,false);
+				maximize(`-tie,mainstat,100exp,-equip {c2t_pilcrow($item[makeshift garbage shirt])},-equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])},-equip {c2t_pilcrow($item[&quot;i voted!&quot; sticker])},10000 bonus {c2t_pilcrow($item[designer sweatpants])}`+fam,false);
 			string temp = get_property("_speakeasyFreeFights");
 			adv1($location[an unusually quiet barroom brawl]);//don't change from adv1(); need to update tracker even if adventure was used
 			//mafia doesn't always increment this properly
@@ -2378,7 +2378,7 @@ void c2t_hccs_fights() {
 			{
 				garbage = `,-equip {c2t_pilcrow($item[makeshift garbage shirt])}`;
 			}
-			maximize(`-tie,-equip {c2t_pilcrow($item[bat wings])},mainstat,exp,equip {c2t_pilcrow($item[latte lovers member's mug])},equip {c2t_pilcrow($item[backup camera])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+garbage+fam,false);
+			maximize(`-tie,mainstat,exp,equip {c2t_pilcrow($item[latte lovers member's mug])},equip {c2t_pilcrow($item[backup camera])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+garbage+fam,false);
 			c2t_freeAdv($location[the dire warren],-1,"");
 			continue;//don't want to fall into NEP in this state
 		}
@@ -2398,11 +2398,11 @@ void c2t_hccs_fights() {
 			{
 				garbage = `,-equip {c2t_pilcrow($item[makeshift garbage shirt])}`;
 			}
-			maximize(`-tie,-equip {c2t_pilcrow($item[bat wings])},mainstat,exp,equip {c2t_pilcrow($item[backup camera])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+kramco+garbage+fam,false);
+			maximize(`-tie,mainstat,exp,equip {c2t_pilcrow($item[backup camera])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+kramco+garbage+fam,false);
 		}
 		//rest of the free NEP fights
 		else
-			maximize(`-tie,-equip {c2t_pilcrow($item[bat wings])},mainstat,exp,equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+garbage+fam+doc+darts,false);
+			maximize(`-tie,mainstat,exp,equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+garbage+fam+doc+darts,false);
 
 		//asdon as the final final free kill
 		if (get_property("_neverendingPartyFreeTurns").to_int() == 10
@@ -2481,7 +2481,7 @@ void c2t_hccs_shadowRiftFights() {
 	{
 		fam = `,equip {c2t_pilcrow($item[dromedary drinking helmet])}`;
 	}
-	string maxStr = `-tie,-equip {c2t_pilcrow($item[bat wings])},mainstat,100exp,-equip {c2t_pilcrow($item[makeshift garbage shirt])},-equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])},-equip {c2t_pilcrow($item[&quot;i voted!&quot; sticker])},100 bonus {c2t_pilcrow($item[jurassic parka])},10000 bonus {c2t_pilcrow($item[designer sweatpants])}`+fam;
+	string maxStr = `-tie,mainstat,100exp,-equip {c2t_pilcrow($item[makeshift garbage shirt])},-equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])},-equip {c2t_pilcrow($item[&quot;i voted!&quot; sticker])},100 bonus {c2t_pilcrow($item[jurassic parka])},10000 bonus {c2t_pilcrow($item[designer sweatpants])}`+fam;
 
 	//shadow affinity fights
 	while (have_effect($effect[shadow affinity]) > 0)
