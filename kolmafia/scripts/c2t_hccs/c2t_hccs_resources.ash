@@ -1265,6 +1265,9 @@ boolean c2t_hccs_vipFloundry() {
 
 //i--photo booth
 boolean c2t_hccs_vipPhotoBooth(effect eff) {
+	int advBase = 1533;
+	int advEffect = 1534;
+
 	if (have_effect(eff) > 0)
 		return true;
 
@@ -1272,25 +1275,31 @@ boolean c2t_hccs_vipPhotoBooth(effect eff) {
 		return false;
 
 	//don't navigate from start if don't have to
-	if (!c2t_inChoice(1534)) {
-		if (!c2t_inChoice(1533)) {
+	if (!c2t_inChoice(advEffect)) {
+		if (!c2t_inChoice(advBase)) {
 			visit_url("clan_viplounge.php?action=photobooth",false,true);
-			if (!c2t_inChoice(1533))
+			if (!c2t_inChoice(advBase))
 				return false;
 		}
 		run_choice(1);
 	}
-
-	if (!c2t_inChoice(1534))
+	if (!c2t_inChoice(advEffect))
 		return false;
 
-	run_choice(eff.id-2928);
+	run_choice(eff.id-$effect[wild and westy!].id+1);
 
-	run_choice(6);//exit choice since mafia doesn't know it can be walked away from yet
+	//exit choices since mafia doesn't know any can be walked away from yet
+	if (c2t_inChoice(advEffect))
+		run_choice(6);
+	//trying to not break on redirect error
+	cli_execute("try;choice 6");
 
 	return have_effect(eff) > 0;
 }
 boolean c2t_hccs_vipPhotoBooth(item ite) {
+	int advBase = 1533;
+	int advItem = 1535;
+
 	if (available_amount(ite) > 0)
 		return true;
 
@@ -1307,26 +1316,28 @@ boolean c2t_hccs_vipPhotoBooth(item ite) {
 		$item[sheriff pistol]:10,
 		$item[sheriff moustache]:11,
 	};
-
 	if (list[ite] == 0)
 		return false;
 
 	//don't navigate from start if don't have to
-	if (!c2t_inChoice(1535)) {
-		if (!c2t_inChoice(1533)) {
+	if (!c2t_inChoice(advItem)) {
+		if (!c2t_inChoice(advBase)) {
 			visit_url("clan_viplounge.php?action=photobooth",false,true);
-			if (!c2t_inChoice(1533))
+			if (!c2t_inChoice(advBase))
 				return false;
 		}
 		run_choice(2);
 	}
-
-	if (!c2t_inChoice(1535))
+	if (!c2t_inChoice(advItem))
 		return false;
 
 	run_choice(list[ite]);
 
-	run_choice(6);//exit choice since mafia doesn't know it can be walked away from yet
+	//exit choices since mafia doesn't know any can be walked away from yet
+	if (c2t_inChoice(advItem))
+		run_choice(12);
+	//trying to not break on redirect error
+	cli_execute("try;choice 6");
 
 	return available_amount(ite) > 0;
 }
