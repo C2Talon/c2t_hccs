@@ -1288,11 +1288,8 @@ boolean c2t_hccs_vipPhotoBooth(effect eff) {
 
 	run_choice(eff.id-$effect[wild and westy!].id+1);
 
-	//exit choices since mafia doesn't know any can be walked away from yet
-	if (c2t_inChoice(advEffect))
-		run_choice(6);
-	//trying to not break on redirect error
-	cli_execute("try;choice 6");
+	//mafia doesn't know these choices can be walked away from yet
+	visit_url("main.php",false);
 
 	return have_effect(eff) > 0;
 }
@@ -1333,11 +1330,8 @@ boolean c2t_hccs_vipPhotoBooth(item ite) {
 
 	run_choice(list[ite]);
 
-	//exit choices since mafia doesn't know any can be walked away from yet
-	if (c2t_inChoice(advItem))
-		run_choice(12);
-	//trying to not break on redirect error
-	cli_execute("try;choice 6");
+	//mafia doesn't know these choices can be walked away from yet
+	visit_url("main.php",false);
 
 	return available_amount(ite) > 0;
 }
