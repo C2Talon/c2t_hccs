@@ -46,7 +46,8 @@ void main() {
 		"c2t_hccs_disable.vipBeesKnees":"will not drink a Bee's Knees as part of buffing up stats for leveling",
 		"c2t_hccs_disable.vipHotSocks":"will not drink a Hot Socks for familiar test and familiar exp",
 		"c2t_hccs_disable.vipSockdollager":"will not drink a Sockdollager for the weapon and spell tests",
-		"c2t_hccs_disable.vipFloundry":"equipment will not be acquired from the clan floundry"
+		"c2t_hccs_disable.vipFloundry":"equipment will not be acquired from the clan floundry",
+		"c2t_hccs_disable.vipPhotoBooth":"no items will be acquired from the photo booth",
 		};
 
 	string [int] thresholdName = {"HP","muscle","mysticality","moxie","familiar","weapon","spell","non-combat","item","hot"};

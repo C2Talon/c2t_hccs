@@ -286,6 +286,9 @@ boolean c2t_hccs_vipFloundry();
 
 
 //d--vip photo booth
+//returns true if clan has vip photo booth and not disabled
+boolean c2t_hccs_haveVipPhotoBooth();
+
 //returns true if get effect from photo booth
 boolean c2t_hccs_vipPhotoBooth(effect eff);
 
@@ -1261,12 +1264,18 @@ boolean c2t_hccs_vipFloundry() {
 }
 
 //i--photo booth
+boolean c2t_hccs_haveVipPhotoBooth() {
+	return (get_clan_lounge() contains $item[photo booth sized crate])
+		&& !get_property("c2t_hccs_disable.vipPhotoBooth").to_boolean();
+}
 boolean c2t_hccs_vipPhotoBooth(effect eff) {
 	int advBase = 1533;
 	int advEffect = 1534;
 
 	if (have_effect(eff) > 0)
 		return true;
+	if (!(get_clan_lounge() contains $item[photo booth sized crate]))
+		return false;
 	if (get_property("_photoBoothEffects").to_int() >= 3)
 		return false;
 	if (!($effects[wild and westy!,towering muscles,spaced out] contains eff))
@@ -1296,6 +1305,8 @@ boolean c2t_hccs_vipPhotoBooth(item ite) {
 
 	if (available_amount(ite) > 0)
 		return true;
+	if (!c2t_hccs_haveVipPhotoBooth())
+		return false;
 	if (get_property("_photoBoothEquipment").to_int() >= 3)
 		return false;
 

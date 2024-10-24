@@ -394,15 +394,18 @@ boolean c2t_hccs_preCoil() {
 		use(workshed);
 	}
 
-	//vip photo booth item for leveling
+	//vip photo booth items for leveling
 	switch (my_primestat()) {
 		case $stat[muscle]:
+			c2t_hccs_vipPhotoBooth($item[sheriff pistol]);
 			c2t_hccs_vipPhotoBooth($item[fake huge beard]);
 			break;
 		case $stat[mysticality]:
+			c2t_hccs_vipPhotoBooth($item[sheriff badge]);
 			c2t_hccs_vipPhotoBooth($item[oversized monocle on a stick]);
 			break;
 		case $stat[moxie]:
+			c2t_hccs_vipPhotoBooth($item[sheriff moustache]);
 			c2t_hccs_vipPhotoBooth($item[fake arrow-through-the-head]);
 			break;
 	}
