@@ -1296,7 +1296,7 @@ boolean c2t_hccs_vipPhotoBooth(item ite) {
 
 	if (available_amount(ite) > 0)
 		return true;
-	if (get_property("_photoBoothEquipement").to_int() >= 3)
+	if (get_property("_photoBoothEquipment").to_int() >= 3)
 		return false;
 
 	int[item] list = {
