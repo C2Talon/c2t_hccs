@@ -718,9 +718,6 @@ void c2t_hccs_modelTrainSet() {
 	if (visit_url("campground.php?action=workshed",false,true).contains_text('value="Save Train Set Configuration"'))
 		//meat,double,main,all stats,alt1,alt2,ML,hot resist
 		visit_url(`choice.php?pwd&whichchoice=1485&option=1&slot[0]=1&slot[1]=8&slot[2]={main}&slot[3]=3&slot[4]={alt1}&slot[5]={alt2}&slot[6]=13&slot[7]=4`,true,true);
-
-	//let mafia know we're not stuck in the choice
-	visit_url("main.php");
 }
 
 //i--monkey paw
@@ -1270,7 +1267,8 @@ boolean c2t_hccs_vipPhotoBooth(effect eff) {
 
 	if (have_effect(eff) > 0)
 		return true;
-
+	if (get_property("_photoBoothEffects").to_int() >= 3)
+		return false;
 	if (!($effects[wild and westy!,towering muscles,spaced out] contains eff))
 		return false;
 
@@ -1281,15 +1279,14 @@ boolean c2t_hccs_vipPhotoBooth(effect eff) {
 			if (!c2t_inChoice(advBase))
 				return false;
 		}
+		if (!(available_choice_options() contains 1))
+			return false;
 		run_choice(1);
 	}
 	if (!c2t_inChoice(advEffect))
 		return false;
 
 	run_choice(eff.id-$effect[wild and westy!].id+1);
-
-	//mafia doesn't know these choices can be walked away from yet
-	visit_url("main.php",false);
 
 	return have_effect(eff) > 0;
 }
@@ -1299,6 +1296,8 @@ boolean c2t_hccs_vipPhotoBooth(item ite) {
 
 	if (available_amount(ite) > 0)
 		return true;
+	if (get_property("_photoBoothEquipement").to_int() >= 3)
+		return false;
 
 	int[item] list = {
 		$item[photo booth supply list]:1,
@@ -1323,15 +1322,15 @@ boolean c2t_hccs_vipPhotoBooth(item ite) {
 			if (!c2t_inChoice(advBase))
 				return false;
 		}
+		if (!(available_choice_options() contains 2))
+			return false;
 		run_choice(2);
 	}
 	if (!c2t_inChoice(advItem))
 		return false;
-
+	if (!(available_choice_options() contains list[ite]))
+		return false;
 	run_choice(list[ite]);
-
-	//mafia doesn't know these choices can be walked away from yet
-	visit_url("main.php",false);
 
 	return available_amount(ite) > 0;
 }
@@ -1339,7 +1338,7 @@ boolean c2t_hccs_vipPhotoBoothEffect(stat sta) {
 	effect eff;
 	switch (sta) {
 		default:
-			abort(`c2t_hccs_vipPhotoBoothEffect(stat): "{sta}" is bad stat`);
+			abort(`c2t_hccs_vipPhotoBoothEffect(): "{sta}" is bad stat`);
 		case $stat[muscle]:
 			eff = $effect[towering muscles];
 			break;

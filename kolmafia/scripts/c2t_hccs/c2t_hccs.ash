@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r28077;//bat wings rest upside down skill working
+since r28099;//walk away from photo booth
 
 import <c2t_hccs_constants.ash>
 import <c2t_hccs_properties.ash>
