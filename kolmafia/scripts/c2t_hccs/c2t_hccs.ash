@@ -1473,7 +1473,7 @@ boolean c2t_hccs_preNoncombat() {
 	//unbreakable umbrella
 	c2t_hccs_unbreakableUmbrella("nc");
 
-	use_familiar($familiar[disgeist]);
+	use_familiar(c2t_priority($familiars[peace turkey,disgeist]));
 	maximize(maxstr,false);
 	maximize(maxstr,false);
 	if (c2t_hccs_thresholdMet(TEST_NONCOMBAT))
