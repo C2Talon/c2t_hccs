@@ -335,7 +335,7 @@ void main(int initround, monster foe, string page) {
 		case $monster[shadow snake]:
 		case $monster[shadow spider]:
 		case $monster[shadow tree]:
-			if (have_effect($effect[shadow affinity]) == 0 && !contains_text(my_location(), "Shadow Rift"))
+			if (have_effect($effect[shadow affinity]) == 0 && contains_text(my_location(), "Shadow Rift"))
 				abort("Error: entered non-free combat in shadow rift without shadow affinity");
 			mSteal
 			.c2t_bbIf("sauceror",c2t_bb($skill[curse of weaksauce]))
