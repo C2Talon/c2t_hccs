@@ -147,6 +147,7 @@ void main(int initround, monster foe, string page) {
 			}
 			//fishing for latte ingredients with backups
 			else if (have_equipped($item[backup camera])
+				&& get_property("lastCopyableMonster").to_monster() == $monster[sausage goblin]
 				&& c2t_hccs_backupCameraLeft() > 0)
 			{
 				c2t_bb($skill[back-up to your last enemy])
@@ -253,6 +254,7 @@ void main(int initround, monster foe, string page) {
 		case $monster["plain" girl]:
 			m = mHead + mSteal;
 			if (have_equipped($item[backup camera])
+				&& get_property("lastCopyableMonster").to_monster() == $monster[sausage goblin]
 				&& c2t_hccs_backupCameraLeft() > 0)
 			{
 				m += c2t_bb($skill[back-up to your last enemy]).c2t_bb("twiddle;");
