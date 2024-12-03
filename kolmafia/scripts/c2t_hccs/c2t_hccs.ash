@@ -2328,7 +2328,8 @@ void c2t_hccs_fights() {
 
 		// -- setup and combat itself --
 		//hopefully stop it before a possible break if my logic is off
-		if (c2t_hccs_haveBackupCamera()
+		if (c2t_hccs_haveKramco()
+			&& c2t_hccs_haveBackupCamera()
 			&& c2t_hccs_havePocketProfessor()
 			&& c2t_hccs_pocketProfessorLectures() == 0
 			&& c2t_hccs_backupCameraLeft() <= 1)
@@ -2336,7 +2337,8 @@ void c2t_hccs_fights() {
 			abort('Pocket professor has not been used yet, while backup camera charges left is '+c2t_hccs_backupCameraLeft());
 		}
 		//professor chain sausage goblins in NEP first thing if no backup camera
-		if (!c2t_hccs_haveBackupCamera()
+		if (c2t_isSausageGoblinNow()
+			&& !c2t_hccs_haveBackupCamera()
 			&& c2t_hccs_havePocketProfessor()
 			&& c2t_hccs_pocketProfessorLectures() == 0)
 		{
@@ -2391,9 +2393,9 @@ void c2t_hccs_fights() {
 		{
 			//only use kramco offhand if target is sausage goblin to not mess things up
 			if (get_property('lastCopyableMonster').to_monster() == $monster[sausage goblin])
-				kramco = `,equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])}`;
+				kramco = `,1000 bonus {c2t_pilcrow($item[kramco sausage-o-matic&trade;])}`;
 			else
-				kramco = "";
+				kramco = `,-equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])}`;
 
 			//NEP monsters give twice as much base exp as sausage goblins, so keep at least as many shirt charges as fights remaining in NEP
 			if (c2t_hccs_haveGarbageTote()
@@ -2405,7 +2407,7 @@ void c2t_hccs_fights() {
 		}
 		//rest of the free NEP fights
 		else
-			maximize(`-tie,mainstat,exp,equip {c2t_pilcrow($item[kramco sausage-o-matic&trade;])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+garbage+fam+doc+darts,false);
+			maximize(`-tie,mainstat,exp,1000 bonus {c2t_pilcrow($item[kramco sausage-o-matic&trade;])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+garbage+fam+doc+darts,false);
 
 		//asdon as the final final free kill
 		if (get_property("_neverendingPartyFreeTurns").to_int() == 10
@@ -2446,7 +2448,7 @@ boolean c2t_hccs_wandererFight() {
 
 	c2t_hccs_printInfo("Running wanderer fight");
 	//saving last maximizer string and familiar stuff; outfits generally break here
-	string[int] maxstr = split_string(get_property("maximizerMRUList"),";");
+	string maxstr = c2t_lastMaximize();
 	familiar nowFam = my_familiar();
 	item nowEquip = equipped_item($slot[familiar]);
 
@@ -2459,7 +2461,7 @@ boolean c2t_hccs_wandererFight() {
 
 	//hopefully restore to previous state without outfits
 	use_familiar(nowFam);
-	maximize(maxstr[0],false);
+	maximize(maxstr,false);
 	equip($slot[familiar],nowEquip);
 
 	return true;

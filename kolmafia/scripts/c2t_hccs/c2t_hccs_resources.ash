@@ -28,6 +28,7 @@ import <c2t_hccs_preAdv.ash>
 //d--garbage tote
 //d--garden peppermint
 //d--genie
+//d--kramco
 //d--melodramedary
 //d--model train set
 //d--monkey paw
@@ -151,6 +152,11 @@ boolean c2t_hccs_genie(effect eff);
 
 //fights monster from genie; returns true if monster fought
 boolean c2t_hccs_genie(monster mon);
+
+
+//d--kramco
+//returns whether have kramco or not
+boolean c2t_hccs_haveKramco();
 
 
 //d--melodramedary
@@ -322,6 +328,7 @@ void c2t_hccs_vote();
 //i--garbage tote
 //i--garden peppermint
 //i--genie
+//i--kramco
 //i--numberology
 //i--melodramedary
 //i--model train set
@@ -636,6 +643,11 @@ boolean c2t_hccs_genie(monster mon) {
 	if (get_property("lastEncounter") != mon && get_property("lastEncounter") != "Using the Force")
 		return false;
 	return true;
+}
+
+//i--kramco
+boolean c2t_hccs_haveKramco() {
+	return available_amount($item[kramco sausage-o-matic&trade;]) > 0;
 }
 
 //i--numberology
