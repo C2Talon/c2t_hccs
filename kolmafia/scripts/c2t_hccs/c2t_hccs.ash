@@ -807,6 +807,10 @@ boolean c2t_hccs_levelup() {
 			equip($item[familiar scrapbook]);
 		c2t_hccs_haveUse($item[a ten-percent bonus]);
 	}
+	if (my_level() < 7) {
+		c2t_hccs_printInfo("level check failed; mafia might still not know we leveled up, so visiting API to update it to make sure...");
+		visit_url("api.php?what=status&for=c2t_hccs+by+c2t",false,true);
+	}
 	if (my_level() < 7)
 		abort('initial leveling broke');
 
