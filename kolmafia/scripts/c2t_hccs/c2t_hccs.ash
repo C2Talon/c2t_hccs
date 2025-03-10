@@ -820,8 +820,8 @@ boolean c2t_hccs_levelup() {
 	//also attempt to pull stick-knife in weapon and spell tests since having 150 offstat is possible then
 	if (my_primestat() == $stat[muscle])
 		c2t_hccs_pull($item[stick-knife of loathing]);//150 mus; saves 4 for spell test
-	if (have_familiar($familiar[mini-trainbot]))
-		c2t_hccs_pull($item[overloaded yule battery]);//should save at least 2 turns at worst, 4-ish at best
+	//no mini trainbot pull
+
 	//familiar pants
 	if (!c2t_hccs_pull($item[repaid diaper]))
 		c2t_hccs_pull($item[great wolf's beastly trousers]);//100 mus; saves 2 for fam test
@@ -944,9 +944,7 @@ boolean c2t_hccs_allTheBuffs() {
 			c2t_hccs_printWarn("Failed to synthesize stat buff");
 	}
 
-	//third tome use //no longer using bee's knees for stat boost on non-moxie, but still need same strength buff?
-	if (have_effect($effect[purity of spirit]) == 0 && c2t_hccs_tomeClipArt($item[cold-filtered water]))
-		use(1,$item[cold-filtered water]);
+	//no cold philtered water, third summon is for homemade robot fam equip
 
 	//rhinestones to help moxie leveling
 	if (my_primestat() == $stat[moxie])
@@ -1382,8 +1380,16 @@ boolean c2t_hccs_preFamiliar() {
 
 	//find highest familar weight
 	//TODO take familiar equipment or more optimal combinations into account
-	familiar highest = $familiar[none];
-	if (have_familiar($familiar[mini-trainbot])
+	//comma cham NEW CODE blatantly stolen from Prusias
+	familiar highest = $familiar[none];cli_execute("refresh familiar");
+	if (have_familiar($familiar[Comma Chameleon]) && have_familiar($familiar[homemade robot]) && c2t_hccs_tomeClipArt($item[box of familiar jacks]) && (get_property("homemadeRobotUpgrades").to_int() >= 9)) {
+		use_familiar($familiar[homemade robot]);
+		use(1,$item[box of familiar jacks]);
+		use_familiar($familiar[Comma chameleon]);
+		cli_execute("/equip familiar homemade robot gear");
+		cli_execute("refresh familiar");
+		highest = $familiar[Comma Chameleon];
+	} else if (have_familiar($familiar[mini-trainbot])
 		&& available_amount($item[overloaded yule battery]) == 0
 		&& c2t_hccs_tomeClipArt($item[box of familiar jacks]))
 	{
