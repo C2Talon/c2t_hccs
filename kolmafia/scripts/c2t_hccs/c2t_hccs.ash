@@ -953,7 +953,7 @@ boolean c2t_hccs_allTheBuffs() {
 		c2t_hccs_aprilShield($effect[tubes of universal meat]);
 		c2t_hccs_aprilShield($effect[mariachi moisture]);
 	}
-	if (my_primestat() == $stat[muscle]) {
+	else if (my_primestat() == $stat[moxie]) {
 		c2t_hccs_aprilShield($effect[slippery as a seal]);
 		c2t_hccs_aprilShield($effect[lubricating sauce]);
 	}

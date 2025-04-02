@@ -365,10 +365,10 @@ boolean c2t_hccs_haveAprilShield() {
 	return available_amount($item[april shower thoughts shield]) > 0;
 }
 boolean c2t_hccs_aprilShield(effect eff) {
-	if (!c2t_hccs_haveAprilShield())
-		return false;
 	if (have_effect(eff) > 0)
 		return true;
+	if (!c2t_hccs_haveAprilShield())
+		return false;
 
 	effect simmering = $effect[simmering];
 	string prop = "_c2t_hccs_aprilSimmerUsed";
@@ -395,7 +395,6 @@ boolean c2t_hccs_aprilShield(effect eff) {
 		c2t_hccs_printWarn(`c2t_hccs_aprilShield: cannot get "simmering" free again, so skipping`);
 		return false;
 	}
-
 
 	try c2t_equipCast($item[april shower thoughts shield],legend[eff]);
 	finally if (eff == simmering
