@@ -370,6 +370,20 @@ boolean c2t_hccs_aprilShield(effect eff) {
 	if (!c2t_hccs_haveAprilShield())
 		return false;
 
+	item aprilShield = $item[april shower thoughts shield];
+
+	if (eff == $effect[empathy]) {
+		boolean restore = false;
+		if (have_equipped(aprilShield)) {
+			equip($slot[off-hand],$item[none]);
+			restore = true;
+		}
+		c2t_hccs_getEffect($effect[empathy]);
+		if (restore)
+			equip($slot[off-hand],aprilShield);
+		return have_effect(eff) > 0;
+	}
+
 	effect simmering = $effect[simmering];
 	string prop = "_c2t_hccs_aprilSimmerUsed";
 	skill[effect] legend = {

@@ -966,6 +966,14 @@ boolean c2t_hccs_allTheBuffs() {
 	if (my_primestat() == $stat[moxie])
 		use(item_amount($item[rhinestone]),$item[rhinestone]);
 
+	//non-limited familiar buffs
+	restore_hp(31);//need to have the hp before casting blood skills
+	c2t_hccs_getEffect($effect[blood bond]);
+	c2t_hccs_getEffect($effect[leash of linguini]);
+	c2t_hccs_getEffect($effect[empathy]);
+	c2t_hccs_aprilShield($effect[empathy]);
+	c2t_hccs_aprilShield($effect[thoughtful empathy]);
+
 	c2t_hccs_levelingFamiliar(true);
 
 	//telescope
@@ -1236,6 +1244,8 @@ boolean c2t_hccs_preHotRes() {
 		//emotion chip
 		feeling peaceful
 		]);
+	c2t_hccs_aprilShield($effect[empathy]);
+	c2t_hccs_aprilShield($effect[thoughtful empathy]);
 
 	// need to run this twice because familiar weight thresholds interfere with it?
 	maximize(maxstr,false);
@@ -1391,6 +1401,8 @@ boolean c2t_hccs_preFamiliar() {
 	c2t_hccs_getEffect($effect[blood bond]);
 	c2t_hccs_getEffect($effect[leash of linguini]);
 	c2t_hccs_getEffect($effect[empathy]);
+	c2t_hccs_aprilShield($effect[empathy]);
+	c2t_hccs_aprilShield($effect[thoughtful empathy]);
 
 	//AT-only buff
 	if (my_class() == $class[accordion thief] && have_skill($skill[chorale of companionship]))
@@ -1489,6 +1501,8 @@ boolean c2t_hccs_preNoncombat() {
 		throwing some shade,
 		a rose by any other material,
 		]);
+	c2t_hccs_aprilShield($effect[empathy]);
+	c2t_hccs_aprilShield($effect[thoughtful empathy]);
 
 	//unbreakable umbrella
 	c2t_hccs_unbreakableUmbrella("nc");
