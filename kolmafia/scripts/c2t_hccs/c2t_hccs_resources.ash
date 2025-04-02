@@ -15,6 +15,7 @@ import <c2t_hccs_preAdv.ash>
 /*-=-+-=-+-=-+-=-+-=-+-=-
   function declarations
   -=-+-=-+-=-+-=-+-=-+-=-*/
+//d--april shower thoughts shield
 //d--asdon
 //d--backup camera
 //d--bat wings
@@ -47,6 +48,15 @@ import <c2t_hccs_preAdv.ash>
 //d--vip floundry
 //d--vip photo booth
 //d--vote
+
+
+//d--april shower thoughts shield
+//returns true if have april shield
+boolean c2t_hccs_haveAprilShield();
+
+//gets effect with april shield
+//returns true if you have or gained effect
+boolean c2t_hccs_aprilShield(effect eff);
 
 
 //d--asdon
@@ -315,6 +325,7 @@ void c2t_hccs_vote();
 /*-=-+-=-+-=-+-=-+-=-+-=-
   function implementations
   -=-+-=-+-=-+-=-+-=-+-=-*/
+//i--april shower thoughts shield
 //i--asdon
 //i--backup camera
 //i--bat wings
@@ -347,6 +358,54 @@ void c2t_hccs_vote();
 //i--vip floundry
 //i--vip photo booth
 //i--vote
+
+
+//i--april shower thoughts shield
+boolean c2t_hccs_haveAprilShield() {
+	return available_amount($item[april shower thoughts shield]) > 0;
+}
+boolean c2t_hccs_aprilShield(effect eff) {
+	if (!c2t_hccs_haveAprilShield())
+		return false;
+	if (have_effect(eff) > 0)
+		return true;
+
+	effect simmering = $effect[simmering];
+	string prop = "_c2t_hccs_aprilSimmerUsed";
+	skill[effect] legend = {
+		$effect[disco over matter]:$skill[disco aerobics],
+		$effect[lubricating sauce]:$skill[sauce contemplation],
+		$effect[mariachi moisture]:$skill[moxie of the mariachi],
+		$effect[simmering]:$skill[simmer],
+		$effect[slippery as a seal]:$skill[seal clubbing frenzy],
+		$effect[strength of the tortoise]:$skill[patience of the tortoise],
+		$effect[thoughtful empathy]:$skill[empathy of the newt],
+		$effect[tubes of universal meat]:$skill[manicotti meditation],
+	};
+
+	if (!(legend contains eff)) {
+		c2t_hccs_printWarn(`c2t_hccs_aprilShield: not able to get effect "{eff}"`);
+		return false;
+	}
+	if (!have_skill(legend[eff]))
+		return false;
+	if (eff == simmering
+		&& get_property(prop).to_boolean())
+	{
+		c2t_hccs_printWarn(`c2t_hccs_aprilShield: cannot get "simmering" free again, so skipping`);
+		return false;
+	}
+
+
+	try c2t_equipCast($item[april shower thoughts shield],legend[eff]);
+	finally if (eff == simmering
+		&& have_effect(simmering) > 0)
+	{
+		set_property(prop,true);
+	}
+
+	return have_effect(eff) > 0;
+}
 
 
 //i--asdon
@@ -1275,7 +1334,7 @@ boolean c2t_hccs_vipFloundry() {
 		&& !get_property("c2t_hccs_disable.vipFloundry").to_boolean();
 }
 
-//i--photo booth
+//i--vip photo booth
 boolean c2t_hccs_haveVipPhotoBooth() {
 	return (get_clan_lounge() contains $item[photo booth sized crate])
 		&& !get_property("c2t_hccs_disable.vipPhotoBooth").to_boolean();

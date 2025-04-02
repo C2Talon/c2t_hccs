@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r28099;//walk away from photo booth
+since r28481;//april shower thoughts shield barebones
 
 import <c2t_hccs_constants.ash>
 import <c2t_hccs_properties.ash>
@@ -944,6 +944,20 @@ boolean c2t_hccs_allTheBuffs() {
 			c2t_hccs_printWarn("Failed to synthesize stat buff");
 	}
 
+	//april shield
+	if (my_primestat() == $stat[muscle]) {
+		c2t_hccs_aprilShield($effect[strength of the tortoise]);
+		c2t_hccs_aprilShield($effect[disco over matter]);
+	}
+	else if (my_primestat() == $stat[mysticality]) {
+		c2t_hccs_aprilShield($effect[tubes of universal meat]);
+		c2t_hccs_aprilShield($effect[mariachi moisture]);
+	}
+	if (my_primestat() == $stat[muscle]) {
+		c2t_hccs_aprilShield($effect[slippery as a seal]);
+		c2t_hccs_aprilShield($effect[lubricating sauce]);
+	}
+
 	//third tome use //no longer using bee's knees for stat boost on non-moxie, but still need same strength buff?
 	if (have_effect($effect[purity of spirit]) == 0 && c2t_hccs_tomeClipArt($item[cold-filtered water]))
 		use(1,$item[cold-filtered water]);
@@ -1109,6 +1123,8 @@ boolean c2t_hccs_preItem() {
 		crunching leaves,//autumn-aton
 		steely-eyed squint
 		]);
+
+	c2t_hccs_aprilShield($effect[lubricating sauce]);
 
 	//unbreakable umbrella
 	c2t_hccs_unbreakableUmbrella("item");
@@ -1708,11 +1724,17 @@ boolean c2t_hccs_preSpell() {
 
 	restore_mp(500);
 
-	// This will use an adventure.
-	// if spit upon == 1, simmering will just waste a turn to do essentially nothing.
-	// probably good idea to add check for similar effects to not just waste a turn
-	if (have_effect($effect[spit upon]) != 1 && have_effect($effect[do you crush what i crush?]) != 1)
-		c2t_hccs_getEffect($effect[simmering]);
+	//simmering
+	if (!c2t_hccs_aprilShield($effect[simmering])) {
+		// This will use an adventure.
+		// if spit upon == 1, simmering will just waste a turn to do essentially nothing.
+		// probably good idea to add check for similar effects to not just waste a turn
+		if (have_effect($effect[spit upon]) != 1
+			&& have_effect($effect[do you crush what i crush?]) != 1)
+		{
+			c2t_hccs_getEffect($effect[simmering]);
+		}
+	}
 
 	while (c2t_hccs_wandererFight()); //check for after using a turn to cast Simmering
 
@@ -1892,6 +1914,9 @@ boolean c2t_hccs_preMus() {
 		feeling excited
 		]);
 
+	c2t_hccs_aprilShield($effect[strength of the tortoise]);
+	c2t_hccs_aprilShield($effect[disco over matter]);
+
 	return c2t_hccs_thresholdMet(TEST_MUS);
 }
 
@@ -1917,6 +1942,8 @@ boolean c2t_hccs_preMys() {
 		//skill skills from IotM
 		feeling excited
 		]);
+	c2t_hccs_aprilShield($effect[tubes of universal meat]);
+	c2t_hccs_aprilShield($effect[mariachi moisture]);
 
 	return c2t_hccs_thresholdMet(TEST_MYS);
 }
@@ -1948,6 +1975,9 @@ boolean c2t_hccs_preMox() {
 		//skill skills from IotM
 		feeling excited
 		]);
+
+	c2t_hccs_aprilShield($effect[slippery as a seal]);
+	c2t_hccs_aprilShield($effect[lubricating sauce]);
 
 	return c2t_hccs_thresholdMet(TEST_MOX);
 }
