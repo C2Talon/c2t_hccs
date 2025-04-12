@@ -357,8 +357,7 @@ int c2t_hccs_testTurns(int test) {
 		case TEST_SPELL:
 			return (60 - floor(numeric_modifier('spell damage') / 50 + 0.001) - floor(numeric_modifier('spell damage percent') / 50 + 0.001));
 		case TEST_NONCOMBAT:
-			num = -round(numeric_modifier('combat rate'));
-			return (60 - (num > 25?(num-25)*3+15:num/5*3));
+			return 60 - floor(numeric_modifier('raw combat rate') * 3 / 5);
 		case TEST_ITEM:
 			return (60 - floor(numeric_modifier('Booze Drop') / 15 + 0.001) - floor(numeric_modifier('Item Drop') / 30 + 0.001));
 		case TEST_HOT_RES:

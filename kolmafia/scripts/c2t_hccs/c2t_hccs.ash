@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r28481;//april shower thoughts shield barebones
+since r28498;//raw combat rate
 
 import <c2t_hccs_constants.ash>
 import <c2t_hccs_properties.ash>
