@@ -1,7 +1,7 @@
 //c2t hccs
 //c2t
 
-since r28498;//raw combat rate
+since r28500;//raw combat rate in maximizer
 
 import <c2t_hccs_constants.ash>
 import <c2t_hccs_properties.ash>
@@ -1456,7 +1456,7 @@ boolean c2t_hccs_preFamiliar() {
 }
 
 boolean c2t_hccs_preNoncombat() {
-	string maxstr = '-tie,-100combat,familiar weight';
+	string maxstr = '-tie,-raw combat rate,switch peace turkey,switch disgeist,switch left-hand man,switch disembodied hand';
 
 	//globster
 	if (have_familiar($familiar[god lobster])
