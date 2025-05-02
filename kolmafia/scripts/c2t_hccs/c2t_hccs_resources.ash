@@ -7,6 +7,7 @@ import <c2t_lib.ash>
 import <c2t_hccs_lib.ash>
 import <c2t_reminisce.ash>
 import <c2t_hccs_preAdv.ash>
+import <liba_peridot.ash>
 
 
 //some of these resources can be "disabled" via a property. check c2t_hccs_properties.ash at the bottom under "disable resources" for a full list
@@ -35,6 +36,7 @@ import <c2t_hccs_preAdv.ash>
 //d--monkey paw
 //d--numberology
 //d--pantogram
+//d--peridot of peril
 //d--pillkeeper
 //d--pizza cube
 //d--pocket professor
@@ -207,6 +209,11 @@ void c2t_hccs_pantogram();
 void c2t_hccs_pantogram(string type);
 
 
+//d--peridot of peril
+//returns whether monster was fought at location with peridot
+boolean c2t_hccs_peridot(location loc,monster mon);
+
+
 //d--pillkeeper
 //returns whether pillkeeper is available or not
 boolean c2t_hccs_pillkeeper();
@@ -345,6 +352,7 @@ void c2t_hccs_vote();
 //i--model train set
 //i--monkey paw
 //i--pantogram
+//i--peridot of peril
 //i--pillkeeper
 //i--pizza cube
 //i--pocket professor
@@ -850,6 +858,26 @@ void c2t_hccs_pantogram(string type) {
 		cli_execute("refresh all");//mafia doesn't know the pants exist until this
 		visit_url("desc_item.php?whichitem=508365377",false,true);//attempted fix for very rare bug where all pants mods aren't recorded by mafia
 	}
+}
+
+//i--peridot of peril
+boolean c2t_hccs_peridot(location loc,monster mon) {
+	boolean out;
+	int start = turns_played();
+	string prop = "_c2t_hccs_inPeridot";
+
+	//some hacky jank for the combat script to handle it like map the monsters for now
+	try {
+		set_property(prop,true);
+		out = liba_peridot(loc,mon);
+	}
+	finally
+		set_property(prop,false);
+
+	if (turns_played() > start)
+		abort("turned used trying to use peridot");
+
+	return out;
 }
 
 //i--garbage tote

@@ -2042,13 +2042,14 @@ void c2t_hccs_fights() {
 				string temp = `,100 bonus {c2t_pilcrow($item[jurassic parka])}`;
 				if (c2t_hccs_haveCinchoDeMayo())
 					temp = "";
-				maximize(`-tie,mp,-equip {c2t_pilcrow($item[makeshift garbage shirt])},equip {c2t_pilcrow($item[latte lovers member's mug])},100 bonus {c2t_pilcrow($item[vampyric cloake])},100 bonus {c2t_pilcrow($item[lil' doctor&trade; bag])},100 bonus {c2t_pilcrow($item[kremlin's greatest briefcase])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+temp+fam,false);
+				maximize(`-tie,mp,-equip {c2t_pilcrow($item[makeshift garbage shirt])},equip {c2t_pilcrow($item[latte lovers member's mug])},100 bonus {c2t_pilcrow($item[vampyric cloake])},100 bonus {c2t_pilcrow($item[lil' doctor&trade; bag])},100 bonus {c2t_pilcrow($item[kremlin's greatest briefcase])},100 bonus {c2t_pilcrow($item[designer sweatpants])},1000 bonus {c2t_pilcrow($item[peridot of peril])}`+temp+fam,false);
 				if (have_equipped($item[jurassic parka])
 					&& !c2t_hccs_haveCinchoDeMayo())
 				{
 					cli_execute("parka spikes");
 				}
-				c2t_hccs_cartography($location[the skeleton store],$monster[novelty tropical skeleton]);
+				if (!c2t_hccs_peridot($location[the skeleton store],$monster[novelty tropical skeleton]))
+					c2t_hccs_cartography($location[the skeleton store],$monster[novelty tropical skeleton]);
 			}
 			//get NEP exp buff with parka or cincho
 			if (have_effect($effect[spiced up]) == 0
@@ -2074,9 +2075,10 @@ void c2t_hccs_fights() {
 					cli_execute('latte refill cinnamon pumpkin vanilla');
 				//max mp to max latte gulp to fuel buffs
 				c2t_hccs_levelingFamiliar(true);
-				maximize(`-tie,mp,-equip {c2t_pilcrow($item[makeshift garbage shirt])},equip {c2t_pilcrow($item[latte lovers member's mug])},100 bonus {c2t_pilcrow($item[vampyric cloake])},100 bonus {c2t_pilcrow($item[lil' doctor&trade; bag])},100 bonus {c2t_pilcrow($item[kremlin's greatest briefcase])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`+fam,false);
+				maximize(`-tie,mp,-equip {c2t_pilcrow($item[makeshift garbage shirt])},equip {c2t_pilcrow($item[latte lovers member's mug])},100 bonus {c2t_pilcrow($item[vampyric cloake])},100 bonus {c2t_pilcrow($item[lil' doctor&trade; bag])},100 bonus {c2t_pilcrow($item[kremlin's greatest briefcase])},100 bonus {c2t_pilcrow($item[designer sweatpants])},1000 bonus {c2t_pilcrow($item[peridot of peril])}`+fam,false);
 
-				c2t_hccs_cartography($location[the haunted pantry],$monster[possessed can of tomatoes]);
+				if (!c2t_hccs_peridot($location[the haunted pantry],$monster[possessed can of tomatoes]))
+					c2t_hccs_cartography($location[the haunted pantry],$monster[possessed can of tomatoes]);
 			}
 			//get the tomato with nostalgia
 			c2t_hccs_fightGodLobster();
@@ -2137,11 +2139,13 @@ void c2t_hccs_fights() {
 			cli_execute('latte refill cinnamon pumpkin vanilla');
 		if (have_familiar($familiar[ghost of crimbo carols]))
 			use_familiar($familiar[ghost of crimbo carols]);
-		maximize(`-tie,mainstat,equip {c2t_pilcrow($item[latte lovers member's mug])},-equip {c2t_pilcrow($item[&quot;i voted!&quot; sticker])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`,false);
+		maximize(`-tie,mainstat,equip {c2t_pilcrow($item[latte lovers member's mug])},-equip {c2t_pilcrow($item[&quot;i voted!&quot; sticker])},100 bonus {c2t_pilcrow($item[designer sweatpants])},1000 bonus {c2t_pilcrow($item[peridot of peril])}`,false);
 
 		//going to grab runproof mascara from globster if moxie instead of having to wait post-kramco
-		if (my_primestat() == $stat[moxie])
-			c2t_hccs_cartography($location[the neverending party],$monster[party girl]);
+		if (my_primestat() == $stat[moxie]) {
+			if (!c2t_hccs_peridot($location[the neverending party],$monster[party girl]))
+				c2t_hccs_cartography($location[the neverending party],$monster[party girl]);
+		}
 		else
 			c2t_freeAdv($location[the neverending party],-1,"");
 	}

@@ -2,6 +2,7 @@
 //c2t
 
 import <c2t_hccs_lib.ash>
+import <c2t_lib.ash>
 
 void main (int id,string page) {
 	int testsDone = get_property("csServicesPerformed").split_string(",").count();
@@ -360,6 +361,14 @@ void main (int id,string page) {
 				}
 			}
 			run_choice(pick);
+			break;
+
+		//Peering Through Your Peridot
+		case 1557:
+			//if we get here by accident in zones that don't matter in run or aftercore, oh well
+			//do resend the adventure as a stop-gap though
+			run_choice(2);
+			c2t_freeAdv(my_location());
 			break;
 	}
 }
