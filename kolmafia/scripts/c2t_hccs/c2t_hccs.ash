@@ -1051,6 +1051,7 @@ boolean c2t_hccs_preItem() {
 		&& ((available_amount($item[vampyric cloake]) > 0
 				&& have_effect($effect[bat-adjacent form]) == 0)
 			|| (!get_property('latteUnlocks').contains_text('carrot')
+				&& available_amount($item[latte lovers member's mug]) > 0
 				&& !get_property("c2t_hccs_disable.latteFishing").to_boolean())))
 	{
 		maximize(`-tie,mainstat,equip {c2t_pilcrow($item[latte lovers member's mug])},1000 bonus {c2t_pilcrow($item[lil' doctor&trade; bag])},1000 bonus {c2t_pilcrow($item[kremlin's greatest briefcase])},1000 bonus {c2t_pilcrow($item[vampyric cloake])},100 bonus {c2t_pilcrow($item[designer sweatpants])}`,false);
@@ -1069,6 +1070,7 @@ boolean c2t_hccs_preItem() {
 		//fish for latte ingredient
 		while (c2t_hccs_banishesLeft() > 0
 			&& !get_property('latteUnlocks').contains_text('carrot')
+			&& available_amount($item[latte lovers member's mug]) > 0
 			&& !get_property("c2t_hccs_disable.latteFishing").to_boolean())
 		{
 			//bowling ball could return mid-fishing
@@ -1103,7 +1105,8 @@ boolean c2t_hccs_preItem() {
 	}
 	if (!get_property('latteModifier').contains_text('Item Drop')
 		&& get_property('latteUnlocks').contains_text('carrot')
-		&& get_property('_latteBanishUsed').to_boolean())
+		&& get_property('_latteBanishUsed').to_boolean()
+		&& available_amount($item[latte lovers member's mug]) > 0)
 	{
 		cli_execute('latte refill cinnamon carrot vanilla');
 	}
@@ -1214,7 +1217,12 @@ boolean c2t_hccs_preHotRes() {
 
 	//cloake buff and fireproof foam suit for +32 hot res total, but also weapon and spell test buffs
 	//weapon/spell buff should last 15 turns, which is enough to get through hot(1), NC(9), and weapon(1) tests to also affect the spell test
+	
 	if ((have_effect($effect[do you crush what i crush?]) == 0
+			&& have_effect($effect[holiday yoked]) == 0
+			&& have_effect($effect[let it snow]) == 0
+			&& have_effect($effect[all i want for crimbo is stuff]) == 0
+			&& have_effect($effect[crimbo wrapping]) == 0
 			&& have_familiar($familiar[ghost of crimbo carols]))
 		|| (have_effect($effect[fireproof foam suit]) == 0
 			&& available_amount($item[industrial fire extinguisher]) > 0
@@ -1255,6 +1263,11 @@ boolean c2t_hccs_preHotRes() {
 
 
 	//THINGS I DON'T USE FOR HOT TEST ANYMORE, but will fall back on if other things break
+
+	// Use scroll of minor invulnerability if we have it
+	if (have_effect($effect[minor invulnerability]) == 0 && available_amount($item[scroll of minor invulnerability]) > 0) {
+		use(1, $item[scroll of minor invulnerability]);
+	}
 
 	//beach comb hot buff
 	if (available_amount($item[beach comb]) > 0) {
@@ -1599,7 +1612,7 @@ boolean c2t_hccs_preWeapon() {
 	restore_mp(500);
 
 	// moved to hot res test
-	/*if (have_effect($effect[do you crush what i crush?]) == 0 && have_familiar($familiar[ghost of crimbo carols]) && (get_property('_snokebombUsed').to_int() < 3 || !get_property('_latteBanishUsed').to_boolean())) {
+	/*if (have_effect($effect[do you crush what i crush?]) == 0 && have_familiar($familiar[ghost of crimbo carols]) && (get_property('_snokebombUsed').to_int() < 3 || (!get_property('_latteBanishUsed').to_boolean() && available_amount($item[latte lovers member's mug]) > 0))) {
 		equip($item[latte lovers member's mug]);
 		if (my_mp() < 30)
 			cli_execute('rest free');
@@ -2071,7 +2084,7 @@ void c2t_hccs_fights() {
 			&& have_effect($effect[tomato power]) == 0)
 		{
 			if (get_property('lastCopyableMonster').to_monster() != $monster[possessed can of tomatoes]) {
-				if (get_property('_latteDrinkUsed').to_boolean())
+				if (get_property('_latteDrinkUsed').to_boolean() && available_amount($item[latte lovers member's mug]) > 0)
 					cli_execute('latte refill cinnamon pumpkin vanilla');
 				//max mp to max latte gulp to fuel buffs
 				c2t_hccs_levelingFamiliar(true);
@@ -2135,7 +2148,7 @@ void c2t_hccs_fights() {
 			&& have_effect($effect[unrunnable face]) == 0
 			&& item_amount($item[runproof mascara]) == 0))//to nostalgia runproof mascara
 	{
-		if (get_property('_latteDrinkUsed').to_boolean())
+		if (get_property('_latteDrinkUsed').to_boolean() && available_amount($item[latte lovers member's mug]) > 0)
 			cli_execute('latte refill cinnamon pumpkin vanilla');
 		if (have_familiar($familiar[ghost of crimbo carols]))
 			use_familiar($familiar[ghost of crimbo carols]);
@@ -2425,6 +2438,7 @@ void c2t_hccs_fights() {
 				|| (c2t_hccs_havePocketProfessor()
 					&& c2t_hccs_pocketProfessorLectures() > 0))
 			&& !get_property('latteUnlocks').contains_text('carrot')
+			&& available_amount($item[latte lovers member's mug]) > 0
 			&& c2t_hccs_backupCameraLeft() > 0
 			//target monster
 			&& get_property('lastCopyableMonster').to_monster() == $monster[sausage goblin])
