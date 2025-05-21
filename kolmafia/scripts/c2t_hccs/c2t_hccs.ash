@@ -1220,7 +1220,7 @@ boolean c2t_hccs_preHotRes() {
 	
 	if ((have_effect($effect[do you crush what i crush?]) == 0
 			&& have_effect($effect[holiday yoked]) == 0
-			&& have_effect($effect[let it snow]) == 0
+			&& have_effect($effect[Let It Snow/Boil/Stink/Frighten/Grease]) == 0
 			&& have_effect($effect[all i want for crimbo is stuff]) == 0
 			&& have_effect($effect[crimbo wrapping]) == 0
 			&& have_familiar($familiar[ghost of crimbo carols]))
