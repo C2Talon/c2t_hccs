@@ -1862,6 +1862,16 @@ boolean c2t_hccs_preSpell() {
 	//unbreakable umbrella
 	c2t_hccs_unbreakableUmbrella("spell");
 
+	//prismatic beret
+	c2t_hccs_beret(
+		float[modifier]{
+			$modifier[spell damage]:1,
+			$modifier[spell damage percent]:1,
+			},
+		float[effect]{},
+		true
+	);
+
 	maximize(maxstr,false);
 
 	return c2t_hccs_thresholdMet(TEST_SPELL);

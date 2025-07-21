@@ -7,6 +7,7 @@ import <c2t_lib.ash>
 import <c2t_hccs_lib.ash>
 import <c2t_reminisce.ash>
 import <c2t_hccs_preAdv.ash>
+import <liba_beret.ash>
 import <liba_peridot.ash>
 
 
@@ -20,6 +21,7 @@ import <liba_peridot.ash>
 //d--asdon
 //d--backup camera
 //d--bat wings
+//d--beret
 //d--briefcase
 //d--cartography
 //d--cincho de mayo
@@ -91,6 +93,14 @@ boolean c2t_hccs_haveBatWings();
 
 //returns true if bat wings skill "rest upside down" was used
 boolean c2t_hccs_batWingsRestore();
+
+
+//d--beret
+//returns true if have prismatic beret
+boolean c2t_hccs_beret_have();
+
+//returns true on successfully getting effects that are applicable to the input
+boolean c2t_hccs_beret(float[modifier] modWeight,float[effect] effWeight,boolean onlyNewEffects);
 
 
 //d--briefcase
@@ -336,6 +346,7 @@ void c2t_hccs_vote();
 //i--asdon
 //i--backup camera
 //i--bat wings
+//i--beret
 //i--briefcase
 //i--cartography
 //i--cincho de mayo
@@ -510,6 +521,64 @@ boolean c2t_hccs_batWingsRestore() {
 	if ($skill[rest upside down].dailylimit == 0)
 		return false;
 	return c2t_equipCast($item[bat wings],$skill[rest upside down]);
+}
+
+//i--beret
+boolean c2t_hccs_beret_have() {
+	return liba_beret_have()
+		&& !get_property("c2t_hccs_disable.beret").to_boolean();
+}
+boolean c2t_hccs_beret(float[modifier] modWeight,float[effect] effWeight,boolean onlyNewEffects) {
+	if (!liba_beret_have()
+		|| liba_beret_left() <= 0)
+	{
+		return false;
+	}
+	int success;
+
+	liba_beret_sim sim = liba_beret_simInit(modWeight,effWeight,onlyNewEffects);
+
+	//add pants that can be bought from NPC shops //TODO: find better way to do this
+	foreach pant in $items[
+		//armory and leggery
+		studded leather boxer shorts,
+		chain-mail monokini,
+		union scalemail pants,
+		paper-plate-mail pants,
+		troutpiece,
+		alpha-mail pants]
+	{
+		int power = pant.get_power();
+		if (!(sim.pants contains power))
+			sim.pants[power] = pant;
+	}
+
+	//find best busks and exit if nothing found
+	liba_beret_busk[int] best = liba_beret_bestBusks(5,sim);
+	if (best.count() == 0) {
+		c2t_hccs_printInfo(`no best busks found`);
+		return false;
+	}
+
+	//do the things
+	foreach cast,busk in best {
+		//acquire gear best busks need
+		foreach i,piece in busk.gear if (available_amount(piece) == 0)
+			retrieve_item(1,piece);
+
+		//burn empty busks in best prior to current one, then do it too
+		int tries;
+		while (cast >= liba_beret_used() && tries++ < 5) {
+			if (cast == liba_beret_used())
+				c2t_hccs_printInfo(`casting busk {cast+1}; weighted score {busk.score}; gear power {busk.power}`);
+			else
+				c2t_hccs_printInfo(`burning busk {cast+1}`);
+
+			if (liba_beret_execute(busk.gear))
+				success++;
+		}
+	}
+	return success >= 0;
 }
 
 //i--briefcase
