@@ -29,6 +29,7 @@ void main() {
 		};
 
 	string [string] disableable = {
+		"c2t_hccs_disable.alliedRadio":"will skip using the allied radio for effects and/or booze",
 		"c2t_hccs_disable.autumnatonItem":"will skip getting the 25% item drop potion with autumn-aton",
 		"c2t_hccs_disable.backupCamera":"will not use the 'back-up to your last enemy' skill",
 		"c2t_hccs_disable.beret":"will not use prismatic beret busking",

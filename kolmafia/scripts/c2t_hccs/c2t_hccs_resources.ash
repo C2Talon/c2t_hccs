@@ -7,6 +7,7 @@ import <c2t_lib.ash>
 import <c2t_hccs_lib.ash>
 import <c2t_reminisce.ash>
 import <c2t_hccs_preAdv.ash>
+import <liba_alliedRadio.ash>
 import <liba_beret.ash>
 import <liba_peridot.ash>
 
@@ -17,6 +18,7 @@ import <liba_peridot.ash>
 /*-=-+-=-+-=-+-=-+-=-+-=-
   function declarations
   -=-+-=-+-=-+-=-+-=-+-=-*/
+//d--allied radio
 //d--april shower thoughts shield
 //d--asdon
 //d--backup camera
@@ -52,6 +54,15 @@ import <liba_peridot.ash>
 //d--vip floundry
 //d--vip photo booth
 //d--vote
+
+
+//d--allied radio
+//returns true if have allied radio backpack or handheld
+boolean c2t_hccs_alliedRadio_have();
+
+//gets a thing if not gotten already, then returns true if successful
+boolean c2t_hccs_alliedRadio(effect eff);
+boolean c2t_hccs_alliedRadio(item ite);
 
 
 //d--april shower thoughts shield
@@ -342,6 +353,7 @@ void c2t_hccs_vote();
 /*-=-+-=-+-=-+-=-+-=-+-=-
   function implementations
   -=-+-=-+-=-+-=-+-=-+-=-*/
+//i--allied radio
 //i--april shower thoughts shield
 //i--asdon
 //i--backup camera
@@ -377,6 +389,27 @@ void c2t_hccs_vote();
 //i--vip floundry
 //i--vip photo booth
 //i--vote
+
+
+//i--allied radio
+boolean c2t_hccs_alliedRadio_have() {
+	return liba_alliedRadio_have()
+		&& !get_property("c2t_hccs_disable.alliedRadio").to_boolean();
+}
+boolean c2t_hccs_alliedRadio(effect eff) {
+	if (!c2t_hccs_alliedRadio_have())
+		return false;
+	if (have_effect(eff) > 0)
+		return true;
+	return liba_alliedRadio(eff);
+}
+boolean c2t_hccs_alliedRadio(item ite) {
+	if (!c2t_hccs_alliedRadio_have())
+		return false;
+	if (item_amount(ite) > 0)
+		return true;
+	return liba_alliedRadio(ite);
+}
 
 
 //i--april shower thoughts shield

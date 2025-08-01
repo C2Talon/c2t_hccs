@@ -794,6 +794,8 @@ boolean c2t_hccs_levelup() {
 		c2t_hccs_haveUse($skill[eye and a twist]);
 		if (item_amount($item[eye and a twist]) > 0)
 			itew = $item[eye and a twist];
+		else if (c2t_hccs_alliedRadio($item[skeleton war fuel can]))
+			itew = $item[skeleton war fuel can];
 
 		c2t_assert(itew != $item[none],"could not get booze to get more adventures");
 
@@ -1143,6 +1145,13 @@ boolean c2t_hccs_preItem() {
 
 	//THINGS I DON'T ALWAYS WANT TO USE FOR ITEM TEST
 
+	//allied radio: materiel intel
+	if (c2t_hccs_alliedRadio($effect[materiel intel])) {
+		maximize(maxstr,false);
+		if (c2t_hccs_thresholdMet(TEST_ITEM))
+			return true;
+	}
+
 	//vip photo booth
 	if (c2t_hccs_vipPhotoBooth($item[oversized monocle on a stick])) {
 		maximize(maxstr,false);
@@ -1341,6 +1350,13 @@ boolean c2t_hccs_preHotRes() {
 		return true;
 	}
 
+	//allied radio: wildsun boon
+	if (c2t_hccs_alliedRadio($effect[wildsun boon])
+		&& c2t_hccs_thresholdMet(TEST_HOT_RES))
+	{
+		return true;
+	}
+
 	//pillkeeper
 	if (c2t_hccs_pillkeeper($effect[rainbowolin])
 		&& c2t_hccs_thresholdMet(TEST_HOT_RES))
@@ -1396,6 +1412,9 @@ boolean c2t_hccs_preFamiliar() {
 
 	// Pool buff
 	c2t_hccs_getEffect($effect[billiards belligerence]);
+
+	//allied radio: wildsun boon
+	c2t_hccs_alliedRadio($effect[wildsun boon]);
 
 	restore_hp(31);//need to have the hp before casting blood skills
 	c2t_hccs_getEffect($effect[blood bond]);
@@ -1842,6 +1861,9 @@ boolean c2t_hccs_preSpell() {
 		restore_hp(800);
 		c2t_hccs_getEffect($effect[visions of the deep dark deeps]);
 	}
+
+	//allied radio: wildsun boon
+	c2t_hccs_alliedRadio($effect[wildsun boon]);
 
 	//if I ever feel like blowing the resources:
 	if (get_property('_c2t_hccs_dstab').to_boolean()) {
