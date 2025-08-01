@@ -794,8 +794,6 @@ boolean c2t_hccs_levelup() {
 		c2t_hccs_haveUse($skill[eye and a twist]);
 		if (item_amount($item[eye and a twist]) > 0)
 			itew = $item[eye and a twist];
-		else if (c2t_hccs_alliedRadio($item[skeleton war fuel can]))
-			itew = $item[skeleton war fuel can];
 
 		c2t_assert(itew != $item[none],"could not get booze to get more adventures");
 
