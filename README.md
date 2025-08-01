@@ -62,7 +62,7 @@ Some of the required IotM are only required for now because they're explicitly u
 * [Fourth of May Cosplay Saber kit](https://kol.coldfront.net/thekolwiki/index.php/Fourth_of_May_Cosplay_Saber_Kit)
 * [rune-strewn spoon cocoon](https://kol.coldfront.net/thekolwiki/index.php/Rune-strewn_spoon_cocoon)
 * [Distant Woods Getaway Brochure](https://kol.coldfront.net/thekolwiki/index.php/Distant_Woods_Getaway_Brochure) or [Chateau Mantegna room key](https://kol.coldfront.net/thekolwiki/index.php/Chateau_Mantegna_room_key) &mdash; note: chateau support is limited only to resting there
-* [Comprehensive Cartographic Compendium](https://kol.coldfront.net/thekolwiki/index.php/Comprehensive_Cartographic_Compendium)
+* [Comprehensive Cartographic Compendium](https://kol.coldfront.net/thekolwiki/index.php/Comprehensive_Cartographic_Compendium) or [Unpeeled Peridot of Peril](https://kol.coldfront.net/thekolwiki/index.php/Unpeeled_Peridot_of_Peril) &mdash; force encounters with needed monsters
 * [emotion chip](https://kol.coldfront.net/thekolwiki/index.php/Emotion_chip)
 
 ### Supported IotM ([ordered by release date](https://kol.coldfront.net/thekolwiki/index.php/Mr._Store))
@@ -135,6 +135,9 @@ While these are not strictly required, not having enough that either save turns 
     * [boxed Mayam Calendar](https://kol.coldfront.net/thekolwiki/index.php/Boxed_Mayam_Calendar) &mdash; gets adventures post-coil if low
     * [untorn tearaway pants package](https://kol.coldfront.net/thekolwiki/index.php/Untorn_tearaway_pants_package) &mdash; if moxie, used to unlock guild, unlock distant woods, and fight tentacle in science tent
     * [boxed bat wings](https://kol.coldfront.net/thekolwiki/index.php/Boxed_bat_wings) &mdash; MP recovery
+* 2025
+    * [packaged prismatic beret](https://kol.coldfront.net/thekolwiki/index.php/Packaged_prismatic_beret) &mdash; saves a bunch of turns on the spell test; turns saved can vary wildly based on gear on hand
+    * [Allied Radio Backpack Pack](https://kol.coldfront.net/thekolwiki/index.php/Allied_Radio_Backpack_Pack) &mdash; can save 4 turns on item test, 1 on familiar test, 1 on spell test, 3 on hot test
 
 ## Bugs?
 Report bugs in the [issue tracker](https://github.com/C2Talon/c2t_hccs/issues).
