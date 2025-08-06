@@ -370,5 +370,47 @@ void main (int id,string page) {
 			run_choice(2);
 			c2t_freeAdv(my_location());
 			break;
+
+		//Time is a Möbius Strip
+		case 1562:
+			//just going to increase paradoxicity
+			num = 1;
+			foreach x in $strings[
+				"Stop your arch-nemesis as a baby",		//potion -5 combat
+				"Borrow meat from your future",			//1000 meat
+				"Lift yourself up by your bootstraps",		//mus stats
+				"Give your past self investment tips",		//stock certificate
+				"Mind your own business",			//mys stats
+				"Plant some seeds in the distant past",		//effect 30 hp, mus 15
+				"Meet your parents when they were young",	//effect -15 mox, init -50
+				"Go for a nature walk",				//effect 9 mp regen
+				"Borrow a cup of sugar from yourself",		//food good size 1
+				"Shoot yourself in the foot",			//mox stats
+				"Go back and take a 20-year-long nap",		//effect 30 mp, mys 15
+				"Steal a club from the past",			//random club
+				"Peek in on your future",			//effect weapon drop 100%
+				"Play Schroedinger's Prank on yourself",	//effect varies every turn
+				"Steal a cupcake from young Susie",		//food epic size 1
+				"Hey, free gun!",				//the gun w/ weapon damage 50
+				"Cheeze it, it's the pigs!",			//effect mus -30, hp -15
+				"Go back and write a best-seller.",		//effect mox 25
+				"Plant some trees and harvest them in the future",//5 random fruit
+				"Draw a goatee on yourself",			//effect 5 stats per fight
+				"Defend yourself",				//effect mp -10, init 50
+				"Take the long odds on the trifecta",		//effect Marked by the Don
+				"Make friends with a famous poet",		//effect that breaks kolmafia tracking
+				]
+			{
+				matcher m = create_matcher(`value=(\\d+)><input\\s+class=button\\s+type=submit\\s+value={x}`,page);
+				if (m.find()) {
+					num = m.group(1).to_int();
+					break;
+				}
+			}
+			run_choice(num);
+			//redo adventure
+			c2t_freeAdv(my_location());
+			break;
 	}
 }
+

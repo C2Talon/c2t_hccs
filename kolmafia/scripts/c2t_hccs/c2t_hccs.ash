@@ -1564,6 +1564,13 @@ boolean c2t_hccs_preNoncombat() {
 	if (c2t_hccs_thresholdMet(TEST_NONCOMBAT))
 		return true;
 
+	//mobius ring potion
+	if (c2t_hccs_haveUse($item[life goals pamphlet])
+		&& c2t_hccs_thresholdMet(TEST_NONCOMBAT))
+	{
+		return true;
+	}
+
 	//asdon
 	if (c2t_hccs_asdon($effect[driving stealthily])
 		&& c2t_hccs_thresholdMet(TEST_NONCOMBAT))

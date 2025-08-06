@@ -299,6 +299,8 @@ void main(int initround, monster foe, string page) {
 			return;
 
 		//most basic of combats
+		//mobius ring
+		case $monster[time cop]:
 		//mushroom garden
 		case $monster[piranha plant]:
 		//voters
