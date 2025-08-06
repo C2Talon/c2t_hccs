@@ -6,11 +6,6 @@ import <c2t_lib.ash>
 
 void main (int id,string page) {
 	int testsDone = get_property("csServicesPerformed").split_string(",").count();
-	location loc;
-	string str = "";
-	int num = 0;
-	int[string] priority;
-	int top,pick;
 
 	switch (id) {
 		default:
@@ -227,7 +222,11 @@ void main (int id,string page) {
 			break;
 
 		//autumn-aton
-		case 1483:
+		case 1483:{
+			location loc;
+			string str;
+			int num = 0;
+
 			//upgrade
 			if (available_choice_options() contains 1) {
 				print(`Autumn-aton: {available_choice_options()[1]}`);
@@ -263,6 +262,7 @@ void main (int id,string page) {
 				c2t_hccs_printWarn("Autumn-aton: failed to go to a place that was available");
 			}
 			break;
+		}
 
 		//SIT
 		case 1494:
@@ -300,8 +300,8 @@ void main (int id,string page) {
 			break;
 
 		//labyrinth of shadows
-		case 1499:
-			str = get_property("rufusQuestTarget");
+		case 1499:{
+			string str = get_property("rufusQuestTarget");
 			if (str == "" || get_property("questRufus") == "step1")
 				str = "Shadow's Chill";
 			if (get_property("questRufus") == "step1")
@@ -315,6 +315,7 @@ void main (int id,string page) {
 				run_choice(1);
 			}
 			break;
+		}
 
 		//like a loded stone
 		//1:forge
@@ -325,8 +326,8 @@ void main (int id,string page) {
 			break;
 
 		//dart perks
-		case 1525:
-			priority = {
+		case 1525:{
+			int[string] priority = {
 				"Throw a second dart quickly":60,
 				"Deal 25-50% more damage":800,
 				"You are less impressed by bullseyes":11,
@@ -347,8 +348,8 @@ void main (int id,string page) {
 				"Extra stats from stats targets":40,
 				"25% better chance to hit bullseyes":20,
 				};
-			top = 999999999;
-			pick = 1;
+			int top = 999999999;
+			int pick = 1;
 
 			foreach i,x in available_choice_options() {
 				if (priority[x] == 0) {
@@ -362,6 +363,7 @@ void main (int id,string page) {
 			}
 			run_choice(pick);
 			break;
+		}
 
 		//Peering Through Your Peridot
 		case 1557:
@@ -372,9 +374,9 @@ void main (int id,string page) {
 			break;
 
 		//Time is a Möbius Strip
-		case 1562:
+		case 1562:{
 			//just going to increase paradoxicity
-			num = 1;
+			int num = 1;
 			foreach x in $strings[
 				"Stop your arch-nemesis as a baby",		//potion -5 combat
 				"Borrow meat from your future",			//1000 meat
@@ -391,8 +393,8 @@ void main (int id,string page) {
 				"Peek in on your future",			//effect weapon drop 100%
 				"Play Schroedinger's Prank on yourself",	//effect varies every turn
 				"Steal a cupcake from young Susie",		//food epic size 1
-				"Hey, free gun!",				//the gun w/ weapon damage 50
-				"Cheeze it, it's the pigs!",			//effect mus -30, hp -15
+				"Hey\, free gun!",				//the gun w/ weapon damage 50
+				"Cheeze it\, it's the pigs!",			//effect mus -30, hp -15
 				"Go back and write a best-seller.",		//effect mox 25
 				"Plant some trees and harvest them in the future",//5 random fruit
 				"Draw a goatee on yourself",			//effect 5 stats per fight
@@ -411,6 +413,7 @@ void main (int id,string page) {
 			//redo adventure
 			c2t_freeAdv(my_location());
 			break;
+		}
 	}
 }
 
