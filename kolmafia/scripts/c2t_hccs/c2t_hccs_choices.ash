@@ -4,6 +4,8 @@
 import <c2t_hccs_lib.ash>
 import <c2t_lib.ash>
 
+void c2t_hccs_choiceMobiusRing(string page);
+
 void main (int id,string page) {
 	int testsDone = get_property("csServicesPerformed").split_string(",").count();
 
@@ -374,46 +376,50 @@ void main (int id,string page) {
 			break;
 
 		//Time is a Möbius Strip
-		case 1562:{
-			//just going to increase paradoxicity
-			int num = 1;
-			foreach x in $strings[
-				"Stop your arch-nemesis as a baby",		//potion -5 combat
-				"Borrow meat from your future",			//1000 meat
-				"Lift yourself up by your bootstraps",		//mus stats
-				"Give your past self investment tips",		//stock certificate
-				"Mind your own business",			//mys stats
-				"Plant some seeds in the distant past",		//effect 30 hp, mus 15
-				"Meet your parents when they were young",	//effect -15 mox, init -50
-				"Go for a nature walk",				//effect 9 mp regen
-				"Borrow a cup of sugar from yourself",		//food good size 1
-				"Shoot yourself in the foot",			//mox stats
-				"Go back and take a 20-year-long nap",		//effect 30 mp, mys 15
-				"Steal a club from the past",			//random club
-				"Peek in on your future",			//effect weapon drop 100%
-				"Play Schroedinger's Prank on yourself",	//effect varies every turn
-				"Steal a cupcake from young Susie",		//food epic size 1
-				"Hey\, free gun!",				//the gun w/ weapon damage 50
-				"Cheeze it\, it's the pigs!",			//effect mus -30, hp -15
-				"Go back and write a best-seller.",		//effect mox 25
-				"Plant some trees and harvest them in the future",//5 random fruit
-				"Draw a goatee on yourself",			//effect 5 stats per fight
-				"Defend yourself",				//effect mp -10, init 50
-				"Take the long odds on the trifecta",		//effect Marked by the Don
-				"Make friends with a famous poet",		//effect that breaks kolmafia tracking
-				]
-			{
-				matcher m = create_matcher(`value=(\\d+)><input\\s+class=button\\s+type=submit\\s+value={x}`,page);
-				if (m.find()) {
-					num = m.group(1).to_int();
-					break;
-				}
-			}
-			run_choice(num);
-			//redo adventure
+		case 1562:
+			c2t_hccs_choiceMobiusRing(page);
+			//need to redo adv due to unexpected NC
 			c2t_freeAdv(my_location());
+			break;
+	}
+}
+
+void c2t_hccs_choiceMobiusRing(string page) {
+	//just going to increase paradoxicity--only ever going to get few in-run anyway
+	int pick = 1;
+	foreach i,paradox in string[int]{
+		"Stop your arch-nemesis as a baby",			//+ potion combat -5
+		"Go back and take a 20-year-long nap",			//+ effect mp 30, mys 15
+		"Lift yourself up by your bootstraps",			//+ mus stats
+		"Borrow meat from your future",				//+ 1000 meat
+		"Go back and write a best-seller.",			//+ effect mox 25
+		"Steal a cupcake from young Susie",			//+ food epic size 1
+		"Borrow a cup of sugar from yourself",			//+ food good size 1
+		"Shoot yourself in the foot",				//+ mox stats
+		"Mind your own business",				//+ mys stats
+		"Give your past self investment tips",			//+ item stock certificate
+		"Plant some trees and harvest them in the future",	//+ item 5 random fruit
+		"Steal a club from the past",				//+ item random club
+		"Hey, free gun!",					//+ item the gun w/ weapon damage 50
+		"Plant some seeds in the distant past",			//+ effect hp 30, mus 15
+		"Go for a nature walk",					//+ effect 9 mp regen
+		"Draw a goatee on yourself",				//+ effect 5 stats per fight
+		"Cheeze it, it's the pigs!",				//+ effect mus -30, hp -15
+		"Peek in on your future",				//+ effect weapon drop 100%
+		"Meet your parents when they were young",		//+ effect mox -15, init -50
+		"Defend yourself",					//+ effect mp -10, init 50
+		"Play Schroedinger's Prank on yourself",		//+ effect varies every turn
+		"Take the long odds on the trifecta",			//+ effect Marked by the Don
+		"Make friends with a famous poet",			//+ effect that breaks kolmafia tracking (anapests)
+		}
+	{
+		print(paradox);
+		matcher m = create_matcher(`value=(\\d+)><input\\s+class=button\\s+type=submit\\s+value="{paradox}"`,page);
+		if (m.find()) {
+			pick = m.group(1).to_int();
 			break;
 		}
 	}
+	run_choice(pick);
 }
 

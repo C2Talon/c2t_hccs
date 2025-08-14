@@ -299,8 +299,6 @@ void main(int initround, monster foe, string page) {
 			return;
 
 		//most basic of combats
-		//mobius ring
-		case $monster[time cop]:
 		//mushroom garden
 		case $monster[piranha plant]:
 		//voters
@@ -310,6 +308,13 @@ void main(int initround, monster foe, string page) {
 		case $monster[annoyed snake]:
 		case $monster[slime blob]:
 			c2t_bbSubmit(mHead + mSteal + mBasic);
+			return;
+
+		//mobius ring
+		case $monster[time cop]:
+			c2t_bbSubmit(mHead + mSteal + mBasic);
+			//need to redo adv for unexpected wanderers
+			c2t_freeAdv(loc);
 			return;
 
 		//portscan
