@@ -413,7 +413,6 @@ void c2t_hccs_choiceMobiusRing(string page) {
 		"Make friends with a famous poet",			//+ effect that breaks kolmafia tracking (anapests)
 		}
 	{
-		print(paradox);
 		matcher m = create_matcher(`value=(\\d+)><input\\s+class=button\\s+type=submit\\s+value="{paradox}"`,page);
 		if (m.find()) {
 			pick = m.group(1).to_int();
