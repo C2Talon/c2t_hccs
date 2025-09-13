@@ -421,23 +421,25 @@ boolean c2t_hccs_aprilShield(effect eff) {
 		return true;
 	if (!c2t_hccs_haveAprilShield())
 		return false;
+	if (eff == $effect[simmering] && get_property("_aprilShowerSimmer").to_boolean())
+		return false;
 
 	item aprilShield = $item[april shower thoughts shield];
 
 	if (eff == $effect[empathy]) {
+		if (!have_skill($skill[empathy of the newt]))
+			return false;
 		boolean restore = false;
 		if (have_equipped(aprilShield)) {
 			equip($slot[off-hand],$item[none]);
 			restore = true;
 		}
-		c2t_hccs_getEffect($effect[empathy]);
+		use_skill($skill[empathy of the newt]);
 		if (restore)
 			equip($slot[off-hand],aprilShield);
 		return have_effect(eff) > 0;
 	}
 
-	effect simmering = $effect[simmering];
-	string prop = "_c2t_hccs_aprilSimmerUsed";
 	skill[effect] legend = {
 		$effect[disco over matter]:$skill[disco aerobics],
 		$effect[lubricating sauce]:$skill[sauce contemplation],
@@ -455,19 +457,8 @@ boolean c2t_hccs_aprilShield(effect eff) {
 	}
 	if (!have_skill(legend[eff]))
 		return false;
-	if (eff == simmering
-		&& get_property(prop).to_boolean())
-	{
-		c2t_hccs_printWarn(`c2t_hccs_aprilShield: cannot get "simmering" free again, so skipping`);
-		return false;
-	}
 
-	try c2t_equipCast($item[april shower thoughts shield],legend[eff]);
-	finally if (eff == simmering
-		&& have_effect(simmering) > 0)
-	{
-		set_property(prop,true);
-	}
+	c2t_equipCast($item[april shower thoughts shield],legend[eff]);
 
 	return have_effect(eff) > 0;
 }
