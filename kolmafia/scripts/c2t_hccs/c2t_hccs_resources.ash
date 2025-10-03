@@ -9,6 +9,7 @@ import <c2t_reminisce.ash>
 import <c2t_hccs_preAdv.ash>
 import <liba_alliedRadio.ash>
 import <liba_beret.ash>
+import <liba_bloodCubicZirconia.ash>
 import <liba_peridot.ash>
 
 
@@ -24,6 +25,7 @@ import <liba_peridot.ash>
 //d--backup camera
 //d--bat wings
 //d--beret
+//d--blood cubic zirconia
 //d--briefcase
 //d--cartography
 //d--cincho de mayo
@@ -112,6 +114,15 @@ boolean c2t_hccs_beret_have();
 
 //returns number of busks casts
 int c2t_hccs_beret(float[modifier] modWeight,float[effect] effWeight,boolean onlyNewEffects);
+
+
+//d--blood cubic zirconia
+//returns true if have blood cubic zirconia
+boolean c2t_hccs_bloodCubicZirconia_have();
+
+//gets effect from bcz if don't already have
+//returns true if have effect at end
+boolean c2t_hccs_bloodCubicZirconia(effect eff);
 
 
 //d--briefcase
@@ -359,6 +370,7 @@ void c2t_hccs_vote();
 //i--backup camera
 //i--bat wings
 //i--beret
+//i--blood cubic zirconia
 //i--briefcase
 //i--cartography
 //i--cincho de mayo
@@ -560,6 +572,13 @@ int c2t_hccs_beret(float[modifier] modWeight,float[effect] effWeight,boolean onl
 	}
 	liba_beret_sim sim = liba_beret_simInit(modWeight,effWeight,onlyNewEffects);
 
+	/*
+	map_to_file(sim.hats,"cs_beret_sim_hats.txt");
+	map_to_file(sim.shirts,"cs_beret_sim_shirts.txt");
+	map_to_file(sim.pants,"cs_beret_sim_pants.txt");
+	map_to_file(sim.effects,"cs_beret_sim_effects.txt");
+	*/
+
 	//add pants that can be bought from NPC shops //TODO: find better way to do this
 	foreach pant in $items[
 		//armory and leggery
@@ -576,6 +595,19 @@ int c2t_hccs_beret(float[modifier] modWeight,float[effect] effWeight,boolean onl
 	}
 
 	return liba_beret(5,sim);
+}
+
+//i--blood cubic zirconia
+boolean c2t_hccs_bloodCubicZirconia_have() {
+	return liba_bloodCubicZirconia_have();
+}
+boolean c2t_hccs_bloodCubicZirconia(effect eff) {
+	if (have_effect(eff) > 0)
+		return true;
+	if (!c2t_hccs_bloodCubicZirconia_have())
+		return false;
+	liba_bloodCubicZirconia(eff);
+	return have_effect(eff) > 0;
 }
 
 //i--briefcase

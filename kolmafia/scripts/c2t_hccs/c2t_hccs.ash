@@ -1724,6 +1724,9 @@ boolean c2t_hccs_preWeapon() {
 	
 	c2t_hccs_getEffect($effect[bow-legged swagger]);
 
+	//blood cubic zirconia //TODO probably check to make sure NC test done first in future
+	c2t_hccs_bloodCubicZirconia($effect[bloodbathed]);
+
 	//briefcase
 	//c2t_hccs_briefcase("weapon");//this is the default, but just in case
 
@@ -1869,6 +1872,9 @@ boolean c2t_hccs_preSpell() {
 
 	//allied radio: wildsun boon
 	c2t_hccs_alliedRadio($effect[wildsun boon]);
+
+	//blood cubic zirconia
+	c2t_hccs_bloodCubicZirconia($effect[up to 11]);
 
 	//if I ever feel like blowing the resources:
 	if (get_property('_c2t_hccs_dstab').to_boolean()) {
