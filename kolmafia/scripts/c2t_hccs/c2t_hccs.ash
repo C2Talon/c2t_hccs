@@ -973,6 +973,8 @@ boolean c2t_hccs_allTheBuffs() {
 	c2t_hccs_getEffect($effect[empathy]);
 	c2t_hccs_aprilShield($effect[empathy]);
 	c2t_hccs_aprilShield($effect[thoughtful empathy]);
+	c2t_hccs_getEffect($effect[only dogs love a drunken sailor]);//shanty
+
 
 	c2t_hccs_levelingFamiliar(true);
 
@@ -1124,6 +1126,7 @@ boolean c2t_hccs_preItem() {
 		c2t_hccs_getEffect($effect[spice haze]);
 
 	c2t_hccs_getEffect($effects[
+		who's going to pay this drunken sailor?,//shanty
 		fat leon's phat loot lyric,
 		singer's faithful ocelot,
 		the spirit of taking,
@@ -1245,6 +1248,7 @@ boolean c2t_hccs_preHotRes() {
 		blood bond,
 		empathy,
 		leash of linguini,
+		only dogs love a drunken sailor,//shanty
 		//ele res skills
 		elemental saucesphere,
 		astral shell,
@@ -1420,6 +1424,7 @@ boolean c2t_hccs_preFamiliar() {
 	c2t_hccs_getEffect($effect[empathy]);
 	c2t_hccs_aprilShield($effect[empathy]);
 	c2t_hccs_aprilShield($effect[thoughtful empathy]);
+	c2t_hccs_getEffect($effect[only dogs love a drunken sailor]);//shanty
 
 	//AT-only buff
 	if (my_class() == $class[accordion thief] && have_skill($skill[chorale of companionship]))
@@ -1506,6 +1511,7 @@ boolean c2t_hccs_preNoncombat() {
 		blood bond,
 		empathy,
 		leash of linguini,
+		only dogs love a drunken sailor,//shanty
 		//skills
 		the sonata of sneakiness,
 		smooth movements,
