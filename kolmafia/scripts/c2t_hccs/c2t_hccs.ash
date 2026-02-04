@@ -13,6 +13,7 @@ import <c2t_lib.ash>
 import <c2t_cast.ash>
 import <c2t_apriling.ash>
 import <c2t_mayam.ash>
+import <liba_eternityCodpiece.ash>
 
 int START_TIME = now_to_int();
 
@@ -393,6 +394,13 @@ boolean c2t_hccs_preCoil() {
 	{
 		use(workshed);
 	}
+
+	//take some gems from eternity codpiece
+	liba_eternityCodpiece_take($items[
+		blood cubic zirconia,
+		heartstone,
+		peridot of peril,
+		]);
 
 	//vip photo booth items for leveling
 	switch (my_primestat()) {
@@ -975,7 +983,6 @@ boolean c2t_hccs_allTheBuffs() {
 	c2t_hccs_aprilShield($effect[thoughtful empathy]);
 	c2t_hccs_getEffect($effect[only dogs love a drunken sailor]);//shanty
 
-
 	c2t_hccs_levelingFamiliar(true);
 
 	//telescope
@@ -1467,6 +1474,9 @@ boolean c2t_hccs_preFamiliar() {
 	else
 		use_familiar(highest);
 
+	//eternity codpiece + heartstone
+	liba_eternityCodpiece_set($item[heartstone]);
+
 	maximize(maxstr,false);
 	if (c2t_hccs_thresholdMet(TEST_FAMILIAR))
 		return true;
@@ -1910,6 +1920,9 @@ boolean c2t_hccs_preSpell() {
 		float[effect]{},
 		true
 	);
+
+	//eternity codpiece
+	liba_eternityCodpiece_setAll($item[eye of the tiger-lily]);
 
 	maximize(maxstr,false);
 
