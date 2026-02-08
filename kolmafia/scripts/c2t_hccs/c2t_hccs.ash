@@ -1759,6 +1759,9 @@ boolean c2t_hccs_preWeapon() {
 	//unbreakable umbrella
 	c2t_hccs_unbreakableUmbrella("weapon");
 	
+	//blood cubic zirconia
+	c2t_hccs_bloodCubicZirconia($effect[bloodbathed]);
+
 	maximize(maxstr,false);
 	if (c2t_hccs_thresholdMet(TEST_WEAPON))
 		return true;

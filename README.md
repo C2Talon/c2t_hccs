@@ -55,89 +55,97 @@ Some of the required IotM are only required for now because they're explicitly u
 ### Required IotM ([ordered by release date](https://wiki.kingdomofloathing.com/Mr._Store))
 * [Tome of Clip Art](https://wiki.kingdomofloathing.com/Tome_of_Clip_Art) &mdash; can be somewhat possible to get around this requirement by pulling a [borrowed time](https://wiki.kingdomofloathing.com/Borrowed_time) prior to running
 * [Clan VIP Lounge invitation](https://wiki.kingdomofloathing.com/Clan_VIP_Lounge_invitation) &mdash; assumes a fully-stocked VIP lounge
-* [corked genie bottle](https://wiki.kingdomofloathing.com/Corked_genie_bottle) &mdash; [cursed monkey glove](http://wiki.kingdomofloathing.com/cursed_monkey_glove) and [combat lover's locket lockbox](https://wiki.kingdomofloathing.com/Combat_lover%27s_locket_lockbox) (with [Hobelf (WC)](https://wiki.kingdomofloathing.com/Hobelf_%28WC%29), [ungulith](https://wiki.kingdomofloathing.com/Ungulith), [factory worker (female)](https://wiki.kingdomofloathing.com/Factory_worker_%28female%29), &amp; [evil olive](https://wiki.kingdomofloathing.com/Evil_Olive)) can replace this
+* [genie bottle](https://wiki.kingdomofloathing.com/Genie_bottle) &mdash; [cursed monkey paw](http://wiki.kingdomofloathing.com/Cursed_monkey_paw) and [combat lover's locket](https://wiki.kingdomofloathing.com/Combat_lover%27s_locket) (with [Hobelf (WC)](https://wiki.kingdomofloathing.com/Hobelf_%28WC%29), [ungulith](https://wiki.kingdomofloathing.com/Ungulith), [factory worker (female)](https://wiki.kingdomofloathing.com/Factory_worker_%28female%29), &amp; [evil olive](https://wiki.kingdomofloathing.com/Evil_Olive)) can replace this
 * [Neverending Party invitation envelope](https://wiki.kingdomofloathing.com/Neverending_Party_invitation_envelope)
-* [Latte lovers club card](https://wiki.kingdomofloathing.com/Latte_lovers_club_card)
-* [Kramco Industries packing carton](https://wiki.kingdomofloathing.com/Kramco_Industries_packing_carton)
-* [Fourth of May Cosplay Saber kit](https://wiki.kingdomofloathing.com/Fourth_of_May_Cosplay_Saber_Kit)
-* [rune-strewn spoon cocoon](https://wiki.kingdomofloathing.com/Rune-strewn_spoon_cocoon)
+* [latte lovers member's mug](https://wiki.kingdomofloathing.com/Latte_lovers_member%27s_mug)
+* [Kramco Sausage-o-Matic&trade;](https://wiki.kingdomofloathing.com/Kramco_Sausage-o-Matic%E2%84%A2)
+* [Fourth of May Cosplay Saber](https://wiki.kingdomofloathing.com/Fourth_of_May_Cosplay_Saber)
+* [hewn moon-rune spoon](https://wiki.kingdomofloathing.com/Hewn_moon-rune_spoon)
 * [Distant Woods Getaway Brochure](https://wiki.kingdomofloathing.com/Distant_Woods_Getaway_Brochure) or [Chateau Mantegna room key](https://wiki.kingdomofloathing.com/Chateau_Mantegna_room_key) &mdash; note: chateau support is limited only to resting there
-* [Comprehensive Cartographic Compendium](https://wiki.kingdomofloathing.com/Comprehensive_Cartographic_Compendium) or [Unpeeled Peridot of Peril](https://wiki.kingdomofloathing.com/Unpeeled_Peridot_of_Peril) &mdash; force encounters with needed monsters
+* [Comprehensive Cartographic Compendium](https://wiki.kingdomofloathing.com/Comprehensive_Cartographic_Compendium) or [Peridot of Peril](https://wiki.kingdomofloathing.com/Peridot_of_Peril) &mdash; force encounters with needed monsters
 * [emotion chip](https://wiki.kingdomofloathing.com/Emotion_chip)
 
-### Supported IotM ([ordered by release date](https://wiki.kingdomofloathing.com/Mr._Store))
+### Supported IotM ([grouped by year released](https://wiki.kingdomofloathing.com/Mr._Store))
 
 While these are not strictly required, not having enough that either save turns or significantly help with leveling may cause problems. The blurb after the em dash (&mdash;) is basically what the script uses the IotM for.
 
 * 2010
-    * [panicked kernel](https://wiki.kingdomofloathing.com/Panicked_kernel) &mdash; can potentially save a turn if lacking an astral pet sweater or better
+    * [Baby Bugged Bugbear](https://wiki.kingdomofloathing.com/Baby_Bugged_Bugbear) &mdash; can potentially save a turn if lacking an astral pet sweater or better
 * 2011
-    * [Mint Salton Pepper's Peppermint Seed Catalog](https://wiki.kingdomofloathing.com/Mint_Salton_Pepper%27s_Peppermint_Seed_Catalog) &mdash; used to get the synthesize item buff to save 10 turns on the item test; provides backup candies for other synthesis buffs
+    * [Peppermint Pip Packet](https://wiki.kingdomofloathing.com/Peppermint_Pip_Packet) &mdash; used to get the synthesize item buff to save 10 turns on the item test; provides backup candies for other synthesis buffs
 * 2016
     * [Source terminal](https://wiki.kingdomofloathing.com/Source_terminal) &mdash; saves 2 turns on item test; turns speakeasy fights into scaling fights
 * 2017
-    * [Suspicious Package](https://wiki.kingdomofloathing.com/Suspicious_package) &mdash; saves 5 on hot test, 3 on combat test, 1 on weapon test, 1 on spell test; backup banishes
-    * [LI-11 Motor Pool voucher](http://wiki.kingdomofloathing.com/LI-11_Motor_Pool_voucher) &mdash; can saves some turns on item, hot, and combat tests; makes one fight free
+    * [Asdon Martin keyfob (on ring)](https://wiki.kingdomofloathing.com/Asdon_Martin_keyfob_(on_ring)) &mdash; can saves some turns on item, hot, and combat tests; makes one fight free
+    * [Kremlin's Greatest Briefcase](https://wiki.kingdomofloathing.com/Kremlin%27s_Greatest_Briefcase) &mdash; saves 5 on hot test, 3 on combat test, 1 on weapon test, 1 on spell test; backup banishes
+    * [mumming trunk](https://wiki.kingdomofloathing.com/Mumming_trunk) &mdash; 2-4 stats from combat
     * [Pocket Meteor Guide](https://wiki.kingdomofloathing.com/Pocket_Meteor_Guide) &mdash; with saber saves 4 turns on familiar text, 8 on weapon test, 4 on spell test
-    * [pantogram](https://wiki.kingdomofloathing.com/Pantogram) &mdash; saves 2 turns on hot test, 3 on combat test, 0.4 on spell test
-    * [locked mumming trunk](https://wiki.kingdomofloathing.com/Locked_mumming_trunk) &mdash; 2-4 stats from combat
+    * [portable pantogram](https://wiki.kingdomofloathing.com/Portable_pantogram) &mdash; saves 2 turns on hot test, 3 on combat test, 0.4 on spell test
 * 2018
-    * [January's Garbage Tote (unopened)](https://wiki.kingdomofloathing.com/January%27s_Garbage_Tote_(unopened)) &mdash; _doubles_ stat gain from combats
-    * [FantasyRealm membership packet](https://wiki.kingdomofloathing.com/FantasyRealm_membership_packet) &mdash; get a hat with +15 mainstat
-    * [God Lobster Egg](https://wiki.kingdomofloathing.com/God_Lobster_Egg) &mdash; 3 mid-tier scaling fights & nostalgia pi&ntilde;ata
-    * [Songboom&trade; BoomBox Box](https://wiki.kingdomofloathing.com/SongBoom%E2%84%A2_BoomBox_Box) &mdash; extra meat from fights
-    * [Bastille Battalion control rig crate](https://wiki.kingdomofloathing.com/Bastille_Battalion_control_rig_crate) &mdash; 250 free stats; 25 mainstat buff for leveling; saves 2 turns on weapon test, 1.6 on familiar
-    * [Voter registration form](https://wiki.kingdomofloathing.com/Voter_registration_form) &mdash; vote buffs and chance for mid-tier scaling wanderers
+    * [Bastille Battalion control rig](https://wiki.kingdomofloathing.com/Bastille_Battalion_control_rig) &mdash; 250 free stats; 25 mainstat buff for leveling; saves 2 turns on weapon test, 1.6 on familiar
     * [Boxing Day care package](https://wiki.kingdomofloathing.com/Boxing_Day_care_package) &mdash; free stats; 200% stat buff for leveling; saves 1.67 turns on item test for mys classes
+    * [FantasyRealm membership packet](https://wiki.kingdomofloathing.com/FantasyRealm_membership_packet) &mdash; get a hat with +15 mainstat
+    * [God Lobster](https://wiki.kingdomofloathing.com/God_Lobster) &mdash; 3 mid-tier scaling fights & nostalgia pi&ntilde;ata
+    * [January's Garbage Tote](https://wiki.kingdomofloathing.com/January%27s_Garbage_Tote) &mdash; _doubles_ stat gain from combats
+    * [Songboom&trade; BoomBox](https://wiki.kingdomofloathing.com/SongBoom%E2%84%A2_BoomBox) &mdash; extra meat from fights
+    * [Voter registration form](https://wiki.kingdomofloathing.com/Voter_registration_form) &mdash; vote buffs and chance for mid-tier scaling wanderers
 * 2019
-    * [Mint condition Lil' Doctor&trade; bag](https://wiki.kingdomofloathing.com/Mint_condition_Lil%27_Doctor%E2%84%A2_bag) &mdash; 3 free kills and 3 free banishes
-    * [vampyric cloake pattern](https://wiki.kingdomofloathing.com/Vampyric_cloake_pattern) &mdash; saves 3.3 turns on item test, 2 on hot test; 50% mus buff
-    * [Beach Comb Box](https://wiki.kingdomofloathing.com/Beach_Comb_Box) &mdash; saves 1 turn on familiar and weapon tests, 3 on hot test, 0.5 on spell test; some minor leveling buffs
-    * [packaged Pocket Professor](https://wiki.kingdomofloathing.com/Packaged_Pocket_Professor) &mdash; used to copy several scaling fights & burn delay to get other resources
-    * [Unopened Eight Days a Week Pill Keeper](https://wiki.kingdomofloathing.com/Unopened_Eight_Days_a_Week_Pill_Keeper) &mdash; buff sets familiars to level 20; 100% stat buff for leveling; can save 3 turns on hot test
-    * [unopened diabolic pizza cube box](https://wiki.kingdomofloathing.com/Unopened_diabolic_pizza_cube_box) &mdash; provides several buffs that help leveling and contribute greatly to tests
+    * [Beach Comb](https://wiki.kingdomofloathing.com/Comb_Box) &mdash; saves 1 turn on familiar and weapon tests, 3 on hot test, 0.5 on spell test; some minor leveling buffs
+    * [diabolic pizza cube](https://wiki.kingdomofloathing.com/diabolic_pizza_cube) &mdash; provides several buffs that help leveling and contribute greatly to tests
+    * [Eight Days a Week Pill Keeper](https://wiki.kingdomofloathing.com/Eight_Days_a_Week_Pill_Keeper) &mdash; buff sets familiars to level 20; 100% stat buff for leveling; can save 3 turns on hot test
+    * [Lil' Doctor&trade; bag](https://wiki.kingdomofloathing.com/Lil%27_Doctor%E2%84%A2_bag) &mdash; 3 free kills and 3 free banishes
+    * [Pocket Professor](https://wiki.kingdomofloathing.com/Pocket_Professor) &mdash; used to copy several scaling fights & burn delay to get other resources
+    * [vampyric cloake](https://wiki.kingdomofloathing.com/Vampyric_cloake) &mdash; saves 3.3 turns on item test, 2 on hot test; 50% mus buff
 * 2020
-    * [mint-in-box Powerful Glove](https://wiki.kingdomofloathing.com/Mint-in-box_Powerful_Glove) &mdash; 200% stat buff for leveling & saves 6 turns on combat test, 1 on weapon test, 1 on spell test
-    * [Better Shrooms and Gardens catalog](https://wiki.kingdomofloathing.com/Better_Shrooms_and_Gardens_catalog) &mdash; 1 mid-tier scaling fight
-    * [sinistral homunculus](https://wiki.kingdomofloathing.com/Sinistral_homunculus) &mdash; equip extra offhands for tests
-    * [baby camelCalf](https://wiki.kingdomofloathing.com/Baby_camelCalf) &mdash; with enough fights to fully charge: can save 4 turns on weapon test, 2 on spell test
-    * [packaged SpinMaster&trade; lathe](https://wiki.kingdomofloathing.com/Packaged_SpinMaster%E2%84%A2_lathe) &mdash; saves 4 turns on weapon test with ebony epee
-    * [Bagged Cargo Cultist Shorts](https://wiki.kingdomofloathing.com/Bagged_Cargo_Cultist_Shorts) &mdash; saves 8 turns on weapon test or 4 turns on spell test; makes hp test trivial
-    * [packaged knock-off retro superhero cape](https://wiki.kingdomofloathing.com/Packaged_knock-off_retro_superhero_cape) &mdash; saves 3 turns on hot test; 30% mainstat for leveling
     * [box o' ghosts](https://wiki.kingdomofloathing.com/Box_o%27_ghosts) &mdash; 50% stat buff for leveling; saves 4 turns on weapon test, 2 on spell test
+    * [Cargo Cultist Shorts](https://wiki.kingdomofloathing.com/Cargo_Cultist_Shorts) &mdash; saves 8 turns on weapon test or 4 turns on spell test; makes hp test trivial
+    * [Left-Hand Man](https://wiki.kingdomofloathing.com/Left-Hand_Man) &mdash; equip extra offhands for tests
+    * [Melodramedary](https://wiki.kingdomofloathing.com/Melodramedary) &mdash; with enough fights to fully charge: can save 4 turns on weapon test, 2 on spell test
+    * [packet of mushroom spores](https://wiki.kingdomofloathing.com/Packet_of_mushroom_spores) &mdash; 1 mid-tier scaling fight
+    * [Powerful Glove](https://wiki.kingdomofloathing.com/Powerful_Glove) &mdash; 200% stat buff for leveling & saves 6 turns on combat test, 1 on weapon test, 1 on spell test
+    * [SpinMaster&trade; lathe](https://wiki.kingdomofloathing.com/SpinMaster%E2%84%A2_lathe) &mdash; saves 4 turns on weapon test with ebony epee
+    * [unwrapped knock-off retro superhero cape](https://wiki.kingdomofloathing.com/Unwrapped_knock-off_retro_superhero_cape) &mdash; saves 3 turns on hot test; 30% mainstat for leveling
 * 2021
+    * [backup camera](https://wiki.kingdomofloathing.com/Backup_camera) &mdash; used for 11 scaling fights & burning delay to get other resources
+    * [cold medicine cabinet](https://wiki.kingdomofloathing.com/Cold_medicine_cabinet) &mdash; drinks a 30% stat booze from this for initial adventures and leveling help post-coil test
+    * [familiar scrapbook](https://wiki.kingdomofloathing.com/Familiar_scrapbook) &mdash; equip before using ten-percent bonus
+    * [industrial fire extinguisher](https://wiki.kingdomofloathing.com/Industrial_fire_extinguisher) &mdash; 30 turns saved on hot test with saber and 3 more turns by itself
     * [power seed](https://wiki.kingdomofloathing.com/Power_seed) &mdash; saves 6.7 turns on item test
-    * [packaged backup camera](https://wiki.kingdomofloathing.com/Packaged_backup_camera) &mdash; used for 11 scaling fights & burning delay to get other resources
-    * [shortest-order cook](https://wiki.kingdomofloathing.com/Shortest-order_cook) &mdash; can save 2 turns on familiar test if lucky
-    * [packaged familiar scrapbook](https://wiki.kingdomofloathing.com/Packaged_familiar_scrapbook) &mdash; equip before using ten-percent bonus
+    * [Shorter-Order Cook](https://wiki.kingdomofloathing.com/Shorter-Order_Cook) &mdash; can save 2 turns on familiar test if lucky
     * [Our Daily Candles&trade; order form](https://wiki.kingdomofloathing.com/Our_Daily_Candles%E2%84%A2_order_form) &mdash; class-dependent chance of 50% stat buff and/or 10 stats from combat
-    * [packaged industrial fire extinguisher](https://wiki.kingdomofloathing.com/Packaged_industrial_fire_extinguisher) &mdash; 30 turns saved on hot test with saber and 3 more turns by itself
-    * [packaged cold medicine cabinet](https://wiki.kingdomofloathing.com/Packaged_cold_medicine_cabinet) &mdash; drinks a 30% stat booze from this for initial adventures and leveling help post-coil test
 * 2022
-    * [undrilled cosmic bowling ball](https://wiki.kingdomofloathing.com/Undrilled_cosmic_bowling_ball) &mdash; 50% stat gain in NEP; saves 1.67 adventures on item test; some extra item and meat gain during leveling fights
-    * [combat lover's locket lockbox](https://wiki.kingdomofloathing.com/Combat_lover%27s_locket_lockbox) &mdash; up to 3 monsters to fight to save wishes and time spent on fax
-    * [Undamaged Unbreakable Umbrella](https://wiki.kingdomofloathing.com/Undamaged_Unbreakable_Umbrella) &mdash; saves up to 1.7 turns on item test, 6 on combat test, 1 on weapon test, 0.5 on spell test
-    * [MayDay&trade; contract](https://wiki.kingdomofloathing.com/MayDay%E2%84%A2_contract) &mdash; can save up to 1.7 turns on item test on some classes
-    * [packaged June cleaver](https://wiki.kingdomofloathing.com/Packaged_June_cleaver) &mdash; will choose optimal choices when the cleaver adventures are encountered
-    * [designer sweatpants (new old stock)](https://wiki.kingdomofloathing.com/Designer_sweatpants_(new_old_stock)) &mdash; script will prioritize equipping this to get the most out of it, including saving turns on the hot test
-    * [unopened tiny stillsuit](https://wiki.kingdomofloathing.com/Unopened_tiny_stillsuit) &mdash; if this is not equipped while adventuring, it will be placed on a familiar in the terrarium to passively build up
-    * [packaged Jurassic Parka](https://wiki.kingdomofloathing.com/Packaged_Jurassic_Parka) &mdash; helps get NEP experience buff right away and gives 1 free kill
-    * [boxed autumn-aton](https://wiki.kingdomofloathing.com/Boxed_autumn-aton) &mdash; saves 1.67 turns on item test; will get useful upgrades to prepare for aftercore
+    * [autumn-aton](https://wiki.kingdomofloathing.com/Autumn-aton) &mdash; saves 1.67 turns on item test; will get useful upgrades to prepare for aftercore
+    * [combat lover's locket](https://wiki.kingdomofloathing.com/Combat_lover%27s_locket) &mdash; up to 3 monsters to fight to save wishes and time spent on fax
+    * [cosmic bowling ball](https://wiki.kingdomofloathing.com/Cosmic_bowling_ball) &mdash; 50% stat gain in NEP; saves 1.67 adventures on item test; some extra item and meat gain during leveling fights
     * [deed to Oliver's Place](https://wiki.kingdomofloathing.com/Deed_to_Oliver%27s_Place) &mdash; 3 non-scaling free fights
-    * [packaged model train set](https://wiki.kingdomofloathing.com/Packaged_model_train_set) &mdash; lots of extra stats from fights and can smooth out any meat problems
+    * [designer sweatpants](https://wiki.kingdomofloathing.com/Designer_sweatpants) &mdash; script will prioritize equipping this to get the most out of it, including saving turns on the hot test
+    * [June cleaver](https://wiki.kingdomofloathing.com/June_cleaver) &mdash; will choose optimal choices when the cleaver adventures are encountered
+    * [Jurassic Parka](https://wiki.kingdomofloathing.com/Jurassic_Parka) &mdash; helps get NEP experience buff right away and gives 1 free kill
+    * [MayDay&trade; contract](https://wiki.kingdomofloathing.com/MayDay%E2%84%A2_contract) &mdash; can save up to 1.7 turns on item test on some classes
+    * [model train set](https://wiki.kingdomofloathing.com/Model_train_set) &mdash; lots of extra stats from fights and can smooth out any meat problems
+    * [Unbreakable Umbrella](https://wiki.kingdomofloathing.com/Unbreakable_Umbrella) &mdash; saves up to 1.7 turns on item test, 6 on combat test, 1 on weapon test, 0.5 on spell test
+    * [tiny stillsuit](https://wiki.kingdomofloathing.com/Tiny_stillsuit) &mdash; if this is not equipped while adventuring, it will be placed on a familiar in the terrarium to passively build up
 * 2023
-    * [closed-circuit phone system](http://wiki.kingdomofloathing.com/closed-circuit_phone_system) &mdash; 11 or 12 extra free fights; can save 3.3 turns on item test
-    * [cursed monkey glove](http://wiki.kingdomofloathing.com/cursed_monkey_glove) &mdash; will get effects from this before using genie wishes
     * [book of facts](https://wiki.kingdomofloathing.com/Book_of_facts) &mdash; Recall Facts: Circadian Rhythms used to get more rollover adventures
+    * [Cincho de Mayo](https://wiki.kingdomofloathing.com/Cincho_de_Mayo) &mdash; helps get NEP experience buff right away
+    * [closed-circuit pay phone](http://wiki.kingdomofloathing.com/Closed-circuit_pay_phone) &mdash; 11 or 12 extra free fights; can save 3.3 turns on item test
+    * [cursed monkey paw](http://wiki.kingdomofloathing.com/Cursed_monkey_paw) &mdash; will get effects from this before using genie wishes
 * 2024
-    * [packaged Everfull Dart Holster](https://wiki.kingdomofloathing.com/Packaged_Everfull_Dart_Holster) &mdash; tries to use its free kill whilst leveling; throws darts to level it up if it is equipped otherwise
-    * [boxed Apriling band helmet](https://wiki.kingdomofloathing.com/Boxed_Apriling_band_helmet) &mdash; uses the intrinsics to help with item and non-combat tests
-    * [boxed Mayam Calendar](https://wiki.kingdomofloathing.com/Boxed_Mayam_Calendar) &mdash; gets adventures post-coil if low
-    * [untorn tearaway pants package](https://wiki.kingdomofloathing.com/Untorn_tearaway_pants_package) &mdash; if moxie, used to unlock guild, unlock distant woods, and fight tentacle in science tent
-    * [boxed bat wings](https://wiki.kingdomofloathing.com/Boxed_bat_wings) &mdash; MP recovery
+    * [Apriling band helmet](https://wiki.kingdomofloathing.com/Apriling_band_helmet) &mdash; uses the intrinsics to help with item and non-combat tests
+    * [bat wings](https://wiki.kingdomofloathing.com/Bat_wings) &mdash; MP recovery
+    * [Everfull Dart Holster](https://wiki.kingdomofloathing.com/Everfull_Dart_Holster) &mdash; tries to use its free kill whilst leveling; throws darts to level it up if it is equipped otherwise
+    * [Mayam Calendar](https://wiki.kingdomofloathing.com/Mayam_Calendar) &mdash; gets adventures post-coil if low
+    * [tearaway pants](https://wiki.kingdomofloathing.com/Tearaway_pants) &mdash; if moxie, used to unlock guild, unlock distant woods, and fight tentacle in science tent
 * 2025
-    * [packaged prismatic beret](https://wiki.kingdomofloathing.com/Packaged_prismatic_beret) &mdash; saves a bunch of turns on the spell test; turns saved can vary wildly based on gear on hand
-    * [Allied Radio Backpack Pack](https://wiki.kingdomofloathing.com/Allied_Radio_Backpack_Pack) &mdash; can save 4 turns on item test, 1 on familiar test, 1 on spell test, 3 on hot test
+    * [Allied Radio Backpack](https://wiki.kingdomofloathing.com/Allied_Radio_Backpack) &mdash; can save 4 turns on item test, 1 on familiar test, 1 on spell test, 3 on hot test
+    * [April Shower Thoughts shield](https://wiki.kingdomofloathing.com/April_Shower_Thoughts_shield) &mdash; can save 1.6 turns on familiar test
+    * [blood cubic zirconia](https://wiki.kingdomofloathing.com/Blood_cubic_zirconia) &mdash; can save 4 turns on weapon test, 2.1 on spell test
+    * [M%C3%B6bius ring](https://wiki.kingdomofloathing.com/M%C3%B6bius_ring) &mdash; can save 3 turns on non-combat test if the maximizer so happens to equip it while leveling, but the script does not explicitly try to do that
+    * [Peridot of Peril](https://wiki.kingdomofloathing.com/Peridot_of_Peril) &mdash; force combats with needed monsters
+    * [prismatic beret](https://wiki.kingdomofloathing.com/Prismatic_beret) &mdash; saves a bunch of turns on the spell test; turns saved can vary wildly based on gear on hand
+* 2026
+    * [The Eternity Codpiece](https://wiki.kingdomofloathing.com/The_Eternity_Codpiece) &mdash; handles peridot, zirconia, and heartstone IotMs; fill it with 5 [eye of the Tiger-lily](https://wiki.kingdomofloathing.com/Eye_of_the_Tiger-lily) pre-ascension to save a turn on spell test
+    * [heartstone](https://wiki.kingdomofloathing.com/Heartstone) &mdash; buffs for leveling; saves 1 turn on familiar test, saves an additional turn on familiar test with The Eternity Codpiece
 
 ## Bugs?
 Report bugs in the [issue tracker](https://github.com/C2Talon/c2t_hccs/issues).

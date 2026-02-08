@@ -835,7 +835,8 @@ boolean c2t_hccs_genie(monster mon) {
 boolean c2t_hccs_heartstone(effect eff) {
 	if (have_effect(eff) > 0)
 		return true;
-	return liba_heartstone(eff);
+	liba_heartstone(eff);
+	return have_effect(eff) > 0;
 }
 
 //i--kramco
