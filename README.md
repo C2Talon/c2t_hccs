@@ -140,7 +140,7 @@ While these are not strictly required, not having enough that either save turns 
     * [Allied Radio Backpack](https://wiki.kingdomofloathing.com/Allied_Radio_Backpack) &mdash; can save 4 turns on item test, 1 on familiar test, 1 on spell test, 3 on hot test
     * [April Shower Thoughts shield](https://wiki.kingdomofloathing.com/April_Shower_Thoughts_shield) &mdash; can save 1.6 turns on familiar test
     * [blood cubic zirconia](https://wiki.kingdomofloathing.com/Blood_cubic_zirconia) &mdash; can save 4 turns on weapon test, 2.1 on spell test
-    * [M%C3%B6bius ring](https://wiki.kingdomofloathing.com/M%C3%B6bius_ring) &mdash; can save 3 turns on non-combat test if the maximizer so happens to equip it while leveling, but the script does not explicitly try to do that
+    * [M&ouml;bius ring](https://wiki.kingdomofloathing.com/M%C3%B6bius_ring) &mdash; can save 3 turns on non-combat test if the maximizer so happens to equip it while leveling, but the script does not explicitly try to do that
     * [Peridot of Peril](https://wiki.kingdomofloathing.com/Peridot_of_Peril) &mdash; force combats with needed monsters
     * [prismatic beret](https://wiki.kingdomofloathing.com/Prismatic_beret) &mdash; saves a bunch of turns on the spell test; turns saved can vary wildly based on gear on hand
 * 2026
