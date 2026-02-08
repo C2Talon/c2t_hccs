@@ -966,6 +966,9 @@ boolean c2t_hccs_allTheBuffs() {
 		c2t_hccs_aprilShield($effect[lubricating sauce]);
 	}
 
+	//heartstone
+	c2t_hccs_heartstone($effect[ultraheart]);
+
 	//third tome use //no longer using bee's knees for stat boost on non-moxie, but still need same strength buff?
 	if (have_effect($effect[purity of spirit]) == 0 && c2t_hccs_tomeClipArt($item[cold-filtered water]))
 		use(1,$item[cold-filtered water]);
@@ -1476,6 +1479,9 @@ boolean c2t_hccs_preFamiliar() {
 
 	//eternity codpiece + heartstone
 	liba_eternityCodpiece_set($item[heartstone]);
+
+	//heartstone
+	c2t_hccs_heartstone($effect[best pals]);
 
 	maximize(maxstr,false);
 	if (c2t_hccs_thresholdMet(TEST_FAMILIAR))

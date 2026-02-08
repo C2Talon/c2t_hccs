@@ -10,6 +10,7 @@ import <c2t_hccs_preAdv.ash>
 import <liba_alliedRadio.ash>
 import <liba_beret.ash>
 import <liba_bloodCubicZirconia.ash>
+import <liba_heartstone.ash>
 import <liba_peridot.ash>
 
 
@@ -36,6 +37,7 @@ import <liba_peridot.ash>
 //d--garbage tote
 //d--garden peppermint
 //d--genie
+//d--heartstone
 //d--kramco
 //d--melodramedary
 //d--model train set
@@ -196,6 +198,11 @@ boolean c2t_hccs_genie(effect eff);
 
 //fights monster from genie; returns true if monster fought
 boolean c2t_hccs_genie(monster mon);
+
+
+//d--heartstone
+//gets effect from heartstone if not already have; returns true if have effect
+boolean c2t_hccs_heartstone(effect eff);
 
 
 //d--kramco
@@ -381,6 +388,7 @@ void c2t_hccs_vote();
 //i--garbage tote
 //i--garden peppermint
 //i--genie
+//i--heartstone
 //i--kramco
 //i--numberology
 //i--melodramedary
@@ -724,8 +732,8 @@ boolean c2t_hccs_cloverItem() {
 		return true;
 	c2t_assert(my_adventures() > 0,"no adventures for limerick dungeon lucky adventure");
 
-	//11-leaf clover
-	if (have_effect($effect[lucky!]) == 0) {
+	//heartstone or 11-leaf clover for lucky
+	if (!c2t_hccs_heartstone($effect[lucky!])) {
 		hermit(1,$item[11-leaf clover]);
 		use($item[11-leaf clover]);
 	}
@@ -821,6 +829,13 @@ boolean c2t_hccs_genie(monster mon) {
 	if (get_property("lastEncounter") != mon && get_property("lastEncounter") != "Using the Force")
 		return false;
 	return true;
+}
+
+//i--heartstone
+boolean c2t_hccs_heartstone(effect eff) {
+	if (have_effect(eff) > 0)
+		return true;
+	return liba_heartstone(eff);
 }
 
 //i--kramco
